@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize')
 
-require('dotenv').config({ path: process.env.DEVMODE === 'test' ? '.env.test' : '.env' })
+require('dotenv').config({ path: process.env.DEVMODE?.trim() === 'test' ? '.env.test' : '.env' })
 
 const sequelize = new Sequelize(process.env.DATABASE, process.env.USER, process.env.PWD, {
   host: process.env.SERVER,
