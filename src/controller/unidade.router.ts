@@ -3,7 +3,7 @@ import { IController } from './controller.inteface'
 
 class UnidadeController implements IController {
   async all (req: Request, res: Response, next: NextFunction): Promise<any> {
-    throw new Error('Method not implemented.')
+    return res.status(200).json({ message: 'Method not implemented.' })
   }
 
   async create (req: Request, res: Response, next: NextFunction): Promise<any> {

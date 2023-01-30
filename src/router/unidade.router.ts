@@ -1,11 +1,14 @@
 import controller from '../controller/unidade.router'
 import { Router } from 'express'
 
+import routerMiddleware from '../middleware/router.middleware'
+
 class UnidadeRouter {
   public router!: Router
 
   constructor () {
     this.router = Router()
+    this.router.use(routerMiddleware.authenticated)
     this.routers()
   }
 

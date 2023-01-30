@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt'
 import { uuid } from 'uuidv4'
 import connection from './connection'
 import jwt from 'jsonwebtoken'
+import Perfil from './perfil.model'
 
 class Usuario extends Model {
   public id!: string
@@ -116,5 +117,7 @@ Usuario.init({
     }
   }
 })
+
+Usuario.belongsTo(Perfil, { foreignKey: 'fkPerfil' })
 
 export default Usuario
