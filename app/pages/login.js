@@ -1,5 +1,4 @@
 import * as React from 'react'
-import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
 import CssBaseline from '@mui/material/CssBaseline'
 import TextField from '@mui/material/TextField'
@@ -11,17 +10,27 @@ import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import Image from 'next/image'
+import Dialog from '@mui/material/Dialog'
+import { CircularProgress } from '@mui/material'
 
 const theme = createTheme()
 
 const Login = () => {
-  const handleSubmit = (event) => {
-    event.preventDefault()
-    const data = new FormData(event.currentTarget)
-    console.log({
-      email: data.get('email'),
-      password: data.get('password')
-    })
+  const [email, setEmail] = React.useState('')
+  const [password, setPassword] = React.useState('')
+  const [openDialog, setOpenDialog] = React.useState(false)
+
+  const btEntrar = () => {
+    setOpenDialog(true)
+    fetch('http://localhost:3333/api/authentication/', { method: 'POST', mode: 'cors', body: { password, email } })
+      .then(response => {
+        setOpenDialog(false)
+        alert(JSON.stringify(response))
+      })
+      .catch(err => {
+        setOpenDialog(false)
+        alert(JSON.stringify(err))
+      })
   }
 
   return (
@@ -60,7 +69,7 @@ const Login = () => {
             <Typography component="h1" variant="h5" style={{ marginTop: 16 }}>
               Task Manager
             </Typography>
-            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+            <Box component="form" noValidate sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
                 required
@@ -70,6 +79,7 @@ const Login = () => {
                 name="email"
                 autoComplete="email"
                 autoFocus
+                onChange={e => setEmail(e.target.value)}
               />
               <TextField
                 margin="normal"
@@ -80,6 +90,7 @@ const Login = () => {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                onChange={e => setPassword(e.target.value)}
               />
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
@@ -89,6 +100,7 @@ const Login = () => {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
+                onClick={btEntrar}
               >
                 Entrar
               </Button>
@@ -99,6 +111,12 @@ const Login = () => {
           </Box>
         </Grid>
       </Grid>
+
+      <Dialog open={openDialog}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: 120, height: 120 }}>
+          <CircularProgress />
+        </div>
+      </Dialog>
     </ThemeProvider>
   )
 }
