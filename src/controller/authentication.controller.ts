@@ -62,7 +62,16 @@ class AuthenticationController {
         return res.status(200).json({ message: 'Usuário validado com sucesso.', token: registro.generateToken() })
       }
     } catch (err) {
+      console.log(err)
       res.status(400).json({ message: 'Login ou senha inválidos.' })
+    }
+  }
+
+  async logged (req: any, res: Response, next: NextFunction): Promise<any> {
+    try {
+      res.status(200).json({ data: req.usuario })
+    } catch (err) {
+      return res.status(401).json({ message: err.errors[0].message })
     }
   }
 }

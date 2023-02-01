@@ -33,7 +33,15 @@ class RouterMiddleware {
   public role (perfis: Array<string>) {
     return [
       async (req, res, next) => {
-        if (!perfis.includes(req.usuario.Perfil.nome)) {
+        try {
+          if (req.usuario.Perfil) {
+            if (!perfis.includes(req.usuario.Perfil.nome)) {
+              return res.status(401).json({ message: 'Você não possui permissão para acessar este recurso.' })
+            }
+          } else {
+            return res.status(401).json({ message: 'Você não possui permissão para acessar este recurso.' })
+          }
+        } catch (err) {
           return res.status(401).json({ message: 'Você não possui permissão para acessar este recurso.' })
         }
 

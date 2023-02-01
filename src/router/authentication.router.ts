@@ -1,6 +1,8 @@
 import controller from '../controller/authentication.controller'
 import { Router } from 'express'
 
+import routerMiddleware from '../middleware/router.middleware'
+
 class AuthenticationRouter {
   public router!: Router
 
@@ -11,6 +13,7 @@ class AuthenticationRouter {
 
   private routers () {
     this.router.post('/', controller.login)
+    this.router.get('/logged', routerMiddleware.authenticated, controller.logged)
   }
 }
 

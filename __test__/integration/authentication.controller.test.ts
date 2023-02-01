@@ -72,6 +72,26 @@ describe('authentication.controller', () => {
     expect(response.body.token.length).toBeGreaterThanOrEqual(60)
   })
 
+  it('deve retornar o status 200 com as informações do usuário logado', async () => {
+    const configuracao = await ConfiguracaoGlobal.findOne()
+    await ConfiguracaoGlobal.update({ autenticacaoAd: true }, { where: { id: configuracao?.id } })
+    const response = await request(app)
+      .post('/api/authentication/')
+      .send({ email: 'diegoalisson@pe.senac.br', password: 'gti@2021' })
+
+    const { token } = response.body
+
+    const response2 = await request(app)
+      .get('/api/authentication/logged')
+      .set('authorization', `Bearer ${token}`)
+      .send()
+
+    expect(response2.status).toBe(200)
+    expect(response2.body.data).toHaveProperty('nome')
+    expect(response2.body.data).toHaveProperty('email')
+    expect(response2.body.data).toHaveProperty('Perfil')
+  })
+
   it('deve retornar o status 401 quando o email for invalidado localmente', async () => {
     const configuracao = await ConfiguracaoGlobal.findOne()
     await ConfiguracaoGlobal.update({ autenticacaoAd: false }, { where: { id: configuracao?.id } })
