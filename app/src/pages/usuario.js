@@ -4,6 +4,7 @@ import { Button, Checkbox, CircularProgress, Dialog, DialogActions, DialogConten
 import Paper from '@mui/material/Paper';
 import TablePaginationActions from "@mui/material/TablePagination/TablePaginationActions";
 import EditIcon from '@mui/icons-material/Edit';
+import AddIcon from '@mui/icons-material/Add';
 
 const getCookie = require('../utils/getCookie')
 
@@ -67,7 +68,10 @@ const Usuario = () => {
         <h3>Lista de Usuários</h3>
         <div style={{flex: 1}}></div>
         <div>
-          <TextField id="outlined-basic" label="Pesquisar" variant="outlined" style={{height: 32}} onChange={e => setKeyword(e.target.value)} />
+          <input type='text' style={{height: 32, border: '1px solid #e0e0e0', borderRadius: 3, outline: 'none', paddingRight: 8, paddingLeft: 8}} placeholder='Pesquisar' />
+          <Button size="small" variant="contained" startIcon={<AddIcon />} style={{marginLeft: 8 }} onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/usuario/cadastro/`}>
+            Novo
+          </Button>
         </div>
       </div>
       <TableContainer>
@@ -92,7 +96,7 @@ const Usuario = () => {
                 <TableCell>{<Checkbox disabled checked={row.validado} />}</TableCell>
                 <TableCell>{
                   <Tooltip title='Editar'>
-                    <IconButton onClick={() => alert(row.id)}>
+                    <IconButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/usuario/${row.id}/edit/`}>
                       <EditIcon />
                     </IconButton>
                   </Tooltip>
@@ -105,7 +109,7 @@ const Usuario = () => {
             <TableRow>
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25, { label: 'Todos', value: -1 }]}
-                colSpan={5}
+                colSpan={6}
                 count={registros.length}
                 rowsPerPage={rowsPerPage}
                 page={page}

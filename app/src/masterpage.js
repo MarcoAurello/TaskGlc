@@ -29,6 +29,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import MailIcon from '@mui/icons-material/Mail';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
+import UsuarioForm from "./pages/usuario-form";
 
 const MasterPageContainer = styled.div`
   position: 'absolute'; 
@@ -152,11 +153,7 @@ const Masterpage = (props) => {
       <Content>
         <Switch>
           {/* Usuarios */}
-          {/* <Route
-            exact
-            path="/usuario/:id/edit"
-            render={(props) => <UsuarioForm {...props} logged={logged} />}
-          />
+          {/* 
           <Route
             exact
             path="/usuario/cadastro"
@@ -168,6 +165,18 @@ const Masterpage = (props) => {
             exact
             path="/usuario"
             render={(props) => <Usuario {...props} logged={logged} />}
+          />
+
+          <Route
+            exact
+            path="/usuario/:id/edit"
+            render={(props) => <UsuarioForm {...props} logged={logged} />}
+          />
+
+          <Route
+            exact
+            path="/usuario/cadastro"
+            render={(props) => <UsuarioForm {...props} logged={logged} />}
           />
 
           {/* Home */}

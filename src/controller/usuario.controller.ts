@@ -38,7 +38,19 @@ class UsuarioController implements IController {
   }
 
   async find (req: Request, res: Response, next: NextFunction): Promise<any> {
-    throw new Error('Method not implemented.')
+    try {
+      const { id } = req.params
+
+      const registro = await Usuario.findOne({
+        where: {
+          id
+        }
+      })
+
+      res.status(200).json({ data: registro })
+    } catch (err) {
+      res.status(401).json({ message: err.errors[0].message })
+    }
   }
 
   async update (req: Request, res: Response, next: NextFunction): Promise<any> {
