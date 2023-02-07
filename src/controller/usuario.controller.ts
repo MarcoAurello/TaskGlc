@@ -36,37 +36,7 @@ class UsuarioController implements IController {
   }
 
   async create (req: Request, res: Response, next: NextFunction): Promise<any> {
-    try {
-      const {
-        nome,
-        email,
-        telefone,
-        chapa,
-        demandante,
-        fkPerfil,
-        fkUnidade,
-        fkArea
-      } = req.body
-
-      console.log(req.body)
-
-      const registro = await Usuario.create({
-        nome,
-        email,
-        telefone,
-        chapa,
-        demandante,
-        fkPerfil,
-        fkUnidade,
-        fkArea,
-        password: '987654321'
-      })
-
-      res.status(200).json({ data: registro, message: 'Usuário cadastro com sucesso.' })
-    } catch (err) {
-      console.log(err)
-      res.status(401).json({ message: err.errors[0].message })
-    }
+    throw new Error('Method not implemented.')
   }
 
   async find (req: Request, res: Response, next: NextFunction): Promise<any> {
@@ -91,7 +61,47 @@ class UsuarioController implements IController {
   }
 
   async update (req: Request, res: Response, next: NextFunction): Promise<any> {
-    throw new Error('Method not implemented.')
+    try {
+      const { id } = req.params
+      console.log(id)
+      const {
+        nome,
+        telefone,
+        chapa,
+        demandante,
+        fkPerfil,
+        fkUnidade,
+        fkArea,
+        ativo,
+        primeiroLogin
+      } = req.body
+
+      console.log(req.body)
+
+      await Usuario.update({
+        nome,
+        telefone,
+        chapa,
+        demandante,
+        fkPerfil,
+        fkUnidade,
+        fkArea,
+        ativo,
+        primeiroLogin
+      }, {
+        where: {
+          id
+        },
+        individualHooks: false
+      })
+
+      const registro = await Usuario.findOne({ where: { id } })
+
+      res.status(200).json({ data: registro, message: 'Alteração realizada com sucesso.' })
+    } catch (err) {
+      console.log(err)
+      res.status(401).json({ message: err.errors[0].message })
+    }
   }
 
   async delete (req: Request, res: Response, next: NextFunction): Promise<any> {

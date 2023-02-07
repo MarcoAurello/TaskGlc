@@ -33,6 +33,7 @@ module.exports = {
       fkPerfil: perfilRows[0].id,
       fkArea: areas[0][0].id,
       validado: true,
+      ativo: true,
       createdAt: new Date(),
       updatedAt: new Date()
     }], {})

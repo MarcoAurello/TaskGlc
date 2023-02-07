@@ -28,6 +28,8 @@ const UsuarioForm = (props) => {
   const [telefone, setTelefone] = useState('')
   const [chapa, setChapa] = useState('')
   const [demandante, setDemandante] = useState(false)
+  const [ativo, setAtivo] = useState(false)
+  const [primeiroLogin, setPrimeiroLogin] = useState(false)
   const [fkPerfil, setFkPerfil] = useState(null)
   const [fkUnidade, setFkUnidade] = useState(null)
   const [fkArea, setFkArea] = useState(null)
@@ -65,6 +67,8 @@ const UsuarioForm = (props) => {
               setChapa(data.data.chapa)
               setDemandante(data.data.demandante)
               setFkPerfil(data.data.fkPerfil)
+              setAtivo(data.data.ativo)
+              setPrimeiroLogin(data.data.primeiroLogin)
               setFkArea(data.data.fkArea)
               setFkUnidade(data.data.Area.Unidade.id)
               setValidade(data.data.validade)
@@ -154,7 +158,7 @@ const UsuarioForm = (props) => {
   }, [fkUnidade])
 
 
-  const onSalvar = () => {
+  const onAlterar = () => {
     const token = getCookie('_token_task_manager')
     const params = {
       method: 'POST', 
@@ -170,11 +174,13 @@ const UsuarioForm = (props) => {
         demandante,
         fkPerfil,
         fkUnidade,
-        fkArea
+        fkArea,
+        ativo,
+        primeiroLogin,
       }) 
     }
 
-    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/usuario/`, params)
+    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/usuario/${id}/edit/`, params)
       .then(response => {
         const { status } = response
         response.json().then(data => {
@@ -183,15 +189,13 @@ const UsuarioForm = (props) => {
             setMessage(data.message)
             setOpenMessageDialog(true)
           } else if(status === 200) {
-            alert(JSON.stringify(data.data))
+            // alert(JSON.stringify(data.data))
+            setMessage(data.message)
+            setOpenMessageDialog(true)
             // setArea(data.data)
           }
         }).catch(err => setOpenLoadingDialog(true))
       })
-  }
-
-  const onAlterar = () => {
-    alert('Alterar')
   }
 
   return (
@@ -208,14 +212,14 @@ const UsuarioForm = (props) => {
             </div>
             <div style={{flex: 1}}>
             <FormControl fullWidth size="small">
-              <InputLabel id="demo-select-small">Perfil</InputLabel>
+              <InputLabel id="label-small-perfil">Perfil</InputLabel>
               <Select
                 fullWidth
-                labelId="demo-select-small"
+                labelId="label-small-perfil"
                 id="demo-select-small"
                 label="Area"
                 value={fkPerfil}>
-                <MenuItem value="">
+                <MenuItem value={null}>
                   <em>Nenhum</em>
                 </MenuItem>
                 {perfil.map((item, index) => <MenuItem key={index} value={item.id} onClick={() => setFkPerfil(item.id)}>{item.nome}</MenuItem>)}
@@ -224,7 +228,7 @@ const UsuarioForm = (props) => {
             </div>
           </div>
           <div style={{display: 'flex', flexDirection: 'row', marginBottom: 16}}>
-            <TextField size="small" fullWidth label="Email" variant="outlined" value={email} onChange={e => setEmail(e.target.value)} />
+            <TextField size="small" fullWidth label="Email" variant="outlined" disabled={id ? true : false} value={email} onChange={e => setEmail(e.target.value)} />
           </div>
           <div style={{display: 'flex', flexDirection: 'row', marginBottom: 16}}>
             <div style={{flex: 1, marginRight: 16}}>
@@ -275,13 +279,14 @@ const UsuarioForm = (props) => {
             </div>
           </div>
           <div style={{display: 'flex', flexDirection: 'row', marginBottom: 16}}>
-            <FormControlLabel control={<Switch />} label="Demandante" />
-            <FormControlLabel control={<Switch />} label="Ativo" />
+            <FormControlLabel control={<Switch checked={demandante} onChange={e => setDemandante(e.target.checked)} />} label="Demandante" />
+            <FormControlLabel control={<Switch checked={ativo} />} label="Ativo" onChange={e => setAtivo(e.target.checked)} />
+            <FormControlLabel control={<Switch checked={primeiroLogin} />} label="Primeiro Login" onChange={e => setPrimeiroLogin(e.target.checked)} />
           </div>
           <div style={{flex: 1, display: 'flex', flexDirection: 'row'}}>
             <Button variant="outlined" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/usuario/`}>Voltar</Button>
             <div style={{flex: 1}}></div>
-            <Button variant="contained" onClick={id ? onAlterar : onSalvar}>{id ? 'Alterar' : 'Salvar'}</Button>
+            <Button variant="contained" onClick={onAlterar}>Alterar</Button>
           </div>
         </FormGroup>
       </div>

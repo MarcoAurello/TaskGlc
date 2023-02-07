@@ -69,9 +69,9 @@ const Usuario = () => {
         <div style={{flex: 1}}></div>
         <div>
           <input type='text' style={{height: 32, border: '1px solid #e0e0e0', borderRadius: 3, outline: 'none', paddingRight: 8, paddingLeft: 8}} placeholder='Pesquisar' />
-          <Button size="small" variant="contained" startIcon={<AddIcon />} style={{marginLeft: 8 }} onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/usuario/cadastro/`}>
+          {/* <Button size="small" variant="contained" startIcon={<AddIcon />} style={{marginLeft: 8 }} onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/usuario/cadastro/`}>
             Novo
-          </Button>
+          </Button> */}
         </div>
       </div>
       <TableContainer>

@@ -49,6 +49,11 @@ module.exports = {
         type: Sequelize.UUID,
         allowNull: true
       },
+      ativo: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
+      },
       validado: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
@@ -57,6 +62,11 @@ module.exports = {
       fkValidador: {
         type: Sequelize.UUID,
         allowNull: true
+      },
+      primeiroLogin: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
       },
       createdAt: {
         type: Sequelize.DATE,

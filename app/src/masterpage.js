@@ -14,7 +14,7 @@ import PhonelinkSetupIcon from '@mui/icons-material/PhonelinkSetup';
 
 import CssBaseline from '@mui/material/CssBaseline'
 import Toolbar from './components/toolbar'
-import { Badge, IconButton, Menu, MenuItem } from "@mui/material";
+import { Badge, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Menu, MenuItem, TextField } from "@mui/material";
 
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -30,6 +30,8 @@ import MailIcon from '@mui/icons-material/Mail';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import UsuarioForm from "./pages/usuario-form";
+
+import isAuthenticated from './utils/isAuthenticated'
 
 const MasterPageContainer = styled.div`
   position: 'absolute'; 
@@ -47,9 +49,14 @@ const Masterpage = (props) => {
   const [openDrawer, setOpenDrawer] = useState(false)
   const [openAccountMenu, setOpenAccountMenu] = useState(false)
   const [anchorElAccountMenu, setAnchorElAccountMenu] = useState(null)
+  const [primeiroLogin, setPrimeiroLogin] = useState(false)
+  const [openDialogPrimeiroAcesso, setOpenDialogPrimeiroAcesso] = useState(false)
 
   useEffect(() => {
-    
+    isAuthenticated().then(_ => {
+      setPrimeiroLogin(_.data.data.primeiroLogin)
+      setOpenDialogPrimeiroAcesso(_.data.data.primeiroLogin)
+    })
   }, []);
 
   const actions = [
@@ -191,6 +198,38 @@ const Masterpage = (props) => {
             render={(props) => <Home {...props} logged={logged} />}
           />
         </Switch>
+        <Dialog open={openDialogPrimeiroAcesso}>
+          <DialogTitle>Primeiro Acesso</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Para a correta utilização do sistema é necessário o preenchimento dos campos abaixo. Estas informações passará pela aprovação do gestor imediato.
+            </DialogContentText>
+            <TextField
+              margin="dense"
+              label="Nome"
+              type="email"
+              fullWidth
+              variant="standard"
+            />
+            <TextField
+              margin="dense"
+              label="Chapa"
+              type="text"
+              fullWidth
+              variant="standard"
+            />
+            <TextField
+              margin="dense"
+              label="Telefone/Ramal"
+              type="text"
+              fullWidth
+              variant="standard"
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpenDialogPrimeiroAcesso(false)}>Salvar</Button>
+          </DialogActions>
+        </Dialog>
       </Content>      
     </MasterPageContainer>        
   );

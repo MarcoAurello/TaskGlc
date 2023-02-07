@@ -27,6 +27,14 @@ class Usuario extends Model {
 
   public fkArea!: string
 
+  public ativo!: Boolean
+
+  public validado!: Boolean
+
+  public primeiroLogin!: Boolean
+
+  public fkValidador!: string
+
   public createdAt!: Date
 
   public updatedAt!: Date
@@ -39,7 +47,7 @@ class Usuario extends Model {
 Usuario.init({
   id: {
     type: DataTypes.UUID,
-    allowNull: false,
+    allowNull: true,
     primaryKey: true
   },
   nome: {
@@ -70,7 +78,7 @@ Usuario.init({
   },
   passwordHash: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: true
   },
   password: {
     type: DataTypes.VIRTUAL,
@@ -97,6 +105,16 @@ Usuario.init({
     allowNull: false,
     defaultValue: false
   },
+  ativo: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: true
+  },
+  primeiroLogin: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: true
+  },
   fkPerfil: {
     type: DataTypes.UUID,
     allowNull: true
@@ -118,7 +136,7 @@ Usuario.init({
   sequelize: connection,
   tableName: 'usuario',
   hooks: {
-    async beforeValidate (instance) {
+    async beforeCreate (instance) {
       instance.id = uuid()
       instance.passwordHash = await bcrypt.hash(instance.password, 8)
     }
