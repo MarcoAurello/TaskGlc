@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
+import Area from '../model/area.model'
 import Perfil from '../model/perfil.model'
+import Unidade from '../model/unidade.model'
 import Usuario from '../model/usuario.model'
 import { IController } from './controller.inteface'
 
@@ -34,7 +36,37 @@ class UsuarioController implements IController {
   }
 
   async create (req: Request, res: Response, next: NextFunction): Promise<any> {
-    throw new Error('Method not implemented.')
+    try {
+      const {
+        nome,
+        email,
+        telefone,
+        chapa,
+        demandante,
+        fkPerfil,
+        fkUnidade,
+        fkArea
+      } = req.body
+
+      console.log(req.body)
+
+      const registro = await Usuario.create({
+        nome,
+        email,
+        telefone,
+        chapa,
+        demandante,
+        fkPerfil,
+        fkUnidade,
+        fkArea,
+        password: '987654321'
+      })
+
+      res.status(200).json({ data: registro, message: 'Usuário cadastro com sucesso.' })
+    } catch (err) {
+      console.log(err)
+      res.status(401).json({ message: err.errors[0].message })
+    }
   }
 
   async find (req: Request, res: Response, next: NextFunction): Promise<any> {
@@ -44,11 +76,16 @@ class UsuarioController implements IController {
       const registro = await Usuario.findOne({
         where: {
           id
-        }
+        },
+        include: [{
+          model: Area, as: 'Area', include: [Unidade]
+        },
+        Perfil]
       })
 
       res.status(200).json({ data: registro })
     } catch (err) {
+      console.log(err)
       res.status(401).json({ message: err.errors[0].message })
     }
   }

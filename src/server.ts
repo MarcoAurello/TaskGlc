@@ -5,6 +5,8 @@ import routerStatusApplication from './router/statusapplicatoin.router'
 import routerAuthentication from './router/authentication.router'
 import routerUsuario from './router/usuario.router'
 import routerUnidade from './router/unidade.router'
+import routerArea from './router/area.router'
+import routerPerfil from './router/perfil.router'
 
 class Server {
   public application!: express.Application
@@ -25,6 +27,8 @@ class Server {
     this.application.use('/api/authentication/', routerAuthentication)
     this.application.use('/api/usuario/', routerUsuario)
     this.application.use('/api/unidade/', routerUnidade)
+    this.application.use('/api/area/', routerArea)
+    this.application.use('/api/perfil/', routerPerfil)
   }
 }
 

@@ -1,9 +1,9 @@
-import controller from '../controller/unidade.controller'
+import controller from '../controller/area.controller'
 import { Router } from 'express'
 
 import routerMiddleware from '../middleware/router.middleware'
 
-class UnidadeRouter {
+class AreaRouter {
   public router!: Router
 
   constructor () {
@@ -22,4 +22,4 @@ class UnidadeRouter {
   }
 }
 
-export default new UnidadeRouter().router
+export default new AreaRouter().router

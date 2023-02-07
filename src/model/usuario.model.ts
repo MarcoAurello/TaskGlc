@@ -4,6 +4,7 @@ import { uuid } from 'uuidv4'
 import connection from './connection'
 import jwt from 'jsonwebtoken'
 import Perfil from './perfil.model'
+import Area from './area.model'
 
 class Usuario extends Model {
   public id!: string
@@ -58,6 +59,12 @@ Usuario.init({
       },
       isEmail: {
         msg: 'O campo email deve ser preenchido corretamente.'
+      },
+      async isUnique (value) {
+        const registros = await Usuario.findAll({ where: { email: value } })
+        if (registros.length > 0) {
+          throw new Error('Já existe um usuário utilizando este e-mail.')
+        }
       }
     }
   },
@@ -119,5 +126,6 @@ Usuario.init({
 })
 
 Usuario.belongsTo(Perfil, { foreignKey: 'fkPerfil' })
+Usuario.belongsTo(Area, { foreignKey: 'fkArea' })
 
 export default Usuario

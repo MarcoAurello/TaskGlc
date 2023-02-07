@@ -2,6 +2,7 @@ import { Model, DataTypes } from 'sequelize'
 import connection from './connection'
 
 import { uuid } from 'uuidv4'
+import Unidade from './unidade.model'
 
 class Area extends Model {
   public id!: string
@@ -47,5 +48,7 @@ Area.init({
     }
   }
 })
+
+Area.belongsTo(Unidade, { foreignKey: 'fkUnidade' })
 
 export default Area

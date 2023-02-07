@@ -1,9 +1,16 @@
 import { Request, Response, NextFunction } from 'express'
 import { IController } from './controller.inteface'
+import Unidade from '../model/unidade.model'
 
 class UnidadeController implements IController {
   async all (req: Request, res: Response, next: NextFunction): Promise<any> {
-    return res.status(200).json({ message: 'Method not implemented.' })
+    try {
+      const registros = await Unidade.findAll()
+
+      res.status(200).json({ data: registros })
+    } catch (err) {
+      res.status(401).json({ message: err.errors[0].message })
+    }
   }
 
   async create (req: Request, res: Response, next: NextFunction): Promise<any> {
