@@ -45,6 +45,7 @@
     "resetdb": "set DEVMODE=dev && yarn sequelize db:migrate",
     "postresetdb": "set DEVMODE=dev && yarn sequelize db:seed:all",
     "dev": "concurrently \" tsx watch ./src/app.ts\" \"cd ./app && yarn run start\"",
-    "production": "tsx ./src/app.ts"
+    "production": "tsx ./src/app.ts",
+    "build": "cd ./app && yarn run build"
   }
 }
