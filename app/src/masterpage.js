@@ -13,10 +13,11 @@ import ContactMailIcon from '@mui/icons-material/ContactMail';
 import PhonelinkSetupIcon from '@mui/icons-material/PhonelinkSetup';
 import HomeWorkIcon from '@mui/icons-material/HomeWork';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 
 import CssBaseline from '@mui/material/CssBaseline'
 import Toolbar from './components/toolbar'
-import { Badge, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, IconButton, InputLabel, Menu, MenuItem, Select, TextField } from "@mui/material";
+import { Badge, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, IconButton, InputLabel, Menu, MenuItem, Select, TextField, Tooltip } from "@mui/material";
 
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -204,11 +205,20 @@ const Masterpage = (props) => {
   }
 
   const actions = [
-    <IconButton size="large" aria-label="show 17 new notifications" color="inherit">
-      <Badge badgeContent={17} color="error">
-        <NotificationsIcon />
-      </Badge>
-    </IconButton>,
+    <Tooltip title="Aprovação Equipe" placement="bottom">
+      <IconButton size="large" aria-label="show 17 new notifications" color="inherit">
+        <Badge badgeContent={17} color="error">
+          <ManageAccountsIcon />
+        </Badge>
+      </IconButton>
+    </Tooltip>,
+    <Tooltip title="Nova Atividade" placement="bottom">
+      <IconButton size="large" aria-label="show 17 new notifications" color="inherit">
+        <Badge badgeContent={17} color="error">
+          <NotificationsIcon />
+        </Badge>
+      </IconButton>
+    </Tooltip>,
     <IconButton 
       size="large" 
       edge="end" 
@@ -293,14 +303,6 @@ const Masterpage = (props) => {
                 <ListItemText primary='Configuração' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/configuracao`} />
               </ListItemButton>
             </ListItem>
-            {/* <ListItem disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  <AttachEmailIcon />
-                </ListItemIcon>
-                <ListItemText primary='Emails' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/emails`} />
-              </ListItemButton>
-            </ListItem> */}
             <ListItem disablePadding>
               <ListItemButton>
                 <ListItemIcon>
