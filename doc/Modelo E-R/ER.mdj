@@ -212,6 +212,36 @@
 												},
 												{
 													"_type": "ERDColumnView",
+													"_id": "AAAAAAGGMQwX/ct2YbE=",
+													"_parent": {
+														"$ref": "AAAAAAGF6go6EXwLAVw="
+													},
+													"model": {
+														"$ref": "AAAAAAGGMQwX78tz4v0="
+													},
+													"font": "Arial;13;0",
+													"left": 157,
+													"top": 418,
+													"width": 228.06982421875,
+													"height": 13
+												},
+												{
+													"_type": "ERDColumnView",
+													"_id": "AAAAAAGGMQxax8uAV1k=",
+													"_parent": {
+														"$ref": "AAAAAAGF6go6EXwLAVw="
+													},
+													"model": {
+														"$ref": "AAAAAAGGMQxavst9Eu4="
+													},
+													"font": "Arial;13;0",
+													"left": 157,
+													"top": 433,
+													"width": 228.06982421875,
+													"height": 13
+												},
+												{
+													"_type": "ERDColumnView",
 													"_id": "AAAAAAGF9GeDK33SYks=",
 													"_parent": {
 														"$ref": "AAAAAAGF6go6EXwLAVw="
@@ -221,7 +251,7 @@
 													},
 													"font": "Arial;13;0",
 													"left": 157,
-													"top": 418,
+													"top": 448,
 													"width": 228.06982421875,
 													"height": 13
 												},
@@ -236,7 +266,7 @@
 													},
 													"font": "Arial;13;0",
 													"left": 157,
-													"top": 433,
+													"top": 463,
 													"width": 228.06982421875,
 													"height": 13
 												},
@@ -251,7 +281,7 @@
 													},
 													"font": "Arial;13;0",
 													"left": 157,
-													"top": 448,
+													"top": 478,
 													"width": 228.06982421875,
 													"height": 13
 												}
@@ -260,14 +290,14 @@
 											"left": 152,
 											"top": 263,
 											"width": 238.06982421875,
-											"height": 203
+											"height": 233
 										}
 									],
 									"font": "Arial;13;0",
 									"left": 152,
 									"top": 240,
 									"width": 238.06982421875,
-									"height": 226,
+									"height": 256,
 									"nameLabel": {
 										"$ref": "AAAAAAGF6go6EXwKQVw="
 									},
@@ -422,7 +452,7 @@
 											"visible": false,
 											"font": "Arial;13;0",
 											"left": 249,
-											"top": 505,
+											"top": 520,
 											"height": 13,
 											"alpha": 1.5707963267948966,
 											"distance": 15,
@@ -456,7 +486,7 @@
 											},
 											"font": "Arial;13;0",
 											"left": 249,
-											"top": 484,
+											"top": 514,
 											"height": 13,
 											"alpha": -0.5235987755982988,
 											"distance": 30,
@@ -473,7 +503,7 @@
 										"$ref": "AAAAAAGF6gzlGnxapbw="
 									},
 									"lineStyle": 2,
-									"points": "264:560;264:465",
+									"points": "264:560;264:495",
 									"nameLabel": {
 										"$ref": "AAAAAAGF6hEpD3yamnQ="
 									},
@@ -889,7 +919,7 @@
 											},
 											"font": "Arial;13;0",
 											"left": 297,
-											"top": 484,
+											"top": 514,
 											"height": 13,
 											"alpha": -0.5235987755982988,
 											"distance": 30,
@@ -906,7 +936,7 @@
 										"$ref": "AAAAAAGF6hG35nyvNm8="
 									},
 									"lineStyle": 2,
-									"points": "488:512;312:512;312:465",
+									"points": "488:512;312:512;312:495",
 									"nameLabel": {
 										"$ref": "AAAAAAGF6hTw2H1/s/A="
 									},
@@ -1204,6 +1234,26 @@
 										"$ref": "AAAAAAGF6go6EHwHt3k="
 									},
 									"name": "validado",
+									"type": "boolean",
+									"length": 0
+								},
+								{
+									"_type": "ERDColumn",
+									"_id": "AAAAAAGGMQwX78tz4v0=",
+									"_parent": {
+										"$ref": "AAAAAAGF6go6EHwHt3k="
+									},
+									"name": "ativo",
+									"type": "boolean",
+									"length": 0
+								},
+								{
+									"_type": "ERDColumn",
+									"_id": "AAAAAAGGMQxavst9Eu4=",
+									"_parent": {
+										"$ref": "AAAAAAGF6go6EHwHt3k="
+									},
+									"name": "primeiroLogin",
 									"type": "boolean",
 									"length": 0
 								},

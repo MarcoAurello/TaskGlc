@@ -51,13 +51,45 @@ const Masterpage = (props) => {
   const [anchorElAccountMenu, setAnchorElAccountMenu] = useState(null)
   const [primeiroLogin, setPrimeiroLogin] = useState(false)
   const [openDialogPrimeiroAcesso, setOpenDialogPrimeiroAcesso] = useState(false)
+  const [perfil, setPerfil] = useState([])
+  const [unidade, setUnidade] = useState([])
+  const [area, setArea] = useState([])
 
-  useEffect(() => {
-    isAuthenticated().then(_ => {
-      setPrimeiroLogin(_.data.data.primeiroLogin)
-      setOpenDialogPrimeiroAcesso(_.data.data.primeiroLogin)
-    })
-  }, []);
+  // useEffect(() => {
+  //   isAuthenticated().then(_ => {
+  //     setPrimeiroLogin(_.data.data.primeiroLogin)
+  //     setOpenDialogPrimeiroAcesso(_.data.data.primeiroLogin)
+  //   })
+  // }, []);
+
+
+  // useEffect(() => {
+  //   function carregarPerfil() {
+  //     setOpenLoadingDialog(true)
+  //     const token = getCookie('_token_task_manager')
+  //     const params = {
+  //       headers: {
+  //         'Authorization': `Bearer ${token}`
+  //       }
+  //     }
+  //     fetch(`${process.env.REACT_APP_DOMAIN_API}/api/perfil/`, params)
+  //       .then(response => {
+  //         const { status } = response
+  //         response.json().then(data => {
+  //           if(status === 401) {  
+  //           } else if(status === 200) {
+  //             setPerfil(data.data)
+  //             // carregarUnidade()
+  //           }
+  //         }).catch(err => setOpenLoadingDialog(false))
+  //       })
+  //   }
+
+  //   if(primeiroLogin) {
+  //     carregarPerfil()
+  //   }
+
+  // }, [primeiroLogin])
 
   const actions = [
     <IconButton size="large" aria-label="show 17 new notifications" color="inherit">
