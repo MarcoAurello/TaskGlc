@@ -30,9 +30,9 @@ const UsuarioForm = (props) => {
   const [demandante, setDemandante] = useState(false)
   const [ativo, setAtivo] = useState(false)
   const [primeiroLogin, setPrimeiroLogin] = useState(false)
-  const [fkPerfil, setFkPerfil] = useState(null)
-  const [fkUnidade, setFkUnidade] = useState(null)
-  const [fkArea, setFkArea] = useState(null)
+  const [fkPerfil, setFkPerfil] = useState("")
+  const [fkUnidade, setFkUnidade] = useState("")
+  const [fkArea, setFkArea] = useState("")
   const [validade, setValidade] = useState(false)
   const [createdAt, setCreatedAt] = useState(null)
   const [updatedAt, setUpdatedAt] = useState(null)
@@ -219,7 +219,7 @@ const UsuarioForm = (props) => {
                 id="demo-select-small"
                 label="Area"
                 value={fkPerfil}>
-                <MenuItem value={null}>
+                <MenuItem value="">
                   <em>Nenhum</em>
                 </MenuItem>
                 {perfil.map((item, index) => <MenuItem key={index} value={item.id} onClick={() => setFkPerfil(item.id)}>{item.nome}</MenuItem>)}
@@ -248,9 +248,9 @@ const UsuarioForm = (props) => {
                   id="demo-select-small"
                   label="Unidade"
                   value={fkUnidade}>
-                  <MenuItem value={null} onClick={() => {
-                    setFkUnidade(null)
-                    setFkArea(null)
+                  <MenuItem value="" onClick={() => {
+                    setFkUnidade("")
+                    setFkArea("")
                   }}>
                     <em>Nenhum</em>
                   </MenuItem>
@@ -270,7 +270,7 @@ const UsuarioForm = (props) => {
                   id="demo-select-small"
                   label="Area"
                   value={fkArea}>
-                  <MenuItem value={null} onClick={() => setFkArea(null)}>
+                  <MenuItem value="" onClick={() => setFkArea("")}>
                     <em>Nenhum</em>
                   </MenuItem>
                   {area.map((item, index) => <MenuItem key={index} value={item.id} onClick={() => setFkArea(item.id)}>{item.nome}</MenuItem>)}

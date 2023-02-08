@@ -1,8 +1,8 @@
 
 'use strict'
 
-const bcrypt = require('bcrypt')
-const { uuid } = require('uuidv4')
+// const bcrypt = require('bcrypt')
+// const { uuid } = require('uuidv4')
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -17,26 +17,28 @@ module.exports = {
      * }], {});
     */
 
-    const perfils = await queryInterface.sequelize.query('select * from perfil where nome = \'Administrador\'')
-    const perfilRows = perfils[0]
+    // const perfils = await queryInterface.sequelize.query('select * from perfil where nome = \'Administrador\'')
+    // const perfilRows = perfils[0]
 
-    const areas = await queryInterface.sequelize.query('select * from area where nome = \'Sistemas - Desenvolvimento\'')
+    // const areas = await queryInterface.sequelize.query('select * from area where nome = \'Sistemas - Desenvolvimento\'')
 
-    await queryInterface.bulkInsert('usuario', [{
-      id: uuid(),
-      nome: 'Diego Alisson Monteiro',
-      email: 'diegoalisson@pe.senac.br',
-      passwordHash: await bcrypt.hash('gti@2021', 8),
-      telefone: '34132053',
-      chapa: '15385-F1',
-      demandante: true,
-      fkPerfil: perfilRows[0].id,
-      fkArea: areas[0][0].id,
-      validado: true,
-      ativo: true,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    }], {})
+    await queryInterface.bulkInsert('usuario', [
+    //   {
+    //   id: uuid(),
+    //   nome: 'Diego Alisson Monteiro',
+    //   email: 'diegoalisson@pe.senac.br',
+    //   passwordHash: await bcrypt.hash('gti@2021', 8),
+    //   telefone: '34132053',
+    //   chapa: '15385-F1',
+    //   demandante: true,
+    //   fkPerfil: perfilRows[0].id,
+    //   fkArea: areas[0][0].id,
+    //   validado: true,
+    //   ativo: true,
+    //   createdAt: new Date(),
+    //   updatedAt: new Date()
+    // }
+    ], {})
   },
 
   async down (queryInterface, Sequelize) {

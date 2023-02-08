@@ -11,6 +11,8 @@ import NotificationsIcon from '@mui/icons-material/Notifications'
 import AccountCircle from '@mui/icons-material/AccountCircle'
 import ContactMailIcon from '@mui/icons-material/ContactMail';
 import PhonelinkSetupIcon from '@mui/icons-material/PhonelinkSetup';
+import HomeWorkIcon from '@mui/icons-material/HomeWork';
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 
 import CssBaseline from '@mui/material/CssBaseline'
 import Toolbar from './components/toolbar'
@@ -29,9 +31,12 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import MailIcon from '@mui/icons-material/Mail';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
+import AttachEmailIcon from '@mui/icons-material/AttachEmail';
+import PeopleIcon from '@mui/icons-material/People';
 import UsuarioForm from "./pages/usuario-form";
 
 import isAuthenticated from './utils/isAuthenticated'
+import ConfiguracaoForm from "./pages/configuracao-form";
 const getCookie = require("./utils/getCookie")
 
 const MasterPageContainer = styled.div`
@@ -270,17 +275,50 @@ const Masterpage = (props) => {
             <ListItem disablePadding>
               <ListItemButton>
                 <ListItemIcon>
-                  <PhonelinkSetupIcon />
+                  <PeopleIcon />
                 </ListItemIcon>
-                <ListItemText primary='Configuração' />
+                <ListItemText primary='Equipe' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/usuario`} />
               </ListItemButton>
             </ListItem>
+            <Divider />
+            <ListItem disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  <PhonelinkSetupIcon />
+                </ListItemIcon>
+                <ListItemText primary='Configuração' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/configuracao`} />
+              </ListItemButton>
+            </ListItem>
+            {/* <ListItem disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  <AttachEmailIcon />
+                </ListItemIcon>
+                <ListItemText primary='Emails' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/emails`} />
+              </ListItemButton>
+            </ListItem> */}
             <ListItem disablePadding>
               <ListItemButton>
                 <ListItemIcon>
                   <ContactMailIcon />
                 </ListItemIcon>
                 <ListItemText primary='Usuário' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/usuario`} />
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  <HomeWorkIcon />
+                </ListItemIcon>
+                <ListItemText primary='Unidade' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/unidade`} />
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  <AccountBalanceIcon />
+                </ListItemIcon>
+                <ListItemText primary='Área' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/area`} />
               </ListItemButton>
             </ListItem>
           </List>
@@ -302,6 +340,12 @@ const Masterpage = (props) => {
             render={(props) => <UsuarioForm {...props} logged={logged} />}
           />
           */}
+
+          <Route
+            exact
+            path="/configuracao"
+            render={(props) => <ConfiguracaoForm {...props} logged={logged} />}
+          />
 
           <Route
             exact

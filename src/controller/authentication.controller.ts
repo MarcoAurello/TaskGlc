@@ -13,10 +13,10 @@ class AuthenticationController {
       const configuracao = await ConfiguracaoGlobal.findOne()
 
       const config = {
-        url: 'ldap://10.9.8.16',
-        baseDN: 'drpe',
-        username: 'diegoalisson@pe.senac.br',
-        password: 'gti@2021'
+        url: configuracao?.urlAd,
+        baseDN: configuracao?.baseDN,
+        username: configuracao?.usernameAd,
+        password: configuracao?.passwordAd
       }
 
       const ad = new ActivityDirectory(config)
@@ -49,7 +49,7 @@ class AuthenticationController {
           }
         })
       } else {
-        const registro = await Usuario.findOne({ where: { email } })
+        const registro = await Usuario.findOne({ where: { email, ativo: true } })
 
         if (!registro) {
           return res.status(401).json({ message: 'Não foi possível localizar o usuário.' })

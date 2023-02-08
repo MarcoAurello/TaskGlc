@@ -34,6 +34,10 @@ class RouterMiddleware {
     return [
       async (req, res, next) => {
         try {
+          if (!req.usuario.validado) {
+            return res.status(401).json({ message: 'Você não possui permissão para acessar este recurso.' })
+          }
+
           if (req.usuario.Perfil) {
             if (!perfis.includes(req.usuario.Perfil.nome)) {
               return res.status(401).json({ message: 'Você não possui permissão para acessar este recurso.' })
