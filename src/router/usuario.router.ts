@@ -18,7 +18,8 @@ class UsuarioRouter {
     this.router.get('/', routerMiddleware.role([PerfilUtils.Administrador]), controller.all)
     this.router.post('/', controller.create)
     this.router.get('/:id', routerMiddleware.role([PerfilUtils.Administrador]), controller.find)
-    this.router.post('/:id/edit', controller.update)
+    this.router.post('/:id/edit', routerMiddleware.role([PerfilUtils.Administrador]), controller.update)
+    this.router.post('/edit/primeiroacesso/', controller.updatePrimeiroAcesso)
     this.router.post('/:id/delete', controller.delete)
   }
 }

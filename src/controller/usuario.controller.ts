@@ -104,6 +104,65 @@ class UsuarioController implements IController {
     }
   }
 
+  async updatePrimeiroAcesso (req: any, res: Response, next: NextFunction): Promise<any> {
+    try {
+      const {
+        nome,
+        telefone,
+        chapa,
+        fkPerfil,
+        fkUnidade,
+        fkArea
+      } = req.body
+
+      if (!nome) {
+        return res.status(401).json({ message: 'O campo nome deve ser preenchido corretamente.' })
+      }
+
+      if (!chapa) {
+        return res.status(401).json({ message: 'O campo chapa deve ser preenchido corretamente.' })
+      }
+
+      if (!telefone) {
+        return res.status(401).json({ message: 'O campo telefone deve ser preenchido corretamente.' })
+      }
+
+      if (!fkPerfil) {
+        return res.status(401).json({ message: 'O campo perfil deve ser preenchido corretamente.' })
+      }
+
+      if (!fkUnidade) {
+        return res.status(401).json({ message: 'O campo unidade deve ser preenchido corretamente.' })
+      }
+
+      if (!fkArea) {
+        return res.status(401).json({ message: 'O campo área deve ser preenchido corretamente.' })
+      }
+
+      await Usuario.update({
+        nome,
+        telefone,
+        chapa,
+        fkPerfil,
+        fkUnidade,
+        fkArea,
+        primeiroLogin: false
+      }, {
+        where: {
+          id: req.usuario.id
+        },
+        individualHooks: false
+      })
+
+      const registro = await Usuario.findOne({ where: { id: req.usuario.id } })
+
+      res.status(200).json({ data: registro, message: 'Alteração realizada com sucesso.' })
+    } catch (err) {
+      console.log(err)
+      res.status(401).json({ message: err.errors[0].message })
+    }
+  }
+
   async delete (req: Request, res: Response, next: NextFunction): Promise<any> {
     throw new Error('Method not implemented.')
   }

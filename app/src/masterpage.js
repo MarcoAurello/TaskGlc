@@ -14,7 +14,7 @@ import PhonelinkSetupIcon from '@mui/icons-material/PhonelinkSetup';
 
 import CssBaseline from '@mui/material/CssBaseline'
 import Toolbar from './components/toolbar'
-import { Badge, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Menu, MenuItem, TextField } from "@mui/material";
+import { Badge, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, IconButton, InputLabel, Menu, MenuItem, Select, TextField } from "@mui/material";
 
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -32,6 +32,7 @@ import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import UsuarioForm from "./pages/usuario-form";
 
 import isAuthenticated from './utils/isAuthenticated'
+const getCookie = require("./utils/getCookie")
 
 const MasterPageContainer = styled.div`
   position: 'absolute'; 
@@ -50,46 +51,148 @@ const Masterpage = (props) => {
   const [openAccountMenu, setOpenAccountMenu] = useState(false)
   const [anchorElAccountMenu, setAnchorElAccountMenu] = useState(null)
   const [primeiroLogin, setPrimeiroLogin] = useState(false)
+
+  const [openMessageDialog, setOpenMessageDialog] = useState(false)
+  const [message, setMessage] = useState('')
   const [openDialogPrimeiroAcesso, setOpenDialogPrimeiroAcesso] = useState(false)
+  
+  const [nome, setNome] = useState('')
+  const [telefone, setTelefone] = useState('')
+  const [chapa, setChapa] = useState('')
+  const [fkPerfil, setFkPerfil] = useState(null)  
+  const [fkUnidade, setFkUnidade] = useState(null)
+  const [fkArea, setFkArea] = useState(null)
+
+
   const [perfil, setPerfil] = useState([])
   const [unidade, setUnidade] = useState([])
   const [area, setArea] = useState([])
+  const [openLoadingDialog, setOpenLoadingDialog] = useState(false)
 
-  // useEffect(() => {
-  //   isAuthenticated().then(_ => {
-  //     setPrimeiroLogin(_.data.data.primeiroLogin)
-  //     setOpenDialogPrimeiroAcesso(_.data.data.primeiroLogin)
-  //   })
-  // }, []);
+  useEffect(() => {
+    isAuthenticated().then(_ => {
+      setPrimeiroLogin(_.data.data.primeiroLogin)
+      setOpenDialogPrimeiroAcesso(_.data.data.primeiroLogin)
+    })
+  }, []);
 
 
-  // useEffect(() => {
-  //   function carregarPerfil() {
-  //     setOpenLoadingDialog(true)
-  //     const token = getCookie('_token_task_manager')
-  //     const params = {
-  //       headers: {
-  //         'Authorization': `Bearer ${token}`
-  //       }
-  //     }
-  //     fetch(`${process.env.REACT_APP_DOMAIN_API}/api/perfil/`, params)
-  //       .then(response => {
-  //         const { status } = response
-  //         response.json().then(data => {
-  //           if(status === 401) {  
-  //           } else if(status === 200) {
-  //             setPerfil(data.data)
-  //             // carregarUnidade()
-  //           }
-  //         }).catch(err => setOpenLoadingDialog(false))
-  //       })
-  //   }
+  useEffect(() => {
+    function carregarPerfil() {
+      setOpenLoadingDialog(true)
+      const token = getCookie('_token_task_manager')
+      const params = {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      }
+      fetch(`${process.env.REACT_APP_DOMAIN_API}/api/perfil/`, params)
+        .then(response => {
+          const { status } = response
+          response.json().then(data => {
+            if(status === 401) {  
+            } else if(status === 200) {
+              setPerfil(data.data)
+              carregarUnidade()
+            }
+          }).catch(err => setOpenLoadingDialog(false))
+        })
+    }
 
-  //   if(primeiroLogin) {
-  //     carregarPerfil()
-  //   }
 
-  // }, [primeiroLogin])
+    function carregarUnidade() {
+      // setOpenLoadingDialog(true)
+      const token = getCookie('_token_task_manager')
+      const params = {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      }
+      fetch(`${process.env.REACT_APP_DOMAIN_API}/api/unidade/`, params)
+        .then(response => {
+          const { status } = response
+          response.json().then(data => {
+            setOpenLoadingDialog(false)
+            if(status === 401) {  
+            } else if(status === 200) {
+              setUnidade(data.data)
+              setOpenLoadingDialog(false)
+            }
+          }).catch(err => setOpenLoadingDialog(true))
+        })
+    }
+
+    if(primeiroLogin) {
+      carregarPerfil()
+    }
+
+  }, [primeiroLogin])
+
+
+  useEffect(() => {
+    function carregarArea() {
+      setOpenLoadingDialog(true)
+      const token = getCookie('_token_task_manager')
+      const params = {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      }
+      fetch(`${process.env.REACT_APP_DOMAIN_API}/api/area/?fkUnidade=${fkUnidade}`, params)
+        .then(response => {
+          const { status } = response
+          response.json().then(data => {
+            setOpenLoadingDialog(false)
+            if(status === 401) {  
+            } else if(status === 200) {
+              setArea(data.data)
+            }
+          }).catch(err => setOpenLoadingDialog(false))
+        })
+    }
+
+    if(fkUnidade) {
+      carregarArea()
+    }
+  }, [fkUnidade])
+
+
+  const salvarDadosPrimeiroAcesso = () => {
+    const token = getCookie('_token_task_manager')
+    const params = {
+      method: 'POST', 
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ 
+        nome,
+        telefone,
+        chapa,
+        fkPerfil,
+        fkUnidade,
+        fkArea,
+      }) 
+    }
+
+    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/usuario/edit/primeiroacesso/`, params)
+      .then(response => {
+        const { status } = response
+        response.json().then(data => {
+          setOpenLoadingDialog(false)
+          if(status === 401) {  
+            setMessage(data.message)
+            setOpenMessageDialog(true)
+          } else if(status === 200) {
+            // alert(JSON.stringify(data.data))
+            setMessage(data.message)
+            setOpenMessageDialog(true)
+            setOpenDialogPrimeiroAcesso(false)
+            // setArea(data.data)
+          }
+        }).catch(err => setOpenLoadingDialog(true))
+      })
+  }
 
   const actions = [
     <IconButton size="large" aria-label="show 17 new notifications" color="inherit">
@@ -234,14 +337,17 @@ const Masterpage = (props) => {
           <DialogTitle>Primeiro Acesso</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Para a correta utilização do sistema é necessário o preenchimento dos campos abaixo. Estas informações passará pela aprovação do gestor imediato.
+              Para a correta utilização do sistema é necessário o preenchimento dos campos abaixo. Estas informações passaram pela aprovação do gestor imediato.
             </DialogContentText>
             <TextField
               margin="dense"
               label="Nome"
-              type="email"
+              type="text"
               fullWidth
               variant="standard"
+              size="small"              
+              value={nome}
+              onChange={e => setNome(e.target.value)}
             />
             <TextField
               margin="dense"
@@ -249,6 +355,9 @@ const Masterpage = (props) => {
               type="text"
               fullWidth
               variant="standard"
+              size="small"
+              value={chapa}
+              onChange={e => setChapa(e.target.value)}
             />
             <TextField
               margin="dense"
@@ -256,10 +365,77 @@ const Masterpage = (props) => {
               type="text"
               fullWidth
               variant="standard"
+              size="small"
+              value={telefone}
+              onChange={e => setTelefone(e.target.value)}
             />
+            <FormControl fullWidth size="small" variant="standard" style={{marginTop: 8}}>
+              <InputLabel id="label-small-perfil">Perfil</InputLabel>
+              <Select
+                fullWidth
+                labelId="label-small-perfil"
+                label="Area"
+                value={fkPerfil}>
+                <MenuItem value={null} onClick={() => setFkPerfil(null)}>
+                  <em>Nenhum</em>
+                </MenuItem>
+                {perfil.map((item, index) => <MenuItem key={index} value={item.id} onClick={() => setFkPerfil(item.id)}>{item.nome}</MenuItem>)}
+              </Select>
+            </FormControl>
+            <FormControl fullWidth size="small" variant="standard" style={{marginTop: 16}}>
+              <InputLabel id="label-small-unidade">Unidade</InputLabel>
+              <Select
+                fullWidth
+                labelId="label-small-unidade"
+                label="Area"
+                value={fkUnidade}>
+                <MenuItem value={null} onClick={() => setFkUnidade(null)}>
+                  <em>Nenhum</em>
+                </MenuItem>
+                {unidade.map((item, index) => <MenuItem key={index} value={item.id} onClick={() => setFkUnidade(item.id)}>{item.nome}</MenuItem>)}
+              </Select>
+            </FormControl>
+            <FormControl fullWidth size="small" variant="standard" style={{marginTop: 16}}>
+              <InputLabel id="label-small-unidade">Área</InputLabel>
+              <Select
+                fullWidth
+                labelId="label-small-unidade"
+                label="Area"
+                value={fkArea}>
+                <MenuItem value={null} onClick={() => setFkArea(null)}>
+                  <em>Nenhum</em>
+                </MenuItem>
+                {area.map((item, index) => <MenuItem key={index} value={item.id} onClick={() => setFkArea(item.id)}>{item.nome}</MenuItem>)}
+              </Select>
+            </FormControl>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => setOpenDialogPrimeiroAcesso(false)}>Salvar</Button>
+            <Button onClick={salvarDadosPrimeiroAcesso}>Salvar</Button>
+          </DialogActions>
+        </Dialog>
+
+        <Dialog open={openLoadingDialog}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: 120, height: 120 }}>
+            <CircularProgress />
+          </div>
+        </Dialog>
+
+        <Dialog
+          open={openMessageDialog}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description">
+          <DialogTitle id="alert-dialog-title">
+            Atenção
+          </DialogTitle>
+          <DialogContent style={{width: 400}}>
+            <DialogContentText id="alert-dialog-description">
+              {message}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpenMessageDialog(false)}>
+              OK
+            </Button>
           </DialogActions>
         </Dialog>
       </Content>      
