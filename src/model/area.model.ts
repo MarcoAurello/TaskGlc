@@ -37,7 +37,15 @@ Area.init({
   },
   fkUnidade: {
     type: DataTypes.UUID,
-    allowNull: false
+    allowNull: false,
+    validate: {
+      notNull: {
+        msg: 'O campo unidade deve ser preenchido corretamente.'
+      },
+      notEmpty: {
+        msg: 'O campo unidade deve ser preenchido corretamente.'
+      }
+    }
   }
 }, {
   sequelize: connection,

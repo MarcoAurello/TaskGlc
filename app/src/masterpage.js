@@ -37,6 +37,10 @@ import UsuarioForm from "./pages/usuario-form";
 
 import isAuthenticated from './utils/isAuthenticated'
 import ConfiguracaoForm from "./pages/configuracao-form";
+import Unidade from "./pages/unidade";
+import UnidadeForm from "./pages/unidade-form";
+import Area from "./pages/area";
+import AreaForm from "./pages/area-form";
 const getCookie = require("./utils/getCookie")
 
 const MasterPageContainer = styled.div`
@@ -346,6 +350,45 @@ const Masterpage = (props) => {
             path="/configuracao"
             render={(props) => <ConfiguracaoForm {...props} logged={logged} />}
           />
+
+
+          <Route
+            exact
+            path="/unidade"
+            render={(props) => <Unidade {...props} logged={logged} />}
+          />
+
+          <Route
+            exact
+            path="/unidade/:id/edit"
+            render={(props) => <UnidadeForm {...props} logged={logged} />}
+          />
+
+          <Route
+            exact
+            path="/unidade/cadastro"
+            render={(props) => <UnidadeForm {...props} logged={logged} />}
+          />
+
+
+          <Route
+            exact
+            path="/area"
+            render={(props) => <Area {...props} logged={logged} />}
+          />
+
+          <Route
+            exact
+            path="/area/:id/edit"
+            render={(props) => <AreaForm {...props} logged={logged} />}
+          />
+
+          <Route
+            exact
+            path="/area/cadastro"
+            render={(props) => <AreaForm {...props} logged={logged} />}
+          />
+
 
           <Route
             exact
