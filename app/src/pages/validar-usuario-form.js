@@ -17,7 +17,7 @@ const PageContainer = styled.div`
   box-shadow: 0px 0px 20px -18px #424242;
 `
 
-const UsuarioForm = (props) => {
+const ValidarUsuarioForm = (props) => {
   const { id } = props.match.params;
   const [openLoadingDialog, setOpenLoadingDialog] = useState(false)
   const [openMessageDialog, setOpenMessageDialog] = useState(false)
@@ -180,7 +180,7 @@ const UsuarioForm = (props) => {
       }) 
     }
 
-    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/usuario/${id}/edit/`, params)
+    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/usuario/${id}/validar/`, params)
       .then(response => {
         const { status } = response
         response.json().then(data => {
@@ -201,7 +201,7 @@ const UsuarioForm = (props) => {
   return (
     <PageContainer>
       <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 16}}>
-        <h3>Cadastro de Usuários</h3>
+        <h3>Validação de Usuário</h3>
         <div style={{flex: 1}}></div>
       </div>
       <div style={{display: 'flex', flexDirection: 'column'}}>
@@ -281,12 +281,12 @@ const UsuarioForm = (props) => {
           <div style={{display: 'flex', flexDirection: 'row', marginBottom: 16}}>
             <FormControlLabel control={<Switch checked={demandante} onChange={e => setDemandante(e.target.checked)} />} label="Demandante" />
             <FormControlLabel control={<Switch checked={ativo} />} label="Ativo" onChange={e => setAtivo(e.target.checked)} />
-            <FormControlLabel control={<Switch checked={primeiroLogin} />} label="Primeiro Login" onChange={e => setPrimeiroLogin(e.target.checked)} />
+            <FormControlLabel control={<Switch disabled checked={primeiroLogin} />} label="Primeiro Login" onChange={e => setPrimeiroLogin(e.target.checked)} />
           </div>
           <div style={{flex: 1, display: 'flex', flexDirection: 'row'}}>
-            <Button variant="outlined" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/usuario/`}>Voltar</Button>
+            <Button variant="outlined" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/home/`}>Voltar</Button>
             <div style={{flex: 1}}></div>
-            <Button variant="contained" onClick={onAlterar}>Alterar</Button>
+            <Button variant="contained" onClick={onAlterar}>Validar</Button>
           </div>
         </FormGroup>
       </div>
@@ -319,4 +319,4 @@ const UsuarioForm = (props) => {
   );
 };
 
-export default UsuarioForm;
+export default ValidarUsuarioForm;
