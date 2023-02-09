@@ -1,13 +1,9 @@
 import { Request, Response, NextFunction } from 'express'
 import { IController } from './controller.inteface'
 
-class StatusApplication implements IController {
+class ClassificacaoController implements IController {
   async all (req: Request, res: Response, next: NextFunction): Promise<any> {
-    try {
-      res.status(200).json({ message: 'OK' })
-    } catch (err) {
-      res.status(401).json({ message: '' })
-    }
+    throw new Error('Method not implemented.')
   }
 
   async create (req: Request, res: Response, next: NextFunction): Promise<any> {
@@ -31,4 +27,4 @@ class StatusApplication implements IController {
   }
 }
 
-export default new StatusApplication()
+export default new ClassificacaoController()
