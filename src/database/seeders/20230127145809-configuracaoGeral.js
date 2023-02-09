@@ -16,7 +16,7 @@ module.exports = {
     */
     await queryInterface.bulkInsert('configuracaoGeral', [{
       id: uuid(),
-      autenticacaoAd: true,
+      autenticacaoAd: false,
       email: 'semresposta@pe.senac.br',
       password: 'Gti22122022',
       host: 'smtp.office365.com',

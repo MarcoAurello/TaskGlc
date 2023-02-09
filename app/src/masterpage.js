@@ -14,6 +14,7 @@ import PhonelinkSetupIcon from '@mui/icons-material/PhonelinkSetup';
 import HomeWorkIcon from '@mui/icons-material/HomeWork';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 
 import CssBaseline from '@mui/material/CssBaseline'
 import Toolbar from './components/toolbar'
@@ -42,7 +43,14 @@ import Unidade from "./pages/unidade";
 import UnidadeForm from "./pages/unidade-form";
 import Area from "./pages/area";
 import AreaForm from "./pages/area-form";
+import PerfilUtils from "./utils/perfil.utils";
+import UserNotificationItem from "./components/user-notification-item";
+import Equipe from "./pages/equipe";
+import ValidarUsuarioForm from "./pages/validar-usuario-form";
+
 const getCookie = require("./utils/getCookie")
+
+
 
 const MasterPageContainer = styled.div`
   position: 'absolute'; 
@@ -56,10 +64,12 @@ const MasterPageContainer = styled.div`
 `;
 
 const Masterpage = (props) => {
-  const { logged } = props;
-  const [openDrawer, setOpenDrawer] = useState(false)
+  // const { logged } = props;
+  const [openDrawer, setOpenDrawer] = useState(true)
   const [openAccountMenu, setOpenAccountMenu] = useState(false)
   const [anchorElAccountMenu, setAnchorElAccountMenu] = useState(null)
+  const [openUserNotification, setOpenUserNotification] = useState(false)
+  const [anchorElUserNotification, setAnchorElUserNotification] = useState(null)
   const [primeiroLogin, setPrimeiroLogin] = useState(false)
 
   const [openMessageDialog, setOpenMessageDialog] = useState(false)
@@ -78,9 +88,14 @@ const Masterpage = (props) => {
   const [unidade, setUnidade] = useState([])
   const [area, setArea] = useState([])
   const [openLoadingDialog, setOpenLoadingDialog] = useState(false)
+  const [logged, setLogged] = useState(null)
+
+
+  const [usuariosNaoValidados, setUsuariosNaoValidados] = useState([])
 
   useEffect(() => {
     isAuthenticated().then(_ => {
+      setLogged(_.data.data)
       setPrimeiroLogin(_.data.data.primeiroLogin)
       setOpenDialogPrimeiroAcesso(_.data.data.primeiroLogin)
     })
@@ -167,6 +182,34 @@ const Masterpage = (props) => {
   }, [fkUnidade])
 
 
+  useEffect(() => {
+    function carregarUsuariosNaoValidados() {
+      const token = getCookie('_token_task_manager')
+      const params = {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      }
+
+      fetch(`${process.env.REACT_APP_DOMAIN_API}/api/usuario/naovalidado/`, params)
+        .then(response => {
+          const { status } = response
+          response.json().then(data => {
+            if(status === 401) {  
+            } else if(status === 200) {
+              setUsuariosNaoValidados(data.data)
+            }
+          })
+        })
+    }
+
+
+    if(logged && logged.Perfil && (logged.Perfil.nome === PerfilUtils.Gerente || logged.Perfil.nome === PerfilUtils.Coordenador)) {
+      setInterval(carregarUsuariosNaoValidados, 1000)
+    }
+  }, [logged])
+
+
   const salvarDadosPrimeiroAcesso = () => {
     const token = getCookie('_token_task_manager')
     const params = {
@@ -206,15 +249,19 @@ const Masterpage = (props) => {
 
   const actions = [
     <Tooltip title="Aprovação Equipe" placement="bottom">
-      <IconButton size="large" aria-label="show 17 new notifications" color="inherit">
-        <Badge badgeContent={17} color="error">
+      <IconButton size="large" color="inherit" id="positioned-user-notification-icon-button"
+        onClick={(e) => {
+          setAnchorElUserNotification(e.currentTarget)
+          setOpenUserNotification(true)
+        }}>
+        <Badge badgeContent={usuariosNaoValidados.length} color="error">
           <ManageAccountsIcon />
         </Badge>
       </IconButton>
     </Tooltip>,
     <Tooltip title="Nova Atividade" placement="bottom">
-      <IconButton size="large" aria-label="show 17 new notifications" color="inherit">
-        <Badge badgeContent={17} color="error">
+      <IconButton size="large" color="inherit">
+        <Badge badgeContent={0} color="error">
           <NotificationsIcon />
         </Badge>
       </IconButton>
@@ -271,6 +318,37 @@ const Masterpage = (props) => {
     </Menu>
   );
 
+
+  const renderUserNotification = (
+    <Menu
+      anchorEl={anchorElUserNotification}
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'right',
+      }}
+      id="positioned-use-notification"
+      keepMounted
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      open={openUserNotification}
+      onClose={() => setOpenUserNotification(false)}
+    >
+      {usuariosNaoValidados.map((item, index) => <UserNotificationItem  key={index} item={item} />)}
+    </Menu>
+  );
+
+  useEffect(() => {
+    const closeDrawerAfterAFewSecounds = () => {
+      setTimeout(() => {
+        setOpenDrawer(false)
+      }, 200)
+    }
+
+    closeDrawerAfterAFewSecounds()
+  }, [])
+
   return (
     <MasterPageContainer>
       <Drawer
@@ -283,7 +361,15 @@ const Masterpage = (props) => {
                 <ListItemIcon>
                   <PlaylistAddCheckIcon />
                 </ListItemIcon>
-                <ListItemText primary='Atividades' />
+                <ListItemText primary='Minhas Atividades' />
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/home/`}>
+                <ListItemIcon>
+                  <FormatListNumberedIcon />
+                </ListItemIcon>
+                <ListItemText primary='Chamados Abertos' />
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
@@ -291,42 +377,47 @@ const Masterpage = (props) => {
                 <ListItemIcon>
                   <PeopleIcon />
                 </ListItemIcon>
-                <ListItemText primary='Equipe' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/usuario`} />
+                <ListItemText primary='Equipe' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/equipe`} />
               </ListItemButton>
             </ListItem>
-            <Divider />
-            <ListItem disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  <PhonelinkSetupIcon />
-                </ListItemIcon>
-                <ListItemText primary='Configuração' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/configuracao`} />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  <ContactMailIcon />
-                </ListItemIcon>
-                <ListItemText primary='Usuário' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/usuario`} />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  <HomeWorkIcon />
-                </ListItemIcon>
-                <ListItemText primary='Unidade' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/unidade`} />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  <AccountBalanceIcon />
-                </ListItemIcon>
-                <ListItemText primary='Área' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/area`} />
-              </ListItemButton>
-            </ListItem>
+            {
+              logged && logged.validado && logged.Perfil.nome === PerfilUtils.Administrador ?
+              <>
+                <Divider />
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <PhonelinkSetupIcon />
+                    </ListItemIcon>
+                    <ListItemText primary='Configuração' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/configuracao`} />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <ContactMailIcon />
+                    </ListItemIcon>
+                    <ListItemText primary='Usuário' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/usuario`} />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <HomeWorkIcon />
+                    </ListItemIcon>
+                    <ListItemText primary='Unidade' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/unidade`} />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <AccountBalanceIcon />
+                    </ListItemIcon>
+                    <ListItemText primary='Área' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/area`} />
+                  </ListItemButton>
+                </ListItem>
+              </> : ''
+            }
           </List>
         </Box>
       </Drawer>
@@ -336,6 +427,7 @@ const Masterpage = (props) => {
         title='SENAC - Task Manager'
         actions={actions} />
       {renderMenu}
+      {renderUserNotification}
       <Content>
         <Switch>
           {/* Usuarios */}
@@ -391,6 +483,19 @@ const Masterpage = (props) => {
             render={(props) => <AreaForm {...props} logged={logged} />}
           />
 
+
+          <Route
+            exact
+            path="/equipe"
+            render={(props) => <Equipe {...props} logged={logged} />}
+          />
+
+
+          <Route
+            exact
+            path="/validar/:id"
+            render={(props) => <ValidarUsuarioForm {...props} logged={logged} />}
+          />
 
           <Route
             exact
