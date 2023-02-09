@@ -47,6 +47,7 @@ import PerfilUtils from "./utils/perfil.utils";
 import UserNotificationItem from "./components/user-notification-item";
 import Equipe from "./pages/equipe";
 import ValidarUsuarioForm from "./pages/validar-usuario-form";
+import AtividadeForm from "./pages/chamado-form";
 
 const getCookie = require("./utils/getCookie")
 
@@ -443,6 +444,18 @@ const Masterpage = (props) => {
             exact
             path="/configuracao"
             render={(props) => <ConfiguracaoForm {...props} logged={logged} />}
+          />
+
+          <Route
+            exact
+            path="/atividade/:id/edit"
+            render={(props) => <AtividadeForm {...props} logged={logged} />}
+          />
+
+          <Route
+            exact
+            path="/atividade/cadastro"
+            render={(props) => <AtividadeForm {...props} logged={logged} />}
           />
 
 

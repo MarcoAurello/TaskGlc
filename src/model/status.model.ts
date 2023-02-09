@@ -5,6 +5,7 @@ import connection from './connection'
 class Status extends Model {
   public id!: string
 
+  public nome!: string
 
   public descricao!: string
 
@@ -19,7 +20,11 @@ Status.init({
     allowNull: false,
     primaryKey: true
   },
-
+  nome: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true
+  },
   descricao: {
     type: DataTypes.STRING,
     allowNull: true

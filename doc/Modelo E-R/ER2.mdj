@@ -1182,20 +1182,50 @@
 													"top": 391,
 													"width": 213.5908203125,
 													"height": 13
+												},
+												{
+													"_type": "ERDColumnView",
+													"_id": "AAAAAAGGN7pS2OFKi2E=",
+													"_parent": {
+														"$ref": "AAAAAAGGNvQFSt8fscI="
+													},
+													"model": {
+														"$ref": "AAAAAAGGN7pShuFHs1k="
+													},
+													"font": "Arial;13;0",
+													"left": 749,
+													"top": 406,
+													"width": 213.5908203125,
+													"height": 13
+												},
+												{
+													"_type": "ERDColumnView",
+													"_id": "AAAAAAGGN7sj3+FSib8=",
+													"_parent": {
+														"$ref": "AAAAAAGGNvQFSt8fscI="
+													},
+													"model": {
+														"$ref": "AAAAAAGGN7sjqeFPjhM="
+													},
+													"font": "Arial;13;0",
+													"left": 749,
+													"top": 421,
+													"width": 213.5908203125,
+													"height": 13
 												}
 											],
 											"font": "Arial;13;0",
 											"left": 744,
 											"top": 311,
 											"width": 223.5908203125,
-											"height": 98
+											"height": 128
 										}
 									],
 									"font": "Arial;13;0",
 									"left": 744,
 									"top": 288,
 									"width": 223.5908203125,
-									"height": 121,
+									"height": 151,
 									"nameLabel": {
 										"$ref": "AAAAAAGGNvQFSt8er4Q="
 									},
@@ -3206,7 +3236,7 @@
 									"_parent": {
 										"$ref": "AAAAAAGGNvQFRt8bs74="
 									},
-									"name": "fkUnidade",
+									"name": "fkArea",
 									"type": "uuid",
 									"length": 0
 								},
@@ -3238,6 +3268,26 @@
 									},
 									"name": "fkUsuarioSolicitante",
 									"type": "uuid",
+									"length": 0
+								},
+								{
+									"_type": "ERDColumn",
+									"_id": "AAAAAAGGN7pShuFHs1k=",
+									"_parent": {
+										"$ref": "AAAAAAGGNvQFRt8bs74="
+									},
+									"name": "tempoEstimado",
+									"type": "int",
+									"length": 0
+								},
+								{
+									"_type": "ERDColumn",
+									"_id": "AAAAAAGGN7sjqeFPjhM=",
+									"_parent": {
+										"$ref": "AAAAAAGGNvQFRt8bs74="
+									},
+									"name": "tempoExecutado",
+									"type": "int",
 									"length": 0
 								}
 							]

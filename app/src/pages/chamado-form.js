@@ -17,7 +17,7 @@ const PageContainer = styled.div`
   box-shadow: 0px 0px 20px -18px #424242;
 `
 
-const AreaForm = (props) => {
+const AtividadeForm = (props) => {
   const { id } = props.match.params;
   const [openLoadingDialog, setOpenLoadingDialog] = useState(false)
   const [openMessageDialog, setOpenMessageDialog] = useState(false)
@@ -154,10 +154,13 @@ const AreaForm = (props) => {
   return (
     <PageContainer>
       <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 16}}>
-        <h3>Cadastro de Unidades</h3>
+        <h3>Cadastro de Atividade</h3>
         <div style={{flex: 1}}></div>
       </div>
       <div style={{display: 'flex', flexDirection: 'column'}}>
+        {id ? <div style={{flex: 1, marginBottom: 16}}>
+          <TextField size="small" fullWidth label="Protocolo" disabled variant="outlined" value={nome}  onChange={e => setNome(e.target.value)}/>
+        </div> : ''}
         <FormGroup>
           <div style={{flex: 1, marginBottom: 16}}>
             <FormControl fullWidth size="small">
@@ -176,10 +179,26 @@ const AreaForm = (props) => {
             </FormControl>
           </div>
           <div style={{flex: 1, marginBottom: 16}}>
-            <TextField size="small" fullWidth label="Nome" variant="outlined" value={nome}  onChange={e => setNome(e.target.value)}/>
+            <FormControl fullWidth size="small">
+              <InputLabel id="demo-select-small">Área</InputLabel>
+              <Select
+                fullWidth
+                labelId="demo-select-small"
+                id="demo-select-small"
+                label="Unidade"
+                value={fkUnidade}>
+                <MenuItem value="" onClick={() => setFkUnidade("")}>
+                  <em>Nenhum</em>
+                </MenuItem>
+                {unidade.map((item, index) => <MenuItem key={index} value={item.id} onClick={() => setFkUnidade(item.id)}>{item.nome}</MenuItem>)}
+              </Select>
+            </FormControl>
           </div>
           <div style={{flex: 1, marginBottom: 16}}>
-            <TextField size="small" fullWidth label="Descrição" multiline rows={4} variant="outlined" value={descricao}  onChange={e => setDescricao(e.target.value)}/>
+            <TextField size="small" fullWidth label="Título" variant="outlined" value={nome}  onChange={e => setNome(e.target.value)}/>
+          </div>
+          <div style={{flex: 1, marginBottom: 16}}>
+            <TextField size="small" fullWidth label="Descrição" multiline rows={6} variant="outlined" value={descricao}  onChange={e => setDescricao(e.target.value)}/>
           </div>
           <div style={{flex: 1, display: 'flex', flexDirection: 'row'}}>
             <Button variant="outlined" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/area/`}>Voltar</Button>
@@ -217,4 +236,4 @@ const AreaForm = (props) => {
   );
 };
 
-export default AreaForm;
+export default AtividadeForm;

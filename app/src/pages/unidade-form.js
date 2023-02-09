@@ -135,7 +135,7 @@ const UnidadeForm = (props) => {
             <TextField size="small" fullWidth label="Nome" variant="outlined" value={nome}  onChange={e => setNome(e.target.value)}/>
           </div>
           <div style={{flex: 1, marginBottom: 16}}>
-            <TextField size="small" fullWidth label="Descrição" variant="outlined" value={descricao}  onChange={e => setDescricao(e.target.value)}/>
+            <TextField size="small" fullWidth label="Descrição" multiline rows={4} variant="outlined" value={descricao}  onChange={e => setDescricao(e.target.value)}/>
           </div>
           <div style={{flex: 1, display: 'flex', flexDirection: 'row'}}>
             <Button variant="outlined" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/unidade/`}>Voltar</Button>

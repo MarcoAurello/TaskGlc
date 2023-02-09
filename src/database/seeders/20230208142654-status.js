@@ -14,13 +14,13 @@ module.exports = {
      * }], {});
     */
     await queryInterface.bulkInsert('status', [
-      { id: uuid(), descricao: 'Aberto', createdAt: new Date(), updatedAt: new Date() },
-      { id: uuid(), descricao: 'Planejado para Iniciar', createdAt: new Date(), updatedAt: new Date() },
-      { id: uuid(), descricao: 'Iniciado', createdAt: new Date(), updatedAt: new Date() },
-      { id: uuid(), descricao: 'Cancelado', createdAt: new Date(), updatedAt: new Date() },
-      { id: uuid(), descricao: 'Concluido', createdAt: new Date(), updatedAt: new Date() },
-      { id: uuid(), descricao: 'Pendente', createdAt: new Date(), updatedAt: new Date() },
-      { id: uuid(), descricao: 'Parado', createdAt: new Date(), updatedAt: new Date() }
+      { id: uuid(), nome: 'Aberto', createdAt: new Date(), updatedAt: new Date() },
+      { id: uuid(), nome: 'Planejado para Iniciar', createdAt: new Date(), updatedAt: new Date() },
+      { id: uuid(), nome: 'Iniciado', createdAt: new Date(), updatedAt: new Date() },
+      { id: uuid(), nome: 'Cancelado', createdAt: new Date(), updatedAt: new Date() },
+      { id: uuid(), nome: 'Concluido', createdAt: new Date(), updatedAt: new Date() },
+      { id: uuid(), nome: 'Pendente', createdAt: new Date(), updatedAt: new Date() },
+      { id: uuid(), nome: 'Parado', createdAt: new Date(), updatedAt: new Date() }
     ], {})
   },
 
