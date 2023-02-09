@@ -10,12 +10,15 @@ import routerPerfil from './router/perfil.router'
 import routerChamado from './router/chamado.router'
 import routerConfiguracaoGlobal from './router/configuracaoGlobal.router'
 
+import protocolo from './utils/protocolo.utils'
+
 const path = require('path')
 
 class Server {
   public application!: express.Application
 
   constructor () {
+    console.log(protocolo())
     this.application = express()
     this.middlewares()
     this.routers()
