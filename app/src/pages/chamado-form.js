@@ -23,10 +23,23 @@ const AtividadeForm = (props) => {
   const [openMessageDialog, setOpenMessageDialog] = useState(false)
   const [message, setMessage] = useState('')
   
-  const [nome, setNome] = useState('')
-  const [descricao, setDescricao] = useState('')
+  const [classificacao, setClassificacao] = useState('')
+  const [protocolo, setProtocolo] = useState('')
+  const [status, setStatus] = useState('')
+  const [valueArea, setValueArea] = useState('')
+  const [valueUnidade, setValueUnidade] = useState('')
+  const [usuarioSolicitante, setUsuarioSolicitante] = useState('')
+  const [tempoEstimando, setTempoEstimado] = useState('')
+  const [createdAt, setCreatedAt] = useState('')
+
+  const [titulo, setTitulo] = useState('')
+  const [conteudo, setConteudo] = useState('')
   const [fkUnidade, setFkUnidade] = useState('')
+  const [fkArea, setFkArea] = useState('')
   const [unidade, setUnidade] = useState([])
+  const [area, setArea] = useState([])
+  const [atividade, setAtividade] = useState(null)
+  const [mensagens, setMensagens] = useState([])
 
   useEffect(() => {
     function carregarRegistro() {
@@ -37,7 +50,36 @@ const AtividadeForm = (props) => {
           'Authorization': `Bearer ${token}`
         }
       }
-      fetch(`${process.env.REACT_APP_DOMAIN_API}/api/area/${id}`, params)
+      fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/${id}`, params)
+        .then(response => {
+          const { status } = response
+          response.json().then(data => {
+            setOpenLoadingDialog(false)
+            if(status === 401) {  
+              setMessage(data.message)
+              setOpenMessageDialog(true)
+            } else if(status === 200) {
+              setClassificacao(data.data.Classificacao.nome)
+              setProtocolo(data.data.protocolo)
+              setStatus(data.data.Status.nome)
+              setValueArea(data.data.Area.nome)
+              setValueUnidade(data.data.Area.Unidade.nome)
+              setUsuarioSolicitante(data.data.Usuario.nome)
+              
+              carregarMensagem()
+            }
+          }).catch(err => setOpenLoadingDialog(false))
+        })
+    }
+
+    function carregarMensagem() {
+      const token = getCookie('_token_task_manager')
+      const params = {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      }
+      fetch(`${process.env.REACT_APP_DOMAIN_API}/api/mensagem/?fkAtividade=${id}`, params)
         .then(response => {
           const { status } = response
           response.json().then(data => {
@@ -47,9 +89,7 @@ const AtividadeForm = (props) => {
               setOpenMessageDialog(true)
             } else if(status === 200) {
               setOpenLoadingDialog(false)
-              setNome(data.data.nome)
-              setDescricao(data.data.descricao)
-              setFkUnidade(data.data.fkUnidade)
+              setMensagens(data.data)
             }
           }).catch(err => setOpenLoadingDialog(false))
         })
@@ -81,8 +121,41 @@ const AtividadeForm = (props) => {
         })
     }
     
-    carregarUnidade()
+    if(id) {
+      carregarRegistro()
+    } else {
+      carregarUnidade()
+    }    
   }, [])
+
+
+  useEffect(() => {
+    function carregarArea() {
+      // setOpenLoadingDialog(true)
+      const token = getCookie('_token_task_manager')
+      const params = {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      }
+      fetch(`${process.env.REACT_APP_DOMAIN_API}/api/area/?fkUnidade=${fkUnidade}`, params)
+        .then(response => {
+          const { status } = response
+          response.json().then(data => {
+            setOpenLoadingDialog(false)
+            if(status === 401) {  
+            } else if(status === 200) {
+              setArea(data.data)
+              setOpenLoadingDialog(false)
+            }
+          }).catch(err => setOpenLoadingDialog(true))
+        })
+    }
+    
+    if(fkUnidade) {
+      carregarArea()
+    }
+  }, [fkUnidade])
 
 
   const onSave = () => {
@@ -94,13 +167,14 @@ const AtividadeForm = (props) => {
         'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify({ 
-        nome,
-        descricao,
-        fkUnidade
+        fkUnidade,
+        fkArea,
+        titulo,
+        conteudo
       }) 
     }
 
-    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/area/`, params)
+    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/`, params)
       .then(response => {
         const { status } = response
         response.json().then(data => {
@@ -109,7 +183,7 @@ const AtividadeForm = (props) => {
             setMessage(data.message)
             setOpenMessageDialog(true)
           } else if(status === 200) {
-            // alert(JSON.stringify(data.data))
+            setAtividade(data.data)
             setMessage(data.message)
             setOpenMessageDialog(true)
             // setArea(data.data)
@@ -118,7 +192,7 @@ const AtividadeForm = (props) => {
       })
   }
 
-  const onAlterar = () => {
+  const novaInteracao = () => {
     const token = getCookie('_token_task_manager')
     const params = {
       method: 'POST', 
@@ -127,13 +201,12 @@ const AtividadeForm = (props) => {
         'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify({ 
-        nome,
-        descricao,
-        fkUnidade
+        fkAtividade: id,
+        conteudo
       }) 
     }
 
-    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/area/${id}/edit/`, params)
+    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/mensagem/`, params)
       .then(response => {
         const { status } = response
         response.json().then(data => {
@@ -143,6 +216,7 @@ const AtividadeForm = (props) => {
             setOpenMessageDialog(true)
           } else if(status === 200) {
             // alert(JSON.stringify(data.data))
+            setAtividade(data.data)
             setMessage(data.message)
             setOpenMessageDialog(true)
             // setArea(data.data)
@@ -159,53 +233,95 @@ const AtividadeForm = (props) => {
       </div>
       <div style={{display: 'flex', flexDirection: 'column'}}>
         {id ? <div style={{flex: 1, marginBottom: 16}}>
-          <TextField size="small" fullWidth label="Protocolo" disabled variant="outlined" value={nome}  onChange={e => setNome(e.target.value)}/>
+          <TextField size="small" fullWidth label="Unidade" disabled variant="outlined" value={valueUnidade} />
         </div> : ''}
-        <FormGroup>
+        {id ? <div style={{flex: 1, marginBottom: 16}}>
+          <TextField size="small" fullWidth label="Área" disabled variant="outlined" value={valueArea} />
+        </div> : ''}
+        {id ? <div style={{flex: 1, marginBottom: 16}}>
+          <TextField size="small" fullWidth label="Protocolo" disabled variant="outlined" value={protocolo} />
+        </div> : ''}
+        {id ? <div style={{flex: 1, marginBottom: 16}}>
+          <TextField size="small" fullWidth label="Classificacao" disabled variant="outlined" value={classificacao} />
+        </div> : ''}
+        {id ? <div style={{flex: 1, marginBottom: 16}}>
+          <TextField size="small" fullWidth label="Status" disabled variant="outlined" value={status} />
+        </div> : ''}
+        {id ? <div style={{flex: 1, marginBottom: 16}}>
+          <TextField size="small" fullWidth label="Solicitante" disabled variant="outlined" value={usuarioSolicitante} />
+        </div> : ''}
+        {!id ? <>
+          <FormGroup>
+            <div style={{flex: 1, marginBottom: 16}}>
+              <FormControl fullWidth size="small">
+                <InputLabel id="demo-select-small">Unidade</InputLabel>
+                <Select
+                  fullWidth
+                  labelId="demo-select-small"
+                  id="demo-select-small"
+                  label="Unidade"
+                  value={fkUnidade}>
+                  <MenuItem value="" onClick={() => setFkUnidade("")}>
+                    <em>Nenhum</em>
+                  </MenuItem>
+                  {unidade.map((item, index) => <MenuItem key={index} value={item.id} onClick={() => setFkUnidade(item.id)}>{item.nome}</MenuItem>)}
+                </Select>
+              </FormControl>
+            </div>
+            <div style={{flex: 1, marginBottom: 16}}>
+              <FormControl fullWidth size="small">
+                <InputLabel id="demo-select-small">Área</InputLabel>
+                <Select
+                  fullWidth
+                  labelId="demo-select-small"
+                  id="demo-select-small"
+                  label="Unidade"
+                  value={fkArea}>
+                  <MenuItem value="" onClick={() => setFkUnidade("")}>
+                    <em>Nenhum</em>
+                  </MenuItem>
+                  {area.map((item, index) => <MenuItem key={index} value={item.id} onClick={() => setFkArea(item.id)}>{item.nome}</MenuItem>)}
+                </Select>
+              </FormControl>
+            </div>
+            <div style={{flex: 1, marginBottom: 16}}>
+              <TextField size="small" fullWidth label="Título" variant="outlined" value={titulo}  onChange={e => setTitulo(e.target.value)}/>
+            </div>
+            <div style={{flex: 1, marginBottom: 16}}>
+              <TextField size="small" fullWidth label="Descrição" multiline rows={6} variant="outlined" value={conteudo}  onChange={e => setConteudo(e.target.value)}/>
+            </div>
+            <div style={{flex: 1, display: 'flex', flexDirection: 'row'}}>
+              <Button variant="outlined" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/area/`}>Voltar</Button>
+              <div style={{flex: 1}}></div>
+              <Button variant="contained" onClick={onSave}>{'Criar'}</Button>
+            </div>
+          </FormGroup>
+        </> : ''}
+
+        
+        {id ? <>  
+          <h4>Nova Interação</h4>
           <div style={{flex: 1, marginBottom: 16}}>
-            <FormControl fullWidth size="small">
-              <InputLabel id="demo-select-small">Unidade</InputLabel>
-              <Select
-                fullWidth
-                labelId="demo-select-small"
-                id="demo-select-small"
-                label="Unidade"
-                value={fkUnidade}>
-                <MenuItem value="" onClick={() => setFkUnidade("")}>
-                  <em>Nenhum</em>
-                </MenuItem>
-                {unidade.map((item, index) => <MenuItem key={index} value={item.id} onClick={() => setFkUnidade(item.id)}>{item.nome}</MenuItem>)}
-              </Select>
-            </FormControl>
-          </div>
-          <div style={{flex: 1, marginBottom: 16}}>
-            <FormControl fullWidth size="small">
-              <InputLabel id="demo-select-small">Área</InputLabel>
-              <Select
-                fullWidth
-                labelId="demo-select-small"
-                id="demo-select-small"
-                label="Unidade"
-                value={fkUnidade}>
-                <MenuItem value="" onClick={() => setFkUnidade("")}>
-                  <em>Nenhum</em>
-                </MenuItem>
-                {unidade.map((item, index) => <MenuItem key={index} value={item.id} onClick={() => setFkUnidade(item.id)}>{item.nome}</MenuItem>)}
-              </Select>
-            </FormControl>
-          </div>
-          <div style={{flex: 1, marginBottom: 16}}>
-            <TextField size="small" fullWidth label="Título" variant="outlined" value={nome}  onChange={e => setNome(e.target.value)}/>
-          </div>
-          <div style={{flex: 1, marginBottom: 16}}>
-            <TextField size="small" fullWidth label="Descrição" multiline rows={6} variant="outlined" value={descricao}  onChange={e => setDescricao(e.target.value)}/>
+            <TextField size="small" fullWidth label="Descrição" multiline rows={6} variant="outlined" value={conteudo}  onChange={e => setConteudo(e.target.value)}/>
           </div>
           <div style={{flex: 1, display: 'flex', flexDirection: 'row'}}>
-            <Button variant="outlined" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/area/`}>Voltar</Button>
+            {/* <Button variant="outlined" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/area/`}>Voltar</Button> */}
             <div style={{flex: 1}}></div>
-            <Button variant="contained" onClick={id ? onAlterar : onSave}>{id ? 'Alterar' : 'Salvar'}</Button>
+            <Button variant="contained" onClick={novaInteracao}>{'Enviar'}</Button>
           </div>
-        </FormGroup>
+          <h4>Histórico</h4>
+          {mensagens.map((item, index) => <div style={{borderTop: '1px solid #e0e0e0', padding: 16}}>
+            <div style={{display: 'flex', flexDirection: 'column'}}>
+              <div style={{display: 'flex', flexDirection: 'row'}}>
+                <b style={{fontSize: 13}}>{item.Usuario.nome}</b>
+                <div style={{flex: 1}}></div>
+                <b style={{fontSize: 12}}>{new Date(item.createdAt).toLocaleString()}</b>
+              </div>
+            </div>
+            <p>{item.conteudo}</p>
+          </div>)}
+        </> : ''}
+
       </div>
 
       <Dialog open={openLoadingDialog}>
@@ -227,7 +343,7 @@ const AtividadeForm = (props) => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenMessageDialog(false)}>
+          <Button onClick={atividade ? () => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${atividade.id}/edit` : () => setOpenMessageDialog(false)}>
             OK
           </Button>
         </DialogActions>

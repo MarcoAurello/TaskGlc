@@ -8,6 +8,8 @@ import routerArea from './router/area.router'
 import routerPerfil from './router/perfil.router'
 import routerConfiguracaoGlobal from './router/configuracaoGlobal.router'
 import routerStatus from './router/status.router'
+import routerAtividade from './router/atividade.router'
+import routerMensagem from './router/mensagem.router'
 
 const path = require('path')
 
@@ -33,6 +35,8 @@ class Server {
     this.application.use('/api/perfil/', routerPerfil)
     this.application.use('/api/configuracao/', routerConfiguracaoGlobal)
     this.application.use('/api/status/', routerStatus)
+    this.application.use('/api/atividade/', routerAtividade)
+    this.application.use('/api/mensagem/', routerMensagem)
 
     this.application.use(express.static(path.resolve('app', 'build')))
     this.application.get('/*', (req, res) =>

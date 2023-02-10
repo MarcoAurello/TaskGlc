@@ -15,6 +15,7 @@ module.exports = {
      * }], {});
     */
     await queryInterface.bulkInsert('classificacao', [
+      { id: uuid(), nome: 'Não Definido', createdAt: new Date(), updatedAt: new Date() },
       { id: uuid(), nome: 'Urgente', descricao: 'Atividades onde o tempo está curto ou acabou.', createdAt: new Date(), updatedAt: new Date() },
       { id: uuid(), nome: 'Importante', descricao: 'Atividades que trazem resultado no curto, médio ou longo prazo.', createdAt: new Date(), updatedAt: new Date() },
       { id: uuid(), nome: 'Ciscunstancial', descricao: 'Tarfas desnecessárias feitas por comodidade ou por serem socialmente apropriadas.', createdAt: new Date(), updatedAt: new Date() }
