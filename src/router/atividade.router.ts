@@ -14,6 +14,7 @@ class AtividadeRouter {
   }
 
   private routers () {
+    this.router.get('/naoatribuida/', controller.naoatribuida)
     this.router.get('/search/', controller.search)
     this.router.get('/', controller.all)
     this.router.post('/', controller.create)

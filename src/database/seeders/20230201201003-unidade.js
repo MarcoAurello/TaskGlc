@@ -14,12 +14,20 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    await queryInterface.bulkInsert('unidade', [{
-      id: uuid(),
-      nome: 'Gerência de Tecnologia da Informação',
-      createdAt: new Date(),
-      updatedAt: new Date()
-    }], {})
+    await queryInterface.bulkInsert('unidade', [
+      {
+        id: uuid(),
+        nome: 'Gerência de Tecnologia da Informação',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: uuid(),
+        nome: 'Gerência de Pessoas e Cultura',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }
+    ], {})
   },
 
   async down (queryInterface, Sequelize) {

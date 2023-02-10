@@ -16,6 +16,7 @@ module.exports = {
     */
 
     const unidades = await queryInterface.sequelize.query('select * from unidade where nome = \'Gerência de Tecnologia da Informação\'')
+    const unidadeGPC = await queryInterface.sequelize.query('select * from unidade where nome = \'Gerência de Pessoas e Cultura\'')
 
     await queryInterface.bulkInsert('area', [{
       id: uuid(),
@@ -35,7 +36,15 @@ module.exports = {
       fkUnidade: unidades[0][0].id,
       createdAt: new Date(),
       updatedAt: new Date()
-    }], {})
+    },
+    {
+      id: uuid(),
+      nome: 'Coordenação de Pessoal',
+      fkUnidade: unidadeGPC[0][0].id,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }
+    ], {})
   },
 
   async down (queryInterface, Sequelize) {

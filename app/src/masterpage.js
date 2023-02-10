@@ -93,6 +93,7 @@ const Masterpage = (props) => {
 
 
   const [usuariosNaoValidados, setUsuariosNaoValidados] = useState([])
+  const [atividadesNaoAtribuidas, setAtividadesNaoAtribuidas] = useState([])
 
   useEffect(() => {
     isAuthenticated().then(_ => {
@@ -211,6 +212,34 @@ const Masterpage = (props) => {
   }, [logged])
 
 
+  useEffect(() => {
+    function carregarAtividadesNaoAtribuidas() {
+      const token = getCookie('_token_task_manager')
+      const params = {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      }
+
+      fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/naoatribuida/`, params)
+        .then(response => {
+          const { status } = response
+          response.json().then(data => {
+            if(status === 401) {  
+            } else if(status === 200) {
+              setAtividadesNaoAtribuidas(data.data)
+              // setUsuariosNaoValidados(data.data)
+            }
+          })
+        })
+    }
+
+
+    if(logged && logged.Perfil && (logged.Perfil.nome === PerfilUtils.Gerente || logged.Perfil.nome === PerfilUtils.Coordenador)) {
+      setInterval(carregarAtividadesNaoAtribuidas, 1000)
+    }
+  }, [logged])
+
   const salvarDadosPrimeiroAcesso = () => {
     const token = getCookie('_token_task_manager')
     const params = {
@@ -262,7 +291,7 @@ const Masterpage = (props) => {
     </Tooltip>,
     <Tooltip title="Nova Atividade" placement="bottom">
       <IconButton size="large" color="inherit">
-        <Badge badgeContent={0} color="error">
+        <Badge badgeContent={atividadesNaoAtribuidas.length} color="error">
           <NotificationsIcon />
         </Badge>
       </IconButton>

@@ -44,6 +44,10 @@ module.exports = {
         type: Sequelize.UUID,
         allowNull: false
       },
+      fkUsuarioExecutor: {
+        type: Sequelize.UUID,
+        allowNull: true
+      },
       tempoEstimado: {
         type: Sequelize.INTEGER,
         allowNull: true

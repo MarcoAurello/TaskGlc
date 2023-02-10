@@ -24,6 +24,7 @@ module.exports = {
     const perfilGerenteRows = perfilsGerente[0]
 
     const areas = await queryInterface.sequelize.query('select * from area where nome = \'Sistemas - Desenvolvimento\'')
+    const areasGPC = await queryInterface.sequelize.query('select * from area where nome = \'Coordenação de Pessoal\'')
 
     await queryInterface.bulkInsert('usuario', [
       {
@@ -48,6 +49,22 @@ module.exports = {
         demandante: true,
         fkPerfil: perfilGerenteRows[0].id,
         fkArea: areas[0][0].id,
+        validado: true,
+        ativo: true,
+        primeiroLogin: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: uuid(),
+        nome: 'Usuário Teste GPC',
+        email: 'gpc@pe.senac.br',
+        passwordHash: await bcrypt.hash('gti@2021', 8),
+        telefone: '34132053',
+        chapa: '15385-F1',
+        demandante: true,
+        fkPerfil: perfilGerenteRows[0].id,
+        fkArea: areasGPC[0][0].id,
         validado: true,
         ativo: true,
         primeiroLogin: false,

@@ -95,6 +95,25 @@ class AtividadeController implements IController {
   async search (req: Request, res: Response, next: NextFunction): Promise<any> {
     throw new Error('Method not implemented.')
   }
+
+  async naoatribuida (req: any, res: Response, next: NextFunction): Promise<any> {
+    try {
+      const area = await Area.findOne({ where: { id: req.usuario.fkArea } })
+
+      const registros = await Atividade.findAll({
+        include: [Area],
+        where: {
+          pessoal: false,
+          fkUsuarioExecutor: null,
+          '$Area.fkUnidade$': area?.fkUnidade
+        }
+      })
+
+      res.status(200).json({ data: registros })
+    } catch (err) {
+      res.status(401).json({ data: null })
+    }
+  }
 }
 
 export default new AtividadeController()

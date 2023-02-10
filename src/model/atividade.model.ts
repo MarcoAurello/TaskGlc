@@ -15,6 +15,7 @@ class Atividade extends Model {
   public fkStatus!: string
   public pessoal!: Boolean
   public fkUsuarioSolicitante!: string
+  public fkUsuarioExecutor!: string
   public tempoEstimado!: string
   public createdAt!: Date
   public updatedAt!: Date
@@ -54,6 +55,10 @@ Atividade.init({
   fkUsuarioSolicitante: {
     type: DataTypes.UUID,
     allowNull: false
+  },
+  fkUsuarioExecutor: {
+    type: DataTypes.UUID,
+    allowNull: true
   },
   tempoEstimado: {
     type: DataTypes.INTEGER,
