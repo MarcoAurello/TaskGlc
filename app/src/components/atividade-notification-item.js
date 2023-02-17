@@ -1,9 +1,11 @@
 import { Chip, MenuItem } from '@mui/material'
-import React from 'react'
+import React, { useState } from 'react'
 import Avatar from '@mui/material/Avatar';
 
-const UserNotificationItem = (props) => {
+const AtividadeNotificationItem = (props) => {
   const { item } = props
+  const[selecionar , setselecionar] = useState('')
+
 
   function stringToColor(string) {
     let hash = 0;
@@ -43,13 +45,17 @@ const UserNotificationItem = (props) => {
   }
 
   return (
-    <MenuItem  style={{display: 'flex', flexDirection: 'row', borderBottom: '1px solid #EEEEEE', minWidth: 350}} onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/validar/${item.id}`}>
-      {/* <Avatar {...stringAvatar(`${item.nome}`)} /> */}
+    <MenuItem  style={{display: 'flex',marginBottom:5, flexDirection: 'row', borderBottom: '1px solid #EEEEEE', minWidth: 350}} onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`}>
+      <Avatar 
+    //   {...stringAvatar(`${item.}`)}
+       />
       <div style={{marginLeft: 16}}>
-        <div style={{ width: '100%', fontSize: 14, fontWeight: 'bold', color: '#424242'}}>{item.nome}</div>
-        <div style={{ width: '100%', fontSize: 13, color: '#424242'}}>{item.email}</div>
-        <div style={{ width: '100%' , marginTop: 4}}>
-          <Chip label="Aguardando Validação do Cadastro" size="small" />
+      <div style={{ width: '100%', fontSize: 12, color: '#424242'}}>{'Funcionario: '+ item.Usuario.nome}</div>
+      <div style={{ width: '100%', fontSize: 12, color: '#424242'}}>{'Unidade: '+ item.Area.Unidade.nome}</div>
+        <div style={{ width: '100%', fontSize: 12,  color: '#424242'}}>{'Problema: '+item.titulo}</div>
+        
+        <div style={{ width: '100%' , marginTop: 4, backgroundColor:'#00BFFF', borderRadius:50, paddingLeft: 8 }}>
+          Selecionar Funcionario
         </div>
       </div>
     </MenuItem>
@@ -57,4 +63,4 @@ const UserNotificationItem = (props) => {
 }
 
 
-export default UserNotificationItem
+export default AtividadeNotificationItem

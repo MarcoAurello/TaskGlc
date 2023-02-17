@@ -19,6 +19,10 @@ class Atividade extends Model {
   public tempoEstimado!: string
   public createdAt!: Date
   public updatedAt!: Date
+  public Classificacao!: Classificacao
+  public Area!: Area
+  public Usuario!: Usuario
+  public Status!: Status
 }
 
 Atividade.init({

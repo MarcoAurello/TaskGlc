@@ -17,7 +17,7 @@ class UsuarioRouter {
     this.router.get('/naovalidado/', controller.naoValidado)
     this.router.get('/equipe/', controller.equipe)
     this.router.get('/search/', controller.search)
-    this.router.get('/', routerMiddleware.role([PerfilUtils.Administrador]), controller.all)
+    this.router.get('/', routerMiddleware.role([PerfilUtils.Gerente]), controller.all)
     this.router.post('/', controller.create)
     this.router.get('/:id', routerMiddleware.role([PerfilUtils.Administrador, PerfilUtils.Gerente]), controller.find)
     this.router.post('/:id/edit', routerMiddleware.role([PerfilUtils.Administrador]), controller.update)

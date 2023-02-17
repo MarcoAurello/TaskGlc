@@ -1,10 +1,9 @@
-import controller from '../controller/atividade.controller'
+import controller from '../controller/usuarioDemandado.controller'
 import { Router } from 'express'
 
 import routerMiddleware from '../middleware/router.middleware'
-// import PerfilUtils from '../utils/perfil.utils'
 
-class AtividadeRouter {
+class UsuarioDemandadoRouter {
   public router!: Router
 
   constructor () {
@@ -14,11 +13,8 @@ class AtividadeRouter {
   }
 
   private routers () {
-    this.router.get('/naoatribuida/', controller.naoatribuida)
-    this.router.get('/atividadesRecebidas/', controller.atividadesRecebidas)
     this.router.get('/search/', controller.search)
     this.router.get('/', controller.all)
-    this.router.get('/minhasAtividades', controller.minhasAtividades)
     this.router.post('/', controller.create)
     this.router.get('/:id', controller.find)
     this.router.post('/:id/edit', controller.update)
@@ -26,4 +22,4 @@ class AtividadeRouter {
   }
 }
 
-export default new AtividadeRouter().router
+export default new UsuarioDemandadoRouter().router

@@ -5,6 +5,7 @@ import Content from "./components/content";
 
 import Home from './pages/home';
 import Usuario from './pages/usuario'
+import MinhasAtividades from './pages/minhasAtividades'
 
 import MenuIcon from '@mui/icons-material/Menu'
 import NotificationsIcon from '@mui/icons-material/Notifications'
@@ -45,6 +46,8 @@ import Area from "./pages/area";
 import AreaForm from "./pages/area-form";
 import PerfilUtils from "./utils/perfil.utils";
 import UserNotificationItem from "./components/user-notification-item";
+import AtividadeNotificationItem from "./components/atividade-notification-item";
+import AtividadeRecebidaNotificationItem from "./components/atividadeRecebida-notification-item";
 import Equipe from "./pages/equipe";
 import ValidarUsuarioForm from "./pages/validar-usuario-form";
 import AtividadeForm from "./pages/chamado-form";
@@ -66,6 +69,10 @@ const MasterPageContainer = styled.div`
 
 const Masterpage = (props) => {
   // const { logged } = props;
+  const [anchorElAtividadeNaoAtribuidaNotification, setAnchorElAtividadeNaoAtribuidaNotification] = useState(null)
+  const [anchorElAtividadeReceidaNotification, setAnchorElAtividadeRecebidaNotification] = useState(null)
+  const [openAtividadeNaoAtribuidaNotification, setOpenAtividadeNaoAtribuidaNotification] = useState(false)
+  const [openAtividadeRecebidaNotification, setOpenAtividadeRecebidaNotification] = useState(false)
   const [openDrawer, setOpenDrawer] = useState(true)
   const [openAccountMenu, setOpenAccountMenu] = useState(false)
   const [anchorElAccountMenu, setAnchorElAccountMenu] = useState(null)
@@ -76,11 +83,11 @@ const Masterpage = (props) => {
   const [openMessageDialog, setOpenMessageDialog] = useState(false)
   const [message, setMessage] = useState('')
   const [openDialogPrimeiroAcesso, setOpenDialogPrimeiroAcesso] = useState(false)
-  
+
   const [nome, setNome] = useState('')
   const [telefone, setTelefone] = useState('')
   const [chapa, setChapa] = useState('')
-  const [fkPerfil, setFkPerfil] = useState(null)  
+  const [fkPerfil, setFkPerfil] = useState(null)
   const [fkUnidade, setFkUnidade] = useState(null)
   const [fkArea, setFkArea] = useState(null)
 
@@ -94,6 +101,7 @@ const Masterpage = (props) => {
 
   const [usuariosNaoValidados, setUsuariosNaoValidados] = useState([])
   const [atividadesNaoAtribuidas, setAtividadesNaoAtribuidas] = useState([])
+  const [atividadesRecebida, setAtividadeRecebida] = useState([])
 
   useEffect(() => {
     isAuthenticated().then(_ => {
@@ -117,8 +125,8 @@ const Masterpage = (props) => {
         .then(response => {
           const { status } = response
           response.json().then(data => {
-            if(status === 401) {  
-            } else if(status === 200) {
+            if (status === 401) {
+            } else if (status === 200) {
               setPerfil(data.data)
               carregarUnidade()
             }
@@ -140,8 +148,8 @@ const Masterpage = (props) => {
           const { status } = response
           response.json().then(data => {
             setOpenLoadingDialog(false)
-            if(status === 401) {  
-            } else if(status === 200) {
+            if (status === 401) {
+            } else if (status === 200) {
               setUnidade(data.data)
               setOpenLoadingDialog(false)
             }
@@ -149,7 +157,7 @@ const Masterpage = (props) => {
         })
     }
 
-    if(primeiroLogin) {
+    if (primeiroLogin) {
       carregarPerfil()
     }
 
@@ -170,15 +178,15 @@ const Masterpage = (props) => {
           const { status } = response
           response.json().then(data => {
             setOpenLoadingDialog(false)
-            if(status === 401) {  
-            } else if(status === 200) {
+            if (status === 401) {
+            } else if (status === 200) {
               setArea(data.data)
             }
           }).catch(err => setOpenLoadingDialog(false))
         })
     }
 
-    if(fkUnidade) {
+    if (fkUnidade) {
       carregarArea()
     }
   }, [fkUnidade])
@@ -197,16 +205,18 @@ const Masterpage = (props) => {
         .then(response => {
           const { status } = response
           response.json().then(data => {
-            if(status === 401) {  
-            } else if(status === 200) {
+            if (status === 401) {
+              alert('11')
+            } else if (status === 200) {
+              alert(JSON.stringify(data))
               setUsuariosNaoValidados(data.data)
             }
           })
         })
     }
 
-
-    if(logged && logged.Perfil && (logged.Perfil.nome === PerfilUtils.Gerente || logged.Perfil.nome === PerfilUtils.Coordenador)) {
+    alert(JSON.stringify(logged))
+    if (logged && logged.Perfil && (logged.Perfil.nome === PerfilUtils.Gerente || logged.Perfil.nome === PerfilUtils.Coordenador)) {
       setInterval(carregarUsuariosNaoValidados, 1000)
     }
   }, [logged])
@@ -225,9 +235,11 @@ const Masterpage = (props) => {
         .then(response => {
           const { status } = response
           response.json().then(data => {
-            if(status === 401) {  
-            } else if(status === 200) {
+            if (status === 401) {
+              alert('11')
+            } else if (status === 200) {
               setAtividadesNaoAtribuidas(data.data)
+              alert(JSON.stringify(data))
               // setUsuariosNaoValidados(data.data)
             }
           })
@@ -235,27 +247,59 @@ const Masterpage = (props) => {
     }
 
 
-    if(logged && logged.Perfil && (logged.Perfil.nome === PerfilUtils.Gerente || logged.Perfil.nome === PerfilUtils.Coordenador)) {
+    if (logged && logged.Perfil && (logged.Perfil.nome === PerfilUtils.Gerente || logged.Perfil.nome === PerfilUtils.Coordenador)) {
       setInterval(carregarAtividadesNaoAtribuidas, 1000)
     }
   }, [logged])
 
+
+  useEffect(() => {
+    function carregarAtividadesRecebidas() {
+      const token = getCookie('_token_task_manager')
+      const params = {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      }
+
+      fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/atividadesRecebidas/`, params)
+        .then(response => {
+          const { status } = response
+          response.json().then(data => {
+            if (status === 401) {
+              alert('11')
+            } else if (status === 200) {
+              setAtividadeRecebida(data.data)
+              alert(JSON.stringify(data))
+              // setUsuariosNaoValidados(data.data)
+            }
+          })
+        })
+    }
+
+
+    if (logged && logged.Perfil && (logged.Perfil.nome === PerfilUtils.Gerente || logged.Perfil.nome === PerfilUtils.Coordenador)) {
+      setInterval(carregarAtividadesRecebidas, 1000)
+    }
+  }, [logged])
+
+
   const salvarDadosPrimeiroAcesso = () => {
     const token = getCookie('_token_task_manager')
     const params = {
-      method: 'POST', 
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
-      body: JSON.stringify({ 
+      body: JSON.stringify({
         nome,
         telefone,
         chapa,
         fkPerfil,
         fkUnidade,
         fkArea,
-      }) 
+      })
     }
 
     fetch(`${process.env.REACT_APP_DOMAIN_API}/api/usuario/edit/primeiroacesso/`, params)
@@ -263,10 +307,10 @@ const Masterpage = (props) => {
         const { status } = response
         response.json().then(data => {
           setOpenLoadingDialog(false)
-          if(status === 401) {  
+          if (status === 401) {
             setMessage(data.message)
             setOpenMessageDialog(true)
-          } else if(status === 200) {
+          } else if (status === 200) {
             // alert(JSON.stringify(data.data))
             setMessage(data.message)
             setOpenMessageDialog(true)
@@ -279,28 +323,46 @@ const Masterpage = (props) => {
 
   const actions = [
     <Tooltip title="Aprovação Equipe" placement="bottom">
-      <IconButton size="large" color="inherit" id="positioned-user-notification-icon-button"
+    <IconButton size="large" color="inherit" id="positioned-user-notification-icon-button"
+      onClick={(e) => {
+        setAnchorElUserNotification(e.currentTarget)
+        setOpenUserNotification(true)
+      }}>
+      <Badge badgeContent={usuariosNaoValidados.length} color="error">
+        <ManageAccountsIcon />
+      </Badge>
+    </IconButton>
+  </Tooltip>,
+
+    <Tooltip title="Aprovar Atividade" placement="bottom">
+      <IconButton size="large" color="inherit" id="positioned-msg-notification-icon-button"
         onClick={(e) => {
-          setAnchorElUserNotification(e.currentTarget)
-          setOpenUserNotification(true)
+          setAnchorElAtividadeNaoAtribuidaNotification(e.currentTarget)
+          setOpenAtividadeNaoAtribuidaNotification(true)
         }}>
-        <Badge badgeContent={usuariosNaoValidados.length} color="error">
-          <ManageAccountsIcon />
-        </Badge>
-      </IconButton>
-    </Tooltip>,
-    <Tooltip title="Nova Atividade" placement="bottom">
-      <IconButton size="large" color="inherit">
         <Badge badgeContent={atividadesNaoAtribuidas.length} color="error">
           <NotificationsIcon />
         </Badge>
       </IconButton>
     </Tooltip>,
-    <IconButton 
-      size="large" 
-      edge="end" 
-      aria-haspopup="true" 
-      color="inherit" 
+
+    <Tooltip title="Chegou Atividade" placement="bottom">
+      <IconButton size="large" color="inherit" id="positioned-newmsg-notification-icon-button"
+        onClick={(e) => {
+          setAnchorElAtividadeRecebidaNotification(e.currentTarget)
+          setOpenAtividadeRecebidaNotification(true)
+        }}>
+        <Badge badgeContent={atividadesRecebida.length} color="error">
+          <NotificationsIcon />
+        </Badge>
+      </IconButton>
+    </Tooltip>,
+
+    <IconButton
+      size="large"
+      edge="end"
+      aria-haspopup="true"
+      color="inherit"
       id="positioned-account-icon-button"
       onClick={(e) => {
         setAnchorElAccountMenu(e.currentTarget)
@@ -310,9 +372,9 @@ const Masterpage = (props) => {
     </IconButton>
   ]
 
-  const menu = <IconButton onClick={() => setOpenDrawer(true)}  size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
-      <MenuIcon />
-    </IconButton>
+  const menu = <IconButton onClick={() => setOpenDrawer(true)} size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
+    <MenuIcon />
+  </IconButton>
 
   const renderMenu = (
     <Menu
@@ -331,18 +393,18 @@ const Masterpage = (props) => {
       onClose={() => setOpenAccountMenu(false)}
     >
       <MenuItem onClick={() => setOpenAccountMenu(false)} disableRipple>
-        <div style={{width: 120,  display: 'flex', flexDirection: 'row'}}>
+        <div style={{ width: 120, display: 'flex', flexDirection: 'row' }}>
           <AccountBoxIcon />
-          <div style={{paddingLeft: 16 }}>Meu Perfil</div>
+          <div style={{ paddingLeft: 16 }}>Meu Perfil</div>
         </div>
       </MenuItem>
       <MenuItem onClick={() => {
         setOpenAccountMenu(false)
         window.location.href = `${process.env.REACT_APP_DOMAIN}/logout`
       }} disableRipple>
-        <div style={{width: 120, display: 'flex', flexDirection: 'row'}}>
+        <div style={{ width: 120, display: 'flex', flexDirection: 'row' }}>
           <LogoutIcon />
-          <div style={{paddingLeft: 16 }}>Sair</div>
+          <div style={{ paddingLeft: 16 }}>Sair</div>
         </div>
       </MenuItem>
     </Menu>
@@ -365,9 +427,50 @@ const Masterpage = (props) => {
       open={openUserNotification}
       onClose={() => setOpenUserNotification(false)}
     >
-      {usuariosNaoValidados.map((item, index) => <UserNotificationItem  key={index} item={item} />)}
+      {usuariosNaoValidados.map((item, index) => <UserNotificationItem key={index} item={item} />)}
     </Menu>
   );
+
+  const renderNaoAtribuidosNotification = (
+    <Menu
+      anchorEl={anchorElAtividadeNaoAtribuidaNotification}
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'right',
+      }}
+      id="positioned-naoAtribuido-notification"
+      keepMounted
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      open={openAtividadeNaoAtribuidaNotification}
+      onClose={() => setOpenAtividadeNaoAtribuidaNotification(false)}
+    >
+      {atividadesNaoAtribuidas.map((item, index) => <AtividadeNotificationItem key={index} item={item} />)}
+    </Menu>
+  );
+
+  const renderAtividadeRecebida = (
+    <Menu
+      anchorEl={anchorElAtividadeReceidaNotification}
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'right',
+      }}
+      id="positioned-recebido-notification"
+      keepMounted
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      open={openAtividadeRecebidaNotification}
+      onClose={() => setOpenAtividadeRecebidaNotification(false)}
+    >
+      {atividadesRecebida.map((item, index) => <AtividadeRecebidaNotificationItem key={index} item={item} />)}
+    </Menu>
+  );
+
 
   useEffect(() => {
     const closeDrawerAfterAFewSecounds = () => {
@@ -387,7 +490,7 @@ const Masterpage = (props) => {
         <Box sx={{ width: 250 }} role="presentation">
           <List>
             <ListItem disablePadding>
-              <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/home/`}>
+              <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/minhasAtividades/`}>
                 <ListItemIcon>
                   <PlaylistAddCheckIcon />
                 </ListItemIcon>
@@ -412,41 +515,41 @@ const Masterpage = (props) => {
             </ListItem>
             {
               logged && logged.validado && logged.Perfil.nome === PerfilUtils.Administrador ?
-              <>
-                <Divider />
-                <ListItem disablePadding>
-                  <ListItemButton>
-                    <ListItemIcon>
-                      <PhonelinkSetupIcon />
-                    </ListItemIcon>
-                    <ListItemText primary='Configuração' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/configuracao`} />
-                  </ListItemButton>
-                </ListItem>
-                <ListItem disablePadding>
-                  <ListItemButton>
-                    <ListItemIcon>
-                      <ContactMailIcon />
-                    </ListItemIcon>
-                    <ListItemText primary='Usuário' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/usuario`} />
-                  </ListItemButton>
-                </ListItem>
-                <ListItem disablePadding>
-                  <ListItemButton>
-                    <ListItemIcon>
-                      <HomeWorkIcon />
-                    </ListItemIcon>
-                    <ListItemText primary='Unidade' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/unidade`} />
-                  </ListItemButton>
-                </ListItem>
-                <ListItem disablePadding>
-                  <ListItemButton>
-                    <ListItemIcon>
-                      <AccountBalanceIcon />
-                    </ListItemIcon>
-                    <ListItemText primary='Área' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/area`} />
-                  </ListItemButton>
-                </ListItem>
-              </> : ''
+                <>
+                  <Divider />
+                  <ListItem disablePadding>
+                    <ListItemButton>
+                      <ListItemIcon>
+                        <PhonelinkSetupIcon />
+                      </ListItemIcon>
+                      <ListItemText primary='Configuração' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/configuracao`} />
+                    </ListItemButton>
+                  </ListItem>
+                  <ListItem disablePadding>
+                    <ListItemButton>
+                      <ListItemIcon>
+                        <ContactMailIcon />
+                      </ListItemIcon>
+                      <ListItemText primary='Usuário' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/usuario`} />
+                    </ListItemButton>
+                  </ListItem>
+                  <ListItem disablePadding>
+                    <ListItemButton>
+                      <ListItemIcon>
+                        <HomeWorkIcon />
+                      </ListItemIcon>
+                      <ListItemText primary='Unidade' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/unidade`} />
+                    </ListItemButton>
+                  </ListItem>
+                  <ListItem disablePadding>
+                    <ListItemButton>
+                      <ListItemIcon>
+                        <AccountBalanceIcon />
+                      </ListItemIcon>
+                      <ListItemText primary='Área' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/area`} />
+                    </ListItemButton>
+                  </ListItem>
+                </> : ''
             }
           </List>
         </Box>
@@ -458,6 +561,8 @@ const Masterpage = (props) => {
         actions={actions} />
       {renderMenu}
       {renderUserNotification}
+      {renderNaoAtribuidosNotification}
+      {renderAtividadeRecebida}
       <Content>
         <Switch>
           {/* Usuarios */}
@@ -486,6 +591,13 @@ const Masterpage = (props) => {
             path="/atividade/cadastro"
             render={(props) => <AtividadeForm {...props} logged={logged} />}
           />
+
+          <Route
+            exact
+            path="/minhasAtividades"
+            render={(props) => <MinhasAtividades {...props} logged={logged} />}
+          />
+
 
 
           <Route
@@ -581,7 +693,7 @@ const Masterpage = (props) => {
               type="text"
               fullWidth
               variant="standard"
-              size="small"              
+              size="small"
               value={nome}
               onChange={e => setNome(e.target.value)}
             />
@@ -605,7 +717,7 @@ const Masterpage = (props) => {
               value={telefone}
               onChange={e => setTelefone(e.target.value)}
             />
-            <FormControl fullWidth size="small" variant="standard" style={{marginTop: 8}}>
+            <FormControl fullWidth size="small" variant="standard" style={{ marginTop: 8 }}>
               <InputLabel id="label-small-perfil">Perfil</InputLabel>
               <Select
                 fullWidth
@@ -618,7 +730,7 @@ const Masterpage = (props) => {
                 {perfil.map((item, index) => <MenuItem key={index} value={item.id} onClick={() => setFkPerfil(item.id)}>{item.nome}</MenuItem>)}
               </Select>
             </FormControl>
-            <FormControl fullWidth size="small" variant="standard" style={{marginTop: 16}}>
+            <FormControl fullWidth size="small" variant="standard" style={{ marginTop: 16 }}>
               <InputLabel id="label-small-unidade">Unidade</InputLabel>
               <Select
                 fullWidth
@@ -631,7 +743,7 @@ const Masterpage = (props) => {
                 {unidade.map((item, index) => <MenuItem key={index} value={item.id} onClick={() => setFkUnidade(item.id)}>{item.nome}</MenuItem>)}
               </Select>
             </FormControl>
-            <FormControl fullWidth size="small" variant="standard" style={{marginTop: 16}}>
+            <FormControl fullWidth size="small" variant="standard" style={{ marginTop: 16 }}>
               <InputLabel id="label-small-unidade">Área</InputLabel>
               <Select
                 fullWidth
@@ -663,7 +775,7 @@ const Masterpage = (props) => {
           <DialogTitle id="alert-dialog-title">
             Atenção
           </DialogTitle>
-          <DialogContent style={{width: 400}}>
+          <DialogContent style={{ width: 400 }}>
             <DialogContentText id="alert-dialog-description">
               {message}
             </DialogContentText>
@@ -674,8 +786,8 @@ const Masterpage = (props) => {
             </Button>
           </DialogActions>
         </Dialog>
-      </Content>      
-    </MasterPageContainer>        
+      </Content>
+    </MasterPageContainer>
   );
 };
 

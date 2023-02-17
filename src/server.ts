@@ -10,6 +10,9 @@ import routerConfiguracaoGlobal from './router/configuracaoGlobal.router'
 import routerStatus from './router/status.router'
 import routerAtividade from './router/atividade.router'
 import routerMensagem from './router/mensagem.router'
+import routerUsuarioAtividade from './router/usuarioAtividade.router'
+import routerClassificacao from './router/classificacao.router'
+import routerUsuarioDemandado from './router/usurarioDemandado.router'
 
 const path = require('path')
 
@@ -30,6 +33,7 @@ class Server {
   private routers () {
     this.application.use('/api/authentication/', routerAuthentication)
     this.application.use('/api/usuario/', routerUsuario)
+    this.application.use('/api/usuarioDemandado/', routerUsuarioDemandado)
     this.application.use('/api/unidade/', routerUnidade)
     this.application.use('/api/area/', routerArea)
     this.application.use('/api/perfil/', routerPerfil)
@@ -37,6 +41,8 @@ class Server {
     this.application.use('/api/status/', routerStatus)
     this.application.use('/api/atividade/', routerAtividade)
     this.application.use('/api/mensagem/', routerMensagem)
+    this.application.use('/api/usuarioAtividade/', routerUsuarioAtividade)
+    this.application.use('/api/classificacao/', routerClassificacao)
 
     this.application.use(express.static(path.resolve('app', 'build')))
     this.application.get('/*', (req, res) =>

@@ -3,7 +3,23 @@ import { Button, Chip, IconButton, LinearProgress } from '@mui/material'
 import MoreIcon from '@mui/icons-material/MoreVert'
 import PlayCircleIcon from '@mui/icons-material/PlayCircle'
 
-const TaskItem = () => {
+const TaskItem = (props) => {
+  const { idChamado, tituloChamado, protocoloChamado,
+    classificacao, criacaoChamado,status } = props
+
+
+  const data = new Date(props.criacaoChamado)
+  function formDate(data) {
+    var day = data.getDate();
+    var month = data.getMonth() + 1;
+    var year = data.getFullYear();
+    var dateFormatted = day + '/' + (month) + '/' + year;
+    return dateFormatted
+  }
+  var date = formDate(data)
+
+
+
   return (
     <div style={{
       display: 'flex',
@@ -29,7 +45,7 @@ const TaskItem = () => {
         border: '1px solid #e0e0e0'
       }}>
         <div style={{ display: 'flex', flexDirection: 'row' }}>
-          <div style={{ flex: 1, fontSize: 15, fontWeight: 'bold', color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>Risk Management</div>
+          <div style={{ flex: 1, fontSize: 15, fontWeight: 'bold', color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>Titulo : {props.tituloChamado}</div>
           <div>
             <IconButton size="small" edge="end" color="inherit">
               <MoreIcon />
@@ -37,15 +53,28 @@ const TaskItem = () => {
           </div>
         </div>
         <div style={{ display: 'flex', flexDirection: 'row', marginTop: 8 }}>
-          <div>
-            <Chip size="small" label="Importante" />
+
+
+          <div style={{ fontSize: 12, marginLeft: 8, marginRight: 8, position: 'relative' }}>
+            <Chip size="small" label={"Protocolo: " + props.protocoloChamado} />
           </div>
-          <div style={{ marginLeft: 8, marginRight: 8 }}>
-            <Chip size="small" label="24/01/2023 14:35:00" />
+
+
+
+
+          <div style={{ marginLeft: 15, marginRight: 8, position: 'relative' }}>
+            <Chip size="small" label={"Chamado aberto em: " + date} />
           </div>
-          <div>
-            <Chip size="small" label="Em Execução" />
+          <div style={{ fontSize: 12, marginLeft: 8, marginRight: 8, position: 'relative' }}>
+            <Chip size="small" label={"Classificação: " + props.classificacao} />
           </div>
+
+          <div style={{ fontSize: 12, marginLeft: 8, marginRight: 8, position: 'relative' }}>
+            <Chip size="small" label={"Status: " + props.status} />
+          </div>
+
+
+        
         </div>
         <div style={{ fontSize: 13, color: '#424242', marginTop: 16 }}>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.

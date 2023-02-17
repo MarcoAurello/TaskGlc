@@ -4,28 +4,12 @@ import EditIcon from '@mui/icons-material/Edit';
 import TaskFilter from '../components/task-filter'
 import TaskItem from '../components/task-item'
 
-const Home = () => {
+const home = () => {
   return (
     <div>
       <TaskFilter />
       <TaskItem />
-      <TaskItem />
-      <TaskItem />
-      <TaskItem />
-      <TaskItem />
-      <TaskItem />
-      <TaskItem />
-      <TaskItem />
-      <TaskItem />
-      <TaskItem />
-      <TaskItem />
-      <TaskItem />
-      <TaskItem />
-      <TaskItem />
-      <TaskItem />
-      <TaskItem />
-      <TaskItem />
-      <TaskItem />
+  
       <SpeedDial
         ariaLabel="Nova Tarefa"
         sx={{ position: 'fixed', bottom: 16, right: 16 }}
@@ -36,4 +20,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default home;
