@@ -52,7 +52,7 @@ const AtividadeRecebidaNotificationItem = (props) => {
         if (cor === 'Não Definido') {
             var color = "#9AFF9A"
         } if (cor === 'Circunstancial') {
-            var color = "#fffcb7"
+            var color = "#f2921d"
         } if (cor === 'Importante') {
             var color = "#FFA500"
         } if (cor ==='Urgente') {
@@ -69,11 +69,13 @@ const AtividadeRecebidaNotificationItem = (props) => {
             <div style={{ marginLeft: 16,marginBottom:5 }}><b>Chegou Atividade &#9997; </b>
 
                 <div style={{ width: '100%', fontSize: 12, color: '#424242' }}>{'Chamado: ' + item.titulo}</div>
-                <div   style={{ width: '100%', fontSize: 12, color: corCriticidade( item.Classificacao.nome) }}>{'Clasificação: ' + item.Classificacao.nome}</div>
-                <div style={{ width: '100%', fontSize: 12, color: '#424242' }}>{'Problema: ' + item.titulo}</div>
+                <div style={{ width: '100%', fontSize: 12, color: '#424242' }}>{'Solicitante: ' + item.Usuario.nome}</div>
+                {/* <div   style={{ width: '100%', fontSize: 12, color: corCriticidade( item.Classificacao.nome) }}>{'Clasificação: ' + item.Classificacao.nome}</div> */}
+                {/* <div style={{ width: '100%', 
+                fontSize: 12, color: '#424242' }}>{'Problema: ' + item.titulo}</div> */}
 
                 <div style={{ width: '135px' , marginTop: 8, backgroundColor:'#1E90FF', borderRadius:50, paddingLeft: 8 }}>
-                    Abrir o Chamado
+                   ver o chamado
                 </div>
             </div>
         </MenuItem>

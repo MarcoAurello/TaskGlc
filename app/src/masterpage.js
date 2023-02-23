@@ -23,6 +23,7 @@ import { Badge, Button, CircularProgress, Dialog, DialogActions, DialogContent, 
 
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
+import AutoAwesomeMotionIcon from '@mui/icons-material/AutoAwesomeMotion';
 
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
@@ -206,16 +207,16 @@ const Masterpage = (props) => {
           const { status } = response
           response.json().then(data => {
             if (status === 401) {
-              alert('11')
+              // alert('11')
             } else if (status === 200) {
-              alert(JSON.stringify(data))
+              // alert(JSON.stringify(data))
               setUsuariosNaoValidados(data.data)
             }
           })
         })
     }
 
-    alert(JSON.stringify(logged))
+    // alert(JSON.stringify(logged))
     if (logged && logged.Perfil && (logged.Perfil.nome === PerfilUtils.Gerente || logged.Perfil.nome === PerfilUtils.Coordenador)) {
       setInterval(carregarUsuariosNaoValidados, 1000)
     }
@@ -236,10 +237,10 @@ const Masterpage = (props) => {
           const { status } = response
           response.json().then(data => {
             if (status === 401) {
-              alert('11')
+              // alert('11')
             } else if (status === 200) {
               setAtividadesNaoAtribuidas(data.data)
-              alert(JSON.stringify(data))
+              // alert(JSON.stringify(data))
               // setUsuariosNaoValidados(data.data)
             }
           })
@@ -267,10 +268,10 @@ const Masterpage = (props) => {
           const { status } = response
           response.json().then(data => {
             if (status === 401) {
-              alert('11')
+              // alert('11')
             } else if (status === 200) {
               setAtividadeRecebida(data.data)
-              alert(JSON.stringify(data))
+              // alert(JSON.stringify(data))
               // setUsuariosNaoValidados(data.data)
             }
           })
@@ -278,7 +279,8 @@ const Masterpage = (props) => {
     }
 
 
-    if (logged && logged.Perfil && (logged.Perfil.nome === PerfilUtils.Gerente || logged.Perfil.nome === PerfilUtils.Coordenador)) {
+    if (logged && logged.Perfil && (logged.Perfil.nome === PerfilUtils.Gerente || logged.Perfil.nome === PerfilUtils.Coordenador
+      || logged.Perfil.nome === PerfilUtils.Administrador || logged.Perfil.nome === PerfilUtils.Funcionário)) {
       setInterval(carregarAtividadesRecebidas, 1000)
     }
   }, [logged])
@@ -321,20 +323,25 @@ const Masterpage = (props) => {
       })
   }
 
+ 
+
+
   const actions = [
     <Tooltip title="Aprovação Equipe" placement="bottom">
-    <IconButton size="large" color="inherit" id="positioned-user-notification-icon-button"
-      onClick={(e) => {
-        setAnchorElUserNotification(e.currentTarget)
-        setOpenUserNotification(true)
-      }}>
-      <Badge badgeContent={usuariosNaoValidados.length} color="error">
-        <ManageAccountsIcon />
-      </Badge>
-    </IconButton>
-  </Tooltip>,
+      <IconButton size="large" color="inherit" id="positioned-user-notification-icon-button"
+        onClick={(e) => {
+          setAnchorElUserNotification(e.currentTarget)
+          setOpenUserNotification(true)
+        }}>
+        <Badge badgeContent={usuariosNaoValidados.length} color="error">
+          <ManageAccountsIcon />
+        </Badge>
+      </IconButton>
+    </Tooltip>,
 
-    <Tooltip title="Aprovar Atividade" placement="bottom">
+
+
+    <Tooltip Tooltip title="Aprovar Atividade" placement="bottom" >
       <IconButton size="large" color="inherit" id="positioned-msg-notification-icon-button"
         onClick={(e) => {
           setAnchorElAtividadeNaoAtribuidaNotification(e.currentTarget)
@@ -344,7 +351,11 @@ const Masterpage = (props) => {
           <NotificationsIcon />
         </Badge>
       </IconButton>
-    </Tooltip>,
+    </Tooltip >,
+
+    
+
+
 
     <Tooltip title="Chegou Atividade" placement="bottom">
       <IconButton size="large" color="inherit" id="positioned-newmsg-notification-icon-button"
@@ -353,7 +364,7 @@ const Masterpage = (props) => {
           setOpenAtividadeRecebidaNotification(true)
         }}>
         <Badge badgeContent={atividadesRecebida.length} color="error">
-          <NotificationsIcon />
+          <AutoAwesomeMotionIcon></AutoAwesomeMotionIcon>
         </Badge>
       </IconButton>
     </Tooltip>,

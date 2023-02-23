@@ -20,6 +20,7 @@ const PageContainer = styled.div`
 
 const AtividadeForm = (props) => {
   const [open, setOpen] = useState(false);
+  const [openStatus, setOpenStatus] = useState(false);
 
   const { id } = props.match.params;
   const [openLoadingDialog, setOpenLoadingDialog] = useState(false)
@@ -28,6 +29,9 @@ const AtividadeForm = (props) => {
 
   const [classificacao, setClassificacao] = useState('')
   const [newClassificacao, setNewClassificacao] = useState('')
+  const [newStatus, setNewStatus] = useState('')
+  const[newStatusControler, setNewStatusControler ]=useState('')
+  
   const [protocolo, setProtocolo] = useState('')
   const [status, setStatus] = useState('')
   const [valueArea, setValueArea] = useState('')
@@ -47,13 +51,16 @@ const AtividadeForm = (props) => {
   const [atividade, setAtividade] = useState(null)
   const [mensagens, setMensagens] = useState([])
   const [classificarChamado, setClassificarChamado] = useState([])
+  const[alterarStatus, setAltararStatus] =useState([])
+ 
 
   const [usuarioExecutor, setusuarioExecutor] = useState([])
   const [fkUsuarioExecutor, setFKUsuarioExecutor] = useState('')
   const [fkAreaDemandada, setFkAreaDemandada] = useState('')
 
+
   const [idChamado, setIdChamado] = useState('')
-  
+
 
 
 
@@ -86,7 +93,8 @@ const AtividadeForm = (props) => {
               setTitle(data.data.titulo)
               setFkAreaDemandada(data.data.fkArea)
               setIdChamado(data.data.id)
-              
+
+
 
               carregarMensagem()
 
@@ -171,6 +179,33 @@ const AtividadeForm = (props) => {
         })
     }
 
+    
+    function carregarStatus() {
+      // setOpenLoadingDialog(true)
+      const token = getCookie('_token_task_manager')
+      const params = {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      }
+      fetch(`${process.env.REACT_APP_DOMAIN_API}/api/status/`, params)
+        .then(response => {
+          const { status } = response
+          response.json().then(data => {
+            setOpenLoadingDialog(false)
+
+            if (status === 401) {
+
+            } else if (status === 200) {
+              setAltararStatus(data.data)
+              // alert("3")
+              // alert(JSON.stringify(data))
+
+            }
+          }).catch(err => setOpenLoadingDialog(true))
+        })
+    }
+
     function carregarFuncionarios() {
       // setOpenLoadingDialog(true)
       const token = getCookie('_token_task_manager')
@@ -186,7 +221,7 @@ const AtividadeForm = (props) => {
             setOpenLoadingDialog(false)
 
             if (status === 401) {
-              alert(status)
+              // alert(status)
             } else if (status === 200) {
               setusuarioExecutor(data.data)
               // filtrarUsuariosDemandados()
@@ -204,6 +239,7 @@ const AtividadeForm = (props) => {
       carregarRegistro()
       carregarClassificacao()
       carregarFuncionarios()
+        carregarStatus()
     } else {
       carregarUnidade()
     }
@@ -228,6 +264,7 @@ const AtividadeForm = (props) => {
             } else if (status === 200) {
               setArea(data.data)
               setOpenLoadingDialog(false)
+              
             }
           }).catch(err => setOpenLoadingDialog(true))
         })
@@ -235,8 +272,48 @@ const AtividadeForm = (props) => {
 
     if (fkUnidade) {
       carregarArea()
+     
     }
   }, [fkUnidade])
+
+
+  const onSaveStatus = () => {
+    const token = getCookie('_token_task_manager')
+    const params = {
+      method: 'POST', 
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ 
+        newStatus
+      }) 
+    }
+
+    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/${id}/edit`, params)
+      .then(response => {
+        const { status } = response
+        response.json().then(data => {
+          setOpenLoadingDialog(false)
+          if (status === 401) {
+            setMessage(data.message)
+            setOpenMessageDialog(true)
+          } else if (status === 200) {
+        
+           
+
+            
+            setMessage(data.message)
+            setOpenMessageDialog(true)
+          
+            window.location.href = `${process.env.REACT_APP_DOMAIN}/home/`
+
+            
+            // setArea(data.data)
+          }
+        }).catch(err => setOpenLoadingDialog(true))
+      })
+  }
 
 
   const onSave = () => {
@@ -267,6 +344,9 @@ const AtividadeForm = (props) => {
             setAtividade(data.data)
             setMessage(data.message)
             setOpenMessageDialog(true)
+            window.location.href = `${process.env.REACT_APP_DOMAIN}/home/`
+
+            
             // setArea(data.data)
           }
         }).catch(err => setOpenLoadingDialog(true))
@@ -334,7 +414,7 @@ const AtividadeForm = (props) => {
         response.json().then(data => {
           setOpenLoadingDialog(false)
           if (status === 401) {
-            alert('o1')
+            // alert('o1')
             setMessage(data.message)
             setOpenMessageDialog(true)
           } else if (status === 200) {
@@ -366,9 +446,9 @@ const AtividadeForm = (props) => {
 
         }
 
-        {classificacao != "Não Definido" && protocolo != ''   ?
+        {classificacao != "Não Definido" && protocolo != '' ?
           <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
-            <Button variant="contained"  color="error" onClick={() => setOpen(true)}>Alterar Status do chamado</Button>
+            <Button variant="contained" color="error" onClick={() => setOpenStatus(true)}>Alterar Status do chamado</Button>
           </div> : ''
 
         }
@@ -556,25 +636,50 @@ const AtividadeForm = (props) => {
               }
 
             </select>
-
-
-
           </FormControl>
-
-
-
-
-
-
-
-
-
-
-
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpen(false)}>Cancelar</Button>
           <Button onClick={() => { criarExecucao() }} >Enviar</Button>
+        </DialogActions>
+      </Dialog>
+
+
+
+
+
+
+      <Dialog open={openStatus}  >
+        
+        <DialogContent>
+          <DialogContentText>
+
+          </DialogContentText>
+
+          
+
+          <p></p>
+
+          <FormControl fullWidth labelId="demo-simple-select-label" id="demo-simple-select">
+
+
+            <select style={{ fontSize: 14 }} onChange={e => setNewStatus(e.target.value)}>
+              <option >Alterar Stastus</option>)
+
+              {
+                alterarStatus.map((status, key) => <option name={status.nome} value={status.id} >
+                  {status.nome}</option>)
+              }
+            </select>
+
+            <hr></hr>
+
+          
+          </FormControl>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpen(false)}>Cancelar</Button>
+          <Button onClick={() => { onSaveStatus() }} >Alterar</Button>
         </DialogActions>
       </Dialog>
 

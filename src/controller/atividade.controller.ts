@@ -7,7 +7,7 @@ import protocolo from "../utils/protocolo.utils";
 import Area from "../model/area.model";
 import Usuario from "../model/usuario.model";
 import Classificacao from "../model/classificacao.model";
-import Mensagem from '../model/mensagem.model'
+
 
 import Unidade from "../model/unidade.model";
 
@@ -93,8 +93,32 @@ class AtividadeController implements IController {
     }
   }
 
-  async update(req: any, res: Response, next: NextFunction): Promise<any> {
-    throw new Error("Method not implemented.");
+  async update (req: Request, res: Response, next: NextFunction): Promise<any> {
+    try {
+      const { id } = req.params
+      // console.log(id)
+      const {
+        newStatus
+      } = req.body
+
+      // console.log(req.body)
+
+      await Atividade.update({
+        fkStatus: newStatus
+      }, {
+        where: {
+          id: id
+        },
+        individualHooks: false
+      })
+
+      const registro = await Atividade.findOne({ where: { id } })
+
+      res.status(200).json({ data: registro, message: 'Alteração realizada com sucesso.' })
+    } catch (err) {
+      console.log(err)
+      res.status(401).json({ message: err.errors[0].message })
+    }
   }
 
   async minhasAtividades(
@@ -137,8 +161,7 @@ class AtividadeController implements IController {
       const area = await Area.findOne({ where: { id: req.usuario.fkArea } });
 
       const registros = await Atividade.findAll({
-        // include: [{ model: Area, include: [Unidade] }, Usuario],
-        include: [Area],
+        include: [{ model: Area, include: [Unidade] }, Usuario],
         where: {
           pessoal: false,
           fkUsuarioExecutor: null,
@@ -159,7 +182,7 @@ class AtividadeController implements IController {
   ): Promise<any> {
     try {
       const registros = await Atividade.findAll({
-        include: [Classificacao, Usuario],
+        include: [Classificacao, Usuario, Status],
         where: {
           fkUsuarioExecutor: req.usuario.id
 

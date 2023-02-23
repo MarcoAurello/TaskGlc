@@ -60,13 +60,18 @@ const MinhasAtividades = (props) => {
       tituloChamado={item.titulo}
       protocoloChamado={item.protocolo}
       criacaoChamado={item.createdAt}
-      classificacao={item.Classificacao.nome}
+      // classificacao={item.Classificacao.nome}
       status={item.Status.nome}
       
       />
       )}
       
-
+      <SpeedDial
+        ariaLabel="Nova Tarefa"
+        sx={{ position: 'fixed', bottom: 16, right: 16 }}
+        icon={<EditIcon />} 
+        onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/cadastro`}
+        />
 
 
 
