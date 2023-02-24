@@ -6,7 +6,7 @@ import TaskItem from '../components/task-item'
 
 const getCookie = require('../utils/getCookie')
 
-const MinhasAtividades = (props) => {
+const ChamadosAbertos = (props) => {
   const [minhasAtividades,setMinhasAtividades] = useState([])
 
 
@@ -18,7 +18,7 @@ const MinhasAtividades = (props) => {
       }
     }
 
-    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/minhasAtividades/`, params)
+    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/chamadosAbertos/`, params)
       .then(response => {
         const { status } = response
         response.json().then(data => {
@@ -74,7 +74,7 @@ const MinhasAtividades = (props) => {
         onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/cadastro`}
         />
 
-
+          
 
 
 
@@ -82,4 +82,4 @@ const MinhasAtividades = (props) => {
   );
 };
 
-export default MinhasAtividades;
+export default ChamadosAbertos;

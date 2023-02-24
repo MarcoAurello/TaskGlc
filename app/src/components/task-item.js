@@ -1,11 +1,17 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Chip, IconButton, LinearProgress } from '@mui/material'
 import MoreIcon from '@mui/icons-material/MoreVert'
 import PlayCircleIcon from '@mui/icons-material/PlayCircle'
 
+const getCookie = require('../utils/getCookie')
+
 const TaskItem = (props) => {
   const { idChamado, tituloChamado, protocoloChamado,
     classificacao, criacaoChamado,status } = props
+
+    const[mensagem, setMensagem]= useState([])
+
+   
 
 
   const data = new Date(props.criacaoChamado)
@@ -17,6 +23,49 @@ const TaskItem = (props) => {
     return dateFormatted
   }
   var date = formDate(data)
+
+
+  
+    // function carregarMensagem() {
+    //   // setOpenLoadingDialog(true)
+    //   const token = getCookie('_token_task_manager')
+    //   const params = {
+    //     headers: {
+    //       'Authorization': `Bearer ${token}`
+    //     }
+    //   }
+    //   fetch(`${process.env.REACT_APP_DOMAIN_API}/api/mensagem/?fkAtividade=${idChamado}`, params)
+    //     .then(response => {
+    //       const { status } = response
+    //       response.json().then(data => {
+    //         // setOpenLoadingDialog(false)
+  
+    //         if (status === 401) {
+    //           alert('1111')
+  
+    //         } else if (status === 200) {
+    //           // alert(JSON.stringify(data.data))
+    //           setMensagem(data.data)
+    //            alert(JSON.stringify(mensagem))
+    //           // alert("3")
+    //           // alert(JSON.stringify(data))
+  
+    //         }
+    //       }).catch(err =>{
+    //         alert(err)
+    //       })
+    //     })
+    // }
+
+
+
+  
+
+  // if(protocoloChamado != null){
+  //   carregarMensagem()
+
+  // }
+ 
 
 
 
@@ -45,12 +94,13 @@ const TaskItem = (props) => {
         border: '1px solid #e0e0e0'
       }}>
         <div style={{ display: 'flex', flexDirection: 'row' }}>
-          <div style={{ flex: 1, fontSize: 15, fontWeight: 'bold', color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>Titulo : {props.tituloChamado}</div>
+          {/* <div style={{ flex: 1, fontSize: 15, fontWeight: 'bold', color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>Titulo : {props.tituloChamado}</div>
+         
           <div>
             <IconButton size="small" edge="end" color="inherit">
               <MoreIcon />
             </IconButton>
-          </div>
+          </div> */}
         </div>
         <div style={{ display: 'flex', flexDirection: 'row', marginTop: 8 }}>
 
@@ -77,11 +127,16 @@ const TaskItem = (props) => {
         
         </div>
         <div style={{ fontSize: 13, color: '#424242', marginTop: 16 }}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          
+        <div style={{ flex: 1, fontSize: 15, fontWeight: 'bold', color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+          Chamado : {props.tituloChamado}</div>
+         
+        
         </div>
+        
         <div style={{ marginTop: 16, display: 'flex', flexDirection: 'row' }}>
-          <Button variant="contained" startIcon={<PlayCircleIcon />}>
-            Iniciar
+          <Button variant="contained" startIcon={<PlayCircleIcon />} onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${idChamado}/edit`}>
+            ver chamado 
           </Button>
           <div style={{ flex: 1 }}></div>
           <LinearProgress color="success" variant="determinate" value={100} />

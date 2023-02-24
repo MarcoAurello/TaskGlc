@@ -26,6 +26,12 @@ module.exports = {
         nome: 'Gerência de Pessoas e Cultura',
         createdAt: new Date(),
         updatedAt: new Date()
+      },
+      {
+        id: uuid(),
+        nome: 'pedagogico UEP',
+        createdAt: new Date(),
+        updatedAt: new Date()
       }
     ], {})
   },

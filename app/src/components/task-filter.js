@@ -5,6 +5,7 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
 const TaskFilter = (props) => {
   const [funcionario, setFuncionario] = useState('');
+
   return (
     <div style={{
       display: 'flex',
@@ -22,7 +23,7 @@ const TaskFilter = (props) => {
           </IconButton>
         </div>
         <div style={{fontSize: 14}}>
-          <Chip label="Diego Alisson" onClick={() => alert('teste')} />
+          <Chip label='Nome Usuario' onClick={() => alert('teste')} />
         </div>
       </div>
       <div style={{

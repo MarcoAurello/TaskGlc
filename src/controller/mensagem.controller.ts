@@ -39,8 +39,35 @@ class MensagemController implements IController {
     }
   }
 
+  async mensagemPrimeira (req: Request, res: Response, next: NextFunction): Promise<any> {
+    try {
+      const { fkAtividade } = req.query
+
+      const registros = await Mensagem.findAll({
+        where: {fkAtividade : fkAtividade }
+
+      })
+
+      res.status(200).json({ data: registros })
+    } catch (err) {
+      res.status(401).json({ message: err.errors[0].message })
+    }
+  }
+
+
   async find (req: Request, res: Response, next: NextFunction): Promise<any> {
-    throw new Error('Method not implemented.')
+     try {
+      const { fkAtividade } = req.query
+      
+      const registros = await Mensagem.findAll({
+        where: {fkAtividade : fkAtividade }
+
+      })
+
+      res.status(200).json({ data: registros })
+    } catch (err) {
+      res.status(401).json({ message: err.errors[0].message })
+    }
   }
 
   async update (req: Request, res: Response, next: NextFunction): Promise<any> {

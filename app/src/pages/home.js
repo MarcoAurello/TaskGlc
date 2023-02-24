@@ -1,4 +1,4 @@
-import { SpeedDial } from "@mui/material";
+import { Button, SpeedDial } from "@mui/material";
 import React from "react";
 import EditIcon from '@mui/icons-material/Edit';
 import TaskFilter from '../components/task-filter'
@@ -8,8 +8,20 @@ const home = () => {
   return (
     <div>
       <TaskFilter />
-      <TaskItem />
-  
+      <center>
+      <div >
+      <Button  size="large" variant="contained" style={{marginRight: 20 ,marginTop:20}} onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/minhasAtividades/`} >Minhas Tarefas</Button>
+      <Button size="large" variant="contained"style={{marginRight: 20 ,marginTop:20}} onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/chamadosAbertos/`} >Chamados Abertos</Button>
+      <Button  size="large" variant="contained" style={{marginRight: 20 ,marginTop:20}} onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/cadastro`}>Abrir Chamado</Button>
+
+      </div>
+    
+
+
+      </center>
+    
+        
+        
       <SpeedDial
         ariaLabel="Nova Tarefa"
         sx={{ position: 'fixed', bottom: 16, right: 16 }}

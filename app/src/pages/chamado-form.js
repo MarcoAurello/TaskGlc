@@ -439,7 +439,7 @@ const AtividadeForm = (props) => {
           <TextField size="small" fullWidth label="Protocolo" disabled variant="outlined" value={protocolo} />
         </div> : ''}
 
-        {classificacao == "Não Definido" && status == "Aberto" ?
+        {classificacao == "Não Definido" && status == "Aberto"  ?
           <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
             <Button variant="contained" color="error" onClick={() => setOpen(true)}>Encaminhar Chamado</Button>
           </div> : ''

@@ -7,6 +7,7 @@ import protocolo from "../utils/protocolo.utils";
 import Area from "../model/area.model";
 import Usuario from "../model/usuario.model";
 import Classificacao from "../model/classificacao.model";
+import UsuarioAtividade from "../model/usuarioAtividade.model"
 
 
 import Unidade from "../model/unidade.model";
@@ -79,9 +80,10 @@ class AtividadeController implements IController {
       const registro = await Atividade.findOne({
         include: [
           { model: Area, include: [Unidade] },
+         
           Classificacao,
           Status,
-          Usuario,
+          Usuario
         ],
         where: { id },
       });
@@ -185,6 +187,26 @@ class AtividadeController implements IController {
         include: [Classificacao, Usuario, Status],
         where: {
           fkUsuarioExecutor: req.usuario.id
+
+        },
+      });
+
+      res.status(200).json({ data: registros });
+    } catch (err) {
+      res.status(401).json({ data: null });
+    }
+  }
+
+  async chamadosAbertos(
+    req: any,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const registros = await Atividade.findAll({
+        include: [Classificacao, Usuario, Status],
+        where: {
+          fkUsuarioSolicitante: req.usuario.id
 
         },
       });

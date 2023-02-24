@@ -6,6 +6,7 @@ import Content from "./components/content";
 import Home from './pages/home';
 import Usuario from './pages/usuario'
 import MinhasAtividades from './pages/minhasAtividades'
+import ChamadosAbertos from './pages/chamadosAbertos'
 
 import MenuIcon from '@mui/icons-material/Menu'
 import NotificationsIcon from '@mui/icons-material/Notifications'
@@ -38,6 +39,7 @@ import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import AttachEmailIcon from '@mui/icons-material/AttachEmail';
 import PeopleIcon from '@mui/icons-material/People';
 import UsuarioForm from "./pages/usuario-form";
+import HomeIcon from '@mui/icons-material/Home';
 
 import isAuthenticated from './utils/isAuthenticated'
 import ConfiguracaoForm from "./pages/configuracao-form";
@@ -109,6 +111,7 @@ const Masterpage = (props) => {
       setLogged(_.data.data)
       setPrimeiroLogin(_.data.data.primeiroLogin)
       setOpenDialogPrimeiroAcesso(_.data.data.primeiroLogin)
+
     })
   }, []);
 
@@ -160,6 +163,7 @@ const Masterpage = (props) => {
 
     if (primeiroLogin) {
       carregarPerfil()
+
     }
 
   }, [primeiroLogin])
@@ -323,7 +327,7 @@ const Masterpage = (props) => {
       })
   }
 
- 
+
 
 
   const actions = [
@@ -353,7 +357,7 @@ const Masterpage = (props) => {
       </IconButton>
     </Tooltip >,
 
-    
+
 
 
 
@@ -500,6 +504,16 @@ const Masterpage = (props) => {
         onClose={() => setOpenDrawer(false)}>
         <Box sx={{ width: 250 }} role="presentation">
           <List>
+          <ListItem disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  <HomeIcon />
+                </ListItemIcon>
+                <ListItemText primary='Home' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/home`} />
+              </ListItemButton>
+            </ListItem>
+
+
             <ListItem disablePadding>
               <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/minhasAtividades/`}>
                 <ListItemIcon>
@@ -508,14 +522,16 @@ const Masterpage = (props) => {
                 <ListItemText primary='Minhas Atividades' />
               </ListItemButton>
             </ListItem>
+
             <ListItem disablePadding>
-              <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/home/`}>
+              <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/chamadosAbertos/`}>
                 <ListItemIcon>
                   <FormatListNumberedIcon />
                 </ListItemIcon>
                 <ListItemText primary='Chamados Abertos' />
               </ListItemButton>
             </ListItem>
+
             <ListItem disablePadding>
               <ListItemButton>
                 <ListItemIcon>
@@ -524,6 +540,9 @@ const Masterpage = (props) => {
                 <ListItemText primary='Equipe' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/equipe`} />
               </ListItemButton>
             </ListItem>
+
+           
+
             {
               logged && logged.validado && logged.Perfil.nome === PerfilUtils.Administrador ?
                 <>
@@ -607,6 +626,11 @@ const Masterpage = (props) => {
             exact
             path="/minhasAtividades"
             render={(props) => <MinhasAtividades {...props} logged={logged} />}
+          />
+          <Route
+            exact
+            path="/chamadosAbertos"
+            render={(props) => <ChamadosAbertos {...props} logged={logged} />}
           />
 
 

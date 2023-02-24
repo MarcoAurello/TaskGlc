@@ -25,6 +25,7 @@ module.exports = {
 
     const areas = await queryInterface.sequelize.query('select * from area where nome = \'Sistemas - Desenvolvimento\'')
     const areasGPC = await queryInterface.sequelize.query('select * from area where nome = \'Coordenação de Pessoal\'')
+    const unidadeUEP = await queryInterface.sequelize.query('select * from area where nome = \'pedagogico UEP\'')
 
     await queryInterface.bulkInsert('usuario', [
       {
@@ -70,7 +71,61 @@ module.exports = {
         primeiroLogin: false,
         createdAt: new Date(),
         updatedAt: new Date()
+      },
+      {
+        id: uuid(),
+        nome: 'Usuario teste gpc',
+        email: 'gpc2@pe.senac.br',
+        passwordHash: await bcrypt.hash('gti@2021', 8),
+        validado: false,
+        ativo: true,
+        demandante: false,
+        primeiroLogin: true,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+
+      {
+        id: uuid(),
+        nome: 'Usuario teste UEP',
+        email: 'uep@pe.senac.br',
+        passwordHash: await bcrypt.hash('gti@2021', 8),
+        validado: false,
+        ativo: true,
+        demandante: false,
+        primeiroLogin: true,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: uuid(),
+        nome: 'Usuario teste UEP2',
+        email: 'uep2@pe.senac.br',
+        passwordHash: await bcrypt.hash('gti@2021', 8),
+        validado: false,
+        ativo: true,
+        demandante: false,
+        primeiroLogin: true,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: uuid(),
+        nome: 'Gerente UEP',
+        email: 'gerenteuep@pe.senac.br',
+        passwordHash: await bcrypt.hash('gti@2021', 8),
+        telefone: '3413yyy63',
+        chapa: '154545585-F1',
+        demandante: true,
+        fkPerfil: perfilGerenteRows[0].id,
+        fkArea: unidadeUEP[0][0].id,
+        validado: true,
+        ativo: true,
+        primeiroLogin: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
       }
+
     ], {})
   },
 
