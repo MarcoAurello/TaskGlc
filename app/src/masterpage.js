@@ -7,8 +7,11 @@ import Home from './pages/home';
 import Usuario from './pages/usuario'
 import MinhasAtividades from './pages/minhasAtividades'
 import ChamadosAbertos from './pages/chamadosAbertos'
+import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
+import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 
 import MenuIcon from '@mui/icons-material/Menu'
+import MarkUnreadChatAltIcon from '@mui/icons-material/MarkUnreadChatAlt';
 import NotificationsIcon from '@mui/icons-material/Notifications'
 import AccountCircle from '@mui/icons-material/AccountCircle'
 import ContactMailIcon from '@mui/icons-material/ContactMail';
@@ -373,6 +376,8 @@ const Masterpage = (props) => {
       </IconButton>
     </Tooltip>,
 
+
+
     <IconButton
       size="large"
       edge="end"
@@ -519,7 +524,7 @@ const Masterpage = (props) => {
                 <ListItemIcon>
                   <PlaylistAddCheckIcon />
                 </ListItemIcon>
-                <ListItemText primary='Minhas Atividades' />
+                <ListItemText primary='Atividades Recebidas' /><KeyboardDoubleArrowLeftIcon/>
               </ListItemButton>
             </ListItem>
 
@@ -528,7 +533,7 @@ const Masterpage = (props) => {
                 <ListItemIcon>
                   <FormatListNumberedIcon />
                 </ListItemIcon>
-                <ListItemText primary='Chamados Abertos' />
+                <ListItemText primary='Atividades Solicitadas' /><KeyboardDoubleArrowRightIcon/>
               </ListItemButton>
             </ListItem>
 

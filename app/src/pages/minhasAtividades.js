@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import EditIcon from '@mui/icons-material/Edit';
 import TaskFilter from '../components/task-filter'
 import TaskItem from '../components/task-item'
+import { display } from "@mui/system";
+
 
 const getCookie = require('../utils/getCookie')
 
@@ -53,6 +55,10 @@ const MinhasAtividades = (props) => {
   return (
     <div>
       <TaskFilter />
+      <center>
+      <div style={{fontSize: 24, fontWeight: 'bold',
+       marginBottom: 4, marginRight: 8, alignItems:'center',
+       }}>Atividades Recebidas</div></center>
 
       {minhasAtividades.map((item, index) =>
       <TaskItem key={index} 
@@ -62,6 +68,10 @@ const MinhasAtividades = (props) => {
       criacaoChamado={item.createdAt}
       classificacao={item.Classificacao.nome}
       status={item.Status.nome}
+      usuarioDemandante={item.Usuario.nome}
+      usuarioDemandanteTelefone={item.Usuario.telefone}
+      usuarioDemandanteEmail={item.Usuario.email}
+      tela={'minhas'}
       // logado ={item.UsuarioAtividade.Usuario.nome}
       
       />

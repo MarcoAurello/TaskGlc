@@ -64,13 +64,14 @@ const AtividadeRecebidaNotificationItem = (props) => {
     }
 
     return (
-        <MenuItem  style={{display: 'flex',marginBottom:5, flexDirection: 'row', borderBottom: '1px solid #EEEEEE', minWidth: 350}} onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`}>
+        <MenuItem  style={{display: 'flex',marginBottom:5, flexDirection: 'row', borderBottom: '1px solid #EEEEEE', minWidth: 350}}
+         onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`}>
         
             <div style={{ marginLeft: 16,marginBottom:5 }}><b>Chegou Atividade &#9997; </b>
 
                 <div style={{ width: '100%', fontSize: 12, color: '#424242' }}>{'Chamado: ' + item.titulo}</div>
                 <div style={{ width: '100%', fontSize: 12, color: '#424242' }}>{'Solicitante: ' + item.Usuario.nome}</div>
-                {/* <div   style={{ width: '100%', fontSize: 12, color: corCriticidade( item.Classificacao.nome) }}>{'Clasificação: ' + item.Classificacao.nome}</div> */}
+                <div   style={{ width: '100%', fontSize: 12, color: corCriticidade( item.Classificacao.nome) }}>{'Clasificação: ' + item.Classificacao.nome}</div>
                 {/* <div style={{ width: '100%', 
                 fontSize: 12, color: '#424242' }}>{'Problema: ' + item.titulo}</div> */}
 

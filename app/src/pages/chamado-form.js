@@ -5,6 +5,7 @@ import Paper from '@mui/material/Paper';
 import TablePaginationActions from "@mui/material/TablePagination/TablePaginationActions";
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
+import TaskItemDoChamado from "../components/task-item-do-chamado";
 
 
 const getCookie = require('../utils/getCookie')
@@ -30,13 +31,16 @@ const AtividadeForm = (props) => {
   const [classificacao, setClassificacao] = useState('')
   const [newClassificacao, setNewClassificacao] = useState('')
   const [newStatus, setNewStatus] = useState('')
-  const[newStatusControler, setNewStatusControler ]=useState('')
-  
+  const [newStatusControler, setNewStatusControler] = useState('')
+
   const [protocolo, setProtocolo] = useState('')
   const [status, setStatus] = useState('')
   const [valueArea, setValueArea] = useState('')
   const [valueUnidade, setValueUnidade] = useState('')
   const [usuarioSolicitante, setUsuarioSolicitante] = useState('')
+  const[emailUsuarioSolicitante , setEmailUsuarioSolicitante] = useState('')
+  const[telefoneSolicitante,setTelefoneSolicitante]= useState('')
+  const[setorSolicitante, setSetorSolicitante]= useState('')
 
   const [tempoEstimando, setTempoEstimado] = useState('')
   const [createdAt, setCreatedAt] = useState('')
@@ -51,8 +55,8 @@ const AtividadeForm = (props) => {
   const [atividade, setAtividade] = useState(null)
   const [mensagens, setMensagens] = useState([])
   const [classificarChamado, setClassificarChamado] = useState([])
-  const[alterarStatus, setAltararStatus] =useState([])
- 
+  const [alterarStatus, setAltararStatus] = useState([])
+
 
   const [usuarioExecutor, setusuarioExecutor] = useState([])
   const [fkUsuarioExecutor, setFKUsuarioExecutor] = useState('')
@@ -90,6 +94,9 @@ const AtividadeForm = (props) => {
               setValueArea(data.data.Area.nome)
               setValueUnidade(data.data.Area.Unidade.nome)
               setUsuarioSolicitante(data.data.Usuario.nome)
+              setEmailUsuarioSolicitante(data.data.Usuario.email)
+              setTelefoneSolicitante(data.data.Usuario.telefone)
+              // setSetorSolicitante(data.data.Usuario.Area.nome)
               setTitle(data.data.titulo)
               setFkAreaDemandada(data.data.fkArea)
               setIdChamado(data.data.id)
@@ -179,7 +186,7 @@ const AtividadeForm = (props) => {
         })
     }
 
-    
+
     function carregarStatus() {
       // setOpenLoadingDialog(true)
       const token = getCookie('_token_task_manager')
@@ -239,7 +246,7 @@ const AtividadeForm = (props) => {
       carregarRegistro()
       carregarClassificacao()
       carregarFuncionarios()
-        carregarStatus()
+      carregarStatus()
     } else {
       carregarUnidade()
     }
@@ -264,7 +271,7 @@ const AtividadeForm = (props) => {
             } else if (status === 200) {
               setArea(data.data)
               setOpenLoadingDialog(false)
-              
+
             }
           }).catch(err => setOpenLoadingDialog(true))
         })
@@ -272,7 +279,7 @@ const AtividadeForm = (props) => {
 
     if (fkUnidade) {
       carregarArea()
-     
+
     }
   }, [fkUnidade])
 
@@ -280,14 +287,14 @@ const AtividadeForm = (props) => {
   const onSaveStatus = () => {
     const token = getCookie('_token_task_manager')
     const params = {
-      method: 'POST', 
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
-      body: JSON.stringify({ 
+      body: JSON.stringify({
         newStatus
-      }) 
+      })
     }
 
     fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/${id}/edit`, params)
@@ -299,16 +306,16 @@ const AtividadeForm = (props) => {
             setMessage(data.message)
             setOpenMessageDialog(true)
           } else if (status === 200) {
-        
-           
 
-            
+
+
+
             setMessage(data.message)
             setOpenMessageDialog(true)
-          
+
             window.location.href = `${process.env.REACT_APP_DOMAIN}/home/`
 
-            
+
             // setArea(data.data)
           }
         }).catch(err => setOpenLoadingDialog(true))
@@ -346,7 +353,7 @@ const AtividadeForm = (props) => {
             setOpenMessageDialog(true)
             window.location.href = `${process.env.REACT_APP_DOMAIN}/home/`
 
-            
+
             // setArea(data.data)
           }
         }).catch(err => setOpenLoadingDialog(true))
@@ -433,25 +440,49 @@ const AtividadeForm = (props) => {
 
   return (
     <PageContainer>
-      <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 16, marginRight: 3 }}>
-        <h3>Cadastro de Atividade</h3>
-        {id ? <div style={{ flex: 1, marginBottom: 16, marginLeft: 25 }}>
+      <h3>Atividade</h3>
+      {/* {id ? <div style={{ flex: 1, marginBottom: 16, marginLeft: 25 }}>
           <TextField size="small" fullWidth label="Protocolo" disabled variant="outlined" value={protocolo} />
-        </div> : ''}
+        </div> : ''} */}
+      {classificacao == "Não Definido" && status == "Aberto" ?
+        <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
+          <Button variant="contained" color="error" onClick={() => setOpen(true)}>Encaminhar Chamado</Button>
+        </div> : ''
 
-        {classificacao == "Não Definido" && status == "Aberto"  ?
-          <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
-            <Button variant="contained" color="error" onClick={() => setOpen(true)}>Encaminhar Chamado</Button>
-          </div> : ''
+      }
 
-        }
+      {classificacao != "Não Definido" && protocolo != '' ?
+        <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
+          <Button variant="contained"  onClick={() => setOpenStatus(true)}>Alterar Status do chamado</Button>
+        </div> : ''
 
-        {classificacao != "Não Definido" && protocolo != '' ?
-          <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
-            <Button variant="contained" color="error" onClick={() => setOpenStatus(true)}>Alterar Status do chamado</Button>
-          </div> : ''
+      }
 
-        }
+
+      {id ? <div >
+      <TaskItemDoChamado
+        protocolo={protocolo}
+        unidade={valueUnidade}
+        area={valueArea}
+        classificacao={classificacao}
+        solicitante={usuarioSolicitante}
+        status={status}
+        titulo={title}
+        setorSolicitante={setorSolicitante}
+        emailUsuarioSolicitante={emailUsuarioSolicitante}
+        telefoneSolicitante={telefoneSolicitante}
+        setorSol={valueUnidade}
+        
+      />
+      </div> : ''} 
+
+
+
+     
+      <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 16, marginRight: 3 }}>
+
+
+
 
 
 
@@ -459,7 +490,7 @@ const AtividadeForm = (props) => {
         <div style={{ flex: 1 }}></div>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
-        {id ? <div style={{ flex: 1, marginBottom: 16 }}>
+        {/* {id ? <div style={{ flex: 1, marginBottom: 16 }}>
           <TextField size="small" fullWidth label="Unidade" disabled variant="outlined" value={valueUnidade} />
         </div> : ''}
         {id ? <div style={{ flex: 1, marginBottom: 16 }}>
@@ -468,16 +499,16 @@ const AtividadeForm = (props) => {
 
         {id ? <div style={{ flex: 1, marginBottom: 16 }}>
           <TextField size="small" fullWidth label="Classificacao" disabled variant="outlined" value={classificacao} />
-        </div> : ''}
-        {id ? <div style={{ flex: 1, marginBottom: 16 }}>
+        </div> : ''} */}
+        {/* {id ? <div style={{ flex: 1, marginBottom: 16 }}>
           <TextField size="small" fullWidth label="Status" disabled variant="outlined" value={status} />
         </div> : ''}
         {id ? <div style={{ flex: 1, marginBottom: 16 }}>
           <TextField size="small" fullWidth label="Solicitante" disabled variant="outlined" value={usuarioSolicitante} />
-        </div> : ''}
-        {id ? <div style={{ flex: 1, marginBottom: 16 }}>
+        </div> : ''} */}
+        {/* {id ? <div style={{ flex: 1, marginBottom: 16 }}>
           <TextField size="small" fullWidth label="Chamado" disabled variant="outlined" value={title} />
-        </div> : ''}
+        </div> : ''} */}
         {!id ? <>
           <FormGroup>
 
@@ -517,7 +548,7 @@ const AtividadeForm = (props) => {
               <TextField size="small" fullWidth label="Título" variant="outlined" value={titulo} onChange={e => setTitulo(e.target.value)} />
             </div>
             <div style={{ flex: 1, marginBottom: 16 }}>
-              <TextField size="small" fullWidth label="Descrição" multiline rows={6} variant="outlined" value={conteudo} onChange={e => setConteudo(e.target.value)} />
+              <TextField size="small" fullWidth label="Descrição" multiline rows={2} variant="outlined" value={conteudo} onChange={e => setConteudo(e.target.value)} />
             </div>
             <div style={{ flex: 1, display: 'flex', flexDirection: 'row' }}>
               <Button variant="outlined" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/area/`}>Voltar</Button>
@@ -535,7 +566,7 @@ const AtividadeForm = (props) => {
 
 
         {id ? <>
-          <h4>Nova Interação</h4>
+          <h4>Enviar um comentário</h4>
           {/* {classificacao == "Não Definido" && status == "Aberto" ?
             <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
               <Button variant="contained" onClick={() => setOpen(true)}>{'Encaminhar chamado'}</Button>
@@ -544,7 +575,7 @@ const AtividadeForm = (props) => {
           } */}
 
           <div style={{ flex: 1, marginBottom: 16 }}>
-            <TextField size="small" fullWidth label="Descrição" multiline rows={6} variant="outlined" value={conteudo} onChange={e => setConteudo(e.target.value)} />
+            <TextField size="small" fullWidth label="Descrição" multiline rows={2} variant="outlined" value={conteudo} onChange={e => setConteudo(e.target.value)} />
           </div>
 
           <div style={{ flex: 1, display: 'flex', flexDirection: 'row' }}>
@@ -552,13 +583,13 @@ const AtividadeForm = (props) => {
             <div style={{ flex: 1 }}></div>
             <Button variant="contained" onClick={novaInteracao}>{'Enviar'}</Button>
           </div>
-          <h4>Histórico</h4>
-          {mensagens.map((item, index) => <div style={{ borderTop: '1px solid #e0e0e0', padding: 16 }}>
+          <h4>Histórico do chamado</h4>
+          {mensagens.map((item, index) => <div style={{ borderTop: '1px solid #e0e0e0', padding: 2, background: '#EEE9E9', borderRadius: 5, marginBottom: 1, border: '2px solid #e0e0e0' }}>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <div style={{ display: 'flex', flexDirection: 'row' }}>
-                <b style={{ fontSize: 13 }}>{item.Usuario.nome}</b>
+                <b style={{ fontSize: 10 }}>{item.Usuario.nome}</b>
                 <div style={{ flex: 1 }}></div>
-                <b style={{ fontSize: 12 }}>{new Date(item.createdAt).toLocaleString()}</b>
+                <b style={{ fontSize: 10 }}>{new Date(item.createdAt).toLocaleString()}</b>
               </div>
             </div>
             <p>{item.conteudo}</p>
@@ -636,6 +667,8 @@ const AtividadeForm = (props) => {
               }
 
             </select>
+
+            
           </FormControl>
         </DialogContent>
         <DialogActions>
@@ -650,31 +683,32 @@ const AtividadeForm = (props) => {
 
 
       <Dialog open={openStatus}  >
-        
+
         <DialogContent>
           <DialogContentText>
 
           </DialogContentText>
 
-          
+
 
           <p></p>
 
-          <FormControl fullWidth labelId="demo-simple-select-label" id="demo-simple-select">
+          <FormControl fullWidth labelId="demo-simple-select-label" id="demo-simple-select" style={{width: 250}}>
+          <InputLabel id="demo-simple-select-label"> Altarar Status do chamado</InputLabel>
+             
 
-
-            <select style={{ fontSize: 14 }} onChange={e => setNewStatus(e.target.value)}>
-              <option >Alterar Stastus</option>)
+            <Select style={{ fontSize: 20 }} onChange={e => setNewStatus(e.target.value)}>
+            
 
               {
-                alterarStatus.map((status, key) => <option name={status.nome} value={status.id} >
-                  {status.nome}</option>)
+                alterarStatus.map((status, key) => <MenuItem name={status.nome} value={status.id} >
+                  {status.nome}</MenuItem>)
               }
-            </select>
+            </Select>
 
             <hr></hr>
 
-          
+
           </FormControl>
         </DialogContent>
         <DialogActions>

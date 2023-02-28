@@ -8,8 +8,6 @@ import Area from "../model/area.model";
 import Usuario from "../model/usuario.model";
 import Classificacao from "../model/classificacao.model";
 import UsuarioAtividade from "../model/usuarioAtividade.model"
-
-
 import Unidade from "../model/unidade.model";
 
 class AtividadeController implements IController {
@@ -80,7 +78,7 @@ class AtividadeController implements IController {
       const registro = await Atividade.findOne({
         include: [
           { model: Area, include: [Unidade] },
-         
+          Area,
           Classificacao,
           Status,
           Usuario
@@ -185,6 +183,7 @@ class AtividadeController implements IController {
     try {
       const registros = await Atividade.findAll({
         include: [Classificacao, Usuario, Status],
+        order: [['createdAt', 'DESC']],
         where: {
           fkUsuarioExecutor: req.usuario.id
 
@@ -205,10 +204,11 @@ class AtividadeController implements IController {
     try {
       const registros = await Atividade.findAll({
         include: [Classificacao, Usuario, Status],
+        order: [['createdAt', 'DESC']],
         where: {
           fkUsuarioSolicitante: req.usuario.id
 
-        },
+        }
       });
 
       res.status(200).json({ data: registros });

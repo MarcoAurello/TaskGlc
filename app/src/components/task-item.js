@@ -7,9 +7,11 @@ const getCookie = require('../utils/getCookie')
 
 const TaskItem = (props) => {
   const { idChamado, tituloChamado, protocoloChamado,
-    classificacao, criacaoChamado,status } = props
+    classificacao, criacaoChamado,status, 
+    usuarioDemandante, usuarioDemandanteTelefone,usuarioDemandanteEmail ,tela} = props
 
     const[mensagem, setMensagem]= useState([])
+    // alert(tela)
 
    
 
@@ -105,38 +107,69 @@ const TaskItem = (props) => {
         <div style={{ display: 'flex', flexDirection: 'row', marginTop: 8 }}>
 
 
-          <div style={{ fontSize: 12, marginLeft: 8, marginRight: 8, position: 'relative' }}>
-            <Chip size="small" label={"Protocolo: " + props.protocoloChamado} />
+          <div style={{ fontSize: 12,  fontWeight: 'bold',marginLeft: 8, marginRight: 8, position: 'relative'  }}>
+            <Chip size="small" label={"Protocolo: " + props.protocoloChamado} style={{background:'#FFA500'}} />
           </div>
 
 
 
 
-          <div style={{ marginLeft: 15, marginRight: 8, position: 'relative' }}>
-            <Chip size="small" label={"Chamado aberto em: " + date} />
-          </div>
-          <div style={{ fontSize: 12, marginLeft: 8, marginRight: 8, position: 'relative' }}>
-            <Chip size="small" label={"Classificação: " + props.classificacao} />
-          </div>
+          
 
-          <div style={{ fontSize: 12, marginLeft: 8, marginRight: 8, position: 'relative' }}>
-            <Chip size="small" label={"Status: " + props.status} />
-          </div>
+      
 
 
         
         </div>
         <div style={{ fontSize: 13, color: '#424242', marginTop: 16 }}>
+
+        <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+          Abertura : {date}</div>
           
+
+
+          {tela =='minhas' ?<div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+          Solicitante : {props.usuarioDemandante}</div> :''}
+
+          
+
+
+          {tela =='minhas' ?<div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+          Email : {props.usuarioDemandanteEmail}</div> :''}
+
+
+
+          
+          {tela =='minhas' ?<div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+          Telefone : {props.usuarioDemandanteTelefone}</div> :''}
+          
+          
+       
+
+          
+        <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+          Classificação : {props.classificacao}</div>
+
+       
         <div style={{ flex: 1, fontSize: 15, fontWeight: 'bold', color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-          Chamado : {props.tituloChamado}</div>
+        Assunto :{props.tituloChamado}</div>
+
+          <div style={{ flex: 1, fontSize: 22, color: '#424242', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          Status : {props.status}</div>
+          
+       
+          
+
+
+
+          
          
         
         </div>
         
         <div style={{ marginTop: 16, display: 'flex', flexDirection: 'row' }}>
-          <Button variant="contained" startIcon={<PlayCircleIcon />} onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${idChamado}/edit`}>
-            ver chamado 
+          <Button variant="contained" size="small" startIcon={<PlayCircleIcon />} onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${idChamado}/edit`}>
+            detalhes do chamado 
           </Button>
           <div style={{ flex: 1 }}></div>
           <LinearProgress color="success" variant="determinate" value={100} />

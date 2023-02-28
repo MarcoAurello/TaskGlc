@@ -39,6 +39,9 @@ class Usuario extends Model {
 
   public updatedAt!: Date
 
+  public Area!: Area
+  public Perfil!: Perfil
+
   public generateToken () {
     return jwt.sign({ id: this.id }, 'c43e4311194ab5795eaf4db533b8172d')
   }

@@ -53,6 +53,10 @@ const ChamadosAbertos = (props) => {
   return (
     <div>
       <TaskFilter />
+      <center>
+      <div style={{fontSize: 24, fontWeight: 'bold',
+       marginBottom: 4, marginRight: 8, alignItems:'center',
+       }}>Atividades Solicitadas</div></center>
 
       {minhasAtividades.map((item, index) =>
       <TaskItem key={index} 
@@ -62,6 +66,10 @@ const ChamadosAbertos = (props) => {
       criacaoChamado={item.createdAt}
       classificacao={item.Classificacao.nome}
       status={item.Status.nome}
+      tela={'solicitada'}
+      // usuarioDemandante={item.Usuario.nome}
+      // usuarioDemandanteTelefone={item.Usuario.telefone}
+      // usuarioDemandanteEmail={item.Usuario.email}
       // logado ={item.UsuarioAtividade.Usuario.nome}
       
       />
