@@ -11,7 +11,6 @@ class Area extends Model {
   public fkUnidade!: string
   public createdAt!: Date
   public updatedAt!: Date
-  
   public Unidade!: Unidade
 }
 

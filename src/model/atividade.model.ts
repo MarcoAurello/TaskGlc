@@ -89,6 +89,7 @@ Atividade.init({
 Atividade.belongsTo(Classificacao, { foreignKey: 'fkClassificacao' })
 Atividade.belongsTo(Area, { foreignKey: 'fkArea' })
 Atividade.belongsTo(Usuario, { foreignKey: 'fkUsuarioSolicitante' })
+Atividade.belongsTo(Usuario, { foreignKey: 'fkUsuarioExecutor', as: 'UsuarioExecutor' })
 Atividade.belongsTo(Status, { foreignKey: 'fkStatus' })
 
 export default Atividade

@@ -89,8 +89,8 @@ const TaskItem = (props) => {
         marginLeft: 16,
         padding: 16,
         flex: 1,
-        borderRadius: 5,
-        boxShadow: '0px 0px 20px -18px #424242',
+        borderRadius: 45,
+        boxShadow: '0px 0px 20px -10px #424242',
         display: 'flex',
         flexDirection: 'column',
         border: '1px solid #e0e0e0'
@@ -108,7 +108,10 @@ const TaskItem = (props) => {
 
 
           <div style={{ fontSize: 12,  fontWeight: 'bold',marginLeft: 8, marginRight: 8, position: 'relative'  }}>
-            <Chip size="small" label={"Protocolo: " + props.protocoloChamado} style={{background:'#FFA500'}} />
+            <Chip size="small" label={"Protocolo: " + props.protocoloChamado} />
+          </div>
+          <div style={{ fontSize: 12,  fontWeight: 'bold',marginLeft: 8, marginRight: 8, position: 'relative'  }}>
+            <Chip size="small" label={" " + props.status}  />
           </div>
 
 
@@ -149,14 +152,15 @@ const TaskItem = (props) => {
           
         <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
           Classificação : {props.classificacao}</div>
+          <hr></hr>
 
        
         <div style={{ flex: 1, fontSize: 15, fontWeight: 'bold', color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-        Assunto :{props.tituloChamado}</div>
+        {props.tituloChamado}</div>
 
-          <div style={{ flex: 1, fontSize: 22, color: '#424242', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          {/* <div style={{ flex: 1, fontSize: 22, color: '#424242', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           Status : {props.status}</div>
-          
+           */}
        
           
 

@@ -26,6 +26,7 @@ const MinhasAtividades = (props) => {
         response.json().then(data => {
           if (status === 401) {
           } else if (status === 200) {
+            
             // alert(JSON.stringify(data.data))
 
             setMinhasAtividades(data.data)

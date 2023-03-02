@@ -6,6 +6,7 @@ import TablePaginationActions from "@mui/material/TablePagination/TablePaginatio
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import TaskItemDoChamado from "../components/task-item-do-chamado";
+import PerfilUtils from "../utils/perfil.utils";
 
 
 const getCookie = require('../utils/getCookie')
@@ -20,7 +21,11 @@ const PageContainer = styled.div`
 `
 
 const AtividadeForm = (props) => {
+  const {logged} = props
+  // alert(JSON.stringify(props.logged))
+
   const [open, setOpen] = useState(false);
+  const [openMsg, setOpenMsg] = useState(false);
   const [openStatus, setOpenStatus] = useState(false);
 
   const { id } = props.match.params;
@@ -61,6 +66,9 @@ const AtividadeForm = (props) => {
   const [usuarioExecutor, setusuarioExecutor] = useState([])
   const [fkUsuarioExecutor, setFKUsuarioExecutor] = useState('')
   const [fkAreaDemandada, setFkAreaDemandada] = useState('')
+  const [nomeExecutor, getNomeExecutor] = useState('')
+  const [emailExecutor, getEmailExecutor] = useState('')
+  const [telefoneExecutor, getTelefoneExecutor] = useState('')
 
 
   const [idChamado, setIdChamado] = useState('')
@@ -101,7 +109,10 @@ const AtividadeForm = (props) => {
               setFkAreaDemandada(data.data.fkArea)
               setIdChamado(data.data.id)
 
-
+              // alert(JSON.stringify(data.data.UsuarioExecutor))
+              getNomeExecutor(data.data.UsuarioExecutor.nome)
+              getEmailExecutor(data.data.UsuarioExecutor.email)
+              getTelefoneExecutor(data.data.UsuarioExecutor.telefone)
 
               carregarMensagem()
 
@@ -114,8 +125,9 @@ const AtividadeForm = (props) => {
       const token = getCookie('_token_task_manager')
       const params = {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          'Authorization': `Bearer ${token}`,
+        
+        },
       }
       fetch(`${process.env.REACT_APP_DOMAIN_API}/api/mensagem/?fkAtividade=${id}`, params)
         .then(response => {
@@ -247,6 +259,7 @@ const AtividadeForm = (props) => {
       carregarClassificacao()
       carregarFuncionarios()
       carregarStatus()
+     
     } else {
       carregarUnidade()
     }
@@ -292,9 +305,7 @@ const AtividadeForm = (props) => {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
-      body: JSON.stringify({
-        newStatus
-      })
+     
     }
 
     fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/${id}/edit`, params)
@@ -306,6 +317,7 @@ const AtividadeForm = (props) => {
             setMessage(data.message)
             setOpenMessageDialog(true)
           } else if (status === 200) {
+            
 
 
 
@@ -440,20 +452,20 @@ const AtividadeForm = (props) => {
 
   return (
     <PageContainer>
-      <h3>Atividade</h3>
-      {/* {id ? <div style={{ flex: 1, marginBottom: 16, marginLeft: 25 }}>
+    
+      {id ? <div style={{ flex: 1, marginBottom: 16, marginLeft: 25 }}>
           <TextField size="small" fullWidth label="Protocolo" disabled variant="outlined" value={protocolo} />
-        </div> : ''} */}
-      {classificacao == "Não Definido" && status == "Aberto" ?
+        </div> : ''}
+      {logged && props.logged.fkArea === fkAreaDemandada && nomeExecutor ===null && (logged.Perfil.nome === PerfilUtils.Gerente || logged.Perfil.nome === PerfilUtils.Coordenador)  ?
         <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
-          <Button variant="contained" color="error" onClick={() => setOpen(true)}>Encaminhar Chamado</Button>
+          <Button variant="contained" size='small' color="error" onClick={() => setOpen(true)}>Encaminhar Chamado</Button>
         </div> : ''
 
       }
 
-      {classificacao != "Não Definido" && protocolo != '' ?
+      {logged && props.logged.nome === nomeExecutor  ?
         <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
-          <Button variant="contained"  onClick={() => setOpenStatus(true)}>Alterar Status do chamado</Button>
+          <Button  size='small'variant="contained"   onClick={() => setOpenStatus(true)}>Alterar Status do chamado</Button>
         </div> : ''
 
       }
@@ -472,9 +484,14 @@ const AtividadeForm = (props) => {
         emailUsuarioSolicitante={emailUsuarioSolicitante}
         telefoneSolicitante={telefoneSolicitante}
         setorSol={valueUnidade}
+        nomeExecutor={nomeExecutor}
+        emailExecutor={emailExecutor}
+        telefoneExecutor={telefoneExecutor}
         
       />
       </div> : ''} 
+
+     
 
 
 
@@ -513,6 +530,7 @@ const AtividadeForm = (props) => {
           <FormGroup>
 
             <div style={{ flex: 1, marginBottom: 16 }}>
+              Solicitar Atividade
               <FormControl fullWidth size="small">
                 <InputLabel id="demo-select-small">Unidade</InputLabel>
                 <Select
@@ -566,25 +584,19 @@ const AtividadeForm = (props) => {
 
 
         {id ? <>
-          <h4>Enviar um comentário</h4>
-          {/* {classificacao == "Não Definido" && status == "Aberto" ?
-            <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
-              <Button variant="contained" onClick={() => setOpen(true)}>{'Encaminhar chamado'}</Button>
-            </div> : ''
+      
+       
 
-          } */}
-
-          <div style={{ flex: 1, marginBottom: 16 }}>
-            <TextField size="small" fullWidth label="Descrição" multiline rows={2} variant="outlined" value={conteudo} onChange={e => setConteudo(e.target.value)} />
-          </div>
-
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'row' }}>
-            {/* <Button variant="outlined" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/area/`}>Voltar</Button> */}
-            <div style={{ flex: 1 }}></div>
-            <Button variant="contained" onClick={novaInteracao}>{'Enviar'}</Button>
-          </div>
           <h4>Histórico do chamado</h4>
-          {mensagens.map((item, index) => <div style={{ borderTop: '1px solid #e0e0e0', padding: 2, background: '#EEE9E9', borderRadius: 5, marginBottom: 1, border: '2px solid #e0e0e0' }}>
+        
+
+        {logged && (props.logged.nome === nomeExecutor || props.logged.nome === usuarioSolicitante )  ?
+       <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
+       <Button size="small" variant="contained"  onClick={() => setOpenMsg(true)}>Enviar Mensagem</Button>
+     </div> : ''
+
+      }
+          {mensagens.map((item, index) => <div style={{ borderTop: '1px solid #e0e0e0', padding: 2, background: '#FFFFE0', borderRadius: 10, marginBottom: 1, border: '2px solid #e0e0e0' }}>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <div style={{ display: 'flex', flexDirection: 'row' }}>
                 <b style={{ fontSize: 10 }}>{item.Usuario.nome}</b>
@@ -712,10 +724,47 @@ const AtividadeForm = (props) => {
           </FormControl>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpen(false)}>Cancelar</Button>
+          <Button onClick={() => setOpenStatus(false)}>Cancelar</Button>
           <Button onClick={() => { onSaveStatus() }} >Alterar</Button>
         </DialogActions>
       </Dialog>
+
+
+
+
+      <Dialog open={openMsg}  >
+
+<DialogContent>
+  <DialogContentText>
+
+  </DialogContentText>
+
+
+  <h4>Enviar um comentário</h4>
+          {/* {classificacao == "Não Definido" && status == "Aberto" ?
+            <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
+              <Button variant="contained" onClick={() => setOpen(true)}>{'Encaminhar chamado'}</Button>
+            </div> : ''
+
+          } */}
+
+          <div style={{ flex: 1, marginBottom: 16 }}>
+            <TextField  fullWidth sx={{ m: 1 }} size="small" fullWidth label="Descrição"  multiline rows={2} variant="outlined" value={conteudo} onChange={e => setConteudo(e.target.value)} />
+          </div>
+
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'row' }}>
+            {/* <Button variant="outlined" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/area/`}>Voltar</Button> */}
+            <div style={{ flex: 1 }}></div>
+            <Button variant="contained" onClick={novaInteracao}>{'Enviar'}</Button>
+          </div>
+</DialogContent>
+<DialogActions>
+  <Button onClick={() => setOpenMsg(false)}>Cancelar</Button>
+  
+</DialogActions>
+</Dialog>
+
+      
 
 
 

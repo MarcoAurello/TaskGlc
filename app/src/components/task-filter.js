@@ -8,7 +8,7 @@ const TaskFilter = (props) => {
   
   // const {nome} = props
   const [funcionario, setFuncionario] = useState('');
-
+  // alert('3333'+JSON.stringify(logged))
   return (
     <div style={{
       display: 'flex',
@@ -19,7 +19,7 @@ const TaskFilter = (props) => {
       <div style={{flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center',  height: 48, padding: 16}}>
         <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
           <div style={{fontSize: 24, fontWeight: 'bold', marginBottom: 4, marginRight: 8}}>
-           {nome}
+           Ola, {props.nome}
           </div>
           <IconButton size="medium" edge="end" aria-label="account of current user" aria-haspopup="true"color="inherit">
             <CalendarMonthIcon />

@@ -63,7 +63,7 @@ class UsuarioController implements IController {
   async update (req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
       const { id } = req.params
-      console.log(id)
+      // console.log(id)
       const {
         nome,
         telefone,

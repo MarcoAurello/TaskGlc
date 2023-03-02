@@ -7,8 +7,9 @@ import protocolo from "../utils/protocolo.utils";
 import Area from "../model/area.model";
 import Usuario from "../model/usuario.model";
 import Classificacao from "../model/classificacao.model";
-import UsuarioAtividade from "../model/usuarioAtividade.model"
+import UsuarioAtividade from "../model/usuarioAtividade.model";
 import Unidade from "../model/unidade.model";
+const { Op } = require("sequelize");
 
 class AtividadeController implements IController {
   async all(req: Request, res: Response, next: NextFunction): Promise<any> {
@@ -78,10 +79,16 @@ class AtividadeController implements IController {
       const registro = await Atividade.findOne({
         include: [
           { model: Area, include: [Unidade] },
+          {
+            model: Usuario,
+            foreignKey: "fkUsuarioExecutor",
+            as: "UsuarioExecutor",
+            include: [{ model: Area, include: [Unidade] }],
+          },
           Area,
           Classificacao,
           Status,
-          Usuario
+          Usuario,
         ],
         where: { id },
       });
@@ -93,31 +100,34 @@ class AtividadeController implements IController {
     }
   }
 
-  async update (req: Request, res: Response, next: NextFunction): Promise<any> {
+  async update(req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
-      const { id } = req.params
+      const { id } = req.params;
       // console.log(id)
-      const {
-        newStatus
-      } = req.body
+      const { newStatus } = req.body;
 
       // console.log(req.body)
 
-      await Atividade.update({
-        fkStatus: newStatus
-      }, {
-        where: {
-          id: id
+      await Atividade.update(
+        {
+          fkStatus: newStatus,
         },
-        individualHooks: false
-      })
+        {
+          where: {
+            id: id,
+          },
+          individualHooks: false,
+        }
+      );
 
-      const registro = await Atividade.findOne({ where: { id } })
+      const registro = await Atividade.findOne({ where: { id } });
 
-      res.status(200).json({ data: registro, message: 'Alteração realizada com sucesso.' })
+      res
+        .status(200)
+        .json({ data: registro, message: "Alteração realizada com sucesso." });
     } catch (err) {
-      console.log(err)
-      res.status(401).json({ message: err.errors[0].message })
+      console.log(err);
+      res.status(401).json({ message: err.errors[0].message });
     }
   }
 
@@ -133,7 +143,6 @@ class AtividadeController implements IController {
           Classificacao,
           Status,
           Usuario,
-
         ],
         where: { fkUsuarioExecutor: req.usuario.id },
       });
@@ -149,7 +158,23 @@ class AtividadeController implements IController {
   }
 
   async search(req: Request, res: Response, next: NextFunction): Promise<any> {
-    throw new Error("Method not implemented.");
+    try {
+      const { pesquisa } = req.query;
+
+      console.log('pesquisa: ' + pesquisa);
+      const registros = await Atividade.findAll({
+        where: {
+          titulo: {
+            // [Op.like]: `%${pesquisa}%`,
+            [Op.like]: `%${pesquisa}%`,
+          },
+        },
+      });
+      res.status(200).json({ data: registros });
+    } catch (err) {
+      console.log(err);
+      res.status(401).json({ message: err.errors[0].message });
+    }
   }
 
   async naoatribuida(
@@ -181,12 +206,13 @@ class AtividadeController implements IController {
     next: NextFunction
   ): Promise<any> {
     try {
+      // const area = await Area.findOne({ where: { id: req.usuario.fkArea } });
+
       const registros = await Atividade.findAll({
         include: [Classificacao, Usuario, Status],
-        order: [['createdAt', 'DESC']],
+        order: [["createdAt", "DESC"]],
         where: {
-          fkUsuarioExecutor: req.usuario.id
-
+          fkUsuarioExecutor: req.usuario.id,
         },
       });
 
@@ -204,11 +230,10 @@ class AtividadeController implements IController {
     try {
       const registros = await Atividade.findAll({
         include: [Classificacao, Usuario, Status],
-        order: [['createdAt', 'DESC']],
+        order: [["createdAt", "DESC"]],
         where: {
-          fkUsuarioSolicitante: req.usuario.id
-
-        }
+          fkUsuarioSolicitante: req.usuario.id,
+        },
       });
 
       res.status(200).json({ data: registros });

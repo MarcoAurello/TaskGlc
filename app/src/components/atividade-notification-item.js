@@ -45,20 +45,22 @@ const AtividadeNotificationItem = (props) => {
   }
 
   return (
-    <MenuItem  style={{display: 'flex',marginBottom:5, flexDirection: 'row', borderBottom: '1px solid #EEEEEE', minWidth: 350}} onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`}>
-      <Avatar 
-    //   {...stringAvatar(`${item.}`)}
-       />
-      <div style={{marginLeft: 16}}>
-      <div style={{ width: '100%', fontSize: 12, color: '#424242'}}>{'Funcionario: '+ item.Usuario.nome}</div>
-      <div style={{ width: '100%', fontSize: 12, color: '#424242'}}>{'Unidade: '+ item.Area.Unidade.nome}</div>
-        <div style={{ width: '100%', fontSize: 12,  color: '#424242'}}>{'Problema: '+item.titulo}</div>
+    <MenuItem  style={{display: 'flex',marginBottom:5, flexDirection: 'row', 
+    borderBottom: '1px solid #EEEEEE', minWidth: 350}}
+     onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`}>
+      
+      <div style={{ marginLeft: 16,marginBottom:5 }}><b>Encaminhar chamado &#10145; </b>
+      <div style={{ width: '100%', fontSize: 12, color: '#424242'}}>{'Solicitado por: '+ item.Usuario.nome}</div>
+      {/* <div style={{ width: '100%', fontSize: 12, color: '#424242'}}>{'Unidade: '+ item.Area.nome}</div> */}
+        <div style={{ width: '100%', fontSize: 12,  color: '#424242'}}>{'Assunto: '+item.titulo}</div>
         
-        <div style={{ width: '100%' , marginTop: 4, backgroundColor:'#00BFFF', borderRadius:50, paddingLeft: 8 }}>
+        <div style={{ width: '100%' , marginTop: 4, backgroundColor:'#1E90FF', borderRadius:50, paddingLeft: 8 }}>
           Selecionar Funcionario
         </div>
       </div>
     </MenuItem>
+
+    
   )
 }
 

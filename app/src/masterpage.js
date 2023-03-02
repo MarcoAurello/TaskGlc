@@ -9,6 +9,7 @@ import MinhasAtividades from './pages/minhasAtividades'
 import ChamadosAbertos from './pages/chamadosAbertos'
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 
 import MenuIcon from '@mui/icons-material/Menu'
 import MarkUnreadChatAltIcon from '@mui/icons-material/MarkUnreadChatAlt';
@@ -20,6 +21,7 @@ import HomeWorkIcon from '@mui/icons-material/HomeWork';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
+import FaceIcon from '@mui/icons-material/Face';
 
 import CssBaseline from '@mui/material/CssBaseline'
 import Toolbar from './components/toolbar'
@@ -112,6 +114,7 @@ const Masterpage = (props) => {
   useEffect(() => {
     isAuthenticated().then(_ => {
       setLogged(_.data.data)
+      // alert(JSON.stringify(logged))
       setPrimeiroLogin(_.data.data.primeiroLogin)
       setOpenDialogPrimeiroAcesso(_.data.data.primeiroLogin)
 
@@ -223,7 +226,7 @@ const Masterpage = (props) => {
         })
     }
 
-    // alert(JSON.stringify(logged))
+  
     if (logged && logged.Perfil && (logged.Perfil.nome === PerfilUtils.Gerente || logged.Perfil.nome === PerfilUtils.Coordenador)) {
       setInterval(carregarUsuariosNaoValidados, 1000)
     }
@@ -253,7 +256,8 @@ const Masterpage = (props) => {
           })
         })
     }
-
+      
+        
 
     if (logged && logged.Perfil && (logged.Perfil.nome === PerfilUtils.Gerente || logged.Perfil.nome === PerfilUtils.Coordenador)) {
       setInterval(carregarAtividadesNaoAtribuidas, 1000)
@@ -285,11 +289,8 @@ const Masterpage = (props) => {
         })
     }
 
-
-    if (logged && logged.Perfil && (logged.Perfil.nome === PerfilUtils.Gerente || logged.Perfil.nome === PerfilUtils.Coordenador
-      || logged.Perfil.nome === PerfilUtils.Administrador || logged.Perfil.nome === PerfilUtils.Funcionário)) {
       setInterval(carregarAtividadesRecebidas, 1000)
-    }
+    
   }, [logged])
 
 
@@ -333,7 +334,7 @@ const Masterpage = (props) => {
 
 
 
-  const actions = [
+  const actionsGerente = [
     <Tooltip title="Aprovação Equipe" placement="bottom">
       <IconButton size="large" color="inherit" id="positioned-user-notification-icon-button"
         onClick={(e) => {
@@ -359,6 +360,41 @@ const Masterpage = (props) => {
         </Badge>
       </IconButton>
     </Tooltip >,
+
+
+
+
+
+    <Tooltip title="Chegou Atividade" placement="bottom">
+      <IconButton size="large" color="inherit" id="positioned-newmsg-notification-icon-button"
+        onClick={(e) => {
+          setAnchorElAtividadeRecebidaNotification(e.currentTarget)
+          setOpenAtividadeRecebidaNotification(true)
+        }}>
+        <Badge badgeContent={atividadesRecebida.length} color="error">
+          <AutoAwesomeMotionIcon></AutoAwesomeMotionIcon>
+        </Badge>
+      </IconButton>
+    </Tooltip>,
+
+
+
+    <IconButton
+      size="large"
+      edge="end"
+      aria-haspopup="true"
+      color="inherit"
+      id="positioned-account-icon-button"
+      onClick={(e) => {
+        setAnchorElAccountMenu(e.currentTarget)
+        setOpenAccountMenu(true)
+      }}>
+      <AccountCircle />
+    </IconButton>
+  ]
+
+  const actionsFuncionario = [
+    
 
 
 
@@ -489,6 +525,7 @@ const Masterpage = (props) => {
     >
       {atividadesRecebida.map((item, index) => <AtividadeRecebidaNotificationItem key={index} item={item} />)}
     </Menu>
+    
   );
 
 
@@ -497,13 +534,16 @@ const Masterpage = (props) => {
       setTimeout(() => {
         setOpenDrawer(false)
       }, 200)
+     
     }
 
     closeDrawerAfterAFewSecounds()
   }, [])
+  
 
   return (
     <MasterPageContainer>
+       
       <Drawer
         open={openDrawer}
         onClose={() => setOpenDrawer(false)}>
@@ -517,6 +557,14 @@ const Masterpage = (props) => {
                 <ListItemText primary='Home' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/home`} />
               </ListItemButton>
             </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  <InsertDriveFileIcon />
+                </ListItemIcon>
+                <ListItemText primary='Abrir Chamado' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/cadastro`} />
+              </ListItemButton>
+            </ListItem>
 
 
             <ListItem disablePadding>
@@ -527,6 +575,7 @@ const Masterpage = (props) => {
                 <ListItemText primary='Atividades Recebidas' /><KeyboardDoubleArrowLeftIcon/>
               </ListItemButton>
             </ListItem>
+            
 
             <ListItem disablePadding>
               <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/chamadosAbertos/`}>
@@ -590,10 +639,20 @@ const Masterpage = (props) => {
         </Box>
       </Drawer>
       <CssBaseline />
-      <Toolbar
+
+      {logged &&  (logged.Perfil.nome === PerfilUtils.Gerente || logged.Perfil.nome === PerfilUtils.Coordenador)  ?
+        <Toolbar
         menu={menu}
-        title='SENAC - Task Manager'
-        actions={actions} />
+        title='SENAC - Task'
+        actions={actionsGerente} />
+         :
+         <Toolbar
+         menu={menu}
+         title='SENAC - Task Manager'
+         actions={actionsFuncionario} />
+
+      }
+      
       {renderMenu}
       {renderUserNotification}
       {renderNaoAtribuidosNotification}
@@ -720,6 +779,8 @@ const Masterpage = (props) => {
             path="/home"
             render={(props) => <Home {...props} logged={logged} />}
           />
+          
+          
         </Switch>
         <Dialog open={openDialogPrimeiroAcesso}>
           <DialogTitle>Primeiro Acesso</DialogTitle>

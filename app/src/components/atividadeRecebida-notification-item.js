@@ -50,7 +50,7 @@ const AtividadeRecebidaNotificationItem = (props) => {
        
 
         if (cor === 'Não Definido') {
-            var color = "#9AFF9A"
+            var color = "#32CD32"
         } if (cor === 'Circunstancial') {
             var color = "#f2921d"
         } if (cor === 'Importante') {
