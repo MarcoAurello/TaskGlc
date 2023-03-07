@@ -80,10 +80,10 @@ const TaskItem = (props) => {
       padding: 16
       // cursor: 'pointer'
     }}>
-      <div style={{ display: 'flex', flexDirection: 'column', paddingRight: 16, borderRight: '1px solid #E0E0E0' }}>
+      {/* <div style={{ display: 'flex', flexDirection: 'column', paddingRight: 16, borderRight: '1px solid #E0E0E0' }}>
         <div style={{ fontSize: 13, fontWeight: 'bold', color: '#424242' }}>09:15</div>
         <div style={{ fontSize: 12, color: '#757575' }}>11:00</div>
-      </div>
+      </div> */}
       <div style={{
         backgroundColor: '#ffffff',
         marginLeft: 16,

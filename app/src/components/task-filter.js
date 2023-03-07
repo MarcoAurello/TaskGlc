@@ -26,7 +26,7 @@ const TaskFilter = (props) => {
           </IconButton>
         </div>
         <div style={{fontSize: 14}}>
-          <Chip label='Nome Usuario' onClick={() => alert('teste')} />
+          {/* <Chip label='Nome Usuario' onClick={() => alert('teste')} /> */}
         </div>
       </div>
       <div style={{
