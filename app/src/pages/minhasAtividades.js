@@ -9,6 +9,8 @@ import { display } from "@mui/system";
 const getCookie = require('../utils/getCookie')
 
 const MinhasAtividades = (props) => {
+  const {logged} = props
+
   const [minhasAtividades,setMinhasAtividades] = useState([])
 
 
@@ -55,7 +57,10 @@ const MinhasAtividades = (props) => {
 
   return (
     <div>
-      <TaskFilter />
+       {logged ? <TaskFilter  nome={props.logged.nome}/>
+      :
+      ''
+      }
       <center>
       <div style={{fontSize: 24, fontWeight: 'bold',
        marginBottom: 4, marginRight: 8, alignItems:'center',
@@ -68,7 +73,7 @@ const MinhasAtividades = (props) => {
       protocoloChamado={item.protocolo}
       criacaoChamado={item.createdAt}
       classificacao={item.Classificacao.nome}
-      status={item.Status.nome}
+      // status={item.Status.nome}
       usuarioDemandante={item.Usuario.nome}
       usuarioDemandanteTelefone={item.Usuario.telefone}
       usuarioDemandanteEmail={item.Usuario.email}

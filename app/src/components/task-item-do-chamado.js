@@ -6,6 +6,7 @@ import PlayCircleIcon from '@mui/icons-material/PlayCircle'
 const getCookie = require('../utils/getCookie')
 
 const TaskItemDoChamado = (props) => {
+    const { nome } = props;
     const { protocolo, unidade, area, classificacao, solicitante,
         status, titulo, setorSolicitante, emailUsuarioSolicitante, telefoneSolicitante, setorSol,
         nomeExecutor, emailExecutor, telefoneExecutor } = props
@@ -96,8 +97,8 @@ const TaskItemDoChamado = (props) => {
                 <div style={{ fontSize: 13, color: '#424242', marginTop: 16 }}>
 
                     <div style={{ color: '#00BFFF' }}><b>Solicitante</b></div>
-                    <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                        <b>Unidade :</b>xxxxxxxxxxx</div>
+                    {/* <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                        <b>Unidade :</b>xxxxxxxxxxx</div> */}
                     <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                         <b>Nome :</b>  {props.solicitante}</div>
 

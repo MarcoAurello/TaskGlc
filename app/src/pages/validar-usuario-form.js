@@ -193,6 +193,7 @@ const ValidarUsuarioForm = (props) => {
             setMessage(data.message)
             setOpenMessageDialog(true)
             // setArea(data.data)
+            window.location.href = `${process.env.REACT_APP_DOMAIN}/home/`
           }
         }).catch(err => setOpenLoadingDialog(true))
       })

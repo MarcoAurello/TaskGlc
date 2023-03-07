@@ -137,6 +137,8 @@ class AtividadeController implements IController {
     next: NextFunction
   ): Promise<any> {
     try {
+     
+      // const status = await queryInterface.sequelize.query('select id from status where nome = \'Aberto\'')
       const registros = await Atividade.findAll({
         include: [
           { model: Area, include: [Unidade] },
@@ -144,7 +146,10 @@ class AtividadeController implements IController {
           Status,
           Usuario,
         ],
-        where: { fkUsuarioExecutor: req.usuario.id },
+        where: {
+          fkUsuarioExecutor: req.usuario.id,
+        
+        },
       });
       res.status(200).json({ data: registros });
     } catch (err) {
@@ -161,7 +166,7 @@ class AtividadeController implements IController {
     try {
       const { pesquisa } = req.query;
 
-      console.log('pesquisa: ' + pesquisa);
+      // console.log('pesquisa: ' + pesquisa);
       const registros = await Atividade.findAll({
         where: {
           titulo: {
@@ -183,6 +188,7 @@ class AtividadeController implements IController {
     next: NextFunction
   ): Promise<any> {
     try {
+      // console.log(`${req.usuario.nome} - ${req.usuario.fkArea}`)
       const area = await Area.findOne({ where: { id: req.usuario.fkArea } });
 
       const registros = await Atividade.findAll({
@@ -207,12 +213,15 @@ class AtividadeController implements IController {
   ): Promise<any> {
     try {
       // const area = await Area.findOne({ where: { id: req.usuario.fkArea } });
+      const status = await Status.findOne({ where: { nome: 'Aberto' } });
 
       const registros = await Atividade.findAll({
         include: [Classificacao, Usuario, Status],
         order: [["createdAt", "DESC"]],
         where: {
           fkUsuarioExecutor: req.usuario.id,
+          fkStatus: status?.id,
+
         },
       });
 

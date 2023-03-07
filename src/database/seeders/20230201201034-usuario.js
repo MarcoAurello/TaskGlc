@@ -25,13 +25,37 @@ module.exports = {
 
     const areas = await queryInterface.sequelize.query('select * from area where nome = \'Sistemas - Desenvolvimento\'')
     const areasGPC = await queryInterface.sequelize.query('select * from area where nome = \'Coordenação de Pessoal\'')
-    const unidadeUEP = await queryInterface.sequelize.query('select * from area where nome = \'pedagogico UEP\'')
+    const areaGSI = await queryInterface.sequelize.query('select area.* from area inner join unidade on unidade.id=area.fkUnidade where unidade.nome = \'Gerência de Serviços e infra Estrutura\' and area.nome = \'Trasnsporte\'')
 
     await queryInterface.bulkInsert('usuario', [
       {
         id: uuid(),
-        nome: 'Diego Alisson Monteiro',
-        email: 'diegoalisson@pe.senac.br',
+        nome: 'funcionario gti1',
+        email: 'gti1@pe.senac.br',
+        passwordHash: await bcrypt.hash('gti@2021', 8),
+        validado: false,
+        ativo: true,
+        demandante: false,
+        primeiroLogin: true,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: uuid(),
+        nome: 'funcionario gti2',
+        email: 'gti2@pe.senac.br',
+        passwordHash: await bcrypt.hash('gti@2021', 8),
+        validado: false,
+        ativo: true,
+        demandante: false,
+        primeiroLogin: true,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: uuid(),
+        nome: 'funcionario gti3',
+        email: 'gti3@pe.senac.br',
         passwordHash: await bcrypt.hash('gti@2021', 8),
         validado: false,
         ativo: true,
@@ -58,8 +82,8 @@ module.exports = {
       },
       {
         id: uuid(),
-        nome: 'Usuário Teste GPC',
-        email: 'gpc@pe.senac.br',
+        nome: ' Renata Amorin',
+        email: 'grh@pe.senac.br',
         passwordHash: await bcrypt.hash('gti@2021', 8),
         telefone: '34132053',
         chapa: '15385-F1',
@@ -74,8 +98,8 @@ module.exports = {
       },
       {
         id: uuid(),
-        nome: 'Usuario teste gpc',
-        email: 'gpc2@pe.senac.br',
+        nome: 'Usuario teste rh2',
+        email: 'grh2@pe.senac.br',
         passwordHash: await bcrypt.hash('gti@2021', 8),
         validado: false,
         ativo: true,
@@ -87,8 +111,8 @@ module.exports = {
 
       {
         id: uuid(),
-        nome: 'Usuario teste UEP',
-        email: 'uep@pe.senac.br',
+        nome: 'Usuario teste rh3',
+        email: 'grh1@pe.senac.br',
         passwordHash: await bcrypt.hash('gti@2021', 8),
         validado: false,
         ativo: true,
@@ -99,8 +123,8 @@ module.exports = {
       },
       {
         id: uuid(),
-        nome: 'Usuario teste UEP2',
-        email: 'uep2@pe.senac.br',
+        nome: 'Usuario teste gsi- Eletrica',
+        email: 'gsi2@pe.senac.br',
         passwordHash: await bcrypt.hash('gti@2021', 8),
         validado: false,
         ativo: true,
@@ -111,14 +135,26 @@ module.exports = {
       },
       {
         id: uuid(),
-        nome: 'Gerente UEP',
-        email: 'gerenteuep@pe.senac.br',
+        nome: 'Usuario teste gsi- Transporte',
+        email: 'gsi3@pe.senac.br',
+        passwordHash: await bcrypt.hash('gti@2021', 8),
+        validado: false,
+        ativo: true,
+        demandante: false,
+        primeiroLogin: true,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: uuid(),
+        nome: 'Ana Claudia',
+        email: 'gsi@pe.senac.br',
         passwordHash: await bcrypt.hash('gti@2021', 8),
         telefone: '3413yyy63',
         chapa: '154545585-F1',
         demandante: true,
         fkPerfil: perfilGerenteRows[0].id,
-        fkArea: unidadeUEP[0][0].id,
+        fkArea: areaGSI[0][0].id,
         validado: true,
         ativo: true,
         primeiroLogin: false,

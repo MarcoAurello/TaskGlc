@@ -5,4 +5,6 @@ const Perfil = {
   Gerente: "Gerente"
 }
 
+
+
 export default Perfil;

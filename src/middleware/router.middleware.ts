@@ -19,10 +19,16 @@ class RouterMiddleware {
     try {
       const decoded = await promisify(jwt.verify)(token, 'c43e4311194ab5795eaf4db533b8172d')
 
-      req.usuario = await Usuario.findOne({
+      const registro = await Usuario.findOne({
         where: { id: decoded.id },
         include: [Perfil]
       })
+
+      if (!registro) {
+        return res.status(401).json({ message: 'Você não tem permissão de acessar este recurso.' })
+      }
+
+      req.usuario = registro
 
       return next()
     } catch (err) {

@@ -29,7 +29,7 @@ module.exports = {
       },
       {
         id: uuid(),
-        nome: 'pedagogico UEP',
+        nome: 'Gerência de Serviços e infra Estrutura',
         createdAt: new Date(),
         updatedAt: new Date()
       }

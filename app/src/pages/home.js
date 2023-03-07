@@ -171,12 +171,12 @@ const Home = (props) => {
         maxWidth: '100%',
       }}
     >
-      <TextField fullWidth label="pesquise seu problema..."  name='pesquisa' value={pesquisa}  onChange={e=> setPesquisa(e.target.value)} />
+      <TextField fullWidth label="pesquise seu problema"  name='pesquisa' value={pesquisa}  onChange={e=> setPesquisa(e.target.value)} />
      <p></p>
       {/* <Button type="button" className="btn btn-primary" onClick={(e) => { pesquisar() }}>Buscar </Button> */}
 
       {respostas  ?
-      <table class="table table-striped" style={{ fontFamily: "arial", fontSize: '20px' }}>
+      <table className="table table-striped" style={{ fontFamily: "arial", fontSize: '20px' }}>
         {/* <thead>
           <th>titulo</th>
           <th>ver Atividade</th>

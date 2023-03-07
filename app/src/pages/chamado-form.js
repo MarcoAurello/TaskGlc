@@ -7,6 +7,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import TaskItemDoChamado from "../components/task-item-do-chamado";
 import PerfilUtils from "../utils/perfil.utils";
+import UnidadeUtils from "../utils/unidade.utils";
 
 
 const getCookie = require('../utils/getCookie')
@@ -21,7 +22,7 @@ const PageContainer = styled.div`
 `
 
 const AtividadeForm = (props) => {
-  const {logged} = props
+  const { logged } = props
   // alert(JSON.stringify(props.logged))
 
   const [open, setOpen] = useState(false);
@@ -43,9 +44,10 @@ const AtividadeForm = (props) => {
   const [valueArea, setValueArea] = useState('')
   const [valueUnidade, setValueUnidade] = useState('')
   const [usuarioSolicitante, setUsuarioSolicitante] = useState('')
-  const[emailUsuarioSolicitante , setEmailUsuarioSolicitante] = useState('')
-  const[telefoneSolicitante,setTelefoneSolicitante]= useState('')
-  const[setorSolicitante, setSetorSolicitante]= useState('')
+  const [emailUsuarioSolicitante, setEmailUsuarioSolicitante] = useState('')
+  const [telefoneSolicitante, setTelefoneSolicitante] = useState('')
+  const [setorSolicitante, setSetorSolicitante] = useState('')
+  const [btnMsg, setBtnMsg] = useState(false);
 
   const [tempoEstimando, setTempoEstimado] = useState('')
   const [createdAt, setCreatedAt] = useState('')
@@ -110,6 +112,7 @@ const AtividadeForm = (props) => {
               setIdChamado(data.data.id)
 
               // alert(JSON.stringify(data.data.UsuarioExecutor))
+
               getNomeExecutor(data.data.UsuarioExecutor.nome)
               getEmailExecutor(data.data.UsuarioExecutor.email)
               getTelefoneExecutor(data.data.UsuarioExecutor.telefone)
@@ -126,7 +129,7 @@ const AtividadeForm = (props) => {
       const params = {
         headers: {
           'Authorization': `Bearer ${token}`,
-        
+
         },
       }
       fetch(`${process.env.REACT_APP_DOMAIN_API}/api/mensagem/?fkAtividade=${id}`, params)
@@ -259,7 +262,8 @@ const AtividadeForm = (props) => {
       carregarClassificacao()
       carregarFuncionarios()
       carregarStatus()
-     
+      carregarMensagem()
+
     } else {
       carregarUnidade()
     }
@@ -296,8 +300,14 @@ const AtividadeForm = (props) => {
     }
   }, [fkUnidade])
 
-
   const onSaveStatus = () => {
+    setOpenMsg(true)
+
+  }
+
+
+  const onSaveStatusA = () => {
+
     const token = getCookie('_token_task_manager')
     const params = {
       method: 'POST',
@@ -305,7 +315,11 @@ const AtividadeForm = (props) => {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
-     
+      body: JSON.stringify({
+        newStatus
+
+      })
+
     }
 
     fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/${id}/edit`, params)
@@ -317,7 +331,7 @@ const AtividadeForm = (props) => {
             setMessage(data.message)
             setOpenMessageDialog(true)
           } else if (status === 200) {
-            
+
 
 
 
@@ -325,7 +339,7 @@ const AtividadeForm = (props) => {
             setMessage(data.message)
             setOpenMessageDialog(true)
 
-            window.location.href = `${process.env.REACT_APP_DOMAIN}/home/`
+            window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${idChamado}/edit`
 
 
             // setArea(data.data)
@@ -373,37 +387,49 @@ const AtividadeForm = (props) => {
   }
 
   const novaInteracao = () => {
-    const token = getCookie('_token_task_manager')
-    const params = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify({
-        fkAtividade: id,
-        conteudo
-      })
+    if (conteudo) {
+      onSaveStatusA()
+      const token = getCookie('_token_task_manager')
+      const params = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          fkAtividade: id,
+          conteudo
+        })
+      }
+
+      fetch(`${process.env.REACT_APP_DOMAIN_API}/api/mensagem/`, params)
+        .then(response => {
+          const { status } = response
+          response.json().then(data => {
+            setOpenLoadingDialog(false)
+            if (status === 401) {
+              setMessage(data.message)
+              setOpenMessageDialog(true)
+            } else if (status === 200) {
+              // alert(JSON.stringify(data.data))
+              setAtividade(data.data)
+              setMessage(data.message)
+              setOpenMessageDialog(true)
+              // setArea(data.data)
+
+            }
+          }).catch(err => setOpenLoadingDialog(true))
+        })
+
+    } else {
+      alert('Insira uma mensagem')
+      // window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${idChamado}/edit`
+
+
     }
 
-    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/mensagem/`, params)
-      .then(response => {
-        const { status } = response
-        response.json().then(data => {
-          setOpenLoadingDialog(false)
-          if (status === 401) {
-            setMessage(data.message)
-            setOpenMessageDialog(true)
-          } else if (status === 200) {
-            // alert(JSON.stringify(data.data))
-            setAtividade(data.data)
-            setMessage(data.message)
-            setOpenMessageDialog(true)
-            // setArea(data.data)
 
-          }
-        }).catch(err => setOpenLoadingDialog(true))
-      })
+
   }
 
 
@@ -452,50 +478,51 @@ const AtividadeForm = (props) => {
 
   return (
     <PageContainer>
-    
+
       {id ? <div style={{ flex: 1, marginBottom: 16, marginLeft: 25 }}>
-          <TextField size="small" fullWidth label="Protocolo" disabled variant="outlined" value={protocolo} />
-        </div> : ''}
-      {logged && props.logged.fkArea === fkAreaDemandada && nomeExecutor ===null && (logged.Perfil.nome === PerfilUtils.Gerente || logged.Perfil.nome === PerfilUtils.Coordenador)  ?
+        <TextField size="small" fullWidth label="Protocolo" disabled variant="outlined" value={protocolo} />
+      </div> : ''}
+
+      {logged && nomeExecutor === '' && logged.fkArea === fkAreaDemandada && (logged.Perfil.nome === PerfilUtils.Gerente || logged.Perfil.nome === PerfilUtils.Coordenador) ?
         <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
           <Button variant="contained" size='small' color="error" onClick={() => setOpen(true)}>Encaminhar Chamado</Button>
         </div> : ''
 
       }
 
-      {logged && props.logged.nome === nomeExecutor  ?
+      {logged && props.logged.nome === nomeExecutor ?
         <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
-          <Button  size='small'variant="contained"   onClick={() => setOpenStatus(true)}>Alterar Status do chamado</Button>
+          <Button size='small' variant="contained" onClick={() => setOpenStatus(true)}>Alterar Status do chamado</Button>
         </div> : ''
 
       }
 
 
       {id ? <div >
-      <TaskItemDoChamado
-        protocolo={protocolo}
-        unidade={valueUnidade}
-        area={valueArea}
-        classificacao={classificacao}
-        solicitante={usuarioSolicitante}
-        status={status}
-        titulo={title}
-        setorSolicitante={setorSolicitante}
-        emailUsuarioSolicitante={emailUsuarioSolicitante}
-        telefoneSolicitante={telefoneSolicitante}
-        setorSol={valueUnidade}
-        nomeExecutor={nomeExecutor}
-        emailExecutor={emailExecutor}
-        telefoneExecutor={telefoneExecutor}
-        
-      />
-      </div> : ''} 
+        <TaskItemDoChamado
+          protocolo={protocolo}
+          unidade={valueUnidade}
+          area={valueArea}
+          classificacao={classificacao}
+          solicitante={usuarioSolicitante}
+          status={status}
+          titulo={title}
+          setorSolicitante={setorSolicitante}
+          emailUsuarioSolicitante={emailUsuarioSolicitante}
+          telefoneSolicitante={telefoneSolicitante}
+          setorSol={valueUnidade}
+          nomeExecutor={nomeExecutor}
+          emailExecutor={emailExecutor}
+          telefoneExecutor={telefoneExecutor}
 
-     
+        />
+      </div> : ''}
 
 
 
-     
+
+
+
       <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 16, marginRight: 3 }}>
 
 
@@ -580,26 +607,26 @@ const AtividadeForm = (props) => {
         {/* {envioFuncionario ? <div style={{flex: 1, marginBottom: 16}}>
           <TextField size="small" fullWidth label="Solicitante" disabled variant="outlined" value='ssssssssddfdfssfgd' />
         </div> : 'dddddd'} */}
+        {/* {mensagens =! null ? <div>{
+          mensagens[0].id}  </div>: '' } */}
 
+        {/* {area.map((item, index) => <b key={index} value={item.id} >{item.nome}</b>)} */}
 
 
         {id ? <>
-      
-       
+
+
 
           <h4>Histórico do chamado</h4>
-        
 
-        {logged && (props.logged.nome === nomeExecutor || props.logged.nome === usuarioSolicitante )  ?
-       <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
-       <Button size="small" variant="contained"  onClick={() => setOpenMsg(true)}>Enviar Mensagem</Button>
-     </div> : ''
 
-      }
+          <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
+            <Button size="small" variant="contained" onClick={() => [setOpenMsg(true), setBtnMsg(true)]}>Enviar Mensagem</Button>
+          </div>
           {mensagens.map((item, index) => <div style={{ borderTop: '1px solid #e0e0e0', padding: 2, background: '#FFFFE0', borderRadius: 10, marginBottom: 1, border: '2px solid #e0e0e0' }}>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <div style={{ display: 'flex', flexDirection: 'colrowumn' }}>
               <div style={{ display: 'flex', flexDirection: 'row' }}>
-                <b style={{ fontSize: 10 }}>{item.Usuario.nome}</b>
+                <b style={{ fontSize: 10, marginRight: 5 }}>{item.Usuario.nome}</b>
                 <div style={{ flex: 1 }}></div>
                 <b style={{ fontSize: 10 }}>{new Date(item.createdAt).toLocaleString()}</b>
               </div>
@@ -680,7 +707,7 @@ const AtividadeForm = (props) => {
 
             </select>
 
-            
+
           </FormControl>
         </DialogContent>
         <DialogActions>
@@ -705,12 +732,12 @@ const AtividadeForm = (props) => {
 
           <p></p>
 
-          <FormControl fullWidth labelId="demo-simple-select-label" id="demo-simple-select" style={{width: 250}}>
-          <InputLabel id="demo-simple-select-label"> Altarar Status do chamado</InputLabel>
-             
+          <FormControl labelId="demo-simple-select-label" id="demo-simple-select" style={{ width: 250 }}>
+            <InputLabel id="demo-simple-select-label"> Altarar Status do chamado</InputLabel>
+
 
             <Select style={{ fontSize: 20 }} onChange={e => setNewStatus(e.target.value)}>
-            
+
 
               {
                 alterarStatus.map((status, key) => <MenuItem name={status.nome} value={status.id} >
@@ -734,13 +761,32 @@ const AtividadeForm = (props) => {
 
       <Dialog open={openMsg}  >
 
-<DialogContent>
-  <DialogContentText>
+        <DialogContent>
 
-  </DialogContentText>
+          {btnMsg === true ? ''
+            //  <h2>Deiche um comentario nesta atividade</h2>
+            :
+            <h2>Informe o motivo da alteração do Status</h2>
+
+          }
+
+          {newStatus === '738c95e5-d489-44c4-8c45-930adce99c78' ?
+
+            <center><div>
+              <h3 style={{ color: 'red' }}>Atividade Concluida<br></br>conte a solução do problema</h3></div></center> :
+            <div>
+              {/* <h3 style={{ color: 'red' }}>Caso a atividade seja finalizada, informar a solução</h3> */}
+            </div>
+          }
 
 
-  <h4>Enviar um comentário</h4>
+
+
+
+
+
+
+
           {/* {classificacao == "Não Definido" && status == "Aberto" ?
             <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
               <Button variant="contained" onClick={() => setOpen(true)}>{'Encaminhar chamado'}</Button>
@@ -748,23 +794,25 @@ const AtividadeForm = (props) => {
 
           } */}
 
-          <div style={{ flex: 1, marginBottom: 16 }}>
-            <TextField  fullWidth sx={{ m: 1 }} size="small" fullWidth label="Descrição"  multiline rows={2} variant="outlined" value={conteudo} onChange={e => setConteudo(e.target.value)} />
+          <div style={{ flex: 1, marginBottom: 2 }}>
+            <TextField fullWidth sx={{ m: 1 }} size='200px' label='Digite sua mensagem...' multiline rows={8} variant="outlined" value={conteudo} onChange={e => setConteudo(e.target.value)} />
           </div>
 
           <div style={{ flex: 1, display: 'flex', flexDirection: 'row' }}>
             {/* <Button variant="outlined" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/area/`}>Voltar</Button> */}
             <div style={{ flex: 1 }}></div>
             <Button variant="contained" onClick={novaInteracao}>{'Enviar'}</Button>
-          </div>
-</DialogContent>
-<DialogActions>
-  <Button onClick={() => setOpenMsg(false)}>Cancelar</Button>
-  
-</DialogActions>
-</Dialog>
 
-      
+
+            <Button onClick={() => setOpenMsg(false)}>Cancelar</Button>
+
+
+          </div>
+        </DialogContent>
+
+      </Dialog>
+
+
 
 
 

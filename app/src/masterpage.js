@@ -118,6 +118,7 @@ const Masterpage = (props) => {
       setPrimeiroLogin(_.data.data.primeiroLogin)
       setOpenDialogPrimeiroAcesso(_.data.data.primeiroLogin)
 
+
     })
   }, []);
 
@@ -226,7 +227,7 @@ const Masterpage = (props) => {
         })
     }
 
-  
+
     if (logged && logged.Perfil && (logged.Perfil.nome === PerfilUtils.Gerente || logged.Perfil.nome === PerfilUtils.Coordenador)) {
       setInterval(carregarUsuariosNaoValidados, 1000)
     }
@@ -256,8 +257,8 @@ const Masterpage = (props) => {
           })
         })
     }
-      
-        
+
+
 
     if (logged && logged.Perfil && (logged.Perfil.nome === PerfilUtils.Gerente || logged.Perfil.nome === PerfilUtils.Coordenador)) {
       setInterval(carregarAtividadesNaoAtribuidas, 1000)
@@ -289,8 +290,8 @@ const Masterpage = (props) => {
         })
     }
 
-      setInterval(carregarAtividadesRecebidas, 1000)
-    
+    setInterval(carregarAtividadesRecebidas, 1000)
+
   }, [logged])
 
 
@@ -394,7 +395,7 @@ const Masterpage = (props) => {
   ]
 
   const actionsFuncionario = [
-    
+
 
 
 
@@ -525,7 +526,7 @@ const Masterpage = (props) => {
     >
       {atividadesRecebida.map((item, index) => <AtividadeRecebidaNotificationItem key={index} item={item} />)}
     </Menu>
-    
+
   );
 
 
@@ -534,22 +535,22 @@ const Masterpage = (props) => {
       setTimeout(() => {
         setOpenDrawer(false)
       }, 200)
-     
+
     }
 
     closeDrawerAfterAFewSecounds()
   }, [])
-  
+
 
   return (
     <MasterPageContainer>
-       
+
       <Drawer
         open={openDrawer}
         onClose={() => setOpenDrawer(false)}>
         <Box sx={{ width: 250 }} role="presentation">
           <List>
-          <ListItem disablePadding>
+            <ListItem disablePadding>
               <ListItemButton>
                 <ListItemIcon>
                   <HomeIcon />
@@ -572,30 +573,30 @@ const Masterpage = (props) => {
                 <ListItemIcon>
                   <PlaylistAddCheckIcon />
                 </ListItemIcon>
-                <ListItemText primary='Atividades Recebidas' /><KeyboardDoubleArrowLeftIcon/>
+                <ListItemText primary='Atividades Recebidas' /><KeyboardDoubleArrowLeftIcon />
               </ListItemButton>
             </ListItem>
-            
+
 
             <ListItem disablePadding>
               <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/chamadosAbertos/`}>
                 <ListItemIcon>
                   <FormatListNumberedIcon />
                 </ListItemIcon>
-                <ListItemText primary='Atividades Solicitadas' /><KeyboardDoubleArrowRightIcon/>
+                <ListItemText primary='Atividades Solicitadas' /><KeyboardDoubleArrowRightIcon />
               </ListItemButton>
             </ListItem>
 
-            <ListItem disablePadding>
+            {/* <ListItem disablePadding>
               <ListItemButton>
                 <ListItemIcon>
                   <PeopleIcon />
                 </ListItemIcon>
                 <ListItemText primary='Equipe' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/equipe`} />
               </ListItemButton>
-            </ListItem>
+            </ListItem> */}
 
-           
+
 
             {
               logged && logged.validado && logged.Perfil.nome === PerfilUtils.Administrador ?
@@ -640,19 +641,19 @@ const Masterpage = (props) => {
       </Drawer>
       <CssBaseline />
 
-      {logged &&  (logged.Perfil.nome === PerfilUtils.Gerente || logged.Perfil.nome === PerfilUtils.Coordenador)  ?
+      {logged && logged.Perfil && (logged.Perfil.nome === PerfilUtils.Gerente || logged.Perfil.nome === PerfilUtils.Coordenador) ?
         <Toolbar
-        menu={menu}
-        title='SENAC - Task'
-        actions={actionsGerente} />
-         :
-         <Toolbar
-         menu={menu}
-         title='SENAC - Task Manager'
-         actions={actionsFuncionario} />
+          menu={menu}
+          title='SENAC - Task'
+          actions={actionsGerente} />
+        :
+        <Toolbar
+          menu={menu}
+          title='SENAC - Task Manager'
+          actions={actionsFuncionario} />
 
       }
-      
+
       {renderMenu}
       {renderUserNotification}
       {renderNaoAtribuidosNotification}
@@ -691,11 +692,14 @@ const Masterpage = (props) => {
             path="/minhasAtividades"
             render={(props) => <MinhasAtividades {...props} logged={logged} />}
           />
+
           <Route
             exact
             path="/chamadosAbertos"
             render={(props) => <ChamadosAbertos {...props} logged={logged} />}
           />
+
+
 
 
 
@@ -716,6 +720,7 @@ const Masterpage = (props) => {
             path="/unidade/cadastro"
             render={(props) => <UnidadeForm {...props} logged={logged} />}
           />
+
 
 
           <Route
@@ -779,8 +784,8 @@ const Masterpage = (props) => {
             path="/home"
             render={(props) => <Home {...props} logged={logged} />}
           />
-          
-          
+
+
         </Switch>
         <Dialog open={openDialogPrimeiroAcesso}>
           <DialogTitle>Primeiro Acesso</DialogTitle>

@@ -7,6 +7,7 @@ import TaskItem from '../components/task-item'
 const getCookie = require('../utils/getCookie')
 
 const ChamadosAbertos = (props) => {
+  const {logged} = props
   const [minhasAtividades,setMinhasAtividades] = useState([])
 
 
@@ -52,7 +53,10 @@ const ChamadosAbertos = (props) => {
 
   return (
     <div>
-      <TaskFilter />
+         {logged ? <TaskFilter  nome={props.logged.nome}/>
+      :
+      ''
+      }
       <center>
       <div style={{fontSize: 24, fontWeight: 'bold',
        marginBottom: 4, marginRight: 8, alignItems:'center',
@@ -65,7 +69,7 @@ const ChamadosAbertos = (props) => {
       protocoloChamado={item.protocolo}
       criacaoChamado={item.createdAt}
       classificacao={item.Classificacao.nome}
-      status={item.Status.nome}
+      status={item.Status.nome ? item.Status.nome : ''}
       tela={'solicitada'}
       // usuarioDemandante={item.Usuario.nome}
       // usuarioDemandanteTelefone={item.Usuario.telefone}

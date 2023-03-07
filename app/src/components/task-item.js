@@ -7,13 +7,13 @@ const getCookie = require('../utils/getCookie')
 
 const TaskItem = (props) => {
   const { idChamado, tituloChamado, protocoloChamado,
-    classificacao, criacaoChamado,status, 
-    usuarioDemandante, usuarioDemandanteTelefone,usuarioDemandanteEmail ,tela} = props
+    classificacao, criacaoChamado, status,
+    usuarioDemandante, usuarioDemandanteTelefone, usuarioDemandanteEmail, tela } = props
 
-    const[mensagem, setMensagem]= useState([])
-    // alert(tela)
+  const [mensagem, setMensagem] = useState([])
+  // alert(tela)
 
-   
+
 
 
   const data = new Date(props.criacaoChamado)
@@ -27,47 +27,47 @@ const TaskItem = (props) => {
   var date = formDate(data)
 
 
-  
-    // function carregarMensagem() {
-    //   // setOpenLoadingDialog(true)
-    //   const token = getCookie('_token_task_manager')
-    //   const params = {
-    //     headers: {
-    //       'Authorization': `Bearer ${token}`
-    //     }
-    //   }
-    //   fetch(`${process.env.REACT_APP_DOMAIN_API}/api/mensagem/?fkAtividade=${idChamado}`, params)
-    //     .then(response => {
-    //       const { status } = response
-    //       response.json().then(data => {
-    //         // setOpenLoadingDialog(false)
-  
-    //         if (status === 401) {
-    //           alert('1111')
-  
-    //         } else if (status === 200) {
-    //           // alert(JSON.stringify(data.data))
-    //           setMensagem(data.data)
-    //            alert(JSON.stringify(mensagem))
-    //           // alert("3")
-    //           // alert(JSON.stringify(data))
-  
-    //         }
-    //       }).catch(err =>{
-    //         alert(err)
-    //       })
-    //     })
-    // }
+
+  // function carregarMensagem() {
+  //   // setOpenLoadingDialog(true)
+  //   const token = getCookie('_token_task_manager')
+  //   const params = {
+  //     headers: {
+  //       'Authorization': `Bearer ${token}`
+  //     }
+  //   }
+  //   fetch(`${process.env.REACT_APP_DOMAIN_API}/api/mensagem/?fkAtividade=${idChamado}`, params)
+  //     .then(response => {
+  //       const { status } = response
+  //       response.json().then(data => {
+  //         // setOpenLoadingDialog(false)
+
+  //         if (status === 401) {
+  //           alert('1111')
+
+  //         } else if (status === 200) {
+  //           // alert(JSON.stringify(data.data))
+  //           setMensagem(data.data)
+  //            alert(JSON.stringify(mensagem))
+  //           // alert("3")
+  //           // alert(JSON.stringify(data))
+
+  //         }
+  //       }).catch(err =>{
+  //         alert(err)
+  //       })
+  //     })
+  // }
 
 
 
-  
+
 
   // if(protocoloChamado != null){
   //   carregarMensagem()
 
   // }
- 
+
 
 
 
@@ -104,76 +104,82 @@ const TaskItem = (props) => {
             </IconButton>
           </div> */}
         </div>
-        <div style={{ display: 'flex', flexDirection: 'row', marginTop: 8 }}>
-
-
-          <div style={{ fontSize: 12,  fontWeight: 'bold',marginLeft: 8, marginRight: 8, position: 'relative'  }}>
-            <Chip size="small" label={"Protocolo: " + props.protocoloChamado} />
-          </div>
-          <div style={{ fontSize: 12,  fontWeight: 'bold',marginLeft: 8, marginRight: 8, position: 'relative'  }}>
-            <Chip size="small" label={" " + props.status}  />
-          </div>
-
-
-
-
+        <div style={{ flex: 1, fontSize: 15, fontWeight: 'bold', color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+           Titulo:  {props.tituloChamado}</div>
+        
+        <div style={{ display: 'flex', flexDirection: 'column', marginTop: 8 }}>
           
 
-      
 
 
         
+
+          
+
+          <div style={{ fontSize: 12, fontWeight: 'bold', marginLeft: 5, marginRight: 8, marginBottom:5, position: 'relative' }}>
+            <Chip size="small" label={"Protocolo: " + props.protocoloChamado} />
+          </div>
+          <div style={{ fontSize: 12, fontWeight: 'bold', marginLeft: 5, marginRight: 8,  marginBottom:5, position: 'relative' }}>
+            <Chip size="small" label={"Status: " + props.status} />
+          </div>
+         
+
+
+
+
+
+
+
+
+
+
         </div>
         <div style={{ fontSize: 13, color: '#424242', marginTop: 16 }}>
 
-        <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-          Abertura : {date}</div>
-          
-
-
-          {tela =='minhas' ?<div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-          Solicitante : {props.usuarioDemandante}</div> :''}
-
-          
-
-
-          {tela =='minhas' ?<div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-          Email : {props.usuarioDemandanteEmail}</div> :''}
+          <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+            Abertura : {date}</div>
 
 
 
-          
-          {tela =='minhas' ?<div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-          Telefone : {props.usuarioDemandanteTelefone}</div> :''}
-          
-          
-       
+          {tela == 'minhas' ? <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+            Solicitante : {props.usuarioDemandante}</div> : ''}
 
-          
-        <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-          Classificação : {props.classificacao}</div>
-          <hr></hr>
 
-       
-        <div style={{ flex: 1, fontSize: 15, fontWeight: 'bold', color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-        {props.tituloChamado}</div>
+
+
+          {tela == 'minhas' ? <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+            Email : {props.usuarioDemandanteEmail}</div> : ''}
+
+
+
+
+          {tela == 'minhas' ? <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+            Telefone : {props.usuarioDemandanteTelefone}</div> : ''}
+
+
+
+
+
+          <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+            Classificação : {props.classificacao}</div>
+
 
           {/* <div style={{ flex: 1, fontSize: 22, color: '#424242', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           Status : {props.status}</div>
            */}
-       
-          
 
 
 
-          
-         
-        
+
+
+
+
+
         </div>
-        
+
         <div style={{ marginTop: 16, display: 'flex', flexDirection: 'row' }}>
           <Button variant="contained" size="small" startIcon={<PlayCircleIcon />} onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${idChamado}/edit`}>
-            detalhes do chamado 
+            detalhes do chamado
           </Button>
           <div style={{ flex: 1 }}></div>
           <LinearProgress color="success" variant="determinate" value={100} />
