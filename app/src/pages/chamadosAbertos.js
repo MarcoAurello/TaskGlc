@@ -71,6 +71,9 @@ const ChamadosAbertos = (props) => {
       classificacao={item.Classificacao.nome}
       status={item.Status.nome ? item.Status.nome : ''}
       tela={'solicitada'}
+      fkUsuarioSoloicitante={item.fkUsuarioSolicitante}
+      fklogado={props.logged.id}
+      Arquivado={item.arquivado}
       // usuarioDemandante={item.Usuario.nome}
       // usuarioDemandanteTelefone={item.Usuario.telefone}
       // usuarioDemandanteEmail={item.Usuario.email}

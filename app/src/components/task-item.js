@@ -1,17 +1,27 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Chip, IconButton, LinearProgress } from '@mui/material'
-import MoreIcon from '@mui/icons-material/MoreVert'
+
 import PlayCircleIcon from '@mui/icons-material/PlayCircle'
+import FolderCopyIcon from '@mui/icons-material/FolderCopy';
 
 const getCookie = require('../utils/getCookie')
 
 const TaskItem = (props) => {
-  const { idChamado, tituloChamado, protocoloChamado,
-    classificacao, criacaoChamado, status,
-    usuarioDemandante, usuarioDemandanteTelefone, usuarioDemandanteEmail, tela } = props
+  const { logged } = props
+
+  const { idChamado, tituloChamado, protocoloChamado, Arquivado, usuarioExecutor,
+    classificacao, criacaoChamado, status, fkUsuarioSoloicitante, fklogado
+    , usuarioDemandanteTelefone, usuarioDemandanteEmail, tela } = props
+  const [statusAtividade, setStatus] = useState('')
+
 
   const [mensagem, setMensagem] = useState([])
   // alert(tela)
+  const [openLoadingDialog, setOpenLoadingDialog] = useState(false)
+  const [openMessageDialog, setOpenMessageDialog] = useState(false)
+  const [message, setMessage] = useState('')
+  const [arquivado, setArquivado] = useState(true)
+  
 
 
 
@@ -68,6 +78,53 @@ const TaskItem = (props) => {
 
   // }
 
+  function arquivarAtividade() {
+
+
+    if (props.status != 'Concluido') {
+      alert('para arquivar a atividade deve ser concluida')
+    } else {
+
+      const token = getCookie('_token_task_manager')
+      const params = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          arquivado
+
+        })
+
+      }
+
+      fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/${idChamado}/edit`, params)
+        .then(response => {
+          const { status } = response
+          response.json().then(data => {
+            // setOpenLoadingDialog(false)
+            if (status === 401) {
+              // setMessage(data.message)
+              // setOpenMessageDialog(true)
+              alert('erro')
+            } else if (status === 200) {
+              alert('chamado arquivado com sucesso')
+              window.location.href = `${process.env.REACT_APP_DOMAIN}/home`
+
+
+              setMessage(data.message)
+              // alert(message)
+
+            }
+          }).catch(err => alert(err))
+        })
+
+
+
+    }
+  }
+
 
 
 
@@ -105,24 +162,24 @@ const TaskItem = (props) => {
           </div> */}
         </div>
         <div style={{ flex: 1, fontSize: 15, fontWeight: 'bold', color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-           Titulo:  {props.tituloChamado}</div>
-        
+          Titulo:  {props.tituloChamado}</div>
+
         <div style={{ display: 'flex', flexDirection: 'column', marginTop: 8 }}>
-          
 
 
 
-        
 
-          
 
-          <div style={{ fontSize: 12, fontWeight: 'bold', marginLeft: 5, marginRight: 8, marginBottom:5, position: 'relative' }}>
+
+
+
+          <div style={{ fontSize: 12, fontWeight: 'bold', marginLeft: 5, marginRight: 8, marginBottom: 5, position: 'relative' }}>
             <Chip size="small" label={"Protocolo: " + props.protocoloChamado} />
           </div>
-          <div style={{ fontSize: 12, fontWeight: 'bold', marginLeft: 5, marginRight: 8,  marginBottom:5, position: 'relative' }}>
+          <div style={{ fontSize: 12, fontWeight: 'bold', marginLeft: 5, marginRight: 8, marginBottom: 5, position: 'relative' }}>
             <Chip size="small" label={"Status: " + props.status} />
           </div>
-         
+
 
 
 
@@ -163,10 +220,17 @@ const TaskItem = (props) => {
           <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
             Classificação : {props.classificacao}</div>
 
+          { props.Arquivado == true
+            ?
+            <div style={{color:'red'}}>
+            Chamado arquivado pelo Executor
+            </div>
+          :
+          ''
+          }
 
-          {/* <div style={{ flex: 1, fontSize: 22, color: '#424242', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          Status : {props.status}</div>
-           */}
+
+
 
 
 
@@ -181,8 +245,21 @@ const TaskItem = (props) => {
           <Button variant="contained" size="small" startIcon={<PlayCircleIcon />} onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${idChamado}/edit`}>
             detalhes do chamado
           </Button>
-          <div style={{ flex: 1 }}></div>
-          <LinearProgress color="success" variant="determinate" value={100} />
+
+
+
+          {usuarioExecutor === fklogado && Arquivado === false ?
+
+            <div style={{ flex: 1, marginLeft: 5 }}>
+              <Button variant="contained" size="small" startIcon={<FolderCopyIcon />} onClick={() => arquivarAtividade()}>
+                arquivar
+              </Button>
+
+            </div>
+            :
+            ''
+          }
+          {/* <LinearProgress color="success" variant="determinate" value={100} /> */}
         </div>
       </div>
     </div>

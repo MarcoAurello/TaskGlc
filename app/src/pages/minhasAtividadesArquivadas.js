@@ -8,7 +8,7 @@ import { display } from "@mui/system";
 
 const getCookie = require('../utils/getCookie')
 
-const MinhasAtividades = (props) => {
+const MinhasAtividadesArquivadas = (props) => {
   const {logged} = props
 
   const [minhasAtividades,setMinhasAtividades] = useState([])
@@ -22,7 +22,7 @@ const MinhasAtividades = (props) => {
       }
     }
 
-    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/minhasAtividades/`, params)
+    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/minhasAtividadesArquivadas/`, params)
       .then(response => {
         const { status } = response
         response.json().then(data => {
@@ -64,10 +64,10 @@ const MinhasAtividades = (props) => {
       <center>
       <div style={{fontSize: 24, fontWeight: 'bold',
        marginBottom: 4, marginRight: 8, alignItems:'center',
-       }}>Atividades Recebidas<br></br>
-         <Button variant="contained" size="small"  onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/minhasAtividadesArquivadas`}>
-           Arquivadas
-          </Button>
+       }}>Concluidas por você<br></br>
+         {/* <Button variant="contained" size="small"  onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/minhasAtividades`}>
+           Voltar para Recebidas
+          </Button> */}
           </div>
        
        </center> 
@@ -86,9 +86,9 @@ const MinhasAtividades = (props) => {
       tela={'minhas'}
       fkUsuarioSoloicitante={item.fkUsuarioSolicitante}
       fklogado={props.logged.id}
-      // logado ={item.UsuarioAtividade.Usuario.nome}
       Arquivado={item.arquivado}
       usuarioExecutor={item.fkUsuarioExecutor}
+      
       
       />
       )}
@@ -108,4 +108,4 @@ const MinhasAtividades = (props) => {
   );
 };
 
-export default MinhasAtividades;
+export default MinhasAtividadesArquivadas;

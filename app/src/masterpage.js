@@ -6,10 +6,12 @@ import Content from "./components/content";
 import Home from './pages/home';
 import Usuario from './pages/usuario'
 import MinhasAtividades from './pages/minhasAtividades'
+import MinhasAtividadesArquivadas from './pages/minhasAtividadesArquivadas'
 import ChamadosAbertos from './pages/chamadosAbertos'
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import FolderCopyIcon from '@mui/icons-material/FolderCopy';
 
 import MenuIcon from '@mui/icons-material/Menu'
 import MarkUnreadChatAltIcon from '@mui/icons-material/MarkUnreadChatAlt';
@@ -59,6 +61,7 @@ import AtividadeRecebidaNotificationItem from "./components/atividadeRecebida-no
 import Equipe from "./pages/equipe";
 import ValidarUsuarioForm from "./pages/validar-usuario-form";
 import AtividadeForm from "./pages/chamado-form";
+import TaskItem from "./components/task-item";
 
 const getCookie = require("./utils/getCookie")
 
@@ -573,7 +576,16 @@ const Masterpage = (props) => {
                 <ListItemIcon>
                   <PlaylistAddCheckIcon />
                 </ListItemIcon>
-                <ListItemText primary='Atividades Recebidas' /><KeyboardDoubleArrowLeftIcon />
+                <ListItemText primary='Para Execução' /><KeyboardDoubleArrowLeftIcon />
+              </ListItemButton>
+            </ListItem>
+
+            <ListItem disablePadding>
+              <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/minhasAtividadesArquivadas/`}>
+                <ListItemIcon>
+                  <FolderCopyIcon  />
+                </ListItemIcon>
+                <ListItemText primary='Concluidas e  Arquivadas' /><KeyboardDoubleArrowLeftIcon />
               </ListItemButton>
             </ListItem>
 
@@ -693,6 +705,12 @@ const Masterpage = (props) => {
             render={(props) => <MinhasAtividades {...props} logged={logged} />}
           />
 
+<Route
+            exact
+            path="/minhasAtividadesArquivadas"
+            render={(props) => <MinhasAtividadesArquivadas {...props} logged={logged} />}
+          />
+
           <Route
             exact
             path="/chamadosAbertos"
@@ -708,7 +726,7 @@ const Masterpage = (props) => {
             path="/unidade"
             render={(props) => <Unidade {...props} logged={logged} />}
           />
-
+         
           <Route
             exact
             path="/unidade/:id/edit"

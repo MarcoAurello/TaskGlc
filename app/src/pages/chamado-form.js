@@ -24,6 +24,7 @@ const PageContainer = styled.div`
 const AtividadeForm = (props) => {
   const { logged } = props
   // alert(JSON.stringify(props.logged))
+  const [arquivado, setArquivado] = useState(true)
 
   const [open, setOpen] = useState(false);
   const [openMsg, setOpenMsg] = useState(false);
@@ -49,7 +50,7 @@ const AtividadeForm = (props) => {
   const [setorSolicitante, setSetorSolicitante] = useState('')
   const [btnMsg, setBtnMsg] = useState(false);
 
-  const [tempoEstimando, setTempoEstimado] = useState('')
+  const [tempoEstimado, setTempoEstimado] = useState('')
   const [createdAt, setCreatedAt] = useState('')
   const [title, setTitle] = useState('')
 
@@ -71,6 +72,8 @@ const AtividadeForm = (props) => {
   const [nomeExecutor, getNomeExecutor] = useState('')
   const [emailExecutor, getEmailExecutor] = useState('')
   const [telefoneExecutor, getTelefoneExecutor] = useState('')
+  const [fkDemandante, setFkDemandante] = useState('')
+
 
 
   const [idChamado, setIdChamado] = useState('')
@@ -106,6 +109,7 @@ const AtividadeForm = (props) => {
               setUsuarioSolicitante(data.data.Usuario.nome)
               setEmailUsuarioSolicitante(data.data.Usuario.email)
               setTelefoneSolicitante(data.data.Usuario.telefone)
+              setFkDemandante(data.data.fkDemandante)
               // setSetorSolicitante(data.data.Usuario.Area.nome)
               setTitle(data.data.titulo)
               setFkAreaDemandada(data.data.fkArea)
@@ -123,6 +127,8 @@ const AtividadeForm = (props) => {
           }).catch(err => setOpenLoadingDialog(false))
         })
     }
+
+  
 
     function carregarMensagem() {
       const token = getCookie('_token_task_manager')
@@ -316,7 +322,8 @@ const AtividadeForm = (props) => {
         'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify({
-        newStatus
+        newStatus,
+        tempoEstimado
 
       })
 
@@ -361,7 +368,8 @@ const AtividadeForm = (props) => {
         fkUnidade,
         fkArea,
         titulo,
-        conteudo
+        conteudo,
+        arquivado: false
       })
     }
 
@@ -448,11 +456,12 @@ const AtividadeForm = (props) => {
         fkClassificacao: newClassificacao,
         fkAtividade: idChamado,
         fkUsuario: fkUsuarioExecutor,
-        ativo: true
+        ativo: true,
+        
 
       })
     }
-
+    alert(tempoEstimado)
     fetch(`${process.env.REACT_APP_DOMAIN_API}/api/usuarioAtividade/`, params)
       .then(response => {
         const { status } = response
@@ -617,12 +626,23 @@ const AtividadeForm = (props) => {
 
 
 
-          <h4>Histórico do chamado</h4>
 
 
-          <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
-            <Button size="small" variant="contained" onClick={() => [setOpenMsg(true), setBtnMsg(true)]}>Enviar Mensagem</Button>
-          </div>
+          {status === "Concluido"
+            ?
+            <h4>Chamado Concluido
+            </h4>
+
+            :
+
+            <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
+              <h4>Histórico do chamado</h4>
+              <Button size="small" variant="contained" onClick={() => [setOpenMsg(true), setBtnMsg(true)]}>Enviar Mensagem</Button>
+            </div>
+          }
+
+
+
           {mensagens.map((item, index) => <div style={{ borderTop: '1px solid #e0e0e0', padding: 2, background: '#FFFFE0', borderRadius: 10, marginBottom: 1, border: '2px solid #e0e0e0' }}>
             <div style={{ display: 'flex', flexDirection: 'colrowumn' }}>
               <div style={{ display: 'flex', flexDirection: 'row' }}>
@@ -733,7 +753,7 @@ const AtividadeForm = (props) => {
           <p></p>
 
           <FormControl labelId="demo-simple-select-label" id="demo-simple-select" style={{ width: 250 }}>
-            <InputLabel id="demo-simple-select-label"> Altarar Status do chamado</InputLabel>
+            <InputLabel id="demo-simple-select-label"> {status}</InputLabel>
 
 
             <Select style={{ fontSize: 20 }} onChange={e => setNewStatus(e.target.value)}>
@@ -743,6 +763,32 @@ const AtividadeForm = (props) => {
                 alterarStatus.map((status, key) => <MenuItem name={status.nome} value={status.id} >
                   {status.nome}</MenuItem>)
               }
+            </Select>
+            </FormControl>
+            
+            
+            <p></p>
+            <FormControl labelId="demo-simple-select-label" id="demo-simple-select" style={{ width: 250 }}>
+
+            <InputLabel id="demo-simple-select-label"> Tempo para concluir</InputLabel>
+
+
+            <Select style={{ fontSize: 20 }} onChange={e => setTempoEstimado(e.target.value)}>
+
+
+              
+               <MenuItem  value={1} >1 hora</MenuItem>
+               <MenuItem  value={2} >2 horas</MenuItem>
+               <MenuItem  value={3} >3 horas</MenuItem>
+               <MenuItem  value={4} >4 horas</MenuItem>
+               <MenuItem  value={5} >5 horas</MenuItem>
+               <MenuItem  value={6} >6 horas</MenuItem>
+               <MenuItem  value={7} >7 horas</MenuItem>
+               <MenuItem  value={8} >8 horas</MenuItem>
+
+
+
+              
             </Select>
 
             <hr></hr>

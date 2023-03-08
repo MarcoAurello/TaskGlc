@@ -38,9 +38,10 @@ const TaskFilter = (props) => {
         justifyContent: 'center',
         height: 80,
         overflowY: 'hidden',
-        overflowX: 'hidden'
+        overflowX: 'hidden',
+        
       }}>
-        <TaskFilterItem dia='12' diaSemana='Sab' />
+       <TaskFilterItem dia='12' diaSemana='Sab' style={{}} / >
         <TaskFilterItem dia='13' diaSemana='Dom' />
         <TaskFilterItem dia='07' diaSemana='Seg' />
         <TaskFilterItem dia='08' diaSemana='Ter' />
@@ -50,7 +51,7 @@ const TaskFilter = (props) => {
         <TaskFilterItem dia='12' diaSemana='Sab' />
         <TaskFilterItem dia='13' diaSemana='Dom' />
         <TaskFilterItem dia='07' diaSemana='Seg' />
-        <TaskFilterItem dia='08' diaSemana='Ter' selected={true} />
+        <TaskFilterItem dia='08' diaSemana='Ter'  />
         <TaskFilterItem dia='09' diaSemana='Qua' />
         <TaskFilterItem dia='11' diaSemana='Sex' />
         <TaskFilterItem dia='12' diaSemana='Sab' />

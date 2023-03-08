@@ -18,7 +18,7 @@ class AtividadeController implements IController {
 
   async create(req: any, res: Response, next: NextFunction): Promise<any> {
     try {
-      const { fkUnidade, fkArea, titulo, conteudo } = req.body;
+      const { fkUnidade, fkArea, titulo, conteudo, arquivado } = req.body;
 
       if (!fkUnidade) {
         return res.status(401).json({
@@ -56,6 +56,7 @@ class AtividadeController implements IController {
         fkArea,
         fkStatus: status?.id,
         fkUsuarioSolicitante: req.usuario.id,
+        arquivado,
       });
 
       await Mensagem.create({
@@ -104,13 +105,15 @@ class AtividadeController implements IController {
     try {
       const { id } = req.params;
       // console.log(id)
-      const { newStatus } = req.body;
+      const { newStatus, arquivado, tempoEstimado } = req.body;
 
       // console.log(req.body)
 
       await Atividade.update(
         {
           fkStatus: newStatus,
+          arquivado: arquivado,
+          tempoEstimado: tempoEstimado
         },
         {
           where: {
@@ -137,7 +140,6 @@ class AtividadeController implements IController {
     next: NextFunction
   ): Promise<any> {
     try {
-     
       // const status = await queryInterface.sequelize.query('select id from status where nome = \'Aberto\'')
       const registros = await Atividade.findAll({
         include: [
@@ -148,7 +150,32 @@ class AtividadeController implements IController {
         ],
         where: {
           fkUsuarioExecutor: req.usuario.id,
-        
+          arquivado: false,
+        },
+      });
+      res.status(200).json({ data: registros });
+    } catch (err) {
+      console.log(err);
+      res.status(401).json({ message: err.errors[0].message });
+    }
+  }
+
+  async minhasAtividadesArquivadas(
+    req: any,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const registros = await Atividade.findAll({
+        include: [
+          { model: Area, include: [Unidade] },
+          Classificacao,
+          Status,
+          Usuario,
+        ],
+        where: {
+          fkUsuarioExecutor: req.usuario.id,
+          arquivado: true
         },
       });
       res.status(200).json({ data: registros });
@@ -213,7 +240,7 @@ class AtividadeController implements IController {
   ): Promise<any> {
     try {
       // const area = await Area.findOne({ where: { id: req.usuario.fkArea } });
-      const status = await Status.findOne({ where: { nome: 'Aberto' } });
+      const status = await Status.findOne({ where: { nome: "Aberto" } });
 
       const registros = await Atividade.findAll({
         include: [Classificacao, Usuario, Status],
@@ -221,7 +248,6 @@ class AtividadeController implements IController {
         where: {
           fkUsuarioExecutor: req.usuario.id,
           fkStatus: status?.id,
-
         },
       });
 

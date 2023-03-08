@@ -52,6 +52,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: true
       },
+      arquivado: {
+        type: Sequelize.BOOLEAN,
+        allowNull: true
+      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false

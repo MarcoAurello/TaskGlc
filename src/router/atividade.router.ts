@@ -20,6 +20,7 @@ class AtividadeRouter {
     this.router.get('/', controller.all)
     this.router.get('/chamadosAbertos', controller.chamadosAbertos)
     this.router.get('/minhasAtividades', controller.minhasAtividades)
+    this.router.get('/minhasAtividadesArquivadas/', controller.minhasAtividadesArquivadas)
     this.router.post('/', controller.create)
     this.router.get('/:id', controller.find)
     this.router.post('/:id/edit', controller.update)

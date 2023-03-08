@@ -28,7 +28,7 @@ class UsuarioAtividadeController implements IController {
 
   async create(req: any, res: Response, next: NextFunction): Promise<any> {
     try {
-      const { fkClassificacao, fkAtividade, fkUsuario, ativo } = req.body
+      const { fkClassificacao, fkAtividade, fkUsuario, ativo, tempoEstimado } = req.body
 
       const registro = await UsuarioAtividade.create({
         fkUsuario,
@@ -39,7 +39,8 @@ class UsuarioAtividadeController implements IController {
       await Atividade.update(
         {
           fkClassificacao: fkClassificacao,
-          fkUsuarioExecutor: fkUsuario
+          fkUsuarioExecutor: fkUsuario,
+          tempoEstimado: tempoEstimado
         },
         {
           where: { id: fkAtividade }
