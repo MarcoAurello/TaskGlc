@@ -54,7 +54,7 @@ const AtividadeNotificationItem = (props) => {
       {/* <div style={{ width: '100%', fontSize: 12, color: '#424242'}}>{'Unidade: '+ item.Area.nome}</div> */}
         <div style={{ width: '100%', fontSize: 12,  color: '#424242'}}>{'Assunto: '+item.titulo}</div>
         
-        <div style={{ width: '100%' , marginTop: 4, backgroundColor:'#1E90FF', borderRadius:50, paddingLeft: 8 }}>
+        <div style={{ width: '100%' , marginTop: 4, backgroundColor:'#1E90FF', borderRadius:51, paddingLeft: 8 }}>
           Selecionar Funcionario
         </div>
       </div>
