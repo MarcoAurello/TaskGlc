@@ -64,7 +64,7 @@ const MinhasAtividadesArquivadas = (props) => {
       <center>
       <div style={{fontSize: 24, fontWeight: 'bold',
        marginBottom: 4, marginRight: 8, alignItems:'center',
-       }}>Concluidas por você<br></br>
+       }}>Arquivadas por você<br></br>
          {/* <Button variant="contained" size="small"  onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/minhasAtividades`}>
            Voltar para Recebidas
           </Button> */}
@@ -88,6 +88,7 @@ const MinhasAtividadesArquivadas = (props) => {
       fklogado={props.logged.id}
       Arquivado={item.arquivado}
       usuarioExecutor={item.fkUsuarioExecutor}
+      tempoEstimado={props.tempoEstimado}
       
       
       />

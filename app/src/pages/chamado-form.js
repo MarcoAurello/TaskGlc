@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from 'styled-components'
-import { Avatar, Button, Checkbox, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormGroup, IconButton, InputLabel, MenuItem, Select, Switch, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow, TextField, Tooltip } from "@mui/material";
+import { Alert, Avatar, Button, Checkbox, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormGroup, IconButton, InputLabel, MenuItem, Select, Switch, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow, TextField, Tooltip } from "@mui/material";
 import Paper from '@mui/material/Paper';
 import TablePaginationActions from "@mui/material/TablePagination/TablePaginationActions";
 import EditIcon from '@mui/icons-material/Edit';
@@ -39,6 +39,7 @@ const AtividadeForm = (props) => {
   const [newClassificacao, setNewClassificacao] = useState('')
   const [newStatus, setNewStatus] = useState('')
   const [newStatusControler, setNewStatusControler] = useState('')
+  const [statusId, setStatusId] = useState('')
 
   const [protocolo, setProtocolo] = useState('')
   const [status, setStatus] = useState('')
@@ -104,6 +105,7 @@ const AtividadeForm = (props) => {
               setClassificacao(data.data.Classificacao.nome)
               setProtocolo(data.data.protocolo)
               setStatus(data.data.Status.nome)
+              setStatusId(data.data.Status.id)
               setValueArea(data.data.Area.nome)
               setValueUnidade(data.data.Area.Unidade.nome)
               setUsuarioSolicitante(data.data.Usuario.nome)
@@ -122,6 +124,7 @@ const AtividadeForm = (props) => {
               getTelefoneExecutor(data.data.UsuarioExecutor.telefone)
 
               carregarMensagem()
+              // alert(emailExecutor)
 
             }
           }).catch(err => setOpenLoadingDialog(false))
@@ -306,13 +309,16 @@ const AtividadeForm = (props) => {
     }
   }, [fkUnidade])
 
+  // const onSaveStatus = () => {
+  //   setOpenMsg(true)
+  //   onSaveStatusA()
+
+  // }
+
+
   const onSaveStatus = () => {
-    setOpenMsg(true)
-
-  }
-
-
-  const onSaveStatusA = () => {
+    // alert(newStatus)
+    
 
     const token = getCookie('_token_task_manager')
     const params = {
@@ -322,8 +328,11 @@ const AtividadeForm = (props) => {
         'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify({
-        newStatus,
-        tempoEstimado
+        fkStatus : newStatus,
+        tempoEstimado,
+        // email: emailUsuarioSolicitante,
+        // titulo: title,
+        
 
       })
 
@@ -338,15 +347,10 @@ const AtividadeForm = (props) => {
             setMessage(data.message)
             setOpenMessageDialog(true)
           } else if (status === 200) {
-
-
-
-
-
             setMessage(data.message)
             setOpenMessageDialog(true)
-
-            window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${idChamado}/edit`
+            setOpenMsg(true)
+          //  window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${idChamado}/edit`
 
 
             // setArea(data.data)
@@ -395,8 +399,7 @@ const AtividadeForm = (props) => {
   }
 
   const novaInteracao = () => {
-    if (conteudo) {
-      onSaveStatusA()
+  
       const token = getCookie('_token_task_manager')
       const params = {
         method: 'POST',
@@ -406,10 +409,15 @@ const AtividadeForm = (props) => {
         },
         body: JSON.stringify({
           fkAtividade: id,
-          conteudo
+          conteudo,
+          email:  emailUsuarioSolicitante,
+          emailExecutor : emailExecutor,
+          
+        
+         
         })
       }
-
+      
       fetch(`${process.env.REACT_APP_DOMAIN_API}/api/mensagem/`, params)
         .then(response => {
           const { status } = response
@@ -423,28 +431,26 @@ const AtividadeForm = (props) => {
               setAtividade(data.data)
               setMessage(data.message)
               setOpenMessageDialog(true)
+              window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${idChamado}/edit`
+
+
               // setArea(data.data)
 
             }
           }).catch(err => setOpenLoadingDialog(true))
         })
 
-    } else {
-      alert('Insira uma mensagem')
-      // window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${idChamado}/edit`
+    } 
 
 
-    }
-
-
-
-  }
+  
 
 
 
 
 
   const criarExecucao = () => {
+    // alert(emailExecutor)
     const token = getCookie('_token_task_manager')
     const params = {
       method: 'POST',
@@ -457,11 +463,13 @@ const AtividadeForm = (props) => {
         fkAtividade: idChamado,
         fkUsuario: fkUsuarioExecutor,
         ativo: true,
+        email: emailExecutor
+        
         
 
       })
     }
-    alert(tempoEstimado)
+    
     fetch(`${process.env.REACT_APP_DOMAIN_API}/api/usuarioAtividade/`, params)
       .then(response => {
         const { status } = response
@@ -628,18 +636,22 @@ const AtividadeForm = (props) => {
 
 
 
-          {status === "Concluido"
+          {logged && (props.logged.id != fkUsuarioExecutor && props.logged.id != fkDemandante  )
             ?
+           
+            <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
+            <h4>Histórico do chamado</h4>
+            <Button size="small" variant="contained" onClick={() => [setOpenMsg(true)]}>Enviar Mensagem</Button>
+          </div>
+
+            :
             <h4>Chamado Concluido
             </h4>
 
-            :
-
-            <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
-              <h4>Histórico do chamado</h4>
-              <Button size="small" variant="contained" onClick={() => [setOpenMsg(true), setBtnMsg(true)]}>Enviar Mensagem</Button>
-            </div>
+            
           }
+
+
 
 
 
@@ -753,10 +765,11 @@ const AtividadeForm = (props) => {
           <p></p>
 
           <FormControl labelId="demo-simple-select-label" id="demo-simple-select" style={{ width: 250 }}>
-            <InputLabel id="demo-simple-select-label"> {status}</InputLabel>
+            <InputLabel id="demo-simple-select-label">{status}</InputLabel>
+            
 
-
-            <Select style={{ fontSize: 20 }} onChange={e => setNewStatus(e.target.value)}>
+            <Select style={{ fontSize: 20 }}   onChange={e => setNewStatus(e.target.value)}>
+              {/* <option>{status}</option> */}
 
 
               {
@@ -764,6 +777,7 @@ const AtividadeForm = (props) => {
                   {status.nome}</MenuItem>)
               }
             </Select>
+           
             </FormControl>
             
             
@@ -809,27 +823,12 @@ const AtividadeForm = (props) => {
 
         <DialogContent>
 
-          {btnMsg === true ? ''
-            //  <h2>Deiche um comentario nesta atividade</h2>
-            :
+         
             <h2>Informe o motivo da alteração do Status</h2>
 
-          }
+          
 
-          {newStatus === '738c95e5-d489-44c4-8c45-930adce99c78' ?
-
-            <center><div>
-              <h3 style={{ color: 'red' }}>Atividade Concluida<br></br>conte a solução do problema</h3></div></center> :
-            <div>
-              {/* <h3 style={{ color: 'red' }}>Caso a atividade seja finalizada, informar a solução</h3> */}
-            </div>
-          }
-
-
-
-
-
-
+        
 
 
 

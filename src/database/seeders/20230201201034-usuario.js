@@ -66,8 +66,8 @@ module.exports = {
       },
       {
         id: uuid(),
-        nome: 'Graça Bezerra',
-        email: 'gracabezerra@pe.senac.br',
+        nome: 'Marco Aurellio',
+        email: 'marconunes@pe.senac.br',
         passwordHash: await bcrypt.hash('gti@2021', 8),
         telefone: '34132053',
         chapa: '15385-F1',
@@ -83,7 +83,7 @@ module.exports = {
       {
         id: uuid(),
         nome: ' Renata Amorin',
-        email: 'grh@pe.senac.br',
+        email: 'marco.nunes.senac@gmail.com',
         passwordHash: await bcrypt.hash('gti@2021', 8),
         telefone: '34132053',
         chapa: '15385-F1',
@@ -99,7 +99,7 @@ module.exports = {
       {
         id: uuid(),
         nome: 'Usuario teste rh2',
-        email: 'grh2@pe.senac.br',
+        email: 'marco-aurellio@hotmail.com',
         passwordHash: await bcrypt.hash('gti@2021', 8),
         validado: false,
         ativo: true,

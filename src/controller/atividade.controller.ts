@@ -9,6 +9,7 @@ import Usuario from "../model/usuario.model";
 import Classificacao from "../model/classificacao.model";
 import UsuarioAtividade from "../model/usuarioAtividade.model";
 import Unidade from "../model/unidade.model";
+// import emailUtils from "../utils/email.utils";
 const { Op } = require("sequelize");
 
 class AtividadeController implements IController {
@@ -65,6 +66,13 @@ class AtividadeController implements IController {
         fkUsuario: req.usuario.id,
       });
 
+      // if (arquivado) {
+      //   emailUtils.enviar(req.usuario.email, "Seu Chamado foi arquivado pelo executor" )
+      // }
+      // if (conteudo) {
+      //   emailUtils.enviar(req.usuario.email, "Chegou mensagem no seu chamado" )
+      // }
+
       res
         .status(200)
         .json({ data: atividade, message: "Cadastro realizado com sucesso." });
@@ -105,15 +113,14 @@ class AtividadeController implements IController {
     try {
       const { id } = req.params;
       // console.log(id)
-      const { newStatus, arquivado, tempoEstimado } = req.body;
-
-      // console.log(req.body)
+      const { fkStatus, arquivado, tempoEstimado } = req.body;
+      console.log(req.body.fkStatus);
 
       await Atividade.update(
         {
-          fkStatus: newStatus,
+          fkStatus: fkStatus,
           arquivado: arquivado,
-          tempoEstimado: tempoEstimado
+          tempoEstimado: tempoEstimado,
         },
         {
           where: {
@@ -123,11 +130,51 @@ class AtividadeController implements IController {
         }
       );
 
-      const registro = await Atividade.findOne({ where: { id } });
+      // if (newStatus) {
+      //   const status1 = status?.nome
+      //   const txEmail = 'Atividade: \n' + titulo + ' \nStautus alterado para ' + status1;
 
+      //   // emailUtils.enviar(email, txEmail)
+      // }
+
+      const registro = await Atividade.findOne({ where: { id } });
       res
         .status(200)
         .json({ data: registro, message: "Alteração realizada com sucesso." });
+    } catch (err) {
+      console.log(err);
+      res.status(401).json({ message: err.errors[0].message });
+    }
+  }
+
+  async todasAsPendencias(
+    req: any,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      // const status = await queryInterface.sequelize.query('select id from status where nome = \'Aberto\'')
+      const statusPendente = await Status.findOne({ where: { nome: 'Pendente' } })
+      const statusConcluido = await Status.findOne({where: { nome: 'Concluido' }})
+      const statusCancelado = await Status.findOne({where: { nome: 'Cancelado' }})
+      const statusParado = await Status.findOne({where: { nome: 'Parado' }})
+      const registros = await Atividade.findAll({
+        include: [
+          { model: Area, include: [Unidade] },
+          Classificacao,
+          Status,
+          Usuario,
+        ],
+        where: {
+          fkUsuarioExecutor: req.usuario.id,
+          arquivado: false,
+          fkStatus: {
+            [Op.or]: [statusPendente?.id, statusConcluido?.id, statusCancelado?.id, statusParado?.id ],
+          },
+
+        },
+      });
+      res.status(200).json({ data: registros });
     } catch (err) {
       console.log(err);
       res.status(401).json({ message: err.errors[0].message });
@@ -140,8 +187,43 @@ class AtividadeController implements IController {
     next: NextFunction
   ): Promise<any> {
     try {
-      // const status = await queryInterface.sequelize.query('select id from status where nome = \'Aberto\'')
-      const registros = await Atividade.findAll({
+      const statusAberto = await Status.findOne({ where: { nome: 'Aberto' } })
+      const statusIniciado = await Status.findOne({where: { nome: 'Iniciado' }})
+      const statusPlanejado = await Status.findOne({where: { nome: 'Planejado para Iniciar' }})
+
+      const claImediata = await Classificacao.findOne({
+        where: { nome: "Execução Imediata" },
+      });
+      const claUrgente = await Classificacao.findOne({
+        where: { nome: "Urgente" },
+      });
+      const claImportente = await Classificacao.findOne({
+        where: { nome: "Importante" },
+      });
+      const claCircunstancial = await Classificacao.findOne({
+        where: { nome: "Circunstancial" },
+      });
+
+      // const registros = await Atividade.findAll({
+      //   include: [
+      //     { model: Area, include: [Unidade] },
+      //     Classificacao,
+      //     Status,
+      //     Usuario
+      //   ],
+      //   where: {
+      //     fkUsuarioExecutor: req.usuario.id,
+      //     arquivado: false,
+      //     fkStatus: {
+      //       [Op.or]: [statusAberto?.id, statusIniciado?.id]
+      //     }
+      //   },
+      //   order:[
+      //     ['createdAt', 'DESC']
+      //   ]
+      // });
+
+      const registrosImediatos = await Atividade.findAll({
         include: [
           { model: Area, include: [Unidade] },
           Classificacao,
@@ -149,11 +231,73 @@ class AtividadeController implements IController {
           Usuario,
         ],
         where: {
+          fkClassificacao: claImediata?.id,
           fkUsuarioExecutor: req.usuario.id,
           arquivado: false,
+          fkStatus: {
+            [Op.or]: [statusAberto?.id, statusIniciado?.id, statusPlanejado?.id],
+          },
         },
       });
-      res.status(200).json({ data: registros });
+      
+      const registrosUrgentes = await Atividade.findAll({
+        include: [
+          { model: Area, include: [Unidade] },
+          Classificacao,
+          Status,
+          Usuario,
+        ],
+        where: {
+          fkClassificacao: claUrgente?.id,
+          fkUsuarioExecutor: req.usuario.id,
+          arquivado: false,
+          fkStatus: {
+            [Op.or]: [statusAberto?.id, statusIniciado?.id, statusPlanejado?.id],
+          },
+        },
+      });
+
+      const registrosImportantes = await Atividade.findAll({
+        include: [
+          { model: Area, include: [Unidade] },
+          Classificacao,
+          Status,
+          Usuario,
+        ],
+        where: {
+          fkClassificacao: claImportente?.id,
+          fkUsuarioExecutor: req.usuario.id,
+          arquivado: false,
+          fkStatus: {
+            [Op.or]: [statusAberto?.id, statusIniciado?.id, statusPlanejado?.id],
+          },
+        },
+      });
+
+      const registroCircunstancial = await Atividade.findAll({
+        include: [
+          { model: Area, include: [Unidade] },
+          Classificacao,
+          Status,
+          Usuario,
+        ],
+        where: {
+          fkClassificacao: claCircunstancial?.id,
+          fkUsuarioExecutor: req.usuario.id,
+          arquivado: false,
+          fkStatus: {
+            [Op.or]: [statusAberto?.id, statusIniciado?.id, statusPlanejado?.id],
+          },
+        },
+      });
+      const registosOrdenados = [
+        ...registrosImediatos,
+        ...registrosUrgentes,
+        ...registrosImportantes,
+        ...registroCircunstancial
+      ];
+
+      res.status(200).json({ data: registosOrdenados });
     } catch (err) {
       console.log(err);
       res.status(401).json({ message: err.errors[0].message });
@@ -175,7 +319,7 @@ class AtividadeController implements IController {
         ],
         where: {
           fkUsuarioExecutor: req.usuario.id,
-          arquivado: true
+          arquivado: true,
         },
       });
       res.status(200).json({ data: registros });

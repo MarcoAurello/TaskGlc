@@ -1,14 +1,18 @@
-import { SpeedDial } from "@mui/material";
+import { Button, Dialog, DialogContent, SpeedDial } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import EditIcon from '@mui/icons-material/Edit';
 import TaskFilter from '../components/task-filter'
 import TaskItem from '../components/task-item'
+import { display } from "@mui/system";
+
 
 const getCookie = require('../utils/getCookie')
 
-const ChamadosAbertos = (props) => {
+const TodasAsPendencias = (props) => {
   const {logged} = props
+
   const [minhasAtividades,setMinhasAtividades] = useState([])
+  const [openMsg, setOpenMsg] = useState(false);
 
 
   function carregarMinhasAtividades() {
@@ -19,12 +23,13 @@ const ChamadosAbertos = (props) => {
       }
     }
 
-    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/chamadosAbertos/`, params)
+    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/todasAsPendencias/`, params)
       .then(response => {
         const { status } = response
         response.json().then(data => {
           if (status === 401) {
           } else if (status === 200) {
+            
             // alert(JSON.stringify(data.data))
 
             setMinhasAtividades(data.data)
@@ -53,14 +58,23 @@ const ChamadosAbertos = (props) => {
 
   return (
     <div>
-         {logged ? <TaskFilter  nome={props.logged.nome}/>
+       {logged ? <TaskFilter  nome={props.logged.nome}/>
       :
       ''
       }
       <center>
       <div style={{fontSize: 24, fontWeight: 'bold',
-       marginBottom: 4, marginRight: 8, alignItems:'center',
-       }}>Atividades Solicitadas</div></center>
+       marginBottom: 4, marginRight: 8, paddingLeft: 5, alignItems:'center',
+       }}>Aguardando Pendências<br></br>
+         <Button variant="contained" size="small"  onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/minhasAtividadesArquivadas`}>
+           Arquivadas
+          </Button>
+          <Button  style={{marginLeft: 5}} variant="contained" size="small"  onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/minhasAtividades`}>
+           Por ordem de execução
+          </Button>
+          </div>
+       
+       </center> 
 
       {minhasAtividades.map((item, index) =>
       <TaskItem key={index} 
@@ -69,16 +83,17 @@ const ChamadosAbertos = (props) => {
       protocoloChamado={item.protocolo}
       criacaoChamado={item.createdAt}
       classificacao={item.Classificacao.nome}
-      status={item.Status.nome ? item.Status.nome : ''}
-      tela={'solicitada'}
+      status={item.Status.nome}
+      usuarioDemandante={item.Usuario.nome}
+      usuarioDemandanteTelefone={item.Usuario.telefone}
+      usuarioDemandanteEmail={item.Usuario.email}
+      tela={'minhas'}
       fkUsuarioSoloicitante={item.fkUsuarioSolicitante}
       fklogado={props.logged.id}
-      Arquivado={item.arquivado}
-      tempoEstimado={item.tempoEstimado}
-      // usuarioDemandante={item.Usuario.nome}
-      // usuarioDemandanteTelefone={item.Usuario.telefone}
-      // usuarioDemandanteEmail={item.Usuario.email}
       // logado ={item.UsuarioAtividade.Usuario.nome}
+      Arquivado={item.arquivado}
+      usuarioExecutor={item.fkUsuarioExecutor}
+      tempoEstimado={item.tempoEstimado}
       
       />
       )}
@@ -90,7 +105,33 @@ const ChamadosAbertos = (props) => {
         onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/cadastro`}
         />
 
-          
+
+<Dialog open={openMsg}  >
+
+<DialogContent>
+
+ 
+    <h2>Informe o motivo da alteração do Status</h2>
+
+  
+
+
+
+
+
+  {/* {classificacao == "Não Definido" && status == "Aberto" ?
+    <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
+      <Button variant="contained" onClick={() => setOpen(true)}>{'Encaminhar chamado'}</Button>
+    </div> : ''
+
+  } */}
+
+  
+</DialogContent>
+
+</Dialog>
+
+
 
 
 
@@ -98,4 +139,4 @@ const ChamadosAbertos = (props) => {
   );
 };
 
-export default ChamadosAbertos;
+export default TodasAsPendencias;

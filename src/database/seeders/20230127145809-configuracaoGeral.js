@@ -28,7 +28,7 @@ module.exports = {
 <head>
 <meta name="viewport" content="width=device-width" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>SENAC - PE - Contrato Instrutor</title>
+<title>SENAC - PE - Sistema de Atividades</title>
 <style>
   /* -------------------------------------            GLOBAL RESETS        ------------------------------------- */
   img {
@@ -325,6 +325,10 @@ module.exports = {
                 style="margin-top: 48px"
               >
                 @EmailBody
+
+                <a href="https://www7.pe.senac.br/taskmanager/login">Entrar no Sistema de Atividades</a>
+
+
               </table>
             </td>
           </tr>

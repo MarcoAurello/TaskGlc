@@ -18,6 +18,7 @@ class Atividade extends Model {
   public fkUsuarioExecutor!: string
   public tempoEstimado!: string
   public arquivado!: boolean
+  public ordem!: number
   public createdAt!: Date
   public updatedAt!: Date
   public Classificacao!: Classificacao
@@ -72,6 +73,10 @@ Atividade.init({
   arquivado: {
     type: DataTypes.BOOLEAN,
     allowNull: true
+  },
+  ordem : {
+    type: DataTypes.INTEGER,
+    allowNull : true
   },
   createdAt: {
     type: DataTypes.DATE,

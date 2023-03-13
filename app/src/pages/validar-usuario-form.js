@@ -239,7 +239,7 @@ const ValidarUsuarioForm = (props) => {
               <TextField size="small" fullWidth label="Telefone" variant="outlined" value={telefone} onChange={e => setTelefone(e.target.value)} />
             </div>
           </div>
-          <div style={{display: 'flex', flexDirection: 'row', marginBottom: 16}}>
+          <div style={{display: 'flex', flexDirection: 'row', marginBottom: 116}}>
             <div style={{flex: 1, marginRight: 16}}>
               <FormControl fullWidth size="small">
                 <InputLabel id="demo-select-small">Unidade</InputLabel>

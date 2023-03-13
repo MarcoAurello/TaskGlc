@@ -4,6 +4,7 @@ import UsuarioAtividade from '../model/usuarioAtividade.model'
 import Area from '../model/area.model'
 import Atividade from '../model/atividade.model'
 import Usuario from '../model/usuario.model'
+// import emailUtils from '../utils/email.utils'
 // import Chamado from '../models/chamado-model';
 
 class UsuarioAtividadeController implements IController {
@@ -28,7 +29,7 @@ class UsuarioAtividadeController implements IController {
 
   async create(req: any, res: Response, next: NextFunction): Promise<any> {
     try {
-      const { fkClassificacao, fkAtividade, fkUsuario, ativo, tempoEstimado } = req.body
+      const { fkClassificacao, fkAtividade, fkUsuario, ativo, email } = req.body
 
       const registro = await UsuarioAtividade.create({
         fkUsuario,
@@ -40,12 +41,13 @@ class UsuarioAtividadeController implements IController {
         {
           fkClassificacao: fkClassificacao,
           fkUsuarioExecutor: fkUsuario,
-          tempoEstimado: tempoEstimado
         },
         {
           where: { id: fkAtividade }
         }
       )
+      // emailUtils.enviar(email, 'Chegou nova Atividade para você')
+
       res.status(200).json({ data: registro, message: "Chamado enviado para o funcionario " });
     } catch (err) {
       console.log(err)

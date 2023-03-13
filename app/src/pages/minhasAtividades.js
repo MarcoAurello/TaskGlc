@@ -1,4 +1,4 @@
-import { Button, SpeedDial } from "@mui/material";
+import { Button, Dialog, DialogContent, SpeedDial } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import EditIcon from '@mui/icons-material/Edit';
 import TaskFilter from '../components/task-filter'
@@ -12,6 +12,7 @@ const MinhasAtividades = (props) => {
   const {logged} = props
 
   const [minhasAtividades,setMinhasAtividades] = useState([])
+  const [openMsg, setOpenMsg] = useState(false);
 
 
   function carregarMinhasAtividades() {
@@ -32,6 +33,7 @@ const MinhasAtividades = (props) => {
             // alert(JSON.stringify(data.data))
 
             setMinhasAtividades(data.data)
+           
             
             // alert('oi ' +JSON.stringify( minhasAtividades))
             // setUsuariosNaoValidados(data.data)
@@ -43,11 +45,31 @@ const MinhasAtividades = (props) => {
   }
 
 
+    // function checarIniciado(){
+    //   minhasAtividades.reduce((count, item) =>{
+    //     if(item.Status.nome == 'Iniciado'){
+    //       count ++
+    //       if(count > 1){
+    //         return alert('O ideal é apenas uma tarefa com Status INICIADO')
+    //       }
+          
+          
+    //     }
+    //     return count
+    
+    //   })
+    // }
+
 
   useEffect(() => {
     carregarMinhasAtividades()
+   
 
   }, [])
+
+
+   
+  
 
 
 
@@ -57,16 +79,21 @@ const MinhasAtividades = (props) => {
 
   return (
     <div>
+     
+      
        {logged ? <TaskFilter  nome={props.logged.nome}/>
       :
       ''
       }
       <center>
       <div style={{fontSize: 24, fontWeight: 'bold',
-       marginBottom: 4, marginRight: 8, alignItems:'center',
-       }}>Atividades Recebidas<br></br>
+       marginBottom: 4, marginRight: 8, paddingLeft: 5, alignItems:'center',
+       }}>Execute na ordem apresentada<br></br>
          <Button variant="contained" size="small"  onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/minhasAtividadesArquivadas`}>
            Arquivadas
+          </Button>
+          <Button  style={{marginLeft: 5}} variant="contained" size="small"  onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/todasAsPendencias`}>
+           Todas as Pendências
           </Button>
           </div>
        
@@ -89,6 +116,7 @@ const MinhasAtividades = (props) => {
       // logado ={item.UsuarioAtividade.Usuario.nome}
       Arquivado={item.arquivado}
       usuarioExecutor={item.fkUsuarioExecutor}
+      tempoEstimado={item.tempoEstimado}
       
       />
       )}
@@ -99,6 +127,25 @@ const MinhasAtividades = (props) => {
         icon={<EditIcon />} 
         onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/cadastro`}
         />
+
+
+<Dialog open={openMsg}  >
+
+<DialogContent>
+
+ 
+    <h2>Informe o motivo da alteração do Status</h2>
+
+  {/* {classificacao == "Não Definido" && status == "Aberto" ?
+    <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
+      <Button variant="contained" onClick={() => setOpen(true)}>{'Encaminhar chamado'}</Button>
+    </div> : ''
+
+  } */}
+
+</DialogContent>
+
+</Dialog>
 
 
 

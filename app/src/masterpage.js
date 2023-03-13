@@ -6,6 +6,7 @@ import Content from "./components/content";
 import Home from './pages/home';
 import Usuario from './pages/usuario'
 import MinhasAtividades from './pages/minhasAtividades'
+import todasAsPendencias from "./pages/todasAsPendencias";
 import MinhasAtividadesArquivadas from './pages/minhasAtividadesArquivadas'
 import ChamadosAbertos from './pages/chamadosAbertos'
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
@@ -62,6 +63,7 @@ import Equipe from "./pages/equipe";
 import ValidarUsuarioForm from "./pages/validar-usuario-form";
 import AtividadeForm from "./pages/chamado-form";
 import TaskItem from "./components/task-item";
+import TodasAsPendencias from "./pages/todasAsPendencias";
 
 const getCookie = require("./utils/getCookie")
 
@@ -709,6 +711,12 @@ const Masterpage = (props) => {
             exact
             path="/minhasAtividadesArquivadas"
             render={(props) => <MinhasAtividadesArquivadas {...props} logged={logged} />}
+          />
+
+<Route
+            exact
+            path="/todasAsPendencias"
+            render={(props) => <TodasAsPendencias {...props} logged={logged} />}
           />
 
           <Route

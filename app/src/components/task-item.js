@@ -11,7 +11,7 @@ const TaskItem = (props) => {
 
   const { idChamado, tituloChamado, protocoloChamado, Arquivado, usuarioExecutor,
     classificacao, criacaoChamado, status, fkUsuarioSoloicitante, fklogado
-    , usuarioDemandanteTelefone, usuarioDemandanteEmail, tela } = props
+    , usuarioDemandanteTelefone, usuarioDemandanteEmail, tela, tempoEstimado } = props
   const [statusAtividade, setStatus] = useState('')
 
 
@@ -79,6 +79,7 @@ const TaskItem = (props) => {
   // }
 
   function arquivarAtividade() {
+    alert(arquivado)
 
 
     if (props.status != 'Concluido') {
@@ -179,7 +180,10 @@ const TaskItem = (props) => {
           <div style={{ fontSize: 12, fontWeight: 'bold', marginLeft: 5, marginRight: 8, marginBottom: 5, position: 'relative' }}>
             <Chip size="small" label={"Status: " + props.status} />
           </div>
-
+        
+            <div style={{ fontSize: 12, fontWeight: 'bold', marginLeft: 5, marginRight: 8, marginBottom: 5, position: 'relative' }}>
+            <Chip size="small" label={"Tempo para conclusão apos inicio: " + props.tempoEstimado +'/horas'} />
+          </div>
 
 
 
@@ -219,6 +223,10 @@ const TaskItem = (props) => {
 
           <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
             Classificação : {props.classificacao}</div>
+
+        
+
+         
 
           { props.Arquivado == true
             ?

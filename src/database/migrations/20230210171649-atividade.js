@@ -56,6 +56,10 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         allowNull: true
       },
+      ordem: {
+        type: Sequelize.INTEGER,
+        allowNull: true
+      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false
