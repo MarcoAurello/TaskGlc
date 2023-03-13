@@ -21,7 +21,7 @@ const TaskItem = (props) => {
   const [openMessageDialog, setOpenMessageDialog] = useState(false)
   const [message, setMessage] = useState('')
   const [arquivado, setArquivado] = useState(true)
-  
+
 
 
 
@@ -180,10 +180,18 @@ const TaskItem = (props) => {
           <div style={{ fontSize: 12, fontWeight: 'bold', marginLeft: 5, marginRight: 8, marginBottom: 5, position: 'relative' }}>
             <Chip size="small" label={"Status: " + props.status} />
           </div>
-        
+
+          {props.tempoEstimado != null ?
+
             <div style={{ fontSize: 12, fontWeight: 'bold', marginLeft: 5, marginRight: 8, marginBottom: 5, position: 'relative' }}>
-            <Chip size="small" label={"Tempo para conclusão apos inicio: " + props.tempoEstimado +'/horas'} />
-          </div>
+              <Chip size="small" label={"Tempo para conclusão apos inicio: " + props.tempoEstimado + '/horas'} />
+            </div>
+
+            :
+            ''
+          }
+
+
 
 
 
@@ -224,17 +232,17 @@ const TaskItem = (props) => {
           <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
             Classificação : {props.classificacao}</div>
 
-        
 
-         
 
-          { props.Arquivado == true
+
+
+          {props.Arquivado == true
             ?
-            <div style={{color:'red'}}>
-            Chamado arquivado pelo Executor
+            <div style={{ color: 'red' }}>
+              Chamado arquivado pelo Executor
             </div>
-          :
-          ''
+            :
+            ''
           }
 
 

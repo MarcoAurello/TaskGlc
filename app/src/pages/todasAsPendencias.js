@@ -65,7 +65,7 @@ const TodasAsPendencias = (props) => {
       <center>
       <div style={{fontSize: 24, fontWeight: 'bold',
        marginBottom: 4, marginRight: 8, paddingLeft: 5, alignItems:'center',
-       }}>Aguardando Pendências<br></br>
+       }}>Aguardando Mudança de Status para entrar na fila de trabalho<br></br>
          <Button variant="contained" size="small"  onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/minhasAtividadesArquivadas`}>
            Arquivadas
           </Button>

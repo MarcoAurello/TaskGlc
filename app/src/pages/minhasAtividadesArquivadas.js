@@ -65,9 +65,12 @@ const MinhasAtividadesArquivadas = (props) => {
       <div style={{fontSize: 24, fontWeight: 'bold',
        marginBottom: 4, marginRight: 8, alignItems:'center',
        }}>Arquivadas por você<br></br>
-         {/* <Button variant="contained" size="small"  onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/minhasAtividades`}>
-           Voltar para Recebidas
-          </Button> */}
+        <Button variant="contained" size="small"  onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/todasAsPendencias`}>
+           Pendencias
+          </Button>
+          <Button  style={{marginLeft: 5}} variant="contained" size="small"  onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/minhasAtividades`}>
+           Em Ordem de execução
+          </Button>
           </div>
        
        </center> 

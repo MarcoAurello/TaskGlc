@@ -10,6 +10,8 @@ const getCookie = require('../utils/getCookie')
 
 const MinhasAtividades = (props) => {
   const {logged} = props
+  const [contador,setContador] = useState(0)
+
 
   const [minhasAtividades,setMinhasAtividades] = useState([])
   const [openMsg, setOpenMsg] = useState(false);
@@ -118,8 +120,13 @@ const MinhasAtividades = (props) => {
       usuarioExecutor={item.fkUsuarioExecutor}
       tempoEstimado={item.tempoEstimado}
       
-      />
+      
+      />,
+      
       )}
+
+      
+     
       
       <SpeedDial
         ariaLabel="Nova Tarefa"
