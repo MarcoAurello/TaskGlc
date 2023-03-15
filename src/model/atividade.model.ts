@@ -74,7 +74,7 @@ Atividade.init({
     type: DataTypes.BOOLEAN,
     allowNull: true
   },
-  ordem : {
+  ordem: {
     type: DataTypes.INTEGER,
     allowNull : true
   },

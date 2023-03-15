@@ -201,16 +201,16 @@ const ValidarUsuarioForm = (props) => {
 
   return (
     <PageContainer>
-      <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 16}}>
+      <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', marginBottom: 16}}>
         <h3>Validação de Usuário</h3>
         <div style={{flex: 1}}></div>
       </div>
       <div style={{display: 'flex', flexDirection: 'column'}}>
         <FormGroup>
-          <div style={{display: 'flex', flexDirection: 'row', marginBottom: 16}}>
+          <div style={{display: 'flex', flexDirection: 'column', marginBottom: 16}}>
             <div style={{flex: 1, marginRight: 16}}>
               <TextField size="small" fullWidth label="Nome" variant="outlined" value={nome}  onChange={e => setNome(e.target.value)}/>
-            </div>
+            </div><br></br>
             <div style={{flex: 1}}>
             <FormControl fullWidth size="small">
               <InputLabel id="label-small-perfil">Perfil</InputLabel>
@@ -227,19 +227,19 @@ const ValidarUsuarioForm = (props) => {
               </Select>
             </FormControl>
             </div>
-          </div>
-          <div style={{display: 'flex', flexDirection: 'row', marginBottom: 16}}>
-            <TextField size="small" fullWidth label="Email" variant="outlined" disabled={id ? true : false} value={email} onChange={e => setEmail(e.target.value)} />
-          </div>
-          <div style={{display: 'flex', flexDirection: 'row', marginBottom: 16}}>
+          </div><br></br>
+          <div style={{display: 'flex', flexDirection: 'column', marginBottom: 16}}>
+            <TextField size="small"  label="Email" variant="outlined" disabled={id ? true : false} value={email} onChange={e => setEmail(e.target.value)} />
+          </div><br></br>
+          <div style={{display: 'flex', flexDirection: 'column', marginBottom: 16}}>
             <div style={{flex: 1, marginRight: 16}}>
-              <TextField size="small" fullWidth label="Chapa" variant="outlined" value={chapa} onChange={e => setChapa(e.target.value)} />
-            </div>
+              <TextField size="small" label="Chapa" variant="outlined" value={chapa} onChange={e => setChapa(e.target.value)} />
+            </div><br></br>
             <div style={{flex: 1}}>
-              <TextField size="small" fullWidth label="Telefone" variant="outlined" value={telefone} onChange={e => setTelefone(e.target.value)} />
+              <TextField size="small"  label="Telefone" variant="outlined" value={telefone} onChange={e => setTelefone(e.target.value)} />
             </div>
-          </div>
-          <div style={{display: 'flex', flexDirection: 'row', marginBottom: 116}}>
+          </div><br></br>
+          <div style={{display: 'flex', flexDirection: 'column', marginBottom: 116}}>
             <div style={{flex: 1, marginRight: 16}}>
               <FormControl fullWidth size="small">
                 <InputLabel id="demo-select-small">Unidade</InputLabel>
@@ -261,7 +261,7 @@ const ValidarUsuarioForm = (props) => {
                   }}>{item.nome}</MenuItem>)}
                 </Select>
               </FormControl>
-            </div>
+            </div><br></br>
             <div style={{flex: 1}}>
               <FormControl fullWidth size="small">
                 <InputLabel id="demo-select-small">Área</InputLabel>

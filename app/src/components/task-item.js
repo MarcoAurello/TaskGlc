@@ -79,7 +79,7 @@ const TaskItem = (props) => {
   // }
 
   function arquivarAtividade() {
-    alert(arquivado)
+    // alert(arquivado)
 
 
     if (props.status != 'Concluido') {
@@ -278,7 +278,11 @@ const TaskItem = (props) => {
           {/* <LinearProgress color="success" variant="determinate" value={100} /> */}
         </div>
       </div>
+      
     </div>
+    
+
+    
   )
 }
 

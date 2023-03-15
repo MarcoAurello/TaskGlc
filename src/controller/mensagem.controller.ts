@@ -28,7 +28,7 @@ class MensagemController implements IController {
       const { fkAtividade, conteudo, email, emailExecutor} = req.body;
       const titulo = await Atividade.findOne({ where: { id: fkAtividade } });
       // const status = await Atividade.findOne({where: { id: fkAtividade } })
-      console.log(titulo?.fkStatus)
+      // console.log(titulo?.fkStatus)
 
       await Mensagem.create(
         {
@@ -50,19 +50,19 @@ class MensagemController implements IController {
       )
 
       const txEmail =
-        "Sua Solicitação: " + titulo?.protocolo + ".\n tem nova interação! &#128512";
+        'Sua Solicitação: ' + titulo?.protocolo + '.\n tem nova interação! ' + conteudo;
 
       emailUtils.enviar(email, txEmail);
 
       const txEmailExecutor =
-        "Sua Atividade: \n" + titulo?.titulo + ". \n recebeu uma nova mensagem! &#128521";
+        'Sua Atividade: \n' + titulo?.titulo + '. \n recebeu uma nova mensagem! ' + conteudo;
       emailUtils.enviar(emailExecutor, txEmailExecutor);
 
       const atividade = await Atividade.findOne({ where: { id: fkAtividade } });
 
       res
         .status(200)
-        .json({ data: atividade, message: "Cadastro realizado com sucesso." });
+        .json({ data: atividade, message: 'Cadastro realizado com sucesso.' });
     } catch (err) {
       res.status(401).json({ message: err.errors[0].message });
     }

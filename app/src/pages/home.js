@@ -156,7 +156,7 @@ const Home = (props) => {
       <div >
       <Button  size="large" variant="contained" style={{marginRight: 20 ,marginTop:20}} 
       onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/minhasAtividades/`} >
-        Atividades Recebidas<KeyboardDoubleArrowLeftIcon/><div style={{color:'yellow', fontWeight:'bold', fontSize:24}}>{minhasAtividades.length}</div></Button><br></br>
+        Atividades para Executar<KeyboardDoubleArrowLeftIcon/><div style={{color:'yellow', fontWeight:'bold', fontSize:24}}>{minhasAtividades.length}</div></Button><br></br>
       
       <Button size="large" variant="contained"style={{marginRight: 20 ,marginTop:20}} 
       onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/chamadosAbertos/`} >

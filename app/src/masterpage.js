@@ -4,8 +4,10 @@ import { Switch, BrowserRouter as Router, Route } from "react-router-dom";
 import Content from "./components/content";
 
 import Home from './pages/home';
+import WebStoriesIcon from '@mui/icons-material/WebStories';
 import Usuario from './pages/usuario'
 import MinhasAtividades from './pages/minhasAtividades'
+import CampaignIcon from '@mui/icons-material/Campaign';
 import todasAsPendencias from "./pages/todasAsPendencias";
 import MinhasAtividadesArquivadas from './pages/minhasAtividadesArquivadas'
 import ChamadosAbertos from './pages/chamadosAbertos'
@@ -48,7 +50,7 @@ import AttachEmailIcon from '@mui/icons-material/AttachEmail';
 import PeopleIcon from '@mui/icons-material/People';
 import UsuarioForm from "./pages/usuario-form";
 import HomeIcon from '@mui/icons-material/Home';
-
+import RecebidasSetor from "./pages/recebidasSetor";
 import isAuthenticated from './utils/isAuthenticated'
 import ConfiguracaoForm from "./pages/configuracao-form";
 import Unidade from "./pages/unidade";
@@ -59,6 +61,7 @@ import PerfilUtils from "./utils/perfil.utils";
 import UserNotificationItem from "./components/user-notification-item";
 import AtividadeNotificationItem from "./components/atividade-notification-item";
 import AtividadeRecebidaNotificationItem from "./components/atividadeRecebida-notification-item";
+
 import Equipe from "./pages/equipe";
 import ValidarUsuarioForm from "./pages/validar-usuario-form";
 import AtividadeForm from "./pages/chamado-form";
@@ -96,6 +99,7 @@ const Masterpage = (props) => {
   const [openMessageDialog, setOpenMessageDialog] = useState(false)
   const [message, setMessage] = useState('')
   const [openDialogPrimeiroAcesso, setOpenDialogPrimeiroAcesso] = useState(false)
+  const [naoAtrib, setFkNaoAtrib] = useState('')
 
   const [nome, setNome] = useState('')
   const [telefone, setTelefone] = useState('')
@@ -256,7 +260,8 @@ const Masterpage = (props) => {
               // alert('11')
             } else if (status === 200) {
               setAtividadesNaoAtribuidas(data.data)
-              // alert(JSON.stringify(data))
+              setFkNaoAtrib(data.data.fkArea)
+              // alert(JSON.stringify(naoAtrib))
               // setUsuariosNaoValidados(data.data)
             }
           })
@@ -265,7 +270,8 @@ const Masterpage = (props) => {
 
 
 
-    if (logged && logged.Perfil && (logged.Perfil.nome === PerfilUtils.Gerente || logged.Perfil.nome === PerfilUtils.Coordenador)) {
+    if (logged  && logged.Perfil && 
+      (logged.Perfil.nome === PerfilUtils.Gerente || logged.Perfil.nome === PerfilUtils.Coordenador)) {
       setInterval(carregarAtividadesNaoAtribuidas, 1000)
     }
   }, [logged])
@@ -356,7 +362,7 @@ const Masterpage = (props) => {
 
 
     <Tooltip Tooltip title="Aprovar Atividade" placement="bottom" >
-      <IconButton size="large" color="inherit" id="positioned-msg-notification-icon-button"
+      <IconButton size="small" color="inherit" id="positioned-msg-notification-icon-button"
         onClick={(e) => {
           setAnchorElAtividadeNaoAtribuidaNotification(e.currentTarget)
           setOpenAtividadeNaoAtribuidaNotification(true)
@@ -563,41 +569,55 @@ const Masterpage = (props) => {
                 <ListItemText primary='Home' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/home`} />
               </ListItemButton>
             </ListItem>
+            <hr></hr>
+           <center> <div style={{fontSize: 12, color: '#0BA5F1' }}>Atividades Solicitadas</div></center>
             <ListItem disablePadding>
               <ListItemButton>
                 <ListItemIcon>
-                  <InsertDriveFileIcon />
+                  <CampaignIcon />
                 </ListItemIcon>
                 <ListItemText primary='Abrir Chamado' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/cadastro`} />
               </ListItemButton>
             </ListItem>
-
-
-            <ListItem disablePadding>
-              <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/minhasAtividades/`}>
-                <ListItemIcon>
-                  <PlaylistAddCheckIcon />
-                </ListItemIcon>
-                <ListItemText primary='Para Execução' /><KeyboardDoubleArrowLeftIcon />
-              </ListItemButton>
-            </ListItem>
-
-            <ListItem disablePadding>
-              <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/minhasAtividadesArquivadas/`}>
-                <ListItemIcon>
-                  <FolderCopyIcon  />
-                </ListItemIcon>
-                <ListItemText primary='Concluidas e  Arquivadas' /><KeyboardDoubleArrowLeftIcon />
-              </ListItemButton>
-            </ListItem>
-
 
             <ListItem disablePadding>
               <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/chamadosAbertos/`}>
                 <ListItemIcon>
                   <FormatListNumberedIcon />
                 </ListItemIcon>
-                <ListItemText primary='Atividades Solicitadas' /><KeyboardDoubleArrowRightIcon />
+                <ListItemText primary='Atividades Solicitadas' />
+              </ListItemButton>
+            </ListItem>
+            <hr></hr>
+
+            <center> <div style={{fontSize: 12, color: '#0BA5F1' }}>Atividades Recebidas</div></center>
+            <ListItem disablePadding>
+              <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/minhasAtividades/`}>
+                <ListItemIcon>
+                  <PlaylistAddCheckIcon />
+                </ListItemIcon>
+                <ListItemText primary='Para Execução' />
+              </ListItemButton>
+            </ListItem>
+
+            <ListItem disablePadding>
+              <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/minhasAtividadesArquivadas/`}>
+                <ListItemIcon>
+                  <FolderCopyIcon />
+                </ListItemIcon>
+                <ListItemText primary='Concluidas e  Arquivadas' />
+              </ListItemButton>
+            </ListItem>
+
+
+        
+
+            <ListItem disablePadding>
+              <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/recebidasSetor/`}>
+                <ListItemIcon>
+                  <WebStoriesIcon />
+                </ListItemIcon>
+                <ListItemText primary='Recebidas do Setor' />
               </ListItemButton>
             </ListItem>
 
@@ -707,13 +727,13 @@ const Masterpage = (props) => {
             render={(props) => <MinhasAtividades {...props} logged={logged} />}
           />
 
-<Route
+          <Route
             exact
             path="/minhasAtividadesArquivadas"
             render={(props) => <MinhasAtividadesArquivadas {...props} logged={logged} />}
           />
 
-<Route
+          <Route
             exact
             path="/todasAsPendencias"
             render={(props) => <TodasAsPendencias {...props} logged={logged} />}
@@ -725,8 +745,13 @@ const Masterpage = (props) => {
             render={(props) => <ChamadosAbertos {...props} logged={logged} />}
           />
 
+          
 
-
+          <Route
+            exact
+            path="/recebidasSetor"
+            render={(props) => <RecebidasSetor {...props} logged={logged} />}
+          />
 
 
           <Route
@@ -734,7 +759,7 @@ const Masterpage = (props) => {
             path="/unidade"
             render={(props) => <Unidade {...props} logged={logged} />}
           />
-         
+
           <Route
             exact
             path="/unidade/:id/edit"

@@ -9,6 +9,7 @@ import Usuario from "../model/usuario.model";
 import Classificacao from "../model/classificacao.model";
 import UsuarioAtividade from "../model/usuarioAtividade.model";
 import Unidade from "../model/unidade.model";
+import PerfilUtils from "../utils/perfil.utils";
 // import emailUtils from "../utils/email.utils";
 const { Op } = require("sequelize");
 
@@ -310,6 +311,7 @@ class AtividadeController implements IController {
     next: NextFunction
   ): Promise<any> {
     try {
+      const statusConcluido = await Status.findOne({ where: { nome: 'Concluido' } })
       const registros = await Atividade.findAll({
         include: [
           { model: Area, include: [Unidade] },
@@ -319,7 +321,37 @@ class AtividadeController implements IController {
         ],
         where: {
           fkUsuarioExecutor: req.usuario.id,
-          arquivado: true,
+          [Op.or]: [
+            { arquivado: true },
+            { fkStatus: statusConcluido?.id }
+          ]
+        },
+      });
+      res.status(200).json({ data: registros });
+    } catch (err) {
+      console.log(err);
+      res.status(401).json({ message: err.errors[0].message });
+    }
+  }
+
+  async recebidasSetor(
+    req: any,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const area = await Area.findOne({where: {id: req.usuario.fkArea }})
+      
+      const registros = await Atividade.findAll({
+        include: [
+          { model: Area, include: [Unidade] },
+          Classificacao,
+          Status,
+          Usuario,
+        ],
+        order: [["createdAt", "DESC"]],
+        where: {
+          "$Area.fkUnidade$": area?.fkUnidade
         },
       });
       res.status(200).json({ data: registros });
@@ -337,15 +369,20 @@ class AtividadeController implements IController {
     try {
       const { pesquisa } = req.query;
 
+
       // console.log('pesquisa: ' + pesquisa);
       const registros = await Atividade.findAll({
+       
+        order: [['createdAt', 'DESC']],
         where: {
-          titulo: {
-            // [Op.like]: `%${pesquisa}%`,
-            [Op.like]: `%${pesquisa}%`,
-          },
+          [Op.or]: [
+            { titulo: { [Op.like]: `%${pesquisa}%`} },
+            { fkUsuarioExecutor: pesquisa },
+          
+          ]
         },
       });
+
       res.status(200).json({ data: registros });
     } catch (err) {
       console.log(err);
@@ -361,14 +398,23 @@ class AtividadeController implements IController {
     try {
       // console.log(`${req.usuario.nome} - ${req.usuario.fkArea}`)
       const area = await Area.findOne({ where: { id: req.usuario.fkArea } });
+      // console.log(req.usuario)
+      let whereCustum ={
+        pessoal: false,
+        fkUsuarioExecutor: null,
+        "$Area.fkUnidade$": area?.fkUnidade,
+      }
+
+      if(req.usuario.Perfil.nome == PerfilUtils.Coordenador){
+        whereCustum = {...whereCustum,
+          "$Area.id$": area?.id,
+        }
+      }
+
 
       const registros = await Atividade.findAll({
         include: [{ model: Area, include: [Unidade] }, Usuario],
-        where: {
-          pessoal: false,
-          fkUsuarioExecutor: null,
-          "$Area.fkUnidade$": area?.fkUnidade,
-        },
+        where: whereCustum
       });
 
       res.status(200).json({ data: registros });

@@ -90,13 +90,13 @@ const MinhasAtividades = (props) => {
       <center>
       <div style={{fontSize: 24, fontWeight: 'bold',
        marginBottom: 4, marginRight: 8, paddingLeft: 5, alignItems:'center',
-       }}>Execute na ordem apresentada<br></br>
-         <Button variant="contained" size="small"  onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/minhasAtividadesArquivadas`}>
+       }}>Executar na ordem apresentada<br></br>
+         {/* <Button variant="contained" size="small"  onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/minhasAtividadesArquivadas`}>
            Arquivadas
           </Button>
           <Button  style={{marginLeft: 5}} variant="contained" size="small"  onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/todasAsPendencias`}>
            Todas as Pendências
-          </Button>
+          </Button> */}
           </div>
        
        </center> 
@@ -119,6 +119,7 @@ const MinhasAtividades = (props) => {
       Arquivado={item.arquivado}
       usuarioExecutor={item.fkUsuarioExecutor}
       tempoEstimado={item.tempoEstimado}
+      
       
       
       />,

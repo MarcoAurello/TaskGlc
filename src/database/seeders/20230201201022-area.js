@@ -31,13 +31,13 @@ module.exports = {
       createdAt: new Date(),
       updatedAt: new Date()
     },
-    {
-      id: uuid(),
-      nome: 'Infraestrutura',
-      fkUnidade: unidades[0][0].id,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    },
+    // {
+    //   id: uuid(),
+    //   nome: 'Infraestrutura',
+    //   fkUnidade: unidades[0][0].id,
+    //   createdAt: new Date(),
+    //   updatedAt: new Date()
+    // },
     {
       id: uuid(),
       nome: 'Coordenação de Pessoal',

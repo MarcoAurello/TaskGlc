@@ -24,6 +24,8 @@ module.exports = {
     const perfilGerenteRows = perfilsGerente[0]
 
     const areas = await queryInterface.sequelize.query('select * from area where nome = \'Sistemas - Desenvolvimento\'')
+    const areasSuporte = await queryInterface.sequelize.query('select * from area where nome = \'Sistemas - Suporte\'')
+    
     const areasGPC = await queryInterface.sequelize.query('select * from area where nome = \'Coordenação de Pessoal\'')
     const areaGSI = await queryInterface.sequelize.query('select area.* from area inner join unidade on unidade.id=area.fkUnidade where unidade.nome = \'Gerência de Serviços e infra Estrutura\' and area.nome = \'Trasnsporte\'')
 
@@ -66,8 +68,40 @@ module.exports = {
       },
       {
         id: uuid(),
-        nome: 'Marco Aurellio',
-        email: 'marconunes@pe.senac.br',
+        nome: 'Graça Bezerra',
+        email: 'graca@pe.senac.br',
+        passwordHash: await bcrypt.hash('gti@2021', 8),
+        telefone: '34132053',
+        chapa: '15385-F1',
+        demandante: true,
+        fkPerfil: perfilGerenteRows[0].id,
+        fkArea: areas[0][0].id,
+        validado: true,
+        ativo: true,
+        primeiroLogin: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: uuid(),
+        nome: 'Andre Jar',
+        email: 'andre@pe.senac.br',
+        passwordHash: await bcrypt.hash('gti@2021', 8),
+        telefone: '34132053',
+        chapa: '15385-F1',
+        demandante: true,
+        fkPerfil: perfilGerenteRows[0].id,
+        fkArea: areasSuporte[0][0].id,
+        validado: true,
+        ativo: true,
+        primeiroLogin: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: uuid(),
+        nome: 'Marcio Angelo',
+        email: 'marcio@pe.senac.br',
         passwordHash: await bcrypt.hash('gti@2021', 8),
         telefone: '34132053',
         chapa: '15385-F1',

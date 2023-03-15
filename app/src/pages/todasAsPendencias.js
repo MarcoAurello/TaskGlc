@@ -39,22 +39,13 @@ const TodasAsPendencias = (props) => {
           }
         })
       })
-      
-
+     
   }
-
-
 
   useEffect(() => {
     carregarMinhasAtividades()
 
   }, [])
-
-
-
-
-
-
 
   return (
     <div>
@@ -66,12 +57,12 @@ const TodasAsPendencias = (props) => {
       <div style={{fontSize: 24, fontWeight: 'bold',
        marginBottom: 4, marginRight: 8, paddingLeft: 5, alignItems:'center',
        }}>Aguardando Mudança de Status para entrar na fila de trabalho<br></br>
-         <Button variant="contained" size="small"  onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/minhasAtividadesArquivadas`}>
+         {/* <Button variant="contained" size="small"  onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/minhasAtividadesArquivadas`}>
            Arquivadas
           </Button>
           <Button  style={{marginLeft: 5}} variant="contained" size="small"  onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/minhasAtividades`}>
            Por ordem de execução
-          </Button>
+          </Button> */}
           </div>
        
        </center> 

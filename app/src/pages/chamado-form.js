@@ -8,6 +8,7 @@ import AddIcon from '@mui/icons-material/Add';
 import TaskItemDoChamado from "../components/task-item-do-chamado";
 import PerfilUtils from "../utils/perfil.utils";
 import UnidadeUtils from "../utils/unidade.utils";
+import PersonIcon from '@mui/icons-material/Person';
 
 
 const getCookie = require('../utils/getCookie')
@@ -23,7 +24,8 @@ const PageContainer = styled.div`
 
 const AtividadeForm = (props) => {
   const { logged } = props
-  // alert(JSON.stringify(props.logged))
+  
+  // alert(JSON.stringify(logged.nome))
   const [arquivado, setArquivado] = useState(true)
 
   const [open, setOpen] = useState(false);
@@ -65,6 +67,7 @@ const AtividadeForm = (props) => {
   const [mensagens, setMensagens] = useState([])
   const [classificarChamado, setClassificarChamado] = useState([])
   const [alterarStatus, setAltararStatus] = useState([])
+  const [fkUnidadeExecutor , getFkUnidadeExecutor] = useState('')
 
 
   const [usuarioExecutor, setusuarioExecutor] = useState([])
@@ -74,6 +77,8 @@ const AtividadeForm = (props) => {
   const [emailExecutor, getEmailExecutor] = useState('')
   const [telefoneExecutor, getTelefoneExecutor] = useState('')
   const [fkDemandante, setFkDemandante] = useState('')
+  const [fkUsuarioSolicitante, setFkUsuarioSolicitante]= useState('')
+  const [fkExecutor, getFkExecutor] = useState('')
 
 
 
@@ -108,7 +113,10 @@ const AtividadeForm = (props) => {
               setStatusId(data.data.Status.id)
               setValueArea(data.data.Area.nome)
               setValueUnidade(data.data.Area.Unidade.nome)
+              getFkUnidadeExecutor(data.data.Area.fkUnidade)
+
               setUsuarioSolicitante(data.data.Usuario.nome)
+              
               setEmailUsuarioSolicitante(data.data.Usuario.email)
               setTelefoneSolicitante(data.data.Usuario.telefone)
               setFkDemandante(data.data.fkDemandante)
@@ -116,12 +124,16 @@ const AtividadeForm = (props) => {
               setTitle(data.data.titulo)
               setFkAreaDemandada(data.data.fkArea)
               setIdChamado(data.data.id)
+              setFkUsuarioSolicitante(data.data.fkUsuarioSolicitante)
+              
 
               // alert(JSON.stringify(data.data.UsuarioExecutor))
-
+             
+             
               getNomeExecutor(data.data.UsuarioExecutor.nome)
               getEmailExecutor(data.data.UsuarioExecutor.email)
               getTelefoneExecutor(data.data.UsuarioExecutor.telefone)
+              getFkExecutor(data.data.UsuarioExecutor.id)
 
               carregarMensagem()
               // alert(emailExecutor)
@@ -272,6 +284,7 @@ const AtividadeForm = (props) => {
       carregarFuncionarios()
       carregarStatus()
       carregarMensagem()
+      
 
     } else {
       carregarUnidade()
@@ -450,6 +463,7 @@ const AtividadeForm = (props) => {
 
 
   const criarExecucao = () => {
+   
     // alert(emailExecutor)
     const token = getCookie('_token_task_manager')
     const params = {
@@ -495,19 +509,23 @@ const AtividadeForm = (props) => {
 
   return (
     <PageContainer>
+     
 
       {id ? <div style={{ flex: 1, marginBottom: 16, marginLeft: 25 }}>
         <TextField size="small" fullWidth label="Protocolo" disabled variant="outlined" value={protocolo} />
       </div> : ''}
 
-      {logged && nomeExecutor === '' && logged.fkArea === fkAreaDemandada && (logged.Perfil.nome === PerfilUtils.Gerente || logged.Perfil.nome === PerfilUtils.Coordenador) ?
+      { ( logged && logged.fkArea === fkAreaDemandada && logged.Perfil.nome === PerfilUtils.Coordenador) ||
+       (logged && logged.Perfil.nome === PerfilUtils.Gerente  && logged.Area.fkUnidade === fkUnidadeExecutor )
+       
+       ?
         <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
-          <Button variant="contained" size='small' color="error" onClick={() => setOpen(true)}>Encaminhar Chamado</Button>
+          <Button variant="contained" size='small' color="error" onClick={() => setOpen(true)}>Selecionar Funcionario<PersonIcon></PersonIcon></Button>
         </div> : ''
 
       }
 
-      {logged && props.logged.nome === nomeExecutor ?
+      {logged && props.logged.id === fkExecutor ?
         <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
           <Button size='small' variant="contained" onClick={() => setOpenStatus(true)}>Alterar Status do chamado</Button>
         </div> : ''
