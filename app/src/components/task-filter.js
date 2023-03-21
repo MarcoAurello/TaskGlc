@@ -29,7 +29,7 @@ const TaskFilter = (props) => {
           {/* <Chip label='Nome Usuario' onClick={() => alert('teste')} /> */}
         </div>
       </div>
-      <div style={{
+      {/* <div style={{
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
@@ -62,7 +62,7 @@ const TaskFilter = (props) => {
         <TaskFilterItem dia='11' diaSemana='Sex' />
         <TaskFilterItem dia='12' diaSemana='Sab' />
         <TaskFilterItem dia='13' diaSemana='Dom' />
-      </div>
+      </div> */}
     </div>
   )
 }

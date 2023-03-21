@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt'
 import { uuid } from 'uuidv4'
 import connection from './connection'
 import jwt from 'jsonwebtoken'
+
 import Perfil from './perfil.model'
 import Area from './area.model'
 
@@ -40,6 +41,7 @@ class Usuario extends Model {
   public updatedAt!: Date
 
   public Area!: Area
+
   public Perfil!: Perfil
 
   public generateToken () {
@@ -146,7 +148,8 @@ Usuario.init({
   }
 })
 
-Usuario.belongsTo(Perfil, { foreignKey: 'fkPerfil' })
 Usuario.belongsTo(Area, { foreignKey: 'fkArea' })
+Usuario.belongsTo(Perfil, { foreignKey: 'fkPerfil' })
+
 
 export default Usuario

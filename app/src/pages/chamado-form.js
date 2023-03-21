@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 import styled from 'styled-components'
-import { Alert, Avatar, Button, Checkbox, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormGroup, IconButton, InputLabel, MenuItem, Select, Switch, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow, TextField, Tooltip } from "@mui/material";
-import Paper from '@mui/material/Paper';
-import TablePaginationActions from "@mui/material/TablePagination/TablePaginationActions";
-import EditIcon from '@mui/icons-material/Edit';
-import AddIcon from '@mui/icons-material/Add';
+import {
+  Alert, Avatar, Button, Checkbox, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel,
+  FormGroup, Hidden, IconButton, InputLabel, MenuItem, Select, Switch, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination,
+  TableRow, TextField, Tooltip
+} from "@mui/material";
+
 import TaskItemDoChamado from "../components/task-item-do-chamado";
 import PerfilUtils from "../utils/perfil.utils";
-import UnidadeUtils from "../utils/unidade.utils";
+
 import PersonIcon from '@mui/icons-material/Person';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
 
 
 const getCookie = require('../utils/getCookie')
@@ -24,7 +26,8 @@ const PageContainer = styled.div`
 
 const AtividadeForm = (props) => {
   const { logged } = props
-  
+
+  const [checked, setChecked] = React.useState(false);
   // alert(JSON.stringify(logged.nome))
   const [arquivado, setArquivado] = useState(true)
 
@@ -62,12 +65,13 @@ const AtividadeForm = (props) => {
   const [fkUnidade, setFkUnidade] = useState('')
   const [fkArea, setFkArea] = useState('')
   const [unidade, setUnidade] = useState([])
+  const[unidadeTrue, setUnidadeTrue] =useState([])
   const [area, setArea] = useState([])
   const [atividade, setAtividade] = useState(null)
   const [mensagens, setMensagens] = useState([])
   const [classificarChamado, setClassificarChamado] = useState([])
   const [alterarStatus, setAltararStatus] = useState([])
-  const [fkUnidadeExecutor , getFkUnidadeExecutor] = useState('')
+  const [fkUnidadeExecutor, getFkUnidadeExecutor] = useState('')
 
 
   const [usuarioExecutor, setusuarioExecutor] = useState([])
@@ -77,12 +81,16 @@ const AtividadeForm = (props) => {
   const [emailExecutor, getEmailExecutor] = useState('')
   const [telefoneExecutor, getTelefoneExecutor] = useState('')
   const [fkDemandante, setFkDemandante] = useState('')
-  const [fkUsuarioSolicitante, setFkUsuarioSolicitante]= useState('')
+  const [fkUsuarioSolicitante, setFkUsuarioSolicitante] = useState('')
   const [fkExecutor, getFkExecutor] = useState('')
 
 
 
   const [idChamado, setIdChamado] = useState('')
+
+  const toggleChecked = () => {
+    setChecked((prev) => !prev);
+  };
 
 
 
@@ -116,7 +124,7 @@ const AtividadeForm = (props) => {
               getFkUnidadeExecutor(data.data.Area.fkUnidade)
 
               setUsuarioSolicitante(data.data.Usuario.nome)
-              
+
               setEmailUsuarioSolicitante(data.data.Usuario.email)
               setTelefoneSolicitante(data.data.Usuario.telefone)
               setFkDemandante(data.data.fkDemandante)
@@ -125,11 +133,11 @@ const AtividadeForm = (props) => {
               setFkAreaDemandada(data.data.fkArea)
               setIdChamado(data.data.id)
               setFkUsuarioSolicitante(data.data.fkUsuarioSolicitante)
-              
+
 
               // alert(JSON.stringify(data.data.UsuarioExecutor))
-             
-             
+
+
               getNomeExecutor(data.data.UsuarioExecutor.nome)
               getEmailExecutor(data.data.UsuarioExecutor.email)
               getTelefoneExecutor(data.data.UsuarioExecutor.telefone)
@@ -143,7 +151,7 @@ const AtividadeForm = (props) => {
         })
     }
 
-  
+
 
     function carregarMensagem() {
       const token = getCookie('_token_task_manager')
@@ -177,22 +185,33 @@ const AtividadeForm = (props) => {
           'Authorization': `Bearer ${token}`
         }
       }
-      fetch(`${process.env.REACT_APP_DOMAIN_API}/api/unidade/`, params)
+      fetch(`${process.env.REACT_APP_DOMAIN_API}/api/unidade`, params)
         .then(response => {
           const { status } = response
           response.json().then(data => {
             setOpenLoadingDialog(false)
             if (status === 401) {
             } else if (status === 200) {
-              setUnidade(data.data)
+              // alert(data.data.nome)
+              // if(data.data.nome === 'DEP'){
+                setUnidade(data.data)
+              // }
+              
+              filtroUnidade()
               if (id) {
                 carregarRegistro()
+               
               } else {
                 setOpenLoadingDialog(false)
               }
             }
           }).catch(err => setOpenLoadingDialog(true))
         })
+    }
+
+    function filtroUnidade() {
+      // alert(JSON.stringify(unidade))
+       setUnidadeTrue(unidade.filter(item => item.receber === true))
     }
 
 
@@ -284,7 +303,7 @@ const AtividadeForm = (props) => {
       carregarFuncionarios()
       carregarStatus()
       carregarMensagem()
-      
+
 
     } else {
       carregarUnidade()
@@ -331,7 +350,7 @@ const AtividadeForm = (props) => {
 
   const onSaveStatus = () => {
     // alert(newStatus)
-    
+
 
     const token = getCookie('_token_task_manager')
     const params = {
@@ -341,11 +360,11 @@ const AtividadeForm = (props) => {
         'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify({
-        fkStatus : newStatus,
+        fkStatus: newStatus,
         tempoEstimado,
         // email: emailUsuarioSolicitante,
         // titulo: title,
-        
+
 
       })
 
@@ -363,7 +382,7 @@ const AtividadeForm = (props) => {
             setMessage(data.message)
             setOpenMessageDialog(true)
             setOpenMsg(true)
-          //  window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${idChamado}/edit`
+            //  window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${idChamado}/edit`
 
 
             // setArea(data.data)
@@ -411,59 +430,99 @@ const AtividadeForm = (props) => {
       })
   }
 
+  // const onSaveMeu = () => {
+  //   const token = getCookie('_token_task_manager')
+  //   const params = {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       'Authorization': `Bearer ${token}`
+  //     },
+  //     body: JSON.stringify({
+  //       fkUnidade: logged.Area.fkUnidade,
+  //       fkArea : logged.fkArea,
+  //       titulo,
+  //       conteudo,
+  //       arquivado: false,
+  //       pessoal: true,
+  //       fkUsuarioExecutor : logged.id
+  //     })
+  //   }
+
+  //   fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/`, params)
+  //     .then(response => {
+  //       const { status } = response
+  //       response.json().then(data => {
+  //         setOpenLoadingDialog(false)
+  //         if (status === 401) {
+  //           setMessage(data.message)
+  //           setOpenMessageDialog(true)
+  //         } else if (status === 200) {
+  //           setAtividade(data.data)
+  //           setMessage(data.message)
+  //           setOpenMessageDialog(true)
+  //           window.location.href = `${process.env.REACT_APP_DOMAIN}/home/`
+
+
+  //           // setArea(data.data)
+  //         }
+  //       }).catch(err => setOpenLoadingDialog(true))
+  //     })
+  // }
+
   const novaInteracao = () => {
-  
-      const token = getCookie('_token_task_manager')
-      const params = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          fkAtividade: id,
-          conteudo,
-          email:  emailUsuarioSolicitante,
-          emailExecutor : emailExecutor,
-          
-        
-         
-        })
-      }
-      
-      fetch(`${process.env.REACT_APP_DOMAIN_API}/api/mensagem/`, params)
-        .then(response => {
-          const { status } = response
-          response.json().then(data => {
-            setOpenLoadingDialog(false)
-            if (status === 401) {
-              setMessage(data.message)
-              setOpenMessageDialog(true)
-            } else if (status === 200) {
-              // alert(JSON.stringify(data.data))
-              setAtividade(data.data)
-              setMessage(data.message)
-              setOpenMessageDialog(true)
-              window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${idChamado}/edit`
+
+    const token = getCookie('_token_task_manager')
+    const params = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        fkAtividade: id,
+        conteudo,
+        email: emailUsuarioSolicitante,
+        emailExecutor: emailExecutor,
 
 
-              // setArea(data.data)
 
-            }
-          }).catch(err => setOpenLoadingDialog(true))
-        })
+      })
+    }
 
-    } 
+    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/mensagem/`, params)
+      .then(response => {
+        const { status } = response
+        response.json().then(data => {
+          setOpenLoadingDialog(false)
+          if (status === 401) {
+            setMessage(data.message)
+            setOpenMessageDialog(true)
+          } else if (status === 200) {
+            // alert(JSON.stringify(data.data))
+            setAtividade(data.data)
+            setMessage(data.message)
+            setOpenMessageDialog(true)
+            window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${idChamado}/edit`
 
 
-  
+            // setArea(data.data)
+
+          }
+        }).catch(err => setOpenLoadingDialog(true))
+      })
+
+  }
+
+
+
 
 
 
 
 
   const criarExecucao = () => {
-   
+
     // alert(emailExecutor)
     const token = getCookie('_token_task_manager')
     const params = {
@@ -478,12 +537,12 @@ const AtividadeForm = (props) => {
         fkUsuario: fkUsuarioExecutor,
         ativo: true,
         email: emailExecutor
-        
-        
+
+
 
       })
     }
-    
+
     fetch(`${process.env.REACT_APP_DOMAIN_API}/api/usuarioAtividade/`, params)
       .then(response => {
         const { status } = response
@@ -509,16 +568,16 @@ const AtividadeForm = (props) => {
 
   return (
     <PageContainer>
-     
+
 
       {id ? <div style={{ flex: 1, marginBottom: 16, marginLeft: 25 }}>
         <TextField size="small" fullWidth label="Protocolo" disabled variant="outlined" value={protocolo} />
       </div> : ''}
 
-      { ( logged && logged.fkArea === fkAreaDemandada && logged.Perfil.nome === PerfilUtils.Coordenador) ||
-       (logged && logged.Perfil.nome === PerfilUtils.Gerente  && logged.Area.fkUnidade === fkUnidadeExecutor )
-       
-       ?
+      {(logged && logged.fkArea === fkAreaDemandada && logged.Perfil.nome === PerfilUtils.Coordenador) ||
+        (logged && logged.Perfil.nome === PerfilUtils.Gerente && logged.Area.fkUnidade === fkUnidadeExecutor)
+
+        ?
         <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
           <Button variant="contained" size='small' color="error" onClick={() => setOpen(true)}>Selecionar Funcionario<PersonIcon></PersonIcon></Button>
         </div> : ''
@@ -589,11 +648,17 @@ const AtividadeForm = (props) => {
           <TextField size="small" fullWidth label="Chamado" disabled variant="outlined" value={title} />
         </div> : ''} */}
         {!id ? <>
-          <FormGroup>
+              <FormGroup>
 
             <div style={{ flex: 1, marginBottom: 16 }}>
-              Solicitar Atividade
+              Solicitar Atividade<br></br>
+              
+              
+              
+             
+
               <FormControl fullWidth size="small">
+
                 <InputLabel id="demo-select-small">Unidade</InputLabel>
                 <Select
                   fullWidth
@@ -602,12 +667,17 @@ const AtividadeForm = (props) => {
                   label="Unidade"
                   value={fkUnidade}>
                   <MenuItem value="" onClick={() => setFkUnidade("")}>
-                    <em>Nenhum</em>
+                    {/* <em>Nenhum</em> */}
                   </MenuItem>
-                  {unidade.map((item, index) => <MenuItem key={index} value={item.id} onClick={() => setFkUnidade(item.id)}>{item.nome}</MenuItem>)}
+                  {unidade.map((item, index) =>{
+                    if(item.receber ===  true){
+                      return <MenuItem key={index} value={item.id} onClick={() => setFkUnidade(item.id)}>{item.nome}</MenuItem>
+                    } 
+                  } )}
                 </Select>
               </FormControl>
             </div>
+            
             <div style={{ flex: 1, marginBottom: 16 }}>
               <FormControl fullWidth size="small">
                 <InputLabel id="demo-select-small">Área</InputLabel>
@@ -630,12 +700,20 @@ const AtividadeForm = (props) => {
             <div style={{ flex: 1, marginBottom: 16 }}>
               <TextField size="small" fullWidth label="Descrição" multiline rows={2} variant="outlined" value={conteudo} onChange={e => setConteudo(e.target.value)} />
             </div>
+
+            {/* <div style={{ flex: 1, marginBottom: 16 }}>
+              <File size="small" fullWidth label="Descrição" multiline rows={2} variant="outlined" value={conteudo} onChange={e => setConteudo(e.target.value)} />
+            </div> */}
+          
             <div style={{ flex: 1, display: 'flex', flexDirection: 'row' }}>
-              <Button variant="outlined" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/area/`}>Voltar</Button>
+              {/* <Button variant="outlined" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/area/`}>Voltar</Button> */}
               <div style={{ flex: 1 }}></div>
               <Button variant="contained" onClick={onSave}>{'Criar'}</Button>
             </div>
           </FormGroup>
+              
+              
+          
         </> : ''}
 
 
@@ -654,19 +732,19 @@ const AtividadeForm = (props) => {
 
 
 
-          {logged && (props.logged.id != fkUsuarioExecutor && props.logged.id != fkDemandante  )
+          {logged && (props.logged.id != fkUsuarioExecutor && props.logged.id != fkDemandante)
             ?
-           
+
             <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
-            <h4>Histórico do chamado</h4>
-            <Button size="small" variant="contained" onClick={() => [setOpenMsg(true)]}>Enviar Mensagem</Button>
-          </div>
+              <h4>Histórico do chamado</h4>
+              <Button size="small" variant="contained" onClick={() => [setOpenMsg(true)]}>Enviar Mensagem</Button>
+            </div>
 
             :
             <h4>Chamado Concluido
             </h4>
 
-            
+
           }
 
 
@@ -784,9 +862,9 @@ const AtividadeForm = (props) => {
 
           <FormControl labelId="demo-simple-select-label" id="demo-simple-select" style={{ width: 250 }}>
             <InputLabel id="demo-simple-select-label">{status}</InputLabel>
-            
 
-            <Select style={{ fontSize: 20 }}   onChange={e => setNewStatus(e.target.value)}>
+
+            <Select style={{ fontSize: 20 }} onChange={e => setNewStatus(e.target.value)}>
               {/* <option>{status}</option> */}
 
 
@@ -795,12 +873,12 @@ const AtividadeForm = (props) => {
                   {status.nome}</MenuItem>)
               }
             </Select>
-           
-            </FormControl>
-            
-            
-            <p></p>
-            <FormControl labelId="demo-simple-select-label" id="demo-simple-select" style={{ width: 250 }}>
+
+          </FormControl>
+
+
+          <p></p>
+          <FormControl labelId="demo-simple-select-label" id="demo-simple-select" style={{ width: 250 }}>
 
             <InputLabel id="demo-simple-select-label"> Tempo para concluir</InputLabel>
 
@@ -808,19 +886,19 @@ const AtividadeForm = (props) => {
             <Select style={{ fontSize: 20 }} onChange={e => setTempoEstimado(e.target.value)}>
 
 
-              
-               <MenuItem  value={1} >1 hora</MenuItem>
-               <MenuItem  value={2} >2 horas</MenuItem>
-               <MenuItem  value={3} >3 horas</MenuItem>
-               <MenuItem  value={4} >4 horas</MenuItem>
-               <MenuItem  value={5} >5 horas</MenuItem>
-               <MenuItem  value={6} >6 horas</MenuItem>
-               <MenuItem  value={7} >7 horas</MenuItem>
-               <MenuItem  value={8} >8 horas</MenuItem>
+
+              <MenuItem value={1} >1 hora</MenuItem>
+              <MenuItem value={2} >2 horas</MenuItem>
+              <MenuItem value={3} >3 horas</MenuItem>
+              <MenuItem value={4} >4 horas</MenuItem>
+              <MenuItem value={5} >5 horas</MenuItem>
+              <MenuItem value={6} >6 horas</MenuItem>
+              <MenuItem value={7} >7 horas</MenuItem>
+              <MenuItem value={8} >8 horas</MenuItem>
 
 
 
-              
+
             </Select>
 
             <hr></hr>
@@ -841,12 +919,12 @@ const AtividadeForm = (props) => {
 
         <DialogContent>
 
-         
-            <h2>Informe o motivo da alteração do Status</h2>
 
-          
+          <h2>Informe o motivo da alteração do Status</h2>
 
-        
+
+
+
 
 
 

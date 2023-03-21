@@ -17,22 +17,178 @@ module.exports = {
     await queryInterface.bulkInsert('unidade', [
       {
         id: uuid(),
-        nome: 'Gerência de Tecnologia da Informação',
+        nome: 'GTI',
+        receber: true,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         id: uuid(),
-        nome: 'Gerência de Pessoas e Cultura',
+        nome: 'GPC',
+        receber: true,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         id: uuid(),
-        nome: 'Gerência de Serviços e infra Estrutura',
+        nome: 'UIS',
+        receber: false,
         createdAt: new Date(),
         updatedAt: new Date()
-      }
+      },
+      {
+        id: uuid(),
+        nome: 'Gercom',
+        receber: true,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: uuid(),
+        nome: 'GPG',
+        receber: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: uuid(),
+        nome: 'DEP',
+        receber: true,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: uuid(),
+        nome: 'GCF',
+        receber: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: uuid(),
+        nome: 'DR',
+        receber: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: uuid(),
+        nome: 'DAF',
+        receber: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: uuid(),
+        nome: 'CAS',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: uuid(),
+        nome: 'DPE',
+        receber: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: uuid(),
+        nome: 'UEP-REC',
+        receber: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: uuid(),
+        nome: 'UHT',
+        receber: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: uuid(),
+        nome: 'GLC',
+        receber: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: uuid(),
+        nome: 'GSI',
+        receber: true,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: uuid(),
+        nome: 'UEP-Petrolina',
+        receber: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+       {
+        id: uuid(),
+        nome: 'UEP-Caruaru',
+        receber: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: uuid(),
+        nome: 'UEP-Vitoria',
+        receber: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: uuid(),
+        nome: 'UEP-Serra Talhada',
+        receber: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: uuid(),
+        nome: 'UEP-Paulista',
+        receber: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: uuid(),
+        nome: 'Comercial',
+        receber: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: uuid(),
+        nome: 'UEP-Garanhuns',
+        receber: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: uuid(),
+        nome: 'Faculdade',
+        receber: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: uuid(),
+        nome: 'UIP',
+        receber: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: uuid(),
+        nome: 'CETII',
+        receber: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
     ], {})
   },
 

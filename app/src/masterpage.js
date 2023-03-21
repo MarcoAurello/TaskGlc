@@ -4,20 +4,20 @@ import { Switch, BrowserRouter as Router, Route } from "react-router-dom";
 import Content from "./components/content";
 
 import Home from './pages/home';
+
 import WebStoriesIcon from '@mui/icons-material/WebStories';
 import Usuario from './pages/usuario'
+import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import MinhasAtividades from './pages/minhasAtividades'
 import CampaignIcon from '@mui/icons-material/Campaign';
+import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import todasAsPendencias from "./pages/todasAsPendencias";
 import MinhasAtividadesArquivadas from './pages/minhasAtividadesArquivadas'
 import ChamadosAbertos from './pages/chamadosAbertos'
-import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
-import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
-import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
-import FolderCopyIcon from '@mui/icons-material/FolderCopy';
-
+import AddTaskIcon from '@mui/icons-material/AddTask';
 import MenuIcon from '@mui/icons-material/Menu'
-import MarkUnreadChatAltIcon from '@mui/icons-material/MarkUnreadChatAlt';
+import LeaderboardIcon from '@mui/icons-material/Leaderboard';
 import NotificationsIcon from '@mui/icons-material/Notifications'
 import AccountCircle from '@mui/icons-material/AccountCircle'
 import ContactMailIcon from '@mui/icons-material/ContactMail';
@@ -27,6 +27,11 @@ import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import FaceIcon from '@mui/icons-material/Face';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import Typography from '@mui/material/Typography';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import CssBaseline from '@mui/material/CssBaseline'
 import Toolbar from './components/toolbar'
@@ -67,6 +72,7 @@ import ValidarUsuarioForm from "./pages/validar-usuario-form";
 import AtividadeForm from "./pages/chamado-form";
 import TaskItem from "./components/task-item";
 import TodasAsPendencias from "./pages/todasAsPendencias";
+import SolicitadasSetor from "./pages/solicitadasSetor";
 
 const getCookie = require("./utils/getCookie")
 
@@ -95,30 +101,25 @@ const Masterpage = (props) => {
   const [openUserNotification, setOpenUserNotification] = useState(false)
   const [anchorElUserNotification, setAnchorElUserNotification] = useState(null)
   const [primeiroLogin, setPrimeiroLogin] = useState(false)
-
   const [openMessageDialog, setOpenMessageDialog] = useState(false)
   const [message, setMessage] = useState('')
   const [openDialogPrimeiroAcesso, setOpenDialogPrimeiroAcesso] = useState(false)
   const [naoAtrib, setFkNaoAtrib] = useState('')
-
   const [nome, setNome] = useState('')
   const [telefone, setTelefone] = useState('')
   const [chapa, setChapa] = useState('')
   const [fkPerfil, setFkPerfil] = useState(null)
   const [fkUnidade, setFkUnidade] = useState(null)
   const [fkArea, setFkArea] = useState(null)
-
-
   const [perfil, setPerfil] = useState([])
   const [unidade, setUnidade] = useState([])
   const [area, setArea] = useState([])
   const [openLoadingDialog, setOpenLoadingDialog] = useState(false)
   const [logged, setLogged] = useState(null)
-
-
   const [usuariosNaoValidados, setUsuariosNaoValidados] = useState([])
   const [atividadesNaoAtribuidas, setAtividadesNaoAtribuidas] = useState([])
   const [atividadesRecebida, setAtividadeRecebida] = useState([])
+
 
   useEffect(() => {
     isAuthenticated().then(_ => {
@@ -126,8 +127,6 @@ const Masterpage = (props) => {
       // alert(JSON.stringify(logged))
       setPrimeiroLogin(_.data.data.primeiroLogin)
       setOpenDialogPrimeiroAcesso(_.data.data.primeiroLogin)
-
-
     })
   }, []);
 
@@ -154,7 +153,6 @@ const Masterpage = (props) => {
         })
     }
 
-
     function carregarUnidade() {
       // setOpenLoadingDialog(true)
       const token = getCookie('_token_task_manager')
@@ -179,9 +177,7 @@ const Masterpage = (props) => {
 
     if (primeiroLogin) {
       carregarPerfil()
-
     }
-
   }, [primeiroLogin])
 
 
@@ -211,7 +207,6 @@ const Masterpage = (props) => {
       carregarArea()
     }
   }, [fkUnidade])
-
 
   useEffect(() => {
     function carregarUsuariosNaoValidados() {
@@ -270,12 +265,11 @@ const Masterpage = (props) => {
 
 
 
-    if (logged  && logged.Perfil && 
+    if (logged && logged.Perfil &&
       (logged.Perfil.nome === PerfilUtils.Gerente || logged.Perfil.nome === PerfilUtils.Coordenador)) {
       setInterval(carregarAtividadesNaoAtribuidas, 1000)
     }
   }, [logged])
-
 
   useEffect(() => {
     function carregarAtividadesRecebidas() {
@@ -300,9 +294,7 @@ const Masterpage = (props) => {
           })
         })
     }
-
     setInterval(carregarAtividadesRecebidas, 1000)
-
   }, [logged])
 
 
@@ -323,7 +315,6 @@ const Masterpage = (props) => {
         fkArea,
       })
     }
-
     fetch(`${process.env.REACT_APP_DOMAIN_API}/api/usuario/edit/primeiroacesso/`, params)
       .then(response => {
         const { status } = response
@@ -343,9 +334,6 @@ const Masterpage = (props) => {
       })
   }
 
-
-
-
   const actionsGerente = [
     <Tooltip title="Aprovação Equipe" placement="bottom">
       <IconButton size="large" color="inherit" id="positioned-user-notification-icon-button"
@@ -358,9 +346,6 @@ const Masterpage = (props) => {
         </Badge>
       </IconButton>
     </Tooltip>,
-
-
-
     <Tooltip Tooltip title="Aprovar Atividade" placement="bottom" >
       <IconButton size="small" color="inherit" id="positioned-msg-notification-icon-button"
         onClick={(e) => {
@@ -373,10 +358,6 @@ const Masterpage = (props) => {
       </IconButton>
     </Tooltip >,
 
-
-
-
-
     <Tooltip title="Chegou Atividade" placement="bottom">
       <IconButton size="large" color="inherit" id="positioned-newmsg-notification-icon-button"
         onClick={(e) => {
@@ -388,8 +369,6 @@ const Masterpage = (props) => {
         </Badge>
       </IconButton>
     </Tooltip>,
-
-
 
     <IconButton
       size="large"
@@ -407,11 +386,6 @@ const Masterpage = (props) => {
 
   const actionsFuncionario = [
 
-
-
-
-
-
     <Tooltip title="Chegou Atividade" placement="bottom">
       <IconButton size="large" color="inherit" id="positioned-newmsg-notification-icon-button"
         onClick={(e) => {
@@ -423,8 +397,6 @@ const Masterpage = (props) => {
         </Badge>
       </IconButton>
     </Tooltip>,
-
-
 
     <IconButton
       size="large"
@@ -439,11 +411,9 @@ const Masterpage = (props) => {
       <AccountCircle />
     </IconButton>
   ]
-
-  const menu = <IconButton onClick={() => setOpenDrawer(true)} size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
+  const menu = <IconButton style={{ backgroundColor: '#FFA500' }} onClick={() => setOpenDrawer(true)} size="large" edge="start" variant="contained" aria-label="menu" sx={{ mr: 2 }}>
     <MenuIcon />
   </IconButton>
-
   const renderMenu = (
     <Menu
       anchorEl={anchorElAccountMenu}
@@ -553,6 +523,9 @@ const Masterpage = (props) => {
   }, [])
 
 
+
+
+
   return (
     <MasterPageContainer>
 
@@ -569,57 +542,96 @@ const Masterpage = (props) => {
                 <ListItemText primary='Home' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/home`} />
               </ListItemButton>
             </ListItem>
-            <hr></hr>
-           <center> <div style={{fontSize: 12, color: '#0BA5F1' }}>Atividades Solicitadas</div></center>
-            <ListItem disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  <CampaignIcon />
-                </ListItemIcon>
-                <ListItemText primary='Abrir Chamado' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/cadastro`} />
-              </ListItemButton>
-            </ListItem>
 
-            <ListItem disablePadding>
-              <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/chamadosAbertos/`}>
-                <ListItemIcon>
-                  <FormatListNumberedIcon />
-                </ListItemIcon>
-                <ListItemText primary='Atividades Solicitadas' />
-              </ListItemButton>
-            </ListItem>
-            <hr></hr>
+            <Accordion>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
 
-            <center> <div style={{fontSize: 12, color: '#0BA5F1' }}>Atividades Recebidas</div></center>
-            <ListItem disablePadding>
-              <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/minhasAtividades/`}>
-                <ListItemIcon>
-                  <PlaylistAddCheckIcon />
-                </ListItemIcon>
-                <ListItemText primary='Para Execução' />
-              </ListItemButton>
-            </ListItem>
+                <Typography style={{ fontSize: 14, color: '#0BA5F1' }}>Atividades Solicitadas <ArrowCircleRightIcon style={{color:'FFA500'}}></ArrowCircleRightIcon></Typography>
+              </AccordionSummary>
+              <AccordionDetails>
 
-            <ListItem disablePadding>
-              <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/minhasAtividadesArquivadas/`}>
-                <ListItemIcon>
-                  <FolderCopyIcon />
-                </ListItemIcon>
-                <ListItemText primary='Concluidas e  Arquivadas' />
-              </ListItemButton>
-            </ListItem>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <CampaignIcon style={{color:'FFA500'}}/>
+                    </ListItemIcon>
+                    <ListItemText primary='Abrir Chamado' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/cadastro`} />
+                  </ListItemButton>
+                </ListItem>
+
+                <ListItem disablePadding>
+                  <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/chamadosAbertos/`}>
+                    <ListItemIcon>
+                      <FormatListNumberedIcon style={{color:'FFA500'}}/>
+                    </ListItemIcon>
+                    <ListItemText primary='Minhas Solicitações' />
+                  </ListItemButton>
+                </ListItem>
+
+                <ListItem disablePadding>
+                  <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/solicitadasSetor/`}>
+                    <ListItemIcon>
+                      <LeaderboardIcon style={{color:'FFA500'}} />
+                    </ListItemIcon>
+                    <ListItemText primary='Relatório de Solicitações' />
+                  </ListItemButton>
+                </ListItem>
+
+              </AccordionDetails>
+            </Accordion>
 
 
-        
+            <Accordion>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
 
-            <ListItem disablePadding>
-              <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/recebidasSetor/`}>
-                <ListItemIcon>
-                  <WebStoriesIcon />
-                </ListItemIcon>
-                <ListItemText primary='Recebidas do Setor' />
-              </ListItemButton>
-            </ListItem>
+                <Typography style={{ fontSize: 14, color: '#0BA5F1' }}>Atividades Recebidas <ArrowCircleLeftIcon style={{color:'FFA500'}} /></Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+
+                <ListItem disablePadding>
+                  <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/minhasAtividades/`}>
+                    <ListItemIcon>
+                      <PlaylistAddCheckIcon  style={{color:'FFA500'}}/>
+                    </ListItemIcon>
+                    <ListItemText primary='Para Execução' />
+                  </ListItemButton>
+                </ListItem>
+
+                <ListItem disablePadding>
+                  <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/minhasAtividadesArquivadas/`}>
+                    <ListItemIcon>
+                      <AddTaskIcon  style={{color:'FFA500'}}/>
+                    </ListItemIcon>
+                    <ListItemText primary='Concluidas e  Arquivadas' />
+                  </ListItemButton>
+                </ListItem>
+
+
+
+
+                <ListItem disablePadding>
+                  <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/recebidasSetor/`}>
+                    <ListItemIcon>
+                      <LeaderboardIcon style={{color:'FFA500'}} />
+                    </ListItemIcon>
+                    <ListItemText primary='Relatório de Recebidos' />
+                  </ListItemButton>
+                </ListItem>
+
+              </AccordionDetails>
+            </Accordion>
+
+
+
+
 
             {/* <ListItem disablePadding>
               <ListItemButton>
@@ -675,7 +687,8 @@ const Masterpage = (props) => {
       </Drawer>
       <CssBaseline />
 
-      {logged && logged.Perfil && (logged.Perfil.nome === PerfilUtils.Gerente || logged.Perfil.nome === PerfilUtils.Coordenador) ?
+      {logged && logged.Perfil && (logged.Perfil.nome === PerfilUtils.Gerente || logged.Perfil.nome === PerfilUtils.Coordenador
+        || logged.Perfil.nome === PerfilUtils.Administrador) ?
         <Toolbar
           menu={menu}
           title='SENAC - Task'
@@ -745,12 +758,18 @@ const Masterpage = (props) => {
             render={(props) => <ChamadosAbertos {...props} logged={logged} />}
           />
 
-          
+
 
           <Route
             exact
             path="/recebidasSetor"
             render={(props) => <RecebidasSetor {...props} logged={logged} />}
+          />
+
+          <Route
+            exact
+            path="/solicitadasSetor"
+            render={(props) => <SolicitadasSetor {...props} logged={logged} />}
           />
 
 

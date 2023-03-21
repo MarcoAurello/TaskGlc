@@ -14,10 +14,11 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-
-    const unidades = await queryInterface.sequelize.query('select * from unidade where nome = \'Gerência de Tecnologia da Informação\'')
-    const unidadeGPC = await queryInterface.sequelize.query('select * from unidade where nome = \'Gerência de Pessoas e Cultura\'')
-    const unidadeGSI = await queryInterface.sequelize.query('select * from unidade where nome = \'Gerência de Serviços e infra Estrutura\'')
+    const unidadeGercom = await queryInterface.sequelize.query('select * from unidade where nome = \'Gercom\'')
+    const unidadeDep = await queryInterface.sequelize.query('select * from unidade where nome = \'DEP\'')
+    const unidades = await queryInterface.sequelize.query('select * from unidade where nome = \'GTI\'')
+    const unidadeGPC = await queryInterface.sequelize.query('select * from unidade where nome = \'GPC\'')
+    const unidadeGSI = await queryInterface.sequelize.query('select * from unidade where nome = \'GSI\'')
     await queryInterface.bulkInsert('area', [{
       id: uuid(),
       nome: 'Sistemas - Desenvolvimento',
@@ -31,6 +32,27 @@ module.exports = {
       createdAt: new Date(),
       updatedAt: new Date()
     },
+    {
+      id: uuid(),
+      nome: 'Jornalismo',
+      fkUnidade: unidadeGercom[0][0].id,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },
+    {
+      id: uuid(),
+      nome: 'Design / web Design',
+      fkUnidade: unidadeGercom[0][0].id,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },
+    {
+      id: uuid(),
+      nome: 'Eventos',
+      fkUnidade: unidadeGercom[0][0].id,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },
     // {
     //   id: uuid(),
     //   nome: 'Infraestrutura',
@@ -40,7 +62,14 @@ module.exports = {
     // },
     {
       id: uuid(),
-      nome: 'Coordenação de Pessoal',
+      nome: 'Departamento de Pessoal',
+      fkUnidade: unidadeGPC[0][0].id,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },
+    {
+      id: uuid(),
+      nome: 'Desenvolvimento de Pessoas',
       fkUnidade: unidadeGPC[0][0].id,
       createdAt: new Date(),
       updatedAt: new Date()
@@ -80,6 +109,38 @@ module.exports = {
       id: uuid(),
       nome: 'Arquitetura',
       fkUnidade: unidadeGSI[0][0].id,
+      createdAt: new Date(),
+      updatedAt: new Date()
+
+    },
+    {
+      id: uuid(),
+      nome: 'Gerência Academica',
+      fkUnidade: unidadeDep[0][0].id,
+      createdAt: new Date(),
+      updatedAt: new Date()
+
+    },
+    {
+      id: uuid(),
+      nome: 'Copeg',
+      fkUnidade: unidadeDep[0][0].id,
+      createdAt: new Date(),
+      updatedAt: new Date()
+
+    },
+    {
+      id: uuid(),
+      nome: 'Biblioteca',
+      fkUnidade: unidadeDep[0][0].id,
+      createdAt: new Date(),
+      updatedAt: new Date()
+
+    },
+    {
+      id: uuid(),
+      nome: 'Atendimento',
+      fkUnidade: unidadeDep[0][0].id,
       createdAt: new Date(),
       updatedAt: new Date()
 

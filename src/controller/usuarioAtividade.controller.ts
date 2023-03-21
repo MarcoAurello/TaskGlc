@@ -29,7 +29,7 @@ class UsuarioAtividadeController implements IController {
 
   async create(req: any, res: Response, next: NextFunction): Promise<any> {
     try {
-      const { fkClassificacao, fkAtividade, fkUsuario, ativo, email } = req.body
+      const { fkClassificacao, fkAtividade, fkUsuario, ativo} = req.body
 
       const registro = await UsuarioAtividade.create({
         fkUsuario,

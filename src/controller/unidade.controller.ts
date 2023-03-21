@@ -3,9 +3,23 @@ import { IController } from './controller.inteface'
 import Unidade from '../model/unidade.model'
 
 class UnidadeController implements IController {
+  
   async all (req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
       const registros = await Unidade.findAll({
+        order: [['nome', 'asc']]
+      })
+
+      res.status(200).json({ data: registros })
+    } catch (err) {
+      res.status(401).json({ message: err.errors[0].message })
+    }
+  }
+
+  async recebem (req: Request, res: Response, next: NextFunction): Promise<any> {
+    try {
+      const registros = await Unidade.findAll({
+        where: { receber: true },
         order: [['nome', 'asc']]
       })
 

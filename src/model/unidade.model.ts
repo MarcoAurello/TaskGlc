@@ -6,6 +6,7 @@ class Unidade extends Model {
   public id!: string
   public nome!: string
   public descricao!: string
+  public receber!: boolean
   public createdAt!: Date
   public updatedAt!: Date
 }
@@ -37,6 +38,10 @@ Unidade.init({
   },
   descricao: {
     type: DataTypes.STRING,
+    allowNull: true
+  },
+  receber: {
+    type: DataTypes.BOOLEAN,
     allowNull: true
   }
 }, {

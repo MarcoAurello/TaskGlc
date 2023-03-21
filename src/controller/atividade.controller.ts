@@ -20,7 +20,8 @@ class AtividadeController implements IController {
 
   async create(req: any, res: Response, next: NextFunction): Promise<any> {
     try {
-      const { fkUnidade, fkArea, titulo, conteudo, arquivado } = req.body;
+      const { fkUnidade, fkArea, titulo, conteudo, arquivado , pessoal,
+      fkUsuarioExecutor } = req.body;
 
       if (!fkUnidade) {
         return res.status(401).json({
@@ -49,7 +50,11 @@ class AtividadeController implements IController {
       const classificacao = await Classificacao.findOne({
         where: { nome: "Não Definido" },
       });
-      const status = await Status.findOne({ where: { nome: "Aberto" } });
+
+      const status = await Status.findOne({
+        where: { nome: "Aberto" },
+      });
+
 
       const atividade = await Atividade.create({
         titulo,
@@ -59,6 +64,8 @@ class AtividadeController implements IController {
         fkStatus: status?.id,
         fkUsuarioSolicitante: req.usuario.id,
         arquivado,
+        pessoal,
+        fkUsuarioExecutor
       });
 
       await Mensagem.create({
@@ -67,15 +74,7 @@ class AtividadeController implements IController {
         fkUsuario: req.usuario.id,
       });
 
-      // if (arquivado) {
-      //   emailUtils.enviar(req.usuario.email, "Seu Chamado foi arquivado pelo executor" )
-      // }
-      // if (conteudo) {
-      //   emailUtils.enviar(req.usuario.email, "Chegou mensagem no seu chamado" )
-      // }
-
-      res
-        .status(200)
+      res.status(200)
         .json({ data: atividade, message: "Cadastro realizado com sucesso." });
     } catch (err) {
       res.status(401).json({ message: err.errors[0].message });
@@ -189,8 +188,10 @@ class AtividadeController implements IController {
   ): Promise<any> {
     try {
       const statusAberto = await Status.findOne({ where: { nome: 'Aberto' } })
-      const statusIniciado = await Status.findOne({where: { nome: 'Iniciado' }})
-      const statusPlanejado = await Status.findOne({where: { nome: 'Planejado para Iniciar' }})
+      const statusIniciado = await Status.findOne({ where: { nome: 'Iniciado' }})
+      const statusPlanejado = await Status.findOne({ where: { nome: 'Planejado para Iniciar' }})
+      const statusPendente = await Status.findOne({ where: { nome: 'Pendente' }})
+      const statusParado = await Status.findOne({ where: { nome: 'Parado'}})
 
       const claImediata = await Classificacao.findOne({
         where: { nome: "Execução Imediata" },
@@ -236,7 +237,7 @@ class AtividadeController implements IController {
           fkUsuarioExecutor: req.usuario.id,
           arquivado: false,
           fkStatus: {
-            [Op.or]: [statusAberto?.id, statusIniciado?.id, statusPlanejado?.id],
+            [Op.or]: [statusAberto?.id, statusIniciado?.id, statusPlanejado?.id, statusPendente?.id, statusParado?.id],
           },
         },
       });
@@ -253,7 +254,7 @@ class AtividadeController implements IController {
           fkUsuarioExecutor: req.usuario.id,
           arquivado: false,
           fkStatus: {
-            [Op.or]: [statusAberto?.id, statusIniciado?.id, statusPlanejado?.id],
+            [Op.or]: [statusAberto?.id, statusIniciado?.id, statusPlanejado?.id, statusPendente?.id, statusParado?.id],
           },
         },
       });
@@ -270,7 +271,7 @@ class AtividadeController implements IController {
           fkUsuarioExecutor: req.usuario.id,
           arquivado: false,
           fkStatus: {
-            [Op.or]: [statusAberto?.id, statusIniciado?.id, statusPlanejado?.id],
+            [Op.or]: [statusAberto?.id, statusIniciado?.id, statusPlanejado?.id, statusPendente?.id, statusParado?.id],
           },
         },
       });
@@ -287,7 +288,7 @@ class AtividadeController implements IController {
           fkUsuarioExecutor: req.usuario.id,
           arquivado: false,
           fkStatus: {
-            [Op.or]: [statusAberto?.id, statusIniciado?.id, statusPlanejado?.id],
+            [Op.or]: [statusAberto?.id, statusIniciado?.id, statusPlanejado?.id, statusPendente?.id, statusParado?.id],
           },
         },
       });
@@ -361,6 +362,33 @@ class AtividadeController implements IController {
     }
   }
 
+  async solicitadasSetor(
+    req: any,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const area = await Area.findOne({where: {id: req.usuario.fkArea }})
+      
+      const registros = await Atividade.findAll({
+        include: [
+          { model: Area, include: [Unidade] },
+          Classificacao,
+          Status,
+          Usuario,
+        ],
+        order: [["createdAt", "DESC"]],
+        where: {
+          "$Usuario.fkArea$": area?.id
+        },
+      });
+      res.status(200).json({ data: registros });
+    } catch (err) {
+      console.log(err);
+      res.status(401).json({ message: err.errors[0].message });
+    }
+  }
+
   async delete(req: Request, res: Response, next: NextFunction): Promise<any> {
     throw new Error("Method not implemented.");
   }
@@ -369,16 +397,19 @@ class AtividadeController implements IController {
     try {
       const { pesquisa } = req.query;
 
-
       // console.log('pesquisa: ' + pesquisa);
       const registros = await Atividade.findAll({
-       
+           include: [
+          { model: Area, include: [Unidade] },
+          Classificacao,
+          Status,
+          Usuario,
+        ],
         order: [['createdAt', 'DESC']],
         where: {
           [Op.or]: [
             { titulo: { [Op.like]: `%${pesquisa}%`} },
             { fkUsuarioExecutor: pesquisa },
-          
           ]
         },
       });

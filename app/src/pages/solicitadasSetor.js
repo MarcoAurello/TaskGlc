@@ -2,15 +2,15 @@ import { Box, Button, Dialog, DialogContent, FormControl, InputLabel, MenuItem, 
 import React, { useEffect, useState } from "react";
 import EditIcon from '@mui/icons-material/Edit';
 import TaskFilter from '../components/task-filter'
-
+import TaskItem from '../components/task-item'
+import { display } from "@mui/system";
+import MinhasAtividades from "./minhasAtividades";
 import { Chart } from "react-google-charts";
-import { fontSize } from "@mui/system";
-
 
 
 const getCookie = require('../utils/getCookie')
 
-const RecebidasSetor = (props) => {
+const SolicitadasSetor = (props) => {
   const { logged } = props
   const [contador, setContador] = useState(0)
   const [openLoadingDialog, setOpenLoadingDialog] = useState(false)
@@ -27,7 +27,6 @@ const RecebidasSetor = (props) => {
   const [status, setStatus] = useState([])
 
 
-
   function carregarAtividadesDoSetor() {
     const token = getCookie('_token_task_manager')
     const params = {
@@ -36,7 +35,7 @@ const RecebidasSetor = (props) => {
       }
     }
 
-    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/recebidasSetor/`, params)
+    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/solicitadasSetor/`, params)
       .then(response => {
         const { status } = response
         response.json().then(data => {
@@ -150,10 +149,9 @@ const RecebidasSetor = (props) => {
 
   }, [pesquisa])
 
-
   const data = [
-    
-    ["Status", '11111'],
+
+    ["Status", ''],
     ["Iniciadas", meuSetor.reduce((contador, item) => contador += item.Status.nome === 'Iniciado', 0)],
     ["Em Aberto", meuSetor.reduce((contador, item) => contador += item.Status.nome === 'Aberto', 0)],
     ["Para iniciar", meuSetor.reduce((contador, item) => contador += item.Status.nome === 'Planejado para Iniciar', 0)],
@@ -161,8 +159,7 @@ const RecebidasSetor = (props) => {
     ["Canceladas", meuSetor.reduce((contador, item) => contador += item.Status.nome === 'Cancelado', 0)],
     ["Pendentes", meuSetor.reduce((contador, item) => contador += item.Status.nome === 'Pendente', 0)],
     ["Paradas", meuSetor.reduce((contador, item) => contador += item.Status.nome === 'Parado', 0)],
-    ["Todas do Setor", meuSetor.length],
-
+    
   ];
   const data1 = [
     ["Classificação ", ''],
@@ -174,64 +171,18 @@ const RecebidasSetor = (props) => {
    
 
   ];
-
-
   const options = {
-    title: "Status todas Atividades Recebidas",
+    title: "Status Atividades Solicitadas",
     chartArea: { width: "50%" },
     bar: { groupWidth: "85%" },
     legend: { position: "none" },
 
   };
-
   const options1 = {
-    title: "Classificação todas Atividades Recebidas",
-    is3D: true,
-
-
-  };
-
-
-  const dataFuncionario = [
-
-    ["Status", 'funcionario selecionado'],
-    ["Iniciadas", respostas.reduce((contador, item) => contador += item.Status.nome === 'Iniciado', 0)],
-    ["Em Aberto", respostas.reduce((contador, item) => contador += item.Status.nome === 'Aberto', 0)],
-    ["Para iniciar", respostas.reduce((contador, item) => contador += item.Status.nome === 'Planejado para Iniciar', 0)],
-    ["Concluidas", respostas.reduce((contador, item) => contador += item.Status.nome === 'Concluido', 0)],
-    ["Canceladas", respostas.reduce((contador, item) => contador += item.Status.nome === 'Cancelado', 0)],
-    ["Pendentes", respostas.reduce((contador, item) => contador += item.Status.nome === 'Pendente', 0)],
-    ["Paradas", respostas.reduce((contador, item) => contador += item.Status.nome === 'Parado', 0)],
-    
-  ];
-  const optionFuncionario = {
-    title: "Status funcionario selecionado",
-   
-    chartArea: { width: "50%" },
-    bar: { groupWidth: "85%" },
-    legend: { position: "none" },
-
-  };
-
-  const dataClassFuncionario = [
-    ["Classificação ", ''],
-    ["Circunstancial", respostas.reduce((contador, item) => contador += item.Classificacao.nome === 'Circunstancial', 0)],
-    ["Não Definido", respostas.reduce((contador, item) => contador += item.Classificacao.nome === 'Não Definido', 0)],
-    ["Importante", respostas.reduce((contador, item) => contador += item.Classificacao.nome === 'Importante', 0)],
-    ["Urgente", respostas.reduce((contador, item) => contador += item.Classificacao.nome === 'Urgente', 0)],
-    ["Execução Imediata", respostas.reduce((contador, item) => contador += item.Classificacao.nome === 'Execução Imediata', 0)],
-    
-
-  ];
-
-
-  const optionsClassFuncionario = {
-    title: "Classificação Atividades do funcionario",
+    title: "Classificação Atividades Solicitadas",
     is3D: true,
 
   };
-
-
 
 
 
@@ -257,118 +208,25 @@ const RecebidasSetor = (props) => {
       <center>
 
 
-        <Box scope='row' sx={{ maxWidth: 420 }}>
-          <FormControl fullWidth scope='row'>
-            <InputLabel id="demo-simple-select-label">Buscar por funcionario</InputLabel>
 
-            <Select labelId="demo-simple-select-label"
-              id="demo-simple-select" style={{ maxWidth: 310, marginBottom: 10 }}
-              onChange={e => setFKUsuarioExecutor(e.target.value)} placeholder='Selecione o executor'>
-
-              {
-                usuarioExecutor.map((user, key) => <MenuItem name={user.nome} value={user.id} >
-                  {user.nome}</MenuItem>)
-              }
-
-            </Select>
-          </FormControl>
-
-        </Box>
         <p></p>
         {respostas ?
           <div>
 
             <table className="table table-striped" style={{ fontFamily: "arial", fontSize: '12px', marginLeft: 10, marginRight: 10 }}>
 
-              {respostas != '' ?
-
-                
-                <tbody style={{ color: 'red', fontSize: 15, marginLeft: 100, marginRight: 50, padding: 50, backgroundColor: '#D1EDFA' }}>
-
-                  <tr style={{ marginLeft: 100, marginRight: 50, padding: 50 }}>
-                    <td>
-                      
-
-                      <Chart style={{ fontSize: 8 }}
-                        
-                        chartType="BarChart"
-                        width="100%"
-                        height="400px"
-                        data={dataFuncionario}
-                        options={optionFuncionario}
-                      />
-
-                      <Chart style={{ fontSize: 8 }}
-                       chartType="PieChart"
-                        width="100%"
-                        height="400px"
-                        data={dataClassFuncionario}
-                        options={optionsClassFuncionario}
-                      />
-
-
-
-
-                    </td>
-                    
-                  </tr>
-
-
-
-
-
-                  <div style={{fontSize:15}}>Lista de atividades do funcionario selecionado</div>
-                </tbody>
-                : ''}
-
-
-
-              <tbody >
-                 
-
-                {respostas.map((item, index) =>
-
-
-                  <tr key={index}>
-
-                    
-                    <th scope="row">Titulo: {item.titulo}<br></br> Solicitado: {new Date(item.createdAt).toLocaleString()} <br></br>
-                      Situação: {item.Status.nome}
-                      <br></br>
-                      <Button variant="contained" size="small" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`}>
-                        ver chamado
-                      </Button></th>
-
-
-
-                  </tr>)}
-
-              </tbody>
-
-
             </table>
             <hr></hr>
           </div>
-
 
           :
           ''
         }
 
-
         <div style={{
           fontSize: 24, fontWeight: 'bold',
           marginBottom: 4, marginRight: 8, paddingLeft: 5, alignItems: 'center'
         }}>
-          Todas Recebidas do seu Setor<br></br>
-
-        </div>
-
-      </center>
-
-
-      {pesquisa != '' || filtroStatus === '' ?
-        <div>
           <Chart style={{ fontSize: 8 }}
             chartType="BarChart"
             width="100%"
@@ -377,46 +235,47 @@ const RecebidasSetor = (props) => {
             options={options}
           />
           <Chart style={{ fontSize: 8 }}
-           chartType="PieChart"
+            chartType="PieChart"
             width="100%"
             height="400px"
             data={data1}
             options={options1}
           />
+          Todas Solicitadas do seu setor<br></br>
 
-          <table className="table table-striped" style={{ fontFamily: "arial", fontSize: '12px', marginLeft: 10, marginRight: 20 }}>
-            {/* <thead>
+        </div>
+
+
+      </center>
+
+
+
+      <table className="table table-striped" style={{ fontFamily: "arial", fontSize: '12px', marginLeft: 10, marginRight: 20 }}>
+        {/* <thead>
           <th>titulo</th>
           <th>ver Atividade</th>
         </thead> */}
-            <tbody>
+        <tbody>
+
+          {meuSetor.map((item, index) =>
+            <tr key={index}>
+              <th scope="row">Titulo: {item.titulo}<br></br> Solicitado: {new Date(item.createdAt).toLocaleString()} <br></br> </th>
+              <th scope="row">{item.Status.nome === "Iniciado" || item.Status.nome === "Aberto" ||
+                item.Status.nome === "Planejado para Iniciar" ? <div style={{ color: 'green' }}>Na lista de Execução: {item.Status.nome}</div> :
+                <div style={{ color: 'red' }}>Fora da lista de Execução:  {item.Status.nome}</div>} </th>
+              <th>
+                <Button variant="contained" size="small" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`}>
+                  ver
+                </Button>
+              </th>
 
 
+            </tr>)}
+
+        </tbody>
+      </table>
 
 
-
-              {meuSetor.map((item, index) =>
-                <tr key={index}>
-                  <th scope="row">Titulo: {item.titulo}<br></br> Solicitado: {new Date(item.createdAt).toLocaleString()} <br></br> </th>
-                  <th scope="row">{item.Status.nome === "Iniciado" || item.Status.nome === "Aberto" ||
-                    item.Status.nome === "Planejado para Iniciar" ? <div style={{ color: 'green' }}>Na lista de Execução: {item.Status.nome}</div> :
-                    <div style={{ color: 'red' }}>Fora da lista de Execução:  {item.Status.nome}</div>} </th>
-                  <th>
-                    <Button variant="contained" size="small" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`}>
-                      ver
-                    </Button>
-                  </th>
-
-
-                </tr>)}
-
-            </tbody>
-          </table>
-        </div>
-
-        :
-        ''
-      }
 
 
 
@@ -429,23 +288,6 @@ const RecebidasSetor = (props) => {
       />
 
 
-      <Dialog open={openMsg}  >
-
-        <DialogContent>
-
-
-          <h2>Informe o motivo da alteração do Status</h2>
-
-          {/* {classificacao == "Não Definido" && status == "Aberto" ?
-    <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
-      <Button variant="contained" onClick={() => setOpen(true)}>{'Encaminhar chamado'}</Button>
-    </div> : ''
-
-  } */}
-
-        </DialogContent>
-
-      </Dialog>
 
 
 
@@ -455,4 +297,4 @@ const RecebidasSetor = (props) => {
   );
 };
 
-export default RecebidasSetor;
+export default SolicitadasSetor;

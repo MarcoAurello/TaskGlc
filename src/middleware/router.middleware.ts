@@ -1,6 +1,7 @@
 import { Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
 import Area from '../model/area.model'
+import Unidade from '../model/unidade.model'
 
 import Perfil from '../model/perfil.model'
 import Usuario from '../model/usuario.model'
@@ -22,7 +23,7 @@ class RouterMiddleware {
 
       const registro = await Usuario.findOne({
         where: { id: decoded.id },
-        include: [Perfil, Area]
+        include: [Perfil, { model: Area, include: [Unidade] }]
       })
 
       if (!registro) {

@@ -20,14 +20,19 @@ module.exports = {
     // const perfilsAdministrador = await queryInterface.sequelize.query('select * from perfil where nome = \'Administrador\'')
     // const perfilAdministradorRows = perfilsAdministrador[0]
 
+    const perfilAdm = await queryInterface.sequelize.query('select * from perfil where nome = \'Administrador\'')
+    const perfilAdmRows = perfilAdm[0]
+
+    
     const perfilsGerente = await queryInterface.sequelize.query('select * from perfil where nome = \'Gerente\'')
     const perfilGerenteRows = perfilsGerente[0]
 
     const areas = await queryInterface.sequelize.query('select * from area where nome = \'Sistemas - Desenvolvimento\'')
     const areasSuporte = await queryInterface.sequelize.query('select * from area where nome = \'Sistemas - Suporte\'')
+    const areaDep = await queryInterface.sequelize.query('select * from area where nome = \'Atendimento\'')
     
-    const areasGPC = await queryInterface.sequelize.query('select * from area where nome = \'Coordenação de Pessoal\'')
-    const areaGSI = await queryInterface.sequelize.query('select area.* from area inner join unidade on unidade.id=area.fkUnidade where unidade.nome = \'Gerência de Serviços e infra Estrutura\' and area.nome = \'Trasnsporte\'')
+    const areasGPC = await queryInterface.sequelize.query('select * from area where nome = \'Desenvolvimento de Pessoas\'')
+    const areaGSI = await queryInterface.sequelize.query('select area.* from area inner join unidade on unidade.id=area.fkUnidade where unidade.nome = \'GSI\' and area.nome = \'Trasnsporte\'')
 
     await queryInterface.bulkInsert('usuario', [
       {
@@ -66,6 +71,23 @@ module.exports = {
         createdAt: new Date(),
         updatedAt: new Date()
       },
+
+      {
+        id: uuid(),
+        nome: 'Marco Aurellio',
+        email: 'marconunes@pe.senac.br',
+        passwordHash: await bcrypt.hash('gti@2023', 8),
+        telefone: '34132053',
+        chapa: '15812-F1',
+        demandante: true,
+        fkPerfil: perfilAdmRows[0].id,
+        fkArea: areas[0][0].id,
+        validado: true,
+        ativo: true,
+        primeiroLogin: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
       {
         id: uuid(),
         nome: 'Graça Bezerra',
@@ -76,6 +98,22 @@ module.exports = {
         demandante: true,
         fkPerfil: perfilGerenteRows[0].id,
         fkArea: areas[0][0].id,
+        validado: true,
+        ativo: true,
+        primeiroLogin: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: uuid(),
+        nome: 'Betânia',
+        email: 'betania@pe.senac.br',
+        passwordHash: await bcrypt.hash('gti@2021', 8),
+        telefone: '34132053',
+        chapa: '15385-F1',
+        demandante: true,
+        fkPerfil: perfilGerenteRows[0].id,
+        fkArea: areaDep[0][0].id,
         validado: true,
         ativo: true,
         primeiroLogin: false,

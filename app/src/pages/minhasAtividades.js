@@ -11,6 +11,8 @@ const getCookie = require('../utils/getCookie')
 const MinhasAtividades = (props) => {
   const {logged} = props
   const [contador,setContador] = useState(0)
+  const [openLoadingDialog, setOpenLoadingDialog] = useState(false)
+  const [openMessageDialog, setOpenMessageDialog] = useState(false)
 
 
   const [minhasAtividades,setMinhasAtividades] = useState([])
@@ -29,8 +31,11 @@ const MinhasAtividades = (props) => {
       .then(response => {
         const { status } = response
         response.json().then(data => {
+          setOpenLoadingDialog(false)
           if (status === 401) {
+            setOpenMessageDialog(true)
           } else if (status === 200) {
+            setOpenLoadingDialog(false)
             
             // alert(JSON.stringify(data.data))
 

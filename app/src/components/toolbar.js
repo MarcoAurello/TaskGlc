@@ -23,7 +23,7 @@ const Toolbar = (props) => {
   return (
     <ToolbarContainer>
       <div>{menu}</div>
-      <div style={{marginRight: 16, marginLeft: 16, fontWeight: 'bold', flex: 1}}>{title}</div>
+      <div style={{marginRight: 5, marginLeft: 5, fontWeight: 'bold', flex: 1}}>{title}</div>
       <div>{actions}</div>
     </ToolbarContainer>
   )

@@ -13,6 +13,8 @@ const TodasAsPendencias = (props) => {
 
   const [minhasAtividades,setMinhasAtividades] = useState([])
   const [openMsg, setOpenMsg] = useState(false);
+  const [openLoadingDialog, setOpenLoadingDialog] = useState(false)
+  const [openMessageDialog, setOpenMessageDialog] = useState(false)
 
 
   function carregarMinhasAtividades() {
@@ -27,8 +29,11 @@ const TodasAsPendencias = (props) => {
       .then(response => {
         const { status } = response
         response.json().then(data => {
+          setOpenLoadingDialog(false)
           if (status === 401) {
+            setOpenMessageDialog(true)
           } else if (status === 200) {
+            setOpenLoadingDialog(false)
             
             // alert(JSON.stringify(data.data))
 
