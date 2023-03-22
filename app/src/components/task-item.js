@@ -82,8 +82,8 @@ const TaskItem = (props) => {
     // alert(arquivado)
 
 
-    if (props.status != 'Concluido') {
-      alert('para arquivar a atividade deve ser concluida')
+    if (props.status != 'Concluido' || props.status != 'Cancelado') {
+      alert('para arquivar a atividade deve ser Concluida ou Cancelada')
     } else {
 
       const token = getCookie('_token_task_manager')

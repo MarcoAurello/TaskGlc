@@ -71,6 +71,7 @@ const AtividadeRecebidaNotificationItem = (props) => {
 
                 <div style={{ width: '100%', fontSize: 12, color: '#424242' }}>{'Chamado: ' + item.titulo}</div>
                 <div style={{ width: '100%', fontSize: 12, color: '#424242' }}>{'Solicitante: ' + item.Usuario.nome}</div>
+                
                 <div   style={{ width: '100%', fontSize: 12, color: corCriticidade( item.Classificacao.nome) }}>{'Clasificação: ' + item.Classificacao.nome}</div>
                 {/* <div style={{ width: '100%', 
                 fontSize: 12, color: '#424242' }}>{'Problema: ' + item.titulo}</div> */}

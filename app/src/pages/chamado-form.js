@@ -128,7 +128,7 @@ const AtividadeForm = (props) => {
               setEmailUsuarioSolicitante(data.data.Usuario.email)
               setTelefoneSolicitante(data.data.Usuario.telefone)
               setFkDemandante(data.data.fkDemandante)
-              // setSetorSolicitante(data.data.Usuario.Area.nome)
+              
               setTitle(data.data.titulo)
               setFkAreaDemandada(data.data.fkArea)
               setIdChamado(data.data.id)
@@ -142,6 +142,7 @@ const AtividadeForm = (props) => {
               getEmailExecutor(data.data.UsuarioExecutor.email)
               getTelefoneExecutor(data.data.UsuarioExecutor.telefone)
               getFkExecutor(data.data.UsuarioExecutor.id)
+              setSetorSolicitante(data.data.Usuario.Area.nome)
 
               carregarMensagem()
               // alert(emailExecutor)
@@ -586,7 +587,7 @@ const AtividadeForm = (props) => {
 
       {logged && props.logged.id === fkExecutor ?
         <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
-          <Button size='small' variant="contained" onClick={() => setOpenStatus(true)}>Alterar Status do chamado</Button>
+          <Button size='small' variant="contained" onClick={() => setOpenStatus(true)}>Alterar Status da Atividade</Button>
         </div> : ''
 
       }
@@ -594,6 +595,7 @@ const AtividadeForm = (props) => {
 
       {id ? <div >
         <TaskItemDoChamado
+        
           protocolo={protocolo}
           unidade={valueUnidade}
           area={valueArea}
@@ -736,12 +738,12 @@ const AtividadeForm = (props) => {
             ?
 
             <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
-              <h4>Histórico do chamado</h4>
-              <Button size="small" variant="contained" onClick={() => [setOpenMsg(true)]}>Enviar Mensagem</Button>
+              <h4>Histórico da Atividade</h4>
+              <Button size="small" variant="contained" onClick={() => [setOpenMsg(true)]}>Mensagem</Button>
             </div>
 
             :
-            <h4>Chamado Concluido
+            <h4>Atividade Concluida
             </h4>
 
 
@@ -793,13 +795,13 @@ const AtividadeForm = (props) => {
       <hr></hr>
 
       <Dialog open={open} >
-        <DialogTitle style={{ color: '#1E90FF' }} >Encaminhar Chamado</DialogTitle>
+        <DialogTitle style={{ color: '#1E90FF' }} >Encaminhar Atividade</DialogTitle>
         <DialogContent>
           <DialogContentText>
 
           </DialogContentText>
 
-          <InputLabel id="demo-select-small"><b>Titulo Chamado:</b></InputLabel>
+          <InputLabel id="demo-select-small"><b>Titulo Atividade:</b></InputLabel>
           {title}
           <br></br>
           <InputLabel id="demo-select-small"><b>Unidade</b></InputLabel>
@@ -815,7 +817,7 @@ const AtividadeForm = (props) => {
 
 
             <select style={{ fontSize: 14 }} onChange={e => setNewClassificacao(e.target.value)}>
-              <option >CLASSIFIQUE O CHAMADO</option>)
+              <option >CLASSIFIQUE A ATIVIDADE</option>)
 
               {
                 classificarChamado.map((classificacao, key) => <option name={classificacao.nome} value={classificacao.id} >
@@ -886,7 +888,7 @@ const AtividadeForm = (props) => {
             <Select style={{ fontSize: 20 }} onChange={e => setTempoEstimado(e.target.value)}>
 
 
-
+            <MenuItem value={1} >0 hora</MenuItem>
               <MenuItem value={1} >1 hora</MenuItem>
               <MenuItem value={2} >2 horas</MenuItem>
               <MenuItem value={3} >3 horas</MenuItem>
@@ -919,8 +921,10 @@ const AtividadeForm = (props) => {
 
         <DialogContent>
 
-
-          <h2>Informe o motivo da alteração do Status</h2>
+              { openStatus === false ? 
+              <h2>Deixe uma mensagem</h2>
+              :<h4>Informe o motivo da alteração do Status</h4> }
+          
 
 
 

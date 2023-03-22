@@ -20,9 +20,10 @@ const SolicitadasSetor = (props) => {
   const [meuSetor, setMeuSetor] = useState([])
   const [openMsg, setOpenMsg] = useState(false);
   const [usuarioExecutor, setusuarioExecutor] = useState([])
-  const [pesquisa, setFKUsuarioExecutor] = useState('')
+  const [pesquisa, setPesquisa] = useState('')
   const [respostas, setRespostas] = useState([])
   const [filtroStatus, setFiltroStatus] = useState('')
+
 
   const [status, setStatus] = useState([])
 
@@ -117,7 +118,7 @@ const SolicitadasSetor = (props) => {
       }
     }
     // fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade${pesquisa?`/search?&pesquisa=${pesquisa}` : ''
-    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/search?pesquisa=${pesquisa}`, params)
+    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/searchSolicitadas?pesquisa=${pesquisa}`, params)
       .then(response => {
         const { status } = response
         response.json().then(data => {
@@ -161,28 +162,29 @@ const SolicitadasSetor = (props) => {
     ["Paradas", meuSetor.reduce((contador, item) => contador += item.Status.nome === 'Parado', 0)],
     
   ];
-  const data1 = [
-    ["Classificação ", ''],
-    ["Circunstancial", meuSetor.reduce((contador, item) => contador += item.Classificacao.nome === 'Circunstancial', 0)],
-    ["Não Definido", meuSetor.reduce((contador, item) => contador += item.Classificacao.nome === 'Não Definido', 0)],
-    ["Importante", meuSetor.reduce((contador, item) => contador += item.Classificacao.nome === 'Importante', 0)],
-    ["Urgente", meuSetor.reduce((contador, item) => contador += item.Classificacao.nome === 'Urgente', 0)],
-    ["Execução Imediata", meuSetor.reduce((contador, item) => contador += item.Classificacao.nome === 'Execução Imediata', 0)],
+  // const data1 = [
+  //   ["Classificação ", ''],
+  //   ["Circunstancial", meuSetor.reduce((contador, item) => contador += item.Classificacao.nome === 'Circunstancial', 0)],
+  //   ["Não Definido", meuSetor.reduce((contador, item) => contador += item.Classificacao.nome === 'Não Definido', 0)],
+  //   ["Importante", meuSetor.reduce((contador, item) => contador += item.Classificacao.nome === 'Importante', 0)],
+  //   ["Urgente", meuSetor.reduce((contador, item) => contador += item.Classificacao.nome === 'Urgente', 0)],
+  //   ["Execução Imediata", meuSetor.reduce((contador, item) => contador += item.Classificacao.nome === 'Execução Imediata', 0)],
    
 
-  ];
+  // ];
   const options = {
     title: "Status Atividades Solicitadas",
-    chartArea: { width: "50%" },
-    bar: { groupWidth: "85%" },
-    legend: { position: "none" },
-
-  };
-  const options1 = {
-    title: "Classificação Atividades Solicitadas",
     is3D: true,
+    sliceVisibilityThreshold: .2
+
+    
 
   };
+  // const options1 = {
+  //   title: "Classificação Atividades Solicitadas",
+  //   is3D: true,
+
+  // };
 
 
 
@@ -210,47 +212,50 @@ const SolicitadasSetor = (props) => {
 
 
         <p></p>
-        {respostas ?
+        <Box scope='row' sx={{ maxWidth: 420 }}>
+            <FormControl fullWidth scope='row'>
+              <InputLabel id="demo-simple-select-label">Buscar por Status</InputLabel>
+
+              <Select labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                onChange={e => setPesquisa(e.target.value)} >
+
+                {
+                  status.map((user, key) => <MenuItem name={user.nome} value={user.id} >
+                    {user.nome}</MenuItem>)
+                }
+
+              </Select>
+            </FormControl>
+
+          </Box>
+          <p></p>
+
+          {pesquisa === '' ?
           <div>
-
-            <table className="table table-striped" style={{ fontFamily: "arial", fontSize: '12px', marginLeft: 10, marginRight: 10 }}>
-
-            </table>
-            <hr></hr>
-          </div>
-
-          :
-          ''
-        }
-
-        <div style={{
+                <div style={{
           fontSize: 24, fontWeight: 'bold',
           marginBottom: 4, marginRight: 8, paddingLeft: 5, alignItems: 'center'
         }}>
           <Chart style={{ fontSize: 8 }}
-            chartType="BarChart"
+            chartType="PieChart"
             width="100%"
             height="400px"
             data={data}
             options={options}
+           
           />
-          <Chart style={{ fontSize: 8 }}
+          {/* <Chart style={{ fontSize: 8 }}
             chartType="PieChart"
             width="100%"
             height="400px"
             data={data1}
             options={options1}
-          />
-          Todas Solicitadas do seu setor<br></br>
+          /> */}
+          Todas Solicitadas pelo seu setor<br></br>
 
         </div>
-
-
-      </center>
-
-
-
-      <table className="table table-striped" style={{ fontFamily: "arial", fontSize: '12px', marginLeft: 10, marginRight: 20 }}>
+            <table className="table table-striped" style={{ fontFamily: "arial", fontSize: '12px', marginLeft: 10, marginRight: 20 }}>
         {/* <thead>
           <th>titulo</th>
           <th>ver Atividade</th>
@@ -274,6 +279,65 @@ const SolicitadasSetor = (props) => {
 
         </tbody>
       </table>
+          </div>
+           : 
+           
+           <div>
+              <div style={{
+          fontSize: 24, fontWeight: 'bold',
+          marginBottom: 4, marginRight: 8, paddingLeft: 5, alignItems: 'center'
+        }}>
+          {/* <Chart style={{ fontSize: 8 }}
+            chartType="BarChart"
+            width="100%"
+            height="400px"
+            data={data}
+            options={options}
+          />
+          <Chart style={{ fontSize: 8 }}
+            chartType="PieChart"
+            width="100%"
+            height="400px"
+            data={data1}
+            options={options1}
+          /> */}
+          Solicitadas Por Status<br></br>
+
+        </div>
+           <table className="table table-striped" style={{ fontFamily: "arial", fontSize: '12px', marginLeft: 10, marginRight: 20 }}>
+       {/* <thead>
+         <th>titulo</th>
+         <th>ver Atividade</th>
+       </thead> */}
+       <tbody>
+
+         {respostas.map((item, index) =>
+           <tr key={index}>
+             <th scope="row">Titulo: {item.titulo}<br></br> Solicitado: {new Date(item.createdAt).toLocaleString()} <br></br> </th>
+             <th scope="row">{item.Status.nome === "Iniciado" || item.Status.nome === "Aberto" ||
+               item.Status.nome === "Planejado para Iniciar" ? <div style={{ color: 'green' }}>Na lista de Execução: {item.Status.nome}</div> :
+               <div style={{ color: 'red' }}>Fora da lista de Execução:  {item.Status.nome}</div>} </th>
+             <th>
+               <Button variant="contained" size="small" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`}>
+                 ver
+               </Button>
+             </th>
+
+
+           </tr>)}
+
+       </tbody>
+     </table>
+         </div>}
+
+    
+
+
+      </center>
+
+
+
+      
 
 
 

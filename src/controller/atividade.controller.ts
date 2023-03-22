@@ -313,6 +313,8 @@ class AtividadeController implements IController {
   ): Promise<any> {
     try {
       const statusConcluido = await Status.findOne({ where: { nome: 'Concluido' } })
+      const statusCancelado = await Status.findOne({ where: { nome: 'Cancelado' } })
+      
       const registros = await Atividade.findAll({
         include: [
           { model: Area, include: [Unidade] },
@@ -324,7 +326,8 @@ class AtividadeController implements IController {
           fkUsuarioExecutor: req.usuario.id,
           [Op.or]: [
             { arquivado: true },
-            { fkStatus: statusConcluido?.id }
+            { fkStatus: statusConcluido?.id },
+            { fkStatus: statusCancelado?.id }
           ]
         },
       });
@@ -396,6 +399,8 @@ class AtividadeController implements IController {
   async search(req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
       const { pesquisa } = req.query;
+      const area = await Area.findOne({ where: { id: req.usuario.fkArea } });
+      const mensagem = await Mensagem.findOne({})
 
       // console.log('pesquisa: ' + pesquisa);
       const registros = await Atividade.findAll({
@@ -409,8 +414,75 @@ class AtividadeController implements IController {
         where: {
           [Op.or]: [
             { titulo: { [Op.like]: `%${pesquisa}%`} },
-            { fkUsuarioExecutor: pesquisa },
+            // {"$Mensagem$.conteudo" : { [Op.like]: `%${pesquisa}%`} }
+
+            
           ]
+        },
+      });
+
+      res.status(200).json({ data: registros });
+    } catch (err) {
+      console.log(err);
+      res.status(401).json({ message: err.errors[0].message });
+    }
+  }
+
+  async searchRecebidos(req: any, res: Response, next: NextFunction): Promise<any> {
+    try {
+      const { pesquisa } = req.query;
+      const area = await Area.findOne({where: {id: req.usuario.fkArea }})
+
+      console.log('pesquisa: ' + pesquisa);
+      const registros = await Atividade.findAll({
+           include: [
+          { model: Area, include: [Unidade] },
+          Classificacao,
+          Status,
+          Usuario,
+        ],
+        order: [['createdAt', 'DESC']],
+        where: {
+          // fkArea: req.usuario.fkArea ,
+          "$Area.fkUnidade$": area?.fkUnidade,
+
+          [Op.or]: [
+            { fkUsuarioExecutor: pesquisa },
+            { fkStatus: pesquisa },
+            { fkClassificacao: pesquisa },
+          ],
+        },
+      });
+
+      res.status(200).json({ data: registros });
+    } catch (err) {
+      console.log(err);
+      res.status(401).json({ message: err.errors[0].message });
+    }
+  }
+
+    async searchSolicitadas(req: any, res: Response, next: NextFunction): Promise<any> {
+    try {
+      const { pesquisa } = req.query;
+      const area = await Area.findOne({where: {id: req.usuario.fkArea }})
+
+      console.log('pesquisa: ' + pesquisa);
+      const registros = await Atividade.findAll({
+           include: [
+          { model: Area, include: [Unidade] },
+          Classificacao,
+          Status,
+          Usuario,
+        ],
+        order: [['createdAt', 'DESC']],
+        where: {
+          // fkArea: req.usuario.fkArea ,
+          // "$Area.fkUnidade$": area?.fkUnidade,
+          fkStatus: pesquisa,
+
+          [Op.or]: [
+            {"$Usuario.fkArea$": area?.id}
+          ],
         },
       });
 

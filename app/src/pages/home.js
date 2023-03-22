@@ -156,14 +156,14 @@ const Home = (props) => {
       <div >
       <Button  size="large" variant="contained" style={{marginRight: 20 ,marginTop:20}} 
       onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/minhasAtividades/`} >
-        Atividades para Executar<KeyboardDoubleArrowLeftIcon/><div style={{color:'#FFA500', fontWeight:'bold', fontSize:24}}>{minhasAtividades.length}</div></Button><br></br>
+        Atividades Recebidas<KeyboardDoubleArrowLeftIcon/><div style={{color:'#FFA500', fontWeight:'bold', fontSize:24}}>{minhasAtividades.length}</div></Button><br></br>
       
       <Button size="large" variant="contained"style={{marginRight: 20 ,marginTop:20}} 
       onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/chamadosAbertos/`} >
         Atividades Solicitadas<KeyboardDoubleArrowRightIcon/><div  style={{color:'#FFA500', fontWeight:'bold', fontSize:24}}>{solicitacaoAtividades.length}</div></Button><br></br>
       
       <Button  size="large" variant="contained" style={{marginRight: 20 ,marginTop:20}} 
-      onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/cadastro`}>Nova Atividade</Button><br></br><p></p>
+      onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/cadastro`}>Solicitar Atividade</Button><br></br><p></p>
 
 <Box
       sx={{

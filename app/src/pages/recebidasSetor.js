@@ -1,10 +1,15 @@
-import { Box, Button, Dialog, DialogContent, FormControl, InputLabel, MenuItem, Select, SpeedDial } from "@mui/material";
+import { Box, Button, Dialog, DialogContent, InputLabel, MenuItem, Select, SpeedDial } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import EditIcon from '@mui/icons-material/Edit';
 import TaskFilter from '../components/task-filter'
 
 import { Chart } from "react-google-charts";
 import { fontSize } from "@mui/system";
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
 
 
 
@@ -17,14 +22,17 @@ const RecebidasSetor = (props) => {
   const [openMessageDialog, setOpenMessageDialog] = useState(false)
 
 
+
   const [meuSetor, setMeuSetor] = useState([])
   const [openMsg, setOpenMsg] = useState(false);
   const [usuarioExecutor, setusuarioExecutor] = useState([])
-  const [pesquisa, setFKUsuarioExecutor] = useState('')
+  const [pesquisa, setPesquisa] = useState('')
   const [respostas, setRespostas] = useState([])
   const [filtroStatus, setFiltroStatus] = useState('')
 
   const [status, setStatus] = useState([])
+  const [clasificacao, setClassificacao] = useState([])
+  const [chek, setChek] = useState('')
 
 
 
@@ -80,6 +88,32 @@ const RecebidasSetor = (props) => {
       })
   }
 
+  function carregarClassificacao() {
+    // setOpenLoadingDialog(true)
+    const token = getCookie('_token_task_manager')
+    const params = {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    }
+    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/classificacao/`, params)
+      .then(response => {
+        const { status } = response
+        response.json().then(data => {
+          setOpenLoadingDialog(false)
+
+          if (status === 401) {
+
+          } else if (status === 200) {
+            setClassificacao(data.data)
+            // alert("3")
+            // alert(JSON.stringify(data))
+
+          }
+        }).catch(err => setOpenLoadingDialog(true))
+      })
+  }
+
   function carregarFuncionarios() {
     // setOpenLoadingDialog(true)
     const token = getCookie('_token_task_manager')
@@ -118,7 +152,7 @@ const RecebidasSetor = (props) => {
       }
     }
     // fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade${pesquisa?`/search?&pesquisa=${pesquisa}` : ''
-    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/search?pesquisa=${pesquisa}`, params)
+    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/searchRecebidos?pesquisa=${pesquisa}`, params)
       .then(response => {
         const { status } = response
         response.json().then(data => {
@@ -139,20 +173,24 @@ const RecebidasSetor = (props) => {
   }
 
 
+
   useEffect(() => {
     carregarAtividadesDoSetor()
     carregarFuncionarios()
     carregarStatus()
+    carregarClassificacao()
+
 
     if (pesquisa) {
       pesquisar()
+      // alert(pesquisa)
     }
 
   }, [pesquisa])
 
 
   const data = [
-    
+
     ["Status", '11111'],
     ["Iniciadas", meuSetor.reduce((contador, item) => contador += item.Status.nome === 'Iniciado', 0)],
     ["Em Aberto", meuSetor.reduce((contador, item) => contador += item.Status.nome === 'Aberto', 0)],
@@ -161,9 +199,15 @@ const RecebidasSetor = (props) => {
     ["Canceladas", meuSetor.reduce((contador, item) => contador += item.Status.nome === 'Cancelado', 0)],
     ["Pendentes", meuSetor.reduce((contador, item) => contador += item.Status.nome === 'Pendente', 0)],
     ["Paradas", meuSetor.reduce((contador, item) => contador += item.Status.nome === 'Parado', 0)],
-    ["Todas do Setor", meuSetor.length],
+    // ["Todas do Setor", meuSetor.length],
 
   ];
+  const options = {
+    title: "Status todas Atividades Recebidas",
+    is3D: true,
+
+  };
+
   const data1 = [
     ["Classificação ", ''],
     ["Circunstancial", meuSetor.reduce((contador, item) => contador += item.Classificacao.nome === 'Circunstancial', 0)],
@@ -171,26 +215,13 @@ const RecebidasSetor = (props) => {
     ["Importante", meuSetor.reduce((contador, item) => contador += item.Classificacao.nome === 'Importante', 0)],
     ["Urgente", meuSetor.reduce((contador, item) => contador += item.Classificacao.nome === 'Urgente', 0)],
     ["Execução Imediata", meuSetor.reduce((contador, item) => contador += item.Classificacao.nome === 'Execução Imediata', 0)],
-   
+
 
   ];
-
-
-  const options = {
-    title: "Status todas Atividades Recebidas",
-    chartArea: { width: "50%" },
-    bar: { groupWidth: "85%" },
-    legend: { position: "none" },
-
-  };
-
   const options1 = {
     title: "Classificação todas Atividades Recebidas",
     is3D: true,
-
-
   };
-
 
   const dataFuncionario = [
 
@@ -202,14 +233,13 @@ const RecebidasSetor = (props) => {
     ["Canceladas", respostas.reduce((contador, item) => contador += item.Status.nome === 'Cancelado', 0)],
     ["Pendentes", respostas.reduce((contador, item) => contador += item.Status.nome === 'Pendente', 0)],
     ["Paradas", respostas.reduce((contador, item) => contador += item.Status.nome === 'Parado', 0)],
-    
   ];
+
   const optionFuncionario = {
     title: "Status funcionario selecionado",
-   
+
     chartArea: { width: "50%" },
-    bar: { groupWidth: "85%" },
-    legend: { position: "none" },
+    is3D: true,
 
   };
 
@@ -220,19 +250,14 @@ const RecebidasSetor = (props) => {
     ["Importante", respostas.reduce((contador, item) => contador += item.Classificacao.nome === 'Importante', 0)],
     ["Urgente", respostas.reduce((contador, item) => contador += item.Classificacao.nome === 'Urgente', 0)],
     ["Execução Imediata", respostas.reduce((contador, item) => contador += item.Classificacao.nome === 'Execução Imediata', 0)],
-    
+
 
   ];
-
-
   const optionsClassFuncionario = {
     title: "Classificação Atividades do funcionario",
     is3D: true,
 
   };
-
-
-
 
 
   return (
@@ -254,148 +279,176 @@ const RecebidasSetor = (props) => {
         :
         ''
       }
-      <center>
-
-
-        <Box scope='row' sx={{ maxWidth: 420 }}>
-          <FormControl fullWidth scope='row'>
-            <InputLabel id="demo-simple-select-label">Buscar por funcionario</InputLabel>
-
-            <Select labelId="demo-simple-select-label"
-              id="demo-simple-select" style={{ maxWidth: 310, marginBottom: 10 }}
-              onChange={e => setFKUsuarioExecutor(e.target.value)} placeholder='Selecione o executor'>
-
-              {
-                usuarioExecutor.map((user, key) => <MenuItem name={user.nome} value={user.id} >
-                  {user.nome}</MenuItem>)
-              }
-
-            </Select>
-          </FormControl>
-
+     <center> 
+        {/* <FormControl  >
+          <FormLabel id="demo-radio-buttons-group-label"><b> Pesquisar por:</b></FormLabel>
+          <RadioGroup
+            aria-labelledby="demo-radio-buttons-group-label"
+            defaultValue="female"
+            name="radio-buttons-group"
+          >
+            <FormControlLabel value='funcionario' onChange={e => setChek(e.target.value)} control={<Radio />} label="Funcionario" />
+            <FormControlLabel value='status' onChange={e => setChek(e.target.value)} control={<Radio />} label="Status" />
+            <FormControlLabel value="clasificacao" onChange={e => setChek(e.target.value)} control={<Radio />} label="Classificação" />
+          </RadioGroup>
+        </FormControl> */}
+         <Box scope='row' sx={{ maxWidth: 420 }}>
+        <FormControl  fullWidth sx={{ m: 1, minWidth: 320 }} error>
+       
+          <InputLabel id="demo-simple-select-error-label">Pesquisar por</InputLabel>
+          <Select
+            labelId="demo-simple-select-error"
+            id="demo-simple-select"
+            value={chek}
+            label="Age"
+            onChange={e => setChek(e.target.value)}
+          >
+            <MenuItem value={'funcionario'}>Funcionarios</MenuItem>
+            <MenuItem value={'status'}>Status</MenuItem>
+            <MenuItem value={"clasificacao"}>Classificação</MenuItem>
+          </Select>
+          
+        </FormControl>
         </Box>
-        <p></p>
-        {respostas ?
+
+
+        {chek === 'funcionario' ? <div><br></br>
+          <Box scope='row' sx={{ maxWidth: 420 }}>
+            <FormControl fullWidth scope='row'>
+              <InputLabel id="demo-simple-select-label">Buscar por funcionario</InputLabel>
+
+              <Select labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                onChange={e => setPesquisa(e.target.value)} placeholder='Selecione o executor'>
+
+                {
+                  usuarioExecutor.map((user, key) => <MenuItem name={user.nome} value={user.id} >
+                    {user.nome}</MenuItem>)
+                }
+
+              </Select>
+            </FormControl>
+
+          </Box>
+
+        </div> : ''}
+
+        {chek === 'status' ? <div><br></br>
+          <Box scope='row' sx={{ maxWidth: 420 }}>
+            <FormControl fullWidth scope='row'>
+              <InputLabel id="demo-simple-select-label">Buscar por Status</InputLabel>
+
+              <Select labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                onChange={e => setPesquisa(e.target.value)} >
+
+                {
+                  status.map((user, key) => <MenuItem name={user.nome} value={user.id} >
+                    {user.nome}</MenuItem>)
+                }
+
+              </Select>
+            </FormControl>
+
+          </Box>
+
+        </div> : ''}
+
+
+        {chek === 'clasificacao' ? <div><br></br>
+          <Box scope='row' sx={{ maxWidth: 420 }}>
+            <FormControl fullWidth scope='row'>
+              <InputLabel id="demo-simple-select-label">Buscar por Clasificaçao</InputLabel>
+
+              <Select labelId="demo-simple-select-label"
+                id="demo-simple-select" 
+                onChange={e => setPesquisa(e.target.value)} >
+
+                {
+                  clasificacao.map((user, key) => <MenuItem name={user.nome} value={user.id} >
+                    {user.nome}</MenuItem>)
+                }
+
+              </Select>
+            </FormControl>
+
+          </Box>
+
+        </div> : ''}
+        </center>
+
+
+
+
+
+      <p></p>
+
+      <div>
+
+
+
+
+        {chek === 'funcionario' && pesquisa != '' ?
           <div>
-
-            <table className="table table-striped" style={{ fontFamily: "arial", fontSize: '12px', marginLeft: 10, marginRight: 10 }}>
-
-              {respostas != '' ?
-
-                
-                <tbody style={{ color: 'red', fontSize: 15, marginLeft: 100, marginRight: 50, padding: 50, backgroundColor: '#D1EDFA' }}>
-
-                  <tr style={{ marginLeft: 100, marginRight: 50, padding: 50 }}>
-                    <td>
-                      
-
-                      <Chart style={{ fontSize: 8 }}
-                        
-                        chartType="BarChart"
-                        width="100%"
-                        height="400px"
-                        data={dataFuncionario}
-                        options={optionFuncionario}
-                      />
-
-                      <Chart style={{ fontSize: 8 }}
-                       chartType="PieChart"
-                        width="100%"
-                        height="400px"
-                        data={dataClassFuncionario}
-                        options={optionsClassFuncionario}
-                      />
+            <table className="table table-striped" style={{ fontFamily: "arial", fontSize: '12px', marginLeft: 10, marginRight: 10, width: '100%' }}>
 
 
+              <tbody style={{ color: 'red', fontSize: 15, marginLeft: 100, marginRight: 50, padding: 50, backgroundColor: '#D1EDFA', width: '100%' }}>
+
+                <tr style={{ marginLeft: 100, marginRight: 50, padding: 50 }}>
+                  <td>
 
 
-                    </td>
-                    
-                  </tr>
+                    <Chart style={{ fontSize: 8 }}
 
+                      chartType="PieChart"
+                      width="100%"
+                      height="400px"
+                      data={dataFuncionario}
+                      options={optionFuncionario}
+                    />
 
+                    <Chart style={{ fontSize: 8 }}
+                      chartType="PieChart"
+                      width="100%"
+                      height="400px"
+                      data={dataClassFuncionario}
+                      options={optionsClassFuncionario}
+                    />
 
+                  </td>
 
-
-                  <div style={{fontSize:15}}>Lista de atividades do funcionario selecionado</div>
-                </tbody>
-                : ''}
-
-
-
-              <tbody >
-                 
-
-                {respostas.map((item, index) =>
-
-
-                  <tr key={index}>
-
-                    
-                    <th scope="row">Titulo: {item.titulo}<br></br> Solicitado: {new Date(item.createdAt).toLocaleString()} <br></br>
-                      Situação: {item.Status.nome}
-                      <br></br>
-                      <Button variant="contained" size="small" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`}>
-                        ver chamado
-                      </Button></th>
-
-
-
-                  </tr>)}
+                </tr>
 
               </tbody>
 
+              {respostas.map((item, index) =>
+
+
+                <tr key={index}>
+
+
+                  <th scope="row">Titulo: {item.titulo}<br></br> Solicitado: {new Date(item.createdAt).toLocaleString()} <br></br>
+                    Situação: {item.Status.nome}
+                    <br></br>
+                    <Button variant="contained" size="small" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`}>
+                      ver Atividade
+                    </Button></th>
+
+
+
+                </tr>)}
 
             </table>
-            <hr></hr>
           </div>
+          : ''}
 
+        {chek === 'status' || chek === 'clasificacao' ?
+          <div >
 
-          :
-          ''
-        }
+            <table className="table table-striped" style={{ fontFamily: "arial", fontSize: '12px', marginLeft: 10, marginRight: 10, width: '100%' }}>
 
-
-        <div style={{
-          fontSize: 24, fontWeight: 'bold',
-          marginBottom: 4, marginRight: 8, paddingLeft: 5, alignItems: 'center'
-        }}>
-          Todas Recebidas do seu Setor<br></br>
-
-        </div>
-
-      </center>
-
-
-      {pesquisa != '' || filtroStatus === '' ?
-        <div>
-          <Chart style={{ fontSize: 8 }}
-            chartType="BarChart"
-            width="100%"
-            height="400px"
-            data={data}
-            options={options}
-          />
-          <Chart style={{ fontSize: 8 }}
-           chartType="PieChart"
-            width="100%"
-            height="400px"
-            data={data1}
-            options={options1}
-          />
-
-          <table className="table table-striped" style={{ fontFamily: "arial", fontSize: '12px', marginLeft: 10, marginRight: 20 }}>
-            {/* <thead>
-          <th>titulo</th>
-          <th>ver Atividade</th>
-        </thead> */}
-            <tbody>
-
-
-
-
-
-              {meuSetor.map((item, index) =>
+              {respostas.map((item, index) =>
                 <tr key={index}>
                   <th scope="row">Titulo: {item.titulo}<br></br> Solicitado: {new Date(item.createdAt).toLocaleString()} <br></br> </th>
                   <th scope="row">{item.Status.nome === "Iniciado" || item.Status.nome === "Aberto" ||
@@ -409,14 +462,77 @@ const RecebidasSetor = (props) => {
 
 
                 </tr>)}
+            </table>
 
-            </tbody>
-          </table>
-        </div>
 
-        :
-        ''
+          </div >
+          : ''}
+
+
+
+
+
+
+
+
+
+
+        <hr></hr>
+      </div >
+
+
+
+
+      {
+        chek === '' ?
+
+
+          <div><center><h1>Todas recebidas do Setor</h1></center>
+            <Chart style={{ fontSize: 8 }}
+              chartType="PieChart"
+              width="100%"
+              height="400px"
+              data={data}
+              options={options}
+            />
+            <Chart style={{ fontSize: 8 }}
+              chartType="PieChart"
+              width="100%"
+              height="400px"
+              data={data1}
+              options={options1}
+            />
+
+            <table className="table table-striped" style={{ fontFamily: "arial", fontSize: '12px', marginLeft: 10, marginRight: 20 }}>
+
+              <tbody>
+
+
+
+
+
+                {meuSetor.map((item, index) =>
+                  <tr key={index}>
+                    <th scope="row">Titulo: {item.titulo}<br></br> Solicitado: {new Date(item.createdAt).toLocaleString()} <br></br> </th>
+                    <th scope="row">{item.Status.nome === "Iniciado" || item.Status.nome === "Aberto" ||
+                      item.Status.nome === "Planejado para Iniciar" ? <div style={{ color: 'green' }}>Na lista de Execução: {item.Status.nome}</div> :
+                      <div style={{ color: 'red' }}>Fora da lista de Execução:  {item.Status.nome}</div>} </th>
+                    <th>
+                      <Button variant="contained" size="small" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`}>
+                        ver
+                      </Button>
+                    </th>
+
+
+                  </tr>)}
+
+              </tbody>
+            </table>
+          </div>
+          : ''
       }
+
+
 
 
 
@@ -436,12 +552,6 @@ const RecebidasSetor = (props) => {
 
           <h2>Informe o motivo da alteração do Status</h2>
 
-          {/* {classificacao == "Não Definido" && status == "Aberto" ?
-    <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
-      <Button variant="contained" onClick={() => setOpen(true)}>{'Encaminhar chamado'}</Button>
-    </div> : ''
-
-  } */}
 
         </DialogContent>
 
@@ -451,7 +561,7 @@ const RecebidasSetor = (props) => {
 
 
 
-    </div>
+    </div >
   );
 };
 

@@ -550,7 +550,7 @@ const Masterpage = (props) => {
                 id="panel1a-header"
               >
 
-                <Typography style={{ fontSize: 14, color: '#0BA5F1' }}>Atividades Solicitadas <ArrowCircleRightIcon style={{color:'FFA500'}}></ArrowCircleRightIcon></Typography>
+                <Typography style={{ fontSize: 14, color: '#0BA5F1' }}>Atividades Solicitadas<ArrowCircleRightIcon style={{color:'FFA500'}}></ArrowCircleRightIcon></Typography>
               </AccordionSummary>
               <AccordionDetails>
 
@@ -559,7 +559,7 @@ const Masterpage = (props) => {
                     <ListItemIcon>
                       <CampaignIcon style={{color:'FFA500'}}/>
                     </ListItemIcon>
-                    <ListItemText primary='Abrir Chamado' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/cadastro`} />
+                    <ListItemText primary='Solicitar Atividade' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/cadastro`} />
                   </ListItemButton>
                 </ListItem>
 
@@ -601,7 +601,7 @@ const Masterpage = (props) => {
                     <ListItemIcon>
                       <PlaylistAddCheckIcon  style={{color:'FFA500'}}/>
                     </ListItemIcon>
-                    <ListItemText primary='Para Execução' />
+                    <ListItemText primary='Lista Execução' />
                   </ListItemButton>
                 </ListItem>
 
@@ -610,7 +610,7 @@ const Masterpage = (props) => {
                     <ListItemIcon>
                       <AddTaskIcon  style={{color:'FFA500'}}/>
                     </ListItemIcon>
-                    <ListItemText primary='Concluidas e  Arquivadas' />
+                    <ListItemText primary='Fora da lista de execução' />
                   </ListItemButton>
                 </ListItem>
 
