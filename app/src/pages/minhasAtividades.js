@@ -13,8 +13,7 @@ const MinhasAtividades = (props) => {
   const [contador,setContador] = useState(0)
   const [openLoadingDialog, setOpenLoadingDialog] = useState(false)
   const [openMessageDialog, setOpenMessageDialog] = useState(false)
-
-
+  
   const [minhasAtividades,setMinhasAtividades] = useState([])
   const [openMsg, setOpenMsg] = useState(false);
 
@@ -120,10 +119,11 @@ const MinhasAtividades = (props) => {
       tela={'minhas'}
       fkUsuarioSoloicitante={item.fkUsuarioSolicitante}
       fklogado={props.logged.id}
-      // logado ={item.UsuarioAtividade.Usuario.nome}
+      categoria={item.categoria}
       Arquivado={item.arquivado}
       usuarioExecutor={item.fkUsuarioExecutor}
       tempoEstimado={item.tempoEstimado}
+      fkSetorDemandante={item.Usuario.nome}
       
       
       

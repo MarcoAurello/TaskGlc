@@ -8,8 +8,9 @@ const getCookie = require('../utils/getCookie')
 const TaskItemDoChamado = (props) => {
     const { nome } = props;
     const { protocolo, unidade, area, classificacao, solicitante,
-        status, titulo, setorSolicitante, emailUsuarioSolicitante, telefoneSolicitante, setorSol,
-        nomeExecutor, emailExecutor, telefoneExecutor } = props
+        status, titulo, emailUsuarioSolicitante, telefoneSolicitante, setorSol,
+        nomeExecutor, emailExecutor, telefoneExecutor, categoria,
+        setorSolicitante } = props
 
     const [mensagem, setMensagem] = useState([])
 
@@ -57,8 +58,8 @@ const TaskItemDoChamado = (props) => {
                 flexDirection: 'column',
                 border: '1px solid #e0e0e0'
             }}>
-                
-              
+
+
                 {/* <div style={{ fontSize: 13, color: '#424242', marginTop: 16 }}>
           
         <div style={{ flex: 1, fontSize: 15, fontWeight: 'bold', color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
@@ -69,6 +70,14 @@ const TaskItemDoChamado = (props) => {
                 <div style={{ fontSize: 13, color: '#424242', marginTop: 16 }}>
                     <div style={{ flex: 1, fontSize: 15, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                         <b>Assunto:{props.titulo}</b> </div>
+
+                    {props.categoria != '' ?
+                        <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                            <b>Categoria:{props.categoria}</b> </div>
+                        : ''
+
+                    }
+
 
 
                     <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
@@ -87,11 +96,14 @@ Unidade: {props.unidade}</div> */}
                     <div style={{ color: '#00BFFF' }}><b>Solicitante</b></div>
                     {/* <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                         <b>Unidade :</b>xxxxxxxxxxx</div> */}
-                         {/* <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                    {/* <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                         <b>Setor :</b>  {props.setorSolicitante}</div> */}
 
                     <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                         <b>Nome :</b>  {props.solicitante}</div>
+
+                    <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                        <b>Setor :</b>  {props.setorSolicitante}</div>
 
                     <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                         <b>Email:</b> {props.emailUsuarioSolicitante}</div>
@@ -103,7 +115,7 @@ Unidade: {props.unidade}</div> */}
                     <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                         <b> Unidade: </b>{props.setorSol}</div>
 
-                    {props.nomeExecutor === '' ? <div style={{ color: 'red' }}>Aguardando Responsável pelo chamado</div>
+                    {props.nomeExecutor === '' ? <div style={{ color: 'red' }}>Aguardando Responsável pela Atividade</div>
                         :
                         <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                             <b> Nome:</b>{props.nomeExecutor}</div>

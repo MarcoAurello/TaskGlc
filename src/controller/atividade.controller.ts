@@ -7,8 +7,8 @@ import protocolo from "../utils/protocolo.utils";
 import Area from "../model/area.model";
 import Usuario from "../model/usuario.model";
 import Classificacao from "../model/classificacao.model";
-import UsuarioAtividade from "../model/usuarioAtividade.model";
-import Unidade from "../model/unidade.model";
+// import UsuarioAtividade from "../model/usuarioAtividade.model";
+import Unidade from '../model/unidade.model';
 import PerfilUtils from "../utils/perfil.utils";
 // import emailUtils from "../utils/email.utils";
 const { Op } = require("sequelize");
@@ -20,8 +20,8 @@ class AtividadeController implements IController {
 
   async create(req: any, res: Response, next: NextFunction): Promise<any> {
     try {
-      const { fkUnidade, fkArea, titulo, conteudo, arquivado , pessoal,
-      fkUsuarioExecutor } = req.body;
+      const { fkUnidade, fkArea, titulo, conteudo, categoria } = req.body;
+      console.log(req.body)
 
       if (!fkUnidade) {
         return res.status(401).json({
@@ -63,9 +63,10 @@ class AtividadeController implements IController {
         fkArea,
         fkStatus: status?.id,
         fkUsuarioSolicitante: req.usuario.id,
-        arquivado,
-        pessoal,
-        fkUsuarioExecutor
+        arquivado: false,
+        pessoal: false,
+        // fkUsuarioExecutor,
+        categoria
       });
 
       await Mensagem.create({
@@ -77,6 +78,7 @@ class AtividadeController implements IController {
       res.status(200)
         .json({ data: atividade, message: "Cadastro realizado com sucesso." });
     } catch (err) {
+      console.log(err)
       res.status(401).json({ message: err.errors[0].message });
     }
   }
@@ -413,7 +415,7 @@ class AtividadeController implements IController {
         order: [['createdAt', 'DESC']],
         where: {
           [Op.or]: [
-            { titulo: { [Op.like]: `%${pesquisa}%`} },
+            { protocolo: { [Op.like]: `${pesquisa}`} },
             // {"$Mensagem$.conteudo" : { [Op.like]: `%${pesquisa}%`} }
 
             

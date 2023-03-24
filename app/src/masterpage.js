@@ -4,8 +4,7 @@ import { Switch, BrowserRouter as Router, Route } from "react-router-dom";
 import Content from "./components/content";
 
 import Home from './pages/home';
-
-import WebStoriesIcon from '@mui/icons-material/WebStories';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Usuario from './pages/usuario'
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import MinhasAtividades from './pages/minhasAtividades'
@@ -411,7 +410,7 @@ const Masterpage = (props) => {
       <AccountCircle />
     </IconButton>
   ]
-  const menu = <IconButton style={{ backgroundColor: '#FFA500' }} onClick={() => setOpenDrawer(true)} size="large" edge="start" variant="contained" aria-label="menu" sx={{ mr: 2 }}>
+  const menu = <IconButton style={{ backgroundColor: '#2c73d1', color:'#f0f2f5' }} onClick={() => setOpenDrawer(true)} size="large" edge="start"  aria-label="menu" sx={{ mr: 2 }}>
     <MenuIcon />
   </IconButton>
   const renderMenu = (
@@ -539,7 +538,7 @@ const Masterpage = (props) => {
                 <ListItemIcon>
                   <HomeIcon />
                 </ListItemIcon>
-                <ListItemText primary='Home' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/home`} />
+                <ListItemText   style={{ fontSize: 14, color: '#2c73d1' }} primary='Home' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/home`} />
               </ListItemButton>
             </ListItem>
 
@@ -550,7 +549,7 @@ const Masterpage = (props) => {
                 id="panel1a-header"
               >
 
-                <Typography style={{ fontSize: 14, color: '#0BA5F1' }}>Atividades Solicitadas<ArrowCircleRightIcon style={{color:'FFA500'}}></ArrowCircleRightIcon></Typography>
+                <Typography style={{ fontSize: 14, color: '#2c73d1' }}>Atividades Solicitadas<ArrowForwardIcon style={{color:'FFA500'}}></ArrowForwardIcon></Typography>
               </AccordionSummary>
               <AccordionDetails>
 
@@ -577,7 +576,7 @@ const Masterpage = (props) => {
                     <ListItemIcon>
                       <LeaderboardIcon style={{color:'FFA500'}} />
                     </ListItemIcon>
-                    <ListItemText primary='Relatório de Solicitações' />
+                    <ListItemText primary='Solicitações do Setor' />
                   </ListItemButton>
                 </ListItem>
 
@@ -592,7 +591,7 @@ const Masterpage = (props) => {
                 id="panel1a-header"
               >
 
-                <Typography style={{ fontSize: 14, color: '#0BA5F1' }}>Atividades Recebidas <ArrowCircleLeftIcon style={{color:'FFA500'}} /></Typography>
+                <Typography style={{ fontSize: 14, color: '#2c73d1' }}>Atividades Recebidas <ArrowBackIcon style={{color:'FFA500'}} /></Typography>
               </AccordionSummary>
               <AccordionDetails>
 
@@ -601,7 +600,7 @@ const Masterpage = (props) => {
                     <ListItemIcon>
                       <PlaylistAddCheckIcon  style={{color:'FFA500'}}/>
                     </ListItemIcon>
-                    <ListItemText primary='Lista Execução' />
+                    <ListItemText primary='Minha lista de Execução' />
                   </ListItemButton>
                 </ListItem>
 
@@ -622,7 +621,7 @@ const Masterpage = (props) => {
                     <ListItemIcon>
                       <LeaderboardIcon style={{color:'FFA500'}} />
                     </ListItemIcon>
-                    <ListItemText primary='Relatório de Recebidos' />
+                    <ListItemText primary='Recebidas do Setor' />
                   </ListItemButton>
                 </ListItem>
 
@@ -696,7 +695,7 @@ const Masterpage = (props) => {
         :
         <Toolbar
           menu={menu}
-          title='SENAC - Task Manager'
+          title='SENAC - Task'
           actions={actionsFuncionario} />
 
       }

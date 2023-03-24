@@ -27,7 +27,7 @@ module.exports = {
       updatedAt: new Date()
     }, {
       id: uuid(),
-      nome: 'Sistemas - Suporte',
+      nome: 'Suporte e Infraestrutura',
       fkUnidade: unidades[0][0].id,
       createdAt: new Date(),
       updatedAt: new Date()
@@ -115,7 +115,7 @@ module.exports = {
     },
     {
       id: uuid(),
-      nome: 'Gerência Academica',
+      nome: 'Regulação',
       fkUnidade: unidadeDep[0][0].id,
       createdAt: new Date(),
       updatedAt: new Date()
@@ -131,7 +131,7 @@ module.exports = {
     },
     {
       id: uuid(),
-      nome: 'Biblioteca',
+      nome: 'Administrativo',
       fkUnidade: unidadeDep[0][0].id,
       createdAt: new Date(),
       updatedAt: new Date()
@@ -139,7 +139,31 @@ module.exports = {
     },
     {
       id: uuid(),
-      nome: 'Atendimento',
+      nome: 'Processos',
+      fkUnidade: unidadeDep[0][0].id,
+      createdAt: new Date(),
+      updatedAt: new Date()
+
+    },
+    {
+      id: uuid(),
+      nome: 'Equipe Técnica',
+      fkUnidade: unidadeDep[0][0].id,
+      createdAt: new Date(),
+      updatedAt: new Date()
+
+    },
+    {
+      id: uuid(),
+      nome: 'NEAD',
+      fkUnidade: unidadeDep[0][0].id,
+      createdAt: new Date(),
+      updatedAt: new Date()
+
+    },
+    {
+      id: uuid(),
+      nome: 'Biblioteca',
       fkUnidade: unidadeDep[0][0].id,
       createdAt: new Date(),
       updatedAt: new Date()

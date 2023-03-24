@@ -13,6 +13,8 @@ import routerMensagem from './router/mensagem.router'
 import routerUsuarioAtividade from './router/usuarioAtividade.router'
 import routerClassificacao from './router/classificacao.router'
 import routerUsuarioDemandado from './router/usurarioDemandado.router'
+import routerSubArea from './router/subarea.router'
+
 
 const path = require('path')
 
@@ -38,11 +40,13 @@ class Server {
     this.application.use('/api/area/', routerArea)
     this.application.use('/api/perfil/', routerPerfil)
     this.application.use('/api/configuracao/', routerConfiguracaoGlobal)
+ 
     this.application.use('/api/status/', routerStatus)
     this.application.use('/api/atividade/', routerAtividade)
     this.application.use('/api/mensagem/', routerMensagem)
     this.application.use('/api/usuarioAtividade/', routerUsuarioAtividade)
     this.application.use('/api/classificacao/', routerClassificacao)
+    this.application.use('/api/subarea/', routerSubArea)
 
     this.application.use(express.static(path.resolve('app', 'build')))
     this.application.get('/*', (req, res) =>

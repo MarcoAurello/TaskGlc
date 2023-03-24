@@ -10,9 +10,9 @@ const TaskItem = (props) => {
   const { logged } = props
 
   const { idChamado, tituloChamado, protocoloChamado, Arquivado, usuarioExecutor,
-    classificacao, criacaoChamado, status, fkUsuarioSoloicitante, fklogado
+    classificacao, criacaoChamado, status, fkUsuarioSoloicitante, fklogado, categoria
     , usuarioDemandanteTelefone, usuarioDemandanteEmail, tela, tempoEstimado } = props
-  const [statusAtividade, setStatus] = useState('')
+  const [statusAtividade, setStatus, fkSetorDemandante] = useState('')
 
 
   const [mensagem, setMensagem] = useState([])
@@ -20,6 +20,8 @@ const TaskItem = (props) => {
   const [openLoadingDialog, setOpenLoadingDialog] = useState(false)
   const [openMessageDialog, setOpenMessageDialog] = useState(false)
   const [message, setMessage] = useState('')
+  const [ areas, setAreas]= useState([])
+  const [area, setArea] = useState([])
   const [arquivado, setArquivado] = useState(true)
 
 
@@ -126,6 +128,39 @@ const TaskItem = (props) => {
     }
   }
 
+  // function carregarArea() {
+  //   setOpenLoadingDialog(true)
+  //   const token = getCookie('_token_task_manager')
+  //   const params = {
+  //     headers: {
+  //       'Authorization': `Bearer ${token}`
+  //     }
+  //   }
+  //   fetch(`${process.env.REACT_APP_DOMAIN_API}/api/area/?fkArea=${props.fkSetorDemandante}`, params)
+  //     .then(response => {
+  //       const { status } = response
+  //       response.json().then(data => {
+  //         setOpenLoadingDialog(false)
+  //         if(status === 401) {  
+  //         } else if(status === 200) {
+  //           setArea(data.data)
+  //         }
+  //       }).catch(err => setOpenLoadingDialog(false))
+  //     })
+  // }
+  // useEffect(() => {
+  //   carregarArea()
+  //   alert(JSON.stringify(area))
+
+  // }, [])
+
+ 
+  // setArea(areas.filter(area => area.id === fkSetorDemandante))
+
+  
+  
+
+
 
 
 
@@ -180,6 +215,16 @@ const TaskItem = (props) => {
           <div style={{ fontSize: 12, fontWeight: 'bold', marginLeft: 5, marginRight: 8, marginBottom: 5, position: 'relative' }}>
             <Chip size="small" label={"Status: " + props.status} />
           </div>
+          {props.categoria != '' ?
+
+            <div style={{ fontSize: 12, fontWeight: 'bold', marginLeft: 5, marginRight: 8, marginBottom: 5, position: 'relative' }}>
+              <Chip size="small" label={"Categoria: " + props.categoria } />
+            </div>
+
+            :
+            ''
+          }
+
 
           {props.tempoEstimado != null ?
 
@@ -207,11 +252,15 @@ const TaskItem = (props) => {
 
           <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
             Abertura : {date}</div>
+            
 
 
 
           {tela == 'minhas' ? <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
             Solicitante : {props.usuarioDemandante}</div> : ''}
+
+            {tela == 'minhas' ? <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+            Setor : {props.fkSetorDemandante}</div> : ''}
 
 
 
@@ -278,11 +327,11 @@ const TaskItem = (props) => {
           {/* <LinearProgress color="success" variant="determinate" value={100} /> */}
         </div>
       </div>
-      
-    </div>
-    
 
-    
+    </div>
+
+
+
   )
 }
 

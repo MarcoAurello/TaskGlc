@@ -8,6 +8,7 @@ import {
 
 import TaskItemDoChamado from "../components/task-item-do-chamado";
 import PerfilUtils from "../utils/perfil.utils";
+import AttachFileSharpIcon from '@mui/icons-material/AttachFileSharp';
 
 import PersonIcon from '@mui/icons-material/Person';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
@@ -32,6 +33,7 @@ const AtividadeForm = (props) => {
   const [arquivado, setArquivado] = useState(true)
 
   const [open, setOpen] = useState(false);
+  const [openImg, setOpenImg] = useState(false);
   const [openMsg, setOpenMsg] = useState(false);
   const [openStatus, setOpenStatus] = useState(false);
 
@@ -54,6 +56,7 @@ const AtividadeForm = (props) => {
   const [emailUsuarioSolicitante, setEmailUsuarioSolicitante] = useState('')
   const [telefoneSolicitante, setTelefoneSolicitante] = useState('')
   const [setorSolicitante, setSetorSolicitante] = useState('')
+  const [categoriaChamado, setCategoriaChamado] = useState('')
   const [btnMsg, setBtnMsg] = useState(false);
 
   const [tempoEstimado, setTempoEstimado] = useState('')
@@ -63,10 +66,13 @@ const AtividadeForm = (props) => {
   const [titulo, setTitulo] = useState('')
   const [conteudo, setConteudo] = useState('')
   const [fkUnidade, setFkUnidade] = useState('')
+  const [dep, setDep] = useState('')
   const [fkArea, setFkArea] = useState('')
+  const [fkCategoria, setFkCategoria] = useState('')
   const [unidade, setUnidade] = useState([])
-  const[unidadeTrue, setUnidadeTrue] =useState([])
+  const [unidadeTrue, setUnidadeTrue] = useState([])
   const [area, setArea] = useState([])
+  const [subArea, setSubArea] = useState([])
   const [atividade, setAtividade] = useState(null)
   const [mensagens, setMensagens] = useState([])
   const [classificarChamado, setClassificarChamado] = useState([])
@@ -83,6 +89,8 @@ const AtividadeForm = (props) => {
   const [fkDemandante, setFkDemandante] = useState('')
   const [fkUsuarioSolicitante, setFkUsuarioSolicitante] = useState('')
   const [fkExecutor, getFkExecutor] = useState('')
+  const [categoria, setCategoria] = useState('')
+
 
 
 
@@ -128,7 +136,8 @@ const AtividadeForm = (props) => {
               setEmailUsuarioSolicitante(data.data.Usuario.email)
               setTelefoneSolicitante(data.data.Usuario.telefone)
               setFkDemandante(data.data.fkDemandante)
-              
+              setCategoriaChamado(data.data.categoria)
+
               setTitle(data.data.titulo)
               setFkAreaDemandada(data.data.fkArea)
               setIdChamado(data.data.id)
@@ -142,7 +151,8 @@ const AtividadeForm = (props) => {
               getEmailExecutor(data.data.UsuarioExecutor.email)
               getTelefoneExecutor(data.data.UsuarioExecutor.telefone)
               getFkExecutor(data.data.UsuarioExecutor.id)
-              setSetorSolicitante(data.data.Usuario.Area.nome)
+              setSetorSolicitante('data.data.Usuario.Area.nome')
+
 
               carregarMensagem()
               // alert(emailExecutor)
@@ -195,13 +205,13 @@ const AtividadeForm = (props) => {
             } else if (status === 200) {
               // alert(data.data.nome)
               // if(data.data.nome === 'DEP'){
-                setUnidade(data.data)
+              setUnidade(data.data)
               // }
-              
+
               filtroUnidade()
               if (id) {
                 carregarRegistro()
-               
+
               } else {
                 setOpenLoadingDialog(false)
               }
@@ -212,7 +222,7 @@ const AtividadeForm = (props) => {
 
     function filtroUnidade() {
       // alert(JSON.stringify(unidade))
-       setUnidadeTrue(unidade.filter(item => item.receber === true))
+      setUnidadeTrue(unidade.filter(item => item.receber === true))
     }
 
 
@@ -303,11 +313,13 @@ const AtividadeForm = (props) => {
       carregarClassificacao()
       carregarFuncionarios()
       carregarStatus()
+
       carregarMensagem()
 
 
     } else {
       carregarUnidade()
+
     }
   }, [])
 
@@ -339,8 +351,40 @@ const AtividadeForm = (props) => {
     if (fkUnidade) {
       carregarArea()
 
+
     }
   }, [fkUnidade])
+
+  useEffect(() => {
+    function carregarSubArea() {
+      // setOpenLoadingDialog(true)
+      const token = getCookie('_token_task_manager')
+      const params = {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      }
+      fetch(`${process.env.REACT_APP_DOMAIN_API}/api/subarea/?fkArea=${fkArea}`, params)
+        .then(response => {
+          const { status } = response
+          response.json().then(data => {
+            setOpenLoadingDialog(false)
+            if (status === 401) {
+            } else if (status === 200) {
+              setSubArea(data.data)
+              setOpenLoadingDialog(false)
+
+            }
+          }).catch(err => setOpenLoadingDialog(true))
+        })
+    }
+
+    if (fkArea) {
+      carregarSubArea()
+
+
+    }
+  }, [fkArea])
 
   // const onSaveStatus = () => {
   //   setOpenMsg(true)
@@ -404,10 +448,12 @@ const AtividadeForm = (props) => {
       body: JSON.stringify({
         fkUnidade,
         fkArea,
+        categoria,
         titulo,
         conteudo,
         arquivado: false
       })
+
     }
 
     fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/`, params)
@@ -567,6 +613,7 @@ const AtividadeForm = (props) => {
       })
   }
 
+
   return (
     <PageContainer>
 
@@ -575,49 +622,52 @@ const AtividadeForm = (props) => {
         <TextField size="small" fullWidth label="Protocolo" disabled variant="outlined" value={protocolo} />
       </div> : ''}
 
-      {(logged && logged.fkArea === fkAreaDemandada && logged.Perfil.nome === PerfilUtils.Coordenador) ||
-        (logged && logged.Perfil.nome === PerfilUtils.Gerente && logged.Area.fkUnidade === fkUnidadeExecutor)
 
-        ?
-        <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
-          <Button variant="contained" size='small' color="error" onClick={() => setOpen(true)}>Selecionar Funcionario<PersonIcon></PersonIcon></Button>
-        </div> : ''
 
-      }
-
-      {logged && props.logged.id === fkExecutor ?
-        <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
-          <Button size='small' variant="contained" onClick={() => setOpenStatus(true)}>Alterar Status da Atividade</Button>
-        </div> : ''
-
-      }
 
 
       {id ? <div >
         <TaskItemDoChamado
-        
+
           protocolo={protocolo}
           unidade={valueUnidade}
+          categoria={categoriaChamado}
           area={valueArea}
           classificacao={classificacao}
           solicitante={usuarioSolicitante}
           status={status}
           titulo={title}
-          setorSolicitante={setorSolicitante}
+          // setorSolicitante={setorSolicitante}
           emailUsuarioSolicitante={emailUsuarioSolicitante}
           telefoneSolicitante={telefoneSolicitante}
           setorSol={valueUnidade}
           nomeExecutor={nomeExecutor}
           emailExecutor={emailExecutor}
           telefoneExecutor={telefoneExecutor}
+          setorSolicitante={setorSolicitante}
+        // nomeUsuarioSolicitante={nomeUsuarioSolicitante}
+
 
         />
       </div> : ''}
+      <center>
+        {(logged && logged.fkArea === fkAreaDemandada && logged.Perfil.nome === PerfilUtils.Coordenador) ||
+          (logged && logged.Perfil.nome === PerfilUtils.Gerente && logged.Area.fkUnidade === fkUnidadeExecutor)
 
+          ?
+          <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
+            <Button variant="contained" size='small' color="error" onClick={() => setOpen(true)}>Selecionar Funcionario<PersonIcon></PersonIcon></Button>
+          </div> : ''
 
+        }
 
+        {logged && props.logged.id === fkExecutor ?
+          <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
+            <Button size='small' variant="contained" onClick={() => setOpenStatus(true)}>Alterar Status da Atividade</Button>
+          </div> : ''
 
-
+        }
+      </center>
 
       <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 16, marginRight: 3 }}>
 
@@ -650,14 +700,14 @@ const AtividadeForm = (props) => {
           <TextField size="small" fullWidth label="Chamado" disabled variant="outlined" value={title} />
         </div> : ''} */}
         {!id ? <>
-              <FormGroup>
+          <FormGroup>
 
             <div style={{ flex: 1, marginBottom: 16 }}>
               Solicitar Atividade<br></br>
-              
-              
-              
-             
+
+
+
+
 
               <FormControl fullWidth size="small">
 
@@ -671,15 +721,15 @@ const AtividadeForm = (props) => {
                   <MenuItem value="" onClick={() => setFkUnidade("")}>
                     {/* <em>Nenhum</em> */}
                   </MenuItem>
-                  {unidade.map((item, index) =>{
-                    if(item.receber ===  true){
-                      return <MenuItem key={index} value={item.id} onClick={() => setFkUnidade(item.id)}>{item.nome}</MenuItem>
-                    } 
-                  } )}
+                  {unidade.map((item, index) => {
+                    if (item.receber === true) {
+                      return <MenuItem key={index} value={item.id} onClick={(e) => [setFkUnidade(item.id), setDep(item.nome)]}>{item.nome}</MenuItem>
+                    }
+                  })}
                 </Select>
               </FormControl>
             </div>
-            
+
             <div style={{ flex: 1, marginBottom: 16 }}>
               <FormControl fullWidth size="small">
                 <InputLabel id="demo-select-small">Área</InputLabel>
@@ -696,26 +746,52 @@ const AtividadeForm = (props) => {
                 </Select>
               </FormControl>
             </div>
+            {dep === 'DEP'
+              ?
+              <div style={{ flex: 1, marginBottom: 16 }}>
+                <FormControl fullWidth size="small">
+                  <InputLabel id="demo-select-small">Categoria</InputLabel>
+                  <Select
+                    fullWidth
+                    labelId="demo-select-small"
+                    id="demo-select-small"
+                    label="Unidade"
+                    value={categoria}>
+                    <MenuItem value="" onClick={() => setArea("")}>
+                      <em>Nenhum</em>
+                    </MenuItem>
+                    {subArea.map((item, index) => <MenuItem key={index} value={item.nome} onClick={() => setCategoria(item.nome)}>{item.nome}</MenuItem>)}
+
+
+                  </Select>
+                </FormControl>
+              </div>
+              : ''}
+
             <div style={{ flex: 1, marginBottom: 16 }}>
               <TextField size="small" fullWidth label="Título" variant="outlined" value={titulo} onChange={e => setTitulo(e.target.value)} />
             </div>
             <div style={{ flex: 1, marginBottom: 16 }}>
               <TextField size="small" fullWidth label="Descrição" multiline rows={2} variant="outlined" value={conteudo} onChange={e => setConteudo(e.target.value)} />
             </div>
+            <div style={{ flex: 1, marginBottom: 16 }}>
+              {/* <TextField size="small" fullWidth label="Descrição" multiline rows={2} variant="outlined" value={conteudo} onChange={e => setConteudo(e.target.value)} /> */}
+              <Button color="success" variant="contained" onClick={() => setOpenImg(true)}>{'Anexar'}<AttachFileSharpIcon></AttachFileSharpIcon></Button>
+            </div>
 
             {/* <div style={{ flex: 1, marginBottom: 16 }}>
               <File size="small" fullWidth label="Descrição" multiline rows={2} variant="outlined" value={conteudo} onChange={e => setConteudo(e.target.value)} />
             </div> */}
-          
+
             <div style={{ flex: 1, display: 'flex', flexDirection: 'row' }}>
               {/* <Button variant="outlined" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/area/`}>Voltar</Button> */}
               <div style={{ flex: 1 }}></div>
               <Button variant="contained" onClick={onSave}>{'Criar'}</Button>
             </div>
           </FormGroup>
-              
-              
-          
+
+
+
         </> : ''}
 
 
@@ -827,6 +903,7 @@ const AtividadeForm = (props) => {
 
             <hr></hr>
 
+
             <select style={{ fontSize: 14 }} onChange={e => setFKUsuarioExecutor(e.target.value)}>
 
               <option >SELECIONE  O EXECUTOR</option>)
@@ -840,10 +917,16 @@ const AtividadeForm = (props) => {
 
           </FormControl>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpen(false)}>Cancelar</Button>
-          <Button onClick={() => { criarExecucao() }} >Enviar</Button>
-        </DialogActions>
+        {fkUsuarioExecutor != '' && newClassificacao != '' ?
+          <div>
+            <DialogActions>
+              <Button onClick={() => setOpen(false)}>Cancelar</Button>
+              <Button onClick={() => { criarExecucao() }} >Enviar</Button>
+            </DialogActions>
+
+          </div>
+          : ''}
+
       </Dialog>
 
 
@@ -888,7 +971,7 @@ const AtividadeForm = (props) => {
             <Select style={{ fontSize: 20 }} onChange={e => setTempoEstimado(e.target.value)}>
 
 
-            <MenuItem value={1} >0 hora</MenuItem>
+              <MenuItem value={1} >0 hora</MenuItem>
               <MenuItem value={1} >1 hora</MenuItem>
               <MenuItem value={2} >2 horas</MenuItem>
               <MenuItem value={3} >3 horas</MenuItem>
@@ -921,10 +1004,10 @@ const AtividadeForm = (props) => {
 
         <DialogContent>
 
-              { openStatus === false ? 
-              <h2>Deixe uma mensagem</h2>
-              :<h4>Informe o motivo da alteração do Status</h4> }
-          
+          {openStatus === false ?
+            <h2>Deixe uma mensagem</h2>
+            : <h4>Informe o motivo da alteração do Status</h4>}
+
 
 
 
@@ -953,6 +1036,31 @@ const AtividadeForm = (props) => {
 
 
           </div>
+        </DialogContent>
+
+      </Dialog>
+
+      <Dialog open={openImg}  >
+
+        <DialogContent>
+          
+          {/* <div style={{ flex: 1, marginBottom: 16 }}>
+             
+              <Button  type="file" color="success" variant="contained"  onClick={() => setOpenImg(true)}>{'cliique para inserir'}<AttachFileSharpIcon></AttachFileSharpIcon></Button>
+            </div> */}
+          <Button
+            variant="contained"
+            component="label"
+          >
+            Arquivos: PDF, JPG, PNG<AttachFileSharpIcon></AttachFileSharpIcon>
+            <input
+              type="file"
+              hidden
+            />
+          </Button><p>
+          </p>
+          <Button onClick={() => setOpenImg(false)}>Cancelar</Button>
+
         </DialogContent>
 
       </Dialog>

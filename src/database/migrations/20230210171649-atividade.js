@@ -48,6 +48,10 @@ module.exports = {
         type: Sequelize.UUID,
         allowNull: true
       },
+      categoria: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
       tempoEstimado: {
         type: Sequelize.INTEGER,
         allowNull: true

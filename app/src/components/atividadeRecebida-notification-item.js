@@ -5,7 +5,7 @@ import Avatar from '@mui/material/Avatar';
 const AtividadeRecebidaNotificationItem = (props) => {
     const { item } = props
     const [selecionar, setselecionar] = useState([])
-    
+
 
 
     function stringToColor(string) {
@@ -47,7 +47,7 @@ const AtividadeRecebidaNotificationItem = (props) => {
 
     function corCriticidade(selecionar) {
         var cor = selecionar
-       
+
 
         if (cor === 'Não Definido') {
             var color = "#32CD32"
@@ -55,29 +55,31 @@ const AtividadeRecebidaNotificationItem = (props) => {
             var color = "#f2921d"
         } if (cor === 'Importante') {
             var color = "#FFA500"
-        } if (cor ==='Urgente') {
+        } if (cor === 'Urgente') {
             var color = "#FF4040"
         } if (cor === ' Execução Imediata') {
             var color = "#FF4040"
-        } 
+        }
         return color
     }
 
     return (
-        <MenuItem  style={{display: 'flex',marginBottom:5, flexDirection: 'row', borderBottom: '1px solid #EEEEEE', minWidth: 350}}
-         onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`}>
-        
-            <div style={{ marginLeft: 16,marginBottom:5 }}><b>Chegou Atividade &#9997; </b>
+        <MenuItem style={{ display: 'flex', marginBottom: 5, flexDirection: 'row', borderBottom: '1px solid #EEEEEE', minWidth: 350 }}
+            onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`}>
+
+            <div style={{ marginLeft: 16, marginBottom: 5 }}><b>Chegou Atividade &#9997; </b>
 
                 <div style={{ width: '100%', fontSize: 12, color: '#424242' }}>{'Chamado: ' + item.titulo}</div>
                 <div style={{ width: '100%', fontSize: 12, color: '#424242' }}>{'Solicitante: ' + item.Usuario.nome}</div>
-                
-                <div   style={{ width: '100%', fontSize: 12, color: corCriticidade( item.Classificacao.nome) }}>{'Clasificação: ' + item.Classificacao.nome}</div>
+                {item.categoria === '' ? '' :
+                    <div style={{ width: '100%', fontSize: 12, color: '#424242' }}>{'Categoria: ' + item.categoria}</div>}
+
+                <div style={{ width: '100%', fontSize: 12, color: corCriticidade(item.Classificacao.nome) }}>{'Clasificação: ' + item.Classificacao.nome}</div>
                 {/* <div style={{ width: '100%', 
                 fontSize: 12, color: '#424242' }}>{'Problema: ' + item.titulo}</div> */}
 
-                <div style={{ width: '135px' , marginTop: 8, backgroundColor:'#1E90FF', borderRadius:50, paddingLeft: 8 }}>
-                   ver o chamado
+                <div style={{ width: '135px', marginTop: 8, backgroundColor: '#1E90FF', borderRadius: 50, paddingLeft: 8 }}>
+                    ver o chamado
                 </div>
             </div>
         </MenuItem>

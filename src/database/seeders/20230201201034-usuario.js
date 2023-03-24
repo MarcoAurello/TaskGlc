@@ -28,8 +28,8 @@ module.exports = {
     const perfilGerenteRows = perfilsGerente[0]
 
     const areas = await queryInterface.sequelize.query('select * from area where nome = \'Sistemas - Desenvolvimento\'')
-    const areasSuporte = await queryInterface.sequelize.query('select * from area where nome = \'Sistemas - Suporte\'')
-    const areaDep = await queryInterface.sequelize.query('select * from area where nome = \'Atendimento\'')
+    const areasSuporte = await queryInterface.sequelize.query('select * from area where nome = \'Suporte e Infraestrutura\'')
+    const areaDep = await queryInterface.sequelize.query('select * from area where nome = \'Administrativo\'')
     
     const areasGPC = await queryInterface.sequelize.query('select * from area where nome = \'Desenvolvimento de Pessoas\'')
     const areaGSI = await queryInterface.sequelize.query('select area.* from area inner join unidade on unidade.id=area.fkUnidade where unidade.nome = \'GSI\' and area.nome = \'Trasnsporte\'')

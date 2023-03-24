@@ -256,6 +256,7 @@ const RecebidasSetor = (props) => {
   const optionsClassFuncionario = {
     title: "Classificação Atividades do funcionario",
     is3D: true,
+    
 
   };
 
@@ -297,7 +298,7 @@ const RecebidasSetor = (props) => {
        
           <InputLabel id="demo-simple-select-error-label">Pesquisar por</InputLabel>
           <Select
-            labelId="demo-simple-select-error"
+           
             id="demo-simple-select"
             value={chek}
             label="Age"
@@ -393,7 +394,23 @@ const RecebidasSetor = (props) => {
             <table className="table table-striped" style={{ fontFamily: "arial", fontSize: '12px', marginLeft: 10, marginRight: 10, width: '100%' }}>
 
 
-              <tbody style={{ color: 'red', fontSize: 15, marginLeft: 100, marginRight: 50, padding: 50, backgroundColor: '#D1EDFA', width: '100%' }}>
+             
+                   {respostas.map((item, index) =>
+
+
+                <tr key={index}>
+
+
+                  <th scope="row">Titulo: {item.titulo}<br></br> Solicitado: {new Date(item.createdAt).toLocaleString()} <br></br>
+                    Situação: {item.Status.nome}
+                    <br></br>
+                    <Button variant="contained" size="small" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`}>
+                      ver Atividade
+                    </Button></th>
+
+
+
+                </tr>)}
 
                 <tr style={{ marginLeft: 100, marginRight: 50, padding: 50 }}>
                   <td>
@@ -420,24 +437,9 @@ const RecebidasSetor = (props) => {
 
                 </tr>
 
-              </tbody>
+              
 
-              {respostas.map((item, index) =>
-
-
-                <tr key={index}>
-
-
-                  <th scope="row">Titulo: {item.titulo}<br></br> Solicitado: {new Date(item.createdAt).toLocaleString()} <br></br>
-                    Situação: {item.Status.nome}
-                    <br></br>
-                    <Button variant="contained" size="small" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`}>
-                      ver Atividade
-                    </Button></th>
-
-
-
-                </tr>)}
+           
 
             </table>
           </div>
@@ -488,20 +490,7 @@ const RecebidasSetor = (props) => {
 
 
           <div><center><h1>Todas recebidas do Setor</h1></center>
-            <Chart style={{ fontSize: 8 }}
-              chartType="PieChart"
-              width="100%"
-              height="400px"
-              data={data}
-              options={options}
-            />
-            <Chart style={{ fontSize: 8 }}
-              chartType="PieChart"
-              width="100%"
-              height="400px"
-              data={data1}
-              options={options1}
-            />
+            
 
             <table className="table table-striped" style={{ fontFamily: "arial", fontSize: '12px', marginLeft: 10, marginRight: 20 }}>
 
@@ -524,10 +513,25 @@ const RecebidasSetor = (props) => {
                     </th>
 
 
-                  </tr>)}
+                  </tr>)}<p></p>
+                  
 
               </tbody>
             </table>
+            <Chart style={{ fontSize: 8 }}
+              chartType="PieChart"
+              width="100%"
+              height="400px"
+              data={data}
+              options={options}
+            />
+            <Chart style={{ fontSize: 8 }}
+              chartType="PieChart"
+              width="100%"
+              height="400px"
+              data={data1}
+              options={options1}
+            />
           </div>
           : ''
       }

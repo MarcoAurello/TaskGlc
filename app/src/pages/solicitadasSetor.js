@@ -239,8 +239,8 @@ const SolicitadasSetor = (props) => {
         }}>
           <Chart style={{ fontSize: 8 }}
             chartType="PieChart"
-            width="100%"
-            height="400px"
+            width="200px%"
+            height="200px"
             data={data}
             options={options}
            

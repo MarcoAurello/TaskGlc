@@ -6,10 +6,12 @@ import Area from './area.model'
 import Usuario from './usuario.model'
 import Status from './status.model'
 
+
 class Atividade extends Model {
   public id!: string
   public titulo!: string
   public protocolo!: string
+  public categoria !: string
   public fkClassificacao!: string
   public fkArea!: string
   public fkStatus!: string
@@ -21,6 +23,7 @@ class Atividade extends Model {
   public ordem!: number
   public createdAt!: Date
   public updatedAt!: Date
+
   public Classificacao!: Classificacao
   public Area!: Area
   public Usuario!: Usuario
@@ -66,6 +69,10 @@ Atividade.init({
     type: DataTypes.UUID,
     allowNull: true
   },
+  categoria: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
   tempoEstimado: {
     type: DataTypes.INTEGER,
     allowNull: true
@@ -76,7 +83,7 @@ Atividade.init({
   },
   ordem: {
     type: DataTypes.INTEGER,
-    allowNull : true
+    allowNull: true
   },
   createdAt: {
     type: DataTypes.DATE,

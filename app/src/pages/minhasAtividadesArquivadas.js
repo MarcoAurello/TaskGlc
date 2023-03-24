@@ -64,7 +64,7 @@ const MinhasAtividadesArquivadas = (props) => {
       <center>
       <div style={{fontSize: 20, fontWeight: 'bold',
        marginBottom: 4, marginRight: 8, alignItems:'center',
-       }}>Pora da lista de execução, concluidas, canceladas e arquivadas<br></br>
+       }}>Fora da lista de execução, concluidas, canceladas e arquivadas<br></br>
         {/* <Button variant="contained" size="small"  onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/todasAsPendencias`}>
            Pendencias
           </Button>
@@ -92,6 +92,7 @@ const MinhasAtividadesArquivadas = (props) => {
       Arquivado={item.arquivado}
       usuarioExecutor={item.fkUsuarioExecutor}
       tempoEstimado={props.tempoEstimado}
+      categoria={item.categoria}
       
       
       />
