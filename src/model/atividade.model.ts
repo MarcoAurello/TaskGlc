@@ -12,6 +12,7 @@ class Atividade extends Model {
   public titulo!: string
   public protocolo!: string
   public categoria !: string
+  public caminho !: string
   public fkClassificacao!: string
   public fkArea!: string
   public fkStatus!: string
@@ -73,6 +74,10 @@ Atividade.init({
     type: DataTypes.STRING,
     allowNull: true
   },
+  caminho: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
   tempoEstimado: {
     type: DataTypes.INTEGER,
     allowNull: true
@@ -104,9 +109,10 @@ Atividade.init({
 })
 
 Atividade.belongsTo(Classificacao, { foreignKey: 'fkClassificacao' })
-Atividade.belongsTo(Area, { foreignKey: 'fkArea' })
+
 Atividade.belongsTo(Usuario, { foreignKey: 'fkUsuarioSolicitante' })
 Atividade.belongsTo(Usuario, { foreignKey: 'fkUsuarioExecutor', as: 'UsuarioExecutor' })
 Atividade.belongsTo(Status, { foreignKey: 'fkStatus' })
+Atividade.belongsTo(Area, { foreignKey: 'fkArea' })
 
 export default Atividade

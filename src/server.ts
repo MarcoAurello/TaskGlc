@@ -14,6 +14,9 @@ import routerUsuarioAtividade from './router/usuarioAtividade.router'
 import routerClassificacao from './router/classificacao.router'
 import routerUsuarioDemandado from './router/usurarioDemandado.router'
 import routerSubArea from './router/subarea.router'
+import routerArquivo from './router/arquivo.router'
+
+import fileUpload from 'express-fileupload'
 
 
 const path = require('path')
@@ -30,6 +33,9 @@ class Server {
   private middlewares () {
     this.application.use(json())
     this.application.use(cors())
+    this.application.use(fileUpload({
+      limits: { fileSize: 50 * 1024 * 1024 }
+    }))
   }
 
   private routers () {
@@ -47,6 +53,7 @@ class Server {
     this.application.use('/api/usuarioAtividade/', routerUsuarioAtividade)
     this.application.use('/api/classificacao/', routerClassificacao)
     this.application.use('/api/subarea/', routerSubArea)
+    this.application.use('/api/arquivo/', routerArquivo)
 
     this.application.use(express.static(path.resolve('app', 'build')))
     this.application.get('/*', (req, res) =>

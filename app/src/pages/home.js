@@ -159,7 +159,7 @@ const Home = (props) => {
         maxWidth: '100%',
       }}
     >
-      <TextField  error fullWidth id="outlined-error-helper-text"  label="Cole o protocolo"  name='pesquisa' value={pesquisa}  onChange={e=> setPesquisa(e.target.value)} />
+      <TextField  error fullWidth id="outlined-error-helper-text"  label="Cole aqui Palavra chave ou  protocolo"  name='pesquisa' value={pesquisa}  onChange={e=> setPesquisa(e.target.value)} />
      <p></p>
       {/* <Button type="button" className="btn btn-primary" onClick={(e) => { pesquisar() }}>Buscar </Button> */}
 
@@ -195,7 +195,7 @@ const Home = (props) => {
       onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/minhasAtividades/`} >
         Atividades Recebidas<KeyboardDoubleArrowLeftIcon/><div style={{color:'#FFA500', fontWeight:'bold', fontSize:24}}>{minhasAtividades.length}</div></Button><br></br>
       
-      <Button size="large" variant="contained"style={{marginRight: 20 ,marginTop:20}} 
+      <Button size="large" variant="contained" style={{marginRight: 20 ,marginTop:20}} 
       onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/chamadosAbertos/`} >
         Atividades Solicitadas<KeyboardDoubleArrowRightIcon/><div  style={{color:'#FFA500', fontWeight:'bold', fontSize:24}}>{solicitacaoAtividades.length}</div></Button><br></br>
       

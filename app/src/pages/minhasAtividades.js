@@ -123,7 +123,7 @@ const MinhasAtividades = (props) => {
       Arquivado={item.arquivado}
       usuarioExecutor={item.fkUsuarioExecutor}
       tempoEstimado={item.tempoEstimado}
-      fkSetorDemandante={item.Usuario.nome}
+      fkSetorDemandante={item.Usuario.Area.Unidade.nome}
       
       
       

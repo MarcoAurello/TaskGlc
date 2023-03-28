@@ -12,6 +12,8 @@ import AttachFileSharpIcon from '@mui/icons-material/AttachFileSharp';
 
 import PersonIcon from '@mui/icons-material/Person';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
+import UploadButton from "../components/UploadButton";
+import { color } from "@mui/system";
 
 
 const getCookie = require('../utils/getCookie')
@@ -70,6 +72,7 @@ const AtividadeForm = (props) => {
   const [fkArea, setFkArea] = useState('')
   const [fkCategoria, setFkCategoria] = useState('')
   const [unidade, setUnidade] = useState([])
+  const [arquivoDoChamado, setArquivoDoChamado] = useState([])
   const [unidadeTrue, setUnidadeTrue] = useState([])
   const [area, setArea] = useState([])
   const [subArea, setSubArea] = useState([])
@@ -90,6 +93,11 @@ const AtividadeForm = (props) => {
   const [fkUsuarioSolicitante, setFkUsuarioSolicitante] = useState('')
   const [fkExecutor, getFkExecutor] = useState('')
   const [categoria, setCategoria] = useState('')
+  const [arquivo, setArquivo] = useState(null)
+  const [listaDeArquivosEnviados, setListaDeArquivosEnviados] = useState([])
+  const [caminho, setCaminho] = useState()
+  const [openDialogFile, setOpenDialogFile] = useState(false)
+  const [openFile, setOpenFile] = useState('')
 
 
 
@@ -151,7 +159,7 @@ const AtividadeForm = (props) => {
               getEmailExecutor(data.data.UsuarioExecutor.email)
               getTelefoneExecutor(data.data.UsuarioExecutor.telefone)
               getFkExecutor(data.data.UsuarioExecutor.id)
-              setSetorSolicitante('data.data.Usuario.Area.nome')
+              setSetorSolicitante(data.data.Usuario.Area.Unidade.nome)
 
 
               carregarMensagem()
@@ -219,6 +227,30 @@ const AtividadeForm = (props) => {
           }).catch(err => setOpenLoadingDialog(true))
         })
     }
+
+    function carregarArquivo() {
+      // setOpenLoadingDialog(true)
+      const token = getCookie('_token_task_manager')
+      const params = {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      }
+      fetch(`${process.env.REACT_APP_DOMAIN_API}/api/arquivo/?fkAtividade=${id}`, params)
+        .then(response => {
+          const { status } = response
+          response.json().then(data => {
+            setOpenLoadingDialog(false)
+            if (status === 401) {
+            } else if (status === 200) {
+
+              setArquivoDoChamado(data.data)
+
+            }
+          }).catch(err => setOpenLoadingDialog(true))
+        })
+    }
+
 
     function filtroUnidade() {
       // alert(JSON.stringify(unidade))
@@ -313,6 +345,8 @@ const AtividadeForm = (props) => {
       carregarClassificacao()
       carregarFuncionarios()
       carregarStatus()
+      carregarArquivo()
+
 
       carregarMensagem()
 
@@ -446,6 +480,8 @@ const AtividadeForm = (props) => {
         'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify({
+        listaDeArquivosEnviados,
+        caminho,
         fkUnidade,
         fkArea,
         categoria,
@@ -455,6 +491,7 @@ const AtividadeForm = (props) => {
       })
 
     }
+
 
     fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/`, params)
       .then(response => {
@@ -547,9 +584,11 @@ const AtividadeForm = (props) => {
             setOpenMessageDialog(true)
           } else if (status === 200) {
             // alert(JSON.stringify(data.data))
+            alert(JSON.stringify(arquivoDoChamado))
             setAtividade(data.data)
             setMessage(data.message)
             setOpenMessageDialog(true)
+
             window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${idChamado}/edit`
 
 
@@ -613,6 +652,55 @@ const AtividadeForm = (props) => {
       })
   }
 
+  const sendFile = (method, url, params) => {
+    const token = getCookie('_token_task_manager')
+
+    return new Promise(function (resolve, reject) {
+      let req = new XMLHttpRequest();
+      req.open(method, url);
+      req.setRequestHeader("Authorization", `Bearer ${token}`);
+
+      req.addEventListener(
+        "load",
+        () => {
+          if (req.status === 200) {
+            resolve(JSON.parse(req.responseText));
+          } else {
+            reject(JSON.parse(req.responseText));
+          }
+        },
+        false
+      );
+      req.send(params);
+    });
+  };
+
+
+  const enviarArquivo = (e) => {
+    setArquivo(e)
+    const form = new FormData()
+    form.append('arquivo', e)
+
+    sendFile("POST", `${process.env.REACT_APP_DOMAIN_API}/api/arquivo/`, form)
+      .then(response => {
+        const { data } = response
+        setOpenLoadingDialog(true)
+
+        setListaDeArquivosEnviados([...listaDeArquivosEnviados, data])
+        setCaminho(data.caminho)
+        setOpenLoadingDialog(false)
+        alert(JSON.stringify(listaDeArquivosEnviados))
+
+        // alert(JSON.stringify(response))
+      })
+      .catch(err => {
+        alert(JSON.stringify(err))
+      })
+  }
+
+
+
+
 
   return (
     <PageContainer>
@@ -663,7 +751,7 @@ const AtividadeForm = (props) => {
 
         {logged && props.logged.id === fkExecutor ?
           <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
-            <Button size='small' variant="contained" onClick={() => setOpenStatus(true)}>Alterar Status da Atividade</Button>
+            <Button variant="contained" size='small' color="error" onClick={() => setOpenStatus(true)}>Alterar Status da Atividade</Button>
           </div> : ''
 
         }
@@ -737,7 +825,7 @@ const AtividadeForm = (props) => {
                   fullWidth
                   labelId="demo-select-small"
                   id="demo-select-small"
-                  label="Unidade"
+                  label="Area"
                   value={fkArea}>
                   <MenuItem value="" onClick={() => setFkUnidade("")}>
                     <em>Nenhum</em>
@@ -755,7 +843,7 @@ const AtividadeForm = (props) => {
                     fullWidth
                     labelId="demo-select-small"
                     id="demo-select-small"
-                    label="Unidade"
+                    label="categoria"
                     value={categoria}>
                     <MenuItem value="" onClick={() => setArea("")}>
                       <em>Nenhum</em>
@@ -774,14 +862,22 @@ const AtividadeForm = (props) => {
             <div style={{ flex: 1, marginBottom: 16 }}>
               <TextField size="small" fullWidth label="Descrição" multiline rows={2} variant="outlined" value={conteudo} onChange={e => setConteudo(e.target.value)} />
             </div>
-            <div style={{ flex: 1, marginBottom: 16 }}>
-              {/* <TextField size="small" fullWidth label="Descrição" multiline rows={2} variant="outlined" value={conteudo} onChange={e => setConteudo(e.target.value)} /> */}
+            {/* <div style={{ flex: 1, marginBottom: 16 }}>
+              <TextField size="small" fullWidth label="Descrição" multiline rows={2} variant="outlined" value={conteudo} onChange={e => setConteudo(e.target.value)} />
               <Button color="success" variant="contained" onClick={() => setOpenImg(true)}>{'Anexar'}<AttachFileSharpIcon></AttachFileSharpIcon></Button>
-            </div>
+            </div> */}
 
             {/* <div style={{ flex: 1, marginBottom: 16 }}>
               <File size="small" fullWidth label="Descrição" multiline rows={2} variant="outlined" value={conteudo} onChange={e => setConteudo(e.target.value)} />
             </div> */}
+            {/* <UploadButton></UploadButton> */}
+            <input type={"file"} onChange={(e) => enviarArquivo(e.target.files[0])} />
+            {listaDeArquivosEnviados.map((item, key) => <b style={{ color: 'red' }}>{item.nomeApresentacao + ' Adicionado'}</b>)}
+            <hr></hr>
+
+            {/* 
+            classificarChamado.map((classificacao, key) => <option name={classificacao.nome} value={classificacao.id} >
+                  {classificacao.nome}</option>) */}
 
             <div style={{ flex: 1, display: 'flex', flexDirection: 'row' }}>
               {/* <Button variant="outlined" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/area/`}>Voltar</Button> */}
@@ -806,6 +902,64 @@ const AtividadeForm = (props) => {
 
         {id ? <>
 
+          {/* {arquivoDoChamado.length
+            ?
+            <div style={{ borderTop: '1px solid #e0e0e0', 
+            padding: 2, background: '#FFEEE0', borderRadius: 10, marginBottom: 1,
+             border: '2px solid #e0e0e0' }}>
+              <div style={{fontSize:15}}>Anexos</div>
+              {
+
+                <table>
+                  <tr>
+                    <td>Arquivo</td>
+                    <td></td>
+                  </tr>
+                  {arquivoDoChamado.map((item, index) => <tr>
+                    <td >{item.nomeApresentacao}</td>
+                    <td>{<button onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN_API}/api/arquivo/${item.id}`}>Abrir</button>}</td>
+                  </tr>)}
+                </table>
+              
+              }
+            </div>
+
+            :
+            ''
+          } */}
+
+          {arquivoDoChamado.length
+            ?
+            <div style={{
+              borderTop: '1px solid #e0e0e0',
+              padding: 2, background: '#F5FFFA', borderRadius: 10, marginBottom: 1,
+              border: '2px solid #e0e0e0'
+            }}><div style={{marginLeft:20}}><b>Anexos</b></div>
+             
+              {
+
+                <ol>
+                 
+                  {arquivoDoChamado.map((item, index) => 
+                    <li>  
+                    {<Button size="small"  variant="contained" color="primary" style={{ color: '#fff', marginLeft:5, marginBottom:5, fontSize:10}} onClick={() => [setOpenDialogFile(true), setOpenFile(item.id)]}>{item.nomeApresentacao} <AttachFileIcon></AttachFileIcon></Button>}
+                    </li>)}
+                </ol>
+
+              }
+            </div>
+
+            :
+            ''
+
+          }
+
+          {/* 
+{
+                alterarStatus.map((status, key) => <MenuItem name={status.nome} value={status.id} >
+                  {status.nome}</MenuItem>)
+              } */}
+
 
 
 
@@ -829,7 +983,11 @@ const AtividadeForm = (props) => {
 
 
 
-          {mensagens.map((item, index) => <div style={{ borderTop: '1px solid #e0e0e0', padding: 2, background: '#FFFFE0', borderRadius: 10, marginBottom: 1, border: '2px solid #e0e0e0' }}>
+          {mensagens.map((item, index) => <div style={{
+            borderTop: '1px solid #e0e0e0',
+            padding: 2, background: '#FFFFE0', borderRadius: 10, marginBottom: 1,
+            border: '2px solid #e0e0e0'
+          }}>
             <div style={{ display: 'flex', flexDirection: 'colrowumn' }}>
               <div style={{ display: 'flex', flexDirection: 'row' }}>
                 <b style={{ fontSize: 10, marginRight: 5 }}>{item.Usuario.nome}</b>
@@ -867,6 +1025,34 @@ const AtividadeForm = (props) => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {openFile.length?
+        <Dialog
+          open={openDialogFile}    onClose={() => setOpenDialogFile(false)}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description">
+          <DialogTitle id="alert-dialog-title">
+            Anexo
+          </DialogTitle>
+          <DialogContent >
+          <DialogContentText id="alert-dialog-description">
+          <embed src={window.location.href = `${process.env.REACT_APP_DOMAIN_API}/api/arquivo/${openFile}`} type="application/pdf" width="100%" height="100%"></embed>
+
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button >
+            OK
+          </Button>
+        </DialogActions>
+
+          
+        </Dialog>
+        :
+        ''
+      }
+
+
 
       <hr></hr>
 
@@ -980,6 +1166,10 @@ const AtividadeForm = (props) => {
               <MenuItem value={6} >6 horas</MenuItem>
               <MenuItem value={7} >7 horas</MenuItem>
               <MenuItem value={8} >8 horas</MenuItem>
+              <MenuItem value={8} >2 dias</MenuItem>
+              <MenuItem value={8} >3 dias</MenuItem>
+              <MenuItem value={8} >4 dias</MenuItem>
+              <MenuItem value={8} >5 dias</MenuItem>
 
 
 
@@ -1043,7 +1233,7 @@ const AtividadeForm = (props) => {
       <Dialog open={openImg}  >
 
         <DialogContent>
-          
+
           {/* <div style={{ flex: 1, marginBottom: 16 }}>
              
               <Button  type="file" color="success" variant="contained"  onClick={() => setOpenImg(true)}>{'cliique para inserir'}<AttachFileSharpIcon></AttachFileSharpIcon></Button>

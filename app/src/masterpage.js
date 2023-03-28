@@ -382,6 +382,45 @@ const Masterpage = (props) => {
       <AccountCircle />
     </IconButton>
   ]
+  const actionsCoordenador = [
+    
+    <Tooltip Tooltip title="Aprovar Atividade" placement="bottom" >
+      <IconButton size="small" color="inherit" id="positioned-msg-notification-icon-button"
+        onClick={(e) => {
+          setAnchorElAtividadeNaoAtribuidaNotification(e.currentTarget)
+          setOpenAtividadeNaoAtribuidaNotification(true)
+        }}>
+        <Badge badgeContent={atividadesNaoAtribuidas.length} color="error">
+          <NotificationsIcon />
+        </Badge>
+      </IconButton>
+    </Tooltip >,
+
+    <Tooltip title="Chegou Atividade" placement="bottom">
+      <IconButton size="large" color="inherit" id="positioned-newmsg-notification-icon-button"
+        onClick={(e) => {
+          setAnchorElAtividadeRecebidaNotification(e.currentTarget)
+          setOpenAtividadeRecebidaNotification(true)
+        }}>
+        <Badge badgeContent={atividadesRecebida.length} color="error">
+          <AutoAwesomeMotionIcon></AutoAwesomeMotionIcon>
+        </Badge>
+      </IconButton>
+    </Tooltip>,
+
+    <IconButton
+      size="large"
+      edge="end"
+      aria-haspopup="true"
+      color="inherit"
+      id="positioned-account-icon-button"
+      onClick={(e) => {
+        setAnchorElAccountMenu(e.currentTarget)
+        setOpenAccountMenu(true)
+      }}>
+      <AccountCircle />
+    </IconButton>
+  ]
 
   const actionsFuncionario = [
 
@@ -686,20 +725,34 @@ const Masterpage = (props) => {
       </Drawer>
       <CssBaseline />
 
-      {logged && logged.Perfil && (logged.Perfil.nome === PerfilUtils.Gerente || logged.Perfil.nome === PerfilUtils.Coordenador
+      {logged && logged.Perfil && (logged.Perfil.nome === PerfilUtils.Gerente
         || logged.Perfil.nome === PerfilUtils.Administrador) ?
         <Toolbar
           menu={menu}
-          title='SENAC - Task'
+          title='Atividades- Gerente'
           actions={actionsGerente} />
         :
-        <Toolbar
-          menu={menu}
-          title='SENAC - Task'
-          actions={actionsFuncionario} />
+        ''
 
       }
+         {logged && logged.Perfil && ( logged.Perfil.nome === PerfilUtils.Coordenador) ?
+        <Toolbar
+          menu={menu}
+          title='Atividades- Coordenador'
+          actions={actionsCoordenador} />
+        :
+        ''
 
+      }
+         {logged && logged.Perfil && (logged.Perfil.nome === PerfilUtils.Funcionário) ?
+        <Toolbar
+          menu={menu}
+          title='Atividades- Funcionário'
+          actions={actionsFuncionario} />
+        :
+       ''
+      }
+     
       {renderMenu}
       {renderUserNotification}
       {renderNaoAtribuidosNotification}

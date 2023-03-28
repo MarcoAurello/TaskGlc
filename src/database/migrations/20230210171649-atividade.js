@@ -52,6 +52,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true
       },
+      caminho: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
       tempoEstimado: {
         type: Sequelize.INTEGER,
         allowNull: true

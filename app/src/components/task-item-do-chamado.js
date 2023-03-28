@@ -68,7 +68,7 @@ const TaskItemDoChamado = (props) => {
         
         </div> */}
                 <div style={{ fontSize: 13, color: '#424242', marginTop: 16 }}>
-                    <div style={{ flex: 1, fontSize: 15, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                    <div style={{ flex: 1, fontSize: 16, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                         <b>Assunto:{props.titulo}</b> </div>
 
                     {props.categoria != '' ?
@@ -93,7 +93,7 @@ Unidade: {props.unidade}</div> */}
 
                     <hr></hr>
 
-                    <div style={{ color: '#00BFFF' }}><b>Solicitante</b></div>
+                    <div ><b>Solicitante</b></div>
                     {/* <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                         <b>Unidade :</b>xxxxxxxxxxx</div> */}
                     {/* <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
@@ -111,7 +111,7 @@ Unidade: {props.unidade}</div> */}
                         <b>Telefone:</b> {props.telefoneSolicitante}</div>
 
                     <hr></hr>
-                    <div style={{ color: '#00BFFF' }}><b>Unidade Responsável</b></div>
+                    <div ><b>Unidade Responsável</b></div>
                     <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                         <b> Unidade: </b>{props.setorSol}</div>
 

@@ -7,9 +7,12 @@ import protocolo from "../utils/protocolo.utils";
 import Area from "../model/area.model";
 import Usuario from "../model/usuario.model";
 import Classificacao from "../model/classificacao.model";
+import Arquivo from "../model/arquivo.model";
+
 // import UsuarioAtividade from "../model/usuarioAtividade.model";
-import Unidade from '../model/unidade.model';
+import Unidade from "../model/unidade.model";
 import PerfilUtils from "../utils/perfil.utils";
+const multer = require("multer");
 // import emailUtils from "../utils/email.utils";
 const { Op } = require("sequelize");
 
@@ -20,8 +23,17 @@ class AtividadeController implements IController {
 
   async create(req: any, res: Response, next: NextFunction): Promise<any> {
     try {
-      const { fkUnidade, fkArea, titulo, conteudo, categoria } = req.body;
-      console.log(req.body)
+      const {
+        fkUnidade,
+        fkArea,
+        titulo,
+        conteudo,
+        categoria,
+        caminho,
+        listaDeArquivosEnviados,
+      } = req.body;
+      console.log(req.body);
+      console.log(listaDeArquivosEnviados);
 
       if (!fkUnidade) {
         return res.status(401).json({
@@ -55,7 +67,6 @@ class AtividadeController implements IController {
         where: { nome: "Aberto" },
       });
 
-
       const atividade = await Atividade.create({
         titulo,
         fkClassificacao: classificacao?.id,
@@ -66,7 +77,8 @@ class AtividadeController implements IController {
         arquivado: false,
         pessoal: false,
         // fkUsuarioExecutor,
-        categoria
+        categoria,
+        caminho,
       });
 
       await Mensagem.create({
@@ -75,10 +87,26 @@ class AtividadeController implements IController {
         fkUsuario: req.usuario.id,
       });
 
-      res.status(200)
+      const atividadeSalva = await Atividade.findOne({
+        where: { titulo: titulo },
+      });
+
+      listaDeArquivosEnviados.map((item) => {
+        Arquivo.update(
+          {
+            fkAtividade: atividadeSalva?.id,
+          },
+          {
+            where: { id: item.id },
+          }
+        );
+      });
+
+      res
+        .status(200)
         .json({ data: atividade, message: "Cadastro realizado com sucesso." });
     } catch (err) {
-      console.log(err)
+      console.log(err);
       res.status(401).json({ message: err.errors[0].message });
     }
   }
@@ -94,6 +122,12 @@ class AtividadeController implements IController {
             model: Usuario,
             foreignKey: "fkUsuarioExecutor",
             as: "UsuarioExecutor",
+            include: [{ model: Area, include: [Unidade] }],
+          },
+          {
+            model: Usuario,
+            foreignKey: "fkUsuarioSolicitante",
+
             include: [{ model: Area, include: [Unidade] }],
           },
           Area,
@@ -156,24 +190,45 @@ class AtividadeController implements IController {
   ): Promise<any> {
     try {
       // const status = await queryInterface.sequelize.query('select id from status where nome = \'Aberto\'')
-      const statusPendente = await Status.findOne({ where: { nome: 'Pendente' } })
-      const statusConcluido = await Status.findOne({where: { nome: 'Concluido' }})
-      const statusCancelado = await Status.findOne({where: { nome: 'Cancelado' }})
-      const statusParado = await Status.findOne({where: { nome: 'Parado' }})
+      const statusPendente = await Status.findOne({
+        where: { nome: "Pendente" },
+      });
+      const statusConcluido = await Status.findOne({
+        where: { nome: "Concluido" },
+      });
+      const statusCancelado = await Status.findOne({
+        where: { nome: "Cancelado" },
+      });
+      const statusParado = await Status.findOne({ where: { nome: "Parado" } });
       const registros = await Atividade.findAll({
         include: [
           { model: Area, include: [Unidade] },
           Classificacao,
           Status,
-          Usuario,
+          {
+            model: Usuario,
+            foreignKey: "fkUsuarioExecutor",
+            as: "UsuarioExecutor",
+            include: [{ model: Area, include: [Unidade] }],
+          },
+          {
+            model: Usuario,
+            foreignKey: "fkUsuarioSolicitante",
+
+            include: [{ model: Area, include: [Unidade] }],
+          },
         ],
         where: {
           fkUsuarioExecutor: req.usuario.id,
           arquivado: false,
           fkStatus: {
-            [Op.or]: [statusPendente?.id, statusConcluido?.id, statusCancelado?.id, statusParado?.id ],
+            [Op.or]: [
+              statusPendente?.id,
+              statusConcluido?.id,
+              statusCancelado?.id,
+              statusParado?.id,
+            ],
           },
-
         },
       });
       res.status(200).json({ data: registros });
@@ -189,11 +244,17 @@ class AtividadeController implements IController {
     next: NextFunction
   ): Promise<any> {
     try {
-      const statusAberto = await Status.findOne({ where: { nome: 'Aberto' } })
-      const statusIniciado = await Status.findOne({ where: { nome: 'Iniciado' }})
-      const statusPlanejado = await Status.findOne({ where: { nome: 'Planejado para Iniciar' }})
-      const statusPendente = await Status.findOne({ where: { nome: 'Pendente' }})
-      const statusParado = await Status.findOne({ where: { nome: 'Parado'}})
+      const statusAberto = await Status.findOne({ where: { nome: "Aberto" } });
+      const statusIniciado = await Status.findOne({
+        where: { nome: "Iniciado" },
+      });
+      const statusPlanejado = await Status.findOne({
+        where: { nome: "Planejado para Iniciar" },
+      });
+      const statusPendente = await Status.findOne({
+        where: { nome: "Pendente" },
+      });
+      const statusParado = await Status.findOne({ where: { nome: "Parado" } });
 
       const claImediata = await Classificacao.findOne({
         where: { nome: "Execução Imediata" },
@@ -232,31 +293,65 @@ class AtividadeController implements IController {
           { model: Area, include: [Unidade] },
           Classificacao,
           Status,
-          Usuario,
+          {
+            model: Usuario,
+            foreignKey: "fkUsuarioExecutor",
+            as: "UsuarioExecutor",
+            include: [{ model: Area, include: [Unidade] }],
+          },
+          {
+            model: Usuario,
+            foreignKey: "fkUsuarioSolicitante",
+
+            include: [{ model: Area, include: [Unidade] }],
+          },
         ],
         where: {
           fkClassificacao: claImediata?.id,
           fkUsuarioExecutor: req.usuario.id,
           arquivado: false,
           fkStatus: {
-            [Op.or]: [statusAberto?.id, statusIniciado?.id, statusPlanejado?.id, statusPendente?.id, statusParado?.id],
+            [Op.or]: [
+              statusAberto?.id,
+              statusIniciado?.id,
+              statusPlanejado?.id,
+              statusPendente?.id,
+              statusParado?.id,
+            ],
           },
         },
       });
-      
+
       const registrosUrgentes = await Atividade.findAll({
         include: [
           { model: Area, include: [Unidade] },
           Classificacao,
           Status,
-          Usuario,
+          {
+            model: Usuario,
+            foreignKey: "fkUsuarioExecutor",
+            as: "UsuarioExecutor",
+            include: [{ model: Area, include: [Unidade] }],
+          },
+          {
+            model: Usuario,
+            foreignKey: "fkUsuarioSolicitante",
+
+            include: [{ model: Area, include: [Unidade] }],
+          },
         ],
         where: {
           fkClassificacao: claUrgente?.id,
           fkUsuarioExecutor: req.usuario.id,
           arquivado: false,
           fkStatus: {
-            [Op.or]: [statusAberto?.id, statusIniciado?.id, statusPlanejado?.id, statusPendente?.id, statusParado?.id],
+            [Op.or]: [
+              statusAberto?.id,
+              statusIniciado?.id,
+              statusPlanejado?.id,
+              statusPendente?.id,
+              statusParado?.id,
+            ],
           },
         },
       });
@@ -266,14 +361,31 @@ class AtividadeController implements IController {
           { model: Area, include: [Unidade] },
           Classificacao,
           Status,
-          Usuario,
+          {
+            model: Usuario,
+            foreignKey: "fkUsuarioExecutor",
+            as: "UsuarioExecutor",
+            include: [{ model: Area, include: [Unidade] }],
+          },
+          {
+            model: Usuario,
+            foreignKey: "fkUsuarioSolicitante",
+
+            include: [{ model: Area, include: [Unidade] }],
+          },
         ],
         where: {
           fkClassificacao: claImportente?.id,
           fkUsuarioExecutor: req.usuario.id,
           arquivado: false,
           fkStatus: {
-            [Op.or]: [statusAberto?.id, statusIniciado?.id, statusPlanejado?.id, statusPendente?.id, statusParado?.id],
+            [Op.or]: [
+              statusAberto?.id,
+              statusIniciado?.id,
+              statusPlanejado?.id,
+              statusPendente?.id,
+              statusParado?.id,
+            ],
           },
         },
       });
@@ -283,14 +395,31 @@ class AtividadeController implements IController {
           { model: Area, include: [Unidade] },
           Classificacao,
           Status,
-          Usuario,
+          {
+            model: Usuario,
+            foreignKey: "fkUsuarioExecutor",
+            as: "UsuarioExecutor",
+            include: [{ model: Area, include: [Unidade] }],
+          },
+          {
+            model: Usuario,
+            foreignKey: "fkUsuarioSolicitante",
+
+            include: [{ model: Area, include: [Unidade] }],
+          },
         ],
         where: {
           fkClassificacao: claCircunstancial?.id,
           fkUsuarioExecutor: req.usuario.id,
           arquivado: false,
           fkStatus: {
-            [Op.or]: [statusAberto?.id, statusIniciado?.id, statusPlanejado?.id, statusPendente?.id, statusParado?.id],
+            [Op.or]: [
+              statusAberto?.id,
+              statusIniciado?.id,
+              statusPlanejado?.id,
+              statusPendente?.id,
+              statusParado?.id,
+            ],
           },
         },
       });
@@ -298,7 +427,7 @@ class AtividadeController implements IController {
         ...registrosImediatos,
         ...registrosUrgentes,
         ...registrosImportantes,
-        ...registroCircunstancial
+        ...registroCircunstancial,
       ];
 
       res.status(200).json({ data: registosOrdenados });
@@ -314,23 +443,38 @@ class AtividadeController implements IController {
     next: NextFunction
   ): Promise<any> {
     try {
-      const statusConcluido = await Status.findOne({ where: { nome: 'Concluido' } })
-      const statusCancelado = await Status.findOne({ where: { nome: 'Cancelado' } })
-      
+      const statusConcluido = await Status.findOne({
+        where: { nome: "Concluido" },
+      });
+      const statusCancelado = await Status.findOne({
+        where: { nome: "Cancelado" },
+      });
+
       const registros = await Atividade.findAll({
         include: [
           { model: Area, include: [Unidade] },
           Classificacao,
           Status,
-          Usuario,
+          {
+            model: Usuario,
+            foreignKey: "fkUsuarioExecutor",
+            as: "UsuarioExecutor",
+            include: [{ model: Area, include: [Unidade] }],
+          },
+          {
+            model: Usuario,
+            foreignKey: "fkUsuarioSolicitante",
+
+            include: [{ model: Area, include: [Unidade] }],
+          },
         ],
         where: {
           fkUsuarioExecutor: req.usuario.id,
           [Op.or]: [
             { arquivado: true },
             { fkStatus: statusConcluido?.id },
-            { fkStatus: statusCancelado?.id }
-          ]
+            { fkStatus: statusCancelado?.id },
+          ],
         },
       });
       res.status(200).json({ data: registros });
@@ -346,8 +490,8 @@ class AtividadeController implements IController {
     next: NextFunction
   ): Promise<any> {
     try {
-      const area = await Area.findOne({where: {id: req.usuario.fkArea }})
-      
+      const area = await Area.findOne({ where: { id: req.usuario.fkArea } });
+
       const registros = await Atividade.findAll({
         include: [
           { model: Area, include: [Unidade] },
@@ -357,7 +501,7 @@ class AtividadeController implements IController {
         ],
         order: [["createdAt", "DESC"]],
         where: {
-          "$Area.fkUnidade$": area?.fkUnidade
+          "$Area.fkUnidade$": area?.fkUnidade,
         },
       });
       res.status(200).json({ data: registros });
@@ -373,18 +517,29 @@ class AtividadeController implements IController {
     next: NextFunction
   ): Promise<any> {
     try {
-      const area = await Area.findOne({where: {id: req.usuario.fkArea }})
-      
+      const area = await Area.findOne({ where: { id: req.usuario.fkArea } });
+
       const registros = await Atividade.findAll({
         include: [
           { model: Area, include: [Unidade] },
           Classificacao,
           Status,
-          Usuario,
+          {
+            model: Usuario,
+            foreignKey: "fkUsuarioExecutor",
+            as: "UsuarioExecutor",
+            include: [{ model: Area, include: [Unidade] }],
+          },
+          {
+            model: Usuario,
+            foreignKey: "fkUsuarioSolicitante",
+
+            include: [{ model: Area, include: [Unidade] }],
+          },
         ],
         order: [["createdAt", "DESC"]],
         where: {
-          "$Usuario.fkArea$": area?.id
+          "$Usuario.fkArea$": area?.id,
         },
       });
       res.status(200).json({ data: registros });
@@ -398,28 +553,48 @@ class AtividadeController implements IController {
     throw new Error("Method not implemented.");
   }
 
+  // async upload(req: Request, res: Response, next: NextFunction): Promise<any> {
+  //   try {
+  //     const storage = multer.diskStorage({
+  //       destination: function (req, file, cb) {
+  //         cb(null, 'uploads')
+  //       },
+  //       filename: function (req, file, cb) {
+  //         cb(null, file.originalname)
+  //       }
+  //     })
+
+  //     const upload = multer({ storage: storage })
+  //     upload.single('file')
+  //     res.send('cadastrado')
+
+  //   } catch (err) {
+  //     console.log(err);
+  //     res.status(401).json({ message: err.errors[0].message });
+  //   }
+  // }
+
   async search(req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
       const { pesquisa } = req.query;
       const area = await Area.findOne({ where: { id: req.usuario.fkArea } });
-      const mensagem = await Mensagem.findOne({})
+      const mensagem = await Mensagem.findOne({});
 
       // console.log('pesquisa: ' + pesquisa);
       const registros = await Atividade.findAll({
-           include: [
+        include: [
           { model: Area, include: [Unidade] },
           Classificacao,
           Status,
           Usuario,
         ],
-        order: [['createdAt', 'DESC']],
+        order: [["createdAt", "DESC"]],
         where: {
           [Op.or]: [
-            { protocolo: { [Op.like]: `${pesquisa}`} },
+            { titulo: { [Op.like]: `%${pesquisa}%` } },
+            { protocolo: { [Op.like]: `%${pesquisa}%` } },
             // {"$Mensagem$.conteudo" : { [Op.like]: `%${pesquisa}%`} }
-
-            
-          ]
+          ],
         },
       });
 
@@ -430,20 +605,35 @@ class AtividadeController implements IController {
     }
   }
 
-  async searchRecebidos(req: any, res: Response, next: NextFunction): Promise<any> {
+  async searchRecebidos(
+    req: any,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
     try {
       const { pesquisa } = req.query;
-      const area = await Area.findOne({where: {id: req.usuario.fkArea }})
+      const area = await Area.findOne({ where: { id: req.usuario.fkArea } });
 
-      console.log('pesquisa: ' + pesquisa);
+      console.log("pesquisa: " + pesquisa);
       const registros = await Atividade.findAll({
-           include: [
+        include: [
           { model: Area, include: [Unidade] },
           Classificacao,
           Status,
-          Usuario,
+          {
+            model: Usuario,
+            foreignKey: "fkUsuarioExecutor",
+            as: "UsuarioExecutor",
+            include: [{ model: Area, include: [Unidade] }],
+          },
+          {
+            model: Usuario,
+            foreignKey: "fkUsuarioSolicitante",
+
+            include: [{ model: Area, include: [Unidade] }],
+          },
         ],
-        order: [['createdAt', 'DESC']],
+        order: [["createdAt", "DESC"]],
         where: {
           // fkArea: req.usuario.fkArea ,
           "$Area.fkUnidade$": area?.fkUnidade,
@@ -463,28 +653,41 @@ class AtividadeController implements IController {
     }
   }
 
-    async searchSolicitadas(req: any, res: Response, next: NextFunction): Promise<any> {
+  async searchSolicitadas(
+    req: any,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
     try {
       const { pesquisa } = req.query;
-      const area = await Area.findOne({where: {id: req.usuario.fkArea }})
+      const area = await Area.findOne({ where: { id: req.usuario.fkArea } });
 
-      console.log('pesquisa: ' + pesquisa);
+      console.log("pesquisa: " + pesquisa);
       const registros = await Atividade.findAll({
-           include: [
+        include: [
           { model: Area, include: [Unidade] },
           Classificacao,
           Status,
-          Usuario,
+          {
+            model: Usuario,
+            foreignKey: "fkUsuarioExecutor",
+            as: "UsuarioExecutor",
+            include: [{ model: Area, include: [Unidade] }],
+          },
+          {
+            model: Usuario,
+            foreignKey: "fkUsuarioSolicitante",
+
+            include: [{ model: Area, include: [Unidade] }],
+          },
         ],
-        order: [['createdAt', 'DESC']],
+        order: [["createdAt", "DESC"]],
         where: {
           // fkArea: req.usuario.fkArea ,
           // "$Area.fkUnidade$": area?.fkUnidade,
           fkStatus: pesquisa,
 
-          [Op.or]: [
-            {"$Usuario.fkArea$": area?.id}
-          ],
+          [Op.or]: [{ "$Usuario.fkArea$": area?.id }],
         },
       });
 
@@ -504,22 +707,33 @@ class AtividadeController implements IController {
       // console.log(`${req.usuario.nome} - ${req.usuario.fkArea}`)
       const area = await Area.findOne({ where: { id: req.usuario.fkArea } });
       // console.log(req.usuario)
-      let whereCustum ={
+      let whereCustum = {
         pessoal: false,
         fkUsuarioExecutor: null,
         "$Area.fkUnidade$": area?.fkUnidade,
-      }
+      };
 
-      if(req.usuario.Perfil.nome == PerfilUtils.Coordenador){
-        whereCustum = {...whereCustum,
-          "$Area.id$": area?.id,
-        }
+      if (req.usuario.Perfil.nome == PerfilUtils.Coordenador) {
+        whereCustum = { ...whereCustum, "$Area.id$": area?.id };
       }
-
 
       const registros = await Atividade.findAll({
-        include: [{ model: Area, include: [Unidade] }, Usuario],
-        where: whereCustum
+        include: [
+          { model: Area, include: [Unidade] },
+          {
+            model: Usuario,
+            foreignKey: "fkUsuarioExecutor",
+            as: "UsuarioExecutor",
+            include: [{ model: Area, include: [Unidade] }],
+          },
+          {
+            model: Usuario,
+            foreignKey: "fkUsuarioSolicitante",
+
+            include: [{ model: Area, include: [Unidade] }],
+          },
+        ],
+        where: whereCustum,
       });
 
       res.status(200).json({ data: registros });
@@ -538,7 +752,22 @@ class AtividadeController implements IController {
       const status = await Status.findOne({ where: { nome: "Aberto" } });
 
       const registros = await Atividade.findAll({
-        include: [Classificacao, Usuario, Status],
+        include: [
+          Classificacao,
+          Status,
+          {
+            model: Usuario,
+            foreignKey: "fkUsuarioExecutor",
+            as: "UsuarioExecutor",
+            include: [{ model: Area, include: [Unidade] }],
+          },
+          {
+            model: Usuario,
+            foreignKey: "fkUsuarioSolicitante",
+
+            include: [{ model: Area, include: [Unidade] }],
+          },
+        ],
         order: [["createdAt", "DESC"]],
         where: {
           fkUsuarioExecutor: req.usuario.id,
