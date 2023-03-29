@@ -11,7 +11,8 @@ const TaskItem = (props) => {
 
   const { idChamado, tituloChamado, protocoloChamado, Arquivado, usuarioExecutor,
     classificacao, criacaoChamado, status, fkUsuarioSoloicitante, fklogado, categoria
-    , usuarioDemandanteTelefone, usuarioDemandanteEmail, tela, tempoEstimado } = props
+    , setorSolicitante, usuarioDemandanteTelefone, usuarioDemandanteEmail, tela, tempoEstimado,
+    solicitante} = props
   const [statusAtividade, setStatus, fkSetorDemandante] = useState('')
 
 
@@ -20,7 +21,7 @@ const TaskItem = (props) => {
   const [openLoadingDialog, setOpenLoadingDialog] = useState(false)
   const [openMessageDialog, setOpenMessageDialog] = useState(false)
   const [message, setMessage] = useState('')
-  const [ areas, setAreas]= useState([])
+  const [areas, setAreas] = useState([])
   const [area, setArea] = useState([])
   const [arquivado, setArquivado] = useState(true)
 
@@ -154,11 +155,11 @@ const TaskItem = (props) => {
 
   // }, [])
 
- 
+
   // setArea(areas.filter(area => area.id === fkSetorDemandante))
 
-  
-  
+
+
 
 
 
@@ -197,7 +198,7 @@ const TaskItem = (props) => {
             </IconButton>
           </div> */}
         </div>
-        <div style={{ flex: 1, fontSize: 15, fontWeight: 'bold', color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+        <div style={{ flex: 1, fontSize: 15, wordBreak: "break-all", fontWeight: 'bold', color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
           Titulo:  {props.tituloChamado}</div>
 
         <div style={{ display: 'flex', flexDirection: 'column', marginTop: 8 }}>
@@ -217,8 +218,8 @@ const TaskItem = (props) => {
           </div>
           {props.categoria != '' ?
 
-            <div style={{ fontSize: 12, fontWeight: 'bold', marginLeft: 5, marginRight: 8, marginBottom: 5, position: 'relative' }}>
-              <Chip size="small" label={"Categoria: " + props.categoria } />
+            <div style={{ fontSize: 12,wordBreak: "break-all", fontWeight: 'bold', marginLeft: 5, marginRight: 8, marginBottom: 5, position: 'relative' }}>
+              <Chip size="small" label={"Categoria: " + props.categoria} />
             </div>
 
             :
@@ -247,20 +248,22 @@ const TaskItem = (props) => {
 
 
 
+
         </div>
         <div style={{ fontSize: 13, color: '#424242', marginTop: 16 }}>
 
           <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
             Abertura : {date}</div>
-            
+
 
 
 
           {tela == 'minhas' ? <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
             Solicitante : {props.usuarioDemandante}</div> : ''}
 
-            {tela == 'minhas' ? <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+          {tela == 'minhas' ? <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
             Setor : {props.fkSetorDemandante}</div> : ''}
+            
 
 
 
@@ -280,6 +283,9 @@ const TaskItem = (props) => {
 
           <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
             Classificação : {props.classificacao}</div>
+
+          {/* <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+            <b>Setor :</b>  {props.setorSolicitante}</div> */}
 
 
 

@@ -67,6 +67,7 @@ const ChamadosAbertos = (props) => {
       idChamado= {item.id}
       tituloChamado={item.titulo}
       protocoloChamado={item.protocolo}
+      setorSolicitante={item.Usuario.Area.Unidade.nome}
       criacaoChamado={item.createdAt}
       classificacao={item.Classificacao.nome}
       status={item.Status.nome ? item.Status.nome : ''}
@@ -76,6 +77,8 @@ const ChamadosAbertos = (props) => {
       Arquivado={item.arquivado}
       tempoEstimado={item.tempoEstimado}
       categoria={item.categoria}
+      solicitante={item.Usuario.Nome}
+     
       // usuarioDemandante={item.Usuario.nome}
       // usuarioDemandanteTelefone={item.Usuario.telefone}
       // usuarioDemandanteEmail={item.Usuario.email}

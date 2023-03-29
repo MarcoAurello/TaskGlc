@@ -45,17 +45,18 @@ const AtividadeNotificationItem = (props) => {
   }
 
   return (
-    <MenuItem  style={{display: 'flex',marginBottom:5, flexDirection: 'row', 
-    borderBottom: '1px solid #EEEEEE', minWidth: 350}}
+    <MenuItem  style={{display: 'flex',marginBottom:5, flexDirection: 'row',
+    borderBottom: '2px solid #EEEEEE', minWidth: 150, maxWidth:400}}
      onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`}>
       
       <div style={{ marginLeft: 16,marginBottom:5 }}><b>Encaminhar chamado &#10145; </b>
       <div style={{ width: '100%', fontSize: 12, color: '#424242'}}>{'Solicitado por: '+ item.Usuario.nome}</div>
       <div style={{ width: '100%', fontSize: 12, color: '#424242'}}>{'Unidade: '+ item.Usuario.Area.Unidade.nome}</div>
+     
       {/* <div style={{ width: '100%', fontSize: 12, color: '#424242'}}>{'Unidade: '+ item.Area.nome}</div> */}
-        <div style={{ width: '100%', fontSize: 12,  color: '#424242'}}>{'Assunto: '+item.titulo}</div>
+        <div style={{ width: '80%', fontSize: 12,  color: '#424242', wordBreak:"break-all", whiteSpace:'pre-wrap' }}>{'Assunto: '+item.titulo}</div>
         {item.categoria ==='' ?'' :
-         <div style={{ width: '100%', fontSize: 12,  color: '#424242'}}>{'Categoria: '+item.categoria}</div>  }
+         <div style={{ width: '100%', fontSize: 12,  color: '#424242'}}>{item.categoria}</div>  }
         
         <div style={{ width: '100%' , marginTop: 4, backgroundColor:'#1E90FF', borderRadius:51, paddingLeft: 8 }}>
           Selecionar Funcionario

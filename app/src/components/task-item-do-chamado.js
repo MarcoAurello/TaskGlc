@@ -67,7 +67,7 @@ const TaskItemDoChamado = (props) => {
          
         
         </div> */}
-                <div style={{ fontSize: 13, color: '#424242', marginTop: 16 }}>
+                <div style={{ fontSize: 13, color: '#424242', marginTop: 16, wordBreak:"break-all"  }}>
                     <div style={{ flex: 1, fontSize: 16, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                         <b>Assunto:{props.titulo}</b> </div>
 

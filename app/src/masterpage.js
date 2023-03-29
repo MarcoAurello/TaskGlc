@@ -118,6 +118,8 @@ const Masterpage = (props) => {
   const [usuariosNaoValidados, setUsuariosNaoValidados] = useState([])
   const [atividadesNaoAtribuidas, setAtividadesNaoAtribuidas] = useState([])
   const [atividadesRecebida, setAtividadeRecebida] = useState([])
+  const[minhasAtividades,setMinhasAtividades]=useState([])
+  const[solicitacaoAtividade, setSolicitacaoAtividades]=useState([])
 
 
   useEffect(() => {
@@ -151,6 +153,8 @@ const Masterpage = (props) => {
           }).catch(err => setOpenLoadingDialog(false))
         })
     }
+
+   
 
     function carregarUnidade() {
       // setOpenLoadingDialog(true)
@@ -295,6 +299,69 @@ const Masterpage = (props) => {
     }
     setInterval(carregarAtividadesRecebidas, 1000)
   }, [logged])
+
+  function carregarMinhasAtividades() {
+    const token = getCookie('_token_task_manager')
+    const params = {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    }
+
+    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/minhasAtividades/`, params)
+      .then(response => {
+        const { status } = response
+        response.json().then(data => {
+          if (status === 401) {
+          } else if (status === 200) {
+            // alert(JSON.stringify(data.data))
+
+            setMinhasAtividades(data.data)
+
+
+            // alert('oi ' +JSON.stringify( minhasAtividades))
+            // setUsuariosNaoValidados(data.data)
+          }
+        })
+      })
+
+
+  }
+  function carregarSolicitacaoAtividades() {
+    const token = getCookie('_token_task_manager')
+    const params = {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    }
+
+    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/chamadosAbertos/`, params)
+      .then(response => {
+        const { status } = response
+        response.json().then(data => {
+          if (status === 401) {
+          } else if (status === 200) {
+            // alert(JSON.stringify(data.data))
+
+            setSolicitacaoAtividades(data.data)
+
+            // alert('oi ' +JSON.stringify( minhasAtividades))
+            // setUsuariosNaoValidados(data.data)
+          }
+        })
+      })
+
+
+  }
+
+
+
+  useEffect(() => {
+    carregarMinhasAtividades()
+    carregarSolicitacaoAtividades()
+  
+
+  }, [])
 
 
   const salvarDadosPrimeiroAcesso = () => {
@@ -588,7 +655,7 @@ const Masterpage = (props) => {
                 id="panel1a-header"
               >
 
-                <Typography style={{ fontSize: 14, color: '#2c73d1' }}>Atividades Solicitadas<ArrowForwardIcon style={{color:'FFA500'}}></ArrowForwardIcon></Typography>
+                <Typography style={{ fontSize: 14, color: '#2c73d1' }}>Atividades Solicitadas<ArrowForwardIcon style={{color:'FFA500'}}></ArrowForwardIcon>{solicitacaoAtividade.length}</Typography>
               </AccordionSummary>
               <AccordionDetails>
 
@@ -597,7 +664,7 @@ const Masterpage = (props) => {
                     <ListItemIcon>
                       <CampaignIcon style={{color:'FFA500'}}/>
                     </ListItemIcon>
-                    <ListItemText primary='Solicitar Atividade' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/cadastro`} />
+                    <ListItemText primary='Nova Atividade' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/cadastro`} />
                   </ListItemButton>
                 </ListItem>
 
@@ -630,7 +697,7 @@ const Masterpage = (props) => {
                 id="panel1a-header"
               >
 
-                <Typography style={{ fontSize: 14, color: '#2c73d1' }}>Atividades Recebidas <ArrowBackIcon style={{color:'FFA500'}} /></Typography>
+                <Typography style={{ fontSize: 14, color: '#2c73d1' }}>Atividades Recebidas <ArrowBackIcon style={{color:'FFA500'}} />{minhasAtividades.length}</Typography>
               </AccordionSummary>
               <AccordionDetails>
 
@@ -639,7 +706,7 @@ const Masterpage = (props) => {
                     <ListItemIcon>
                       <PlaylistAddCheckIcon  style={{color:'FFA500'}}/>
                     </ListItemIcon>
-                    <ListItemText primary='Minha lista de Execução' />
+                    <ListItemText primary='Minhas Execuções' />
                   </ListItemButton>
                 </ListItem>
 
@@ -648,7 +715,7 @@ const Masterpage = (props) => {
                     <ListItemIcon>
                       <AddTaskIcon  style={{color:'FFA500'}}/>
                     </ListItemIcon>
-                    <ListItemText primary='Fora da lista de execução' />
+                    <ListItemText primary='Concluidas e Arquivadas' />
                   </ListItemButton>
                 </ListItem>
 
@@ -666,6 +733,21 @@ const Masterpage = (props) => {
 
               </AccordionDetails>
             </Accordion>
+
+            {/* <ListItem disablePadding>
+                  <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/recebidasSetor/`}>
+                    <ListItemIcon>
+                      <LeaderboardIcon style={{color:'FFA500'}} />
+                    </ListItemIcon>
+                    <ListItemText primary='Tutorial de Uso' />
+                  </ListItemButton>
+                </ListItem> */}
+
+
+            
+
+
+            
 
 
 

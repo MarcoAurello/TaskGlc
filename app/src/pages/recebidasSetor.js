@@ -401,7 +401,7 @@ const RecebidasSetor = (props) => {
                 <tr key={index}>
 
 
-                  <th scope="row">Titulo: {item.titulo}<br></br> Solicitado: {new Date(item.createdAt).toLocaleString()} <br></br>
+                  <th scope="row" style={{ wordBreak: "break-all" }} >Titulo: {item.titulo}<br></br> Solicitado: {new Date(item.createdAt).toLocaleString()} <br></br>
                     Situação: {item.Status.nome}
                     <br></br>
                     <Button variant="contained" size="small" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`}>
@@ -452,7 +452,7 @@ const RecebidasSetor = (props) => {
 
               {respostas.map((item, index) =>
                 <tr key={index}>
-                  <th scope="row">Titulo: {item.titulo}<br></br> Solicitado: {new Date(item.createdAt).toLocaleString()} <br></br> </th>
+                  <th style={{ wordBreak: "break-all" }} scope="row">Titulo: {item.titulo}<br></br> Solicitado: {new Date(item.createdAt).toLocaleString()} <br></br> </th>
                   <th scope="row">{item.Status.nome === "Iniciado" || item.Status.nome === "Aberto" ||
                     item.Status.nome === "Planejado para Iniciar" ? <div style={{ color: 'green' }}>Na lista de Execução: {item.Status.nome}</div> :
                     <div style={{ color: 'red' }}>Fora da lista de Execução:  {item.Status.nome}</div>} </th>
@@ -502,7 +502,7 @@ const RecebidasSetor = (props) => {
 
                 {meuSetor.map((item, index) =>
                   <tr key={index}>
-                    <th scope="row">Titulo: {item.titulo}<br></br> Solicitado: {new Date(item.createdAt).toLocaleString()} <br></br> </th>
+                    <th scope="row"  style={{ wordBreak:"break-all"}}>Titulo: {item.titulo}<br></br> Solicitado: {new Date(item.createdAt).toLocaleString()} <br></br> </th>
                     <th scope="row">{item.Status.nome === "Iniciado" || item.Status.nome === "Aberto" ||
                       item.Status.nome === "Planejado para Iniciar" ? <div style={{ color: 'green' }}>Na lista de Execução: {item.Status.nome}</div> :
                       <div style={{ color: 'red' }}>Fora da lista de Execução:  {item.Status.nome}</div>} </th>

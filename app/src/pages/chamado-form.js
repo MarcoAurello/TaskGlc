@@ -64,6 +64,7 @@ const AtividadeForm = (props) => {
   const [tempoEstimado, setTempoEstimado] = useState('')
   const [createdAt, setCreatedAt] = useState('')
   const [title, setTitle] = useState('')
+ 
 
   const [titulo, setTitulo] = useState('')
   const [conteudo, setConteudo] = useState('')
@@ -136,30 +137,24 @@ const AtividadeForm = (props) => {
               setStatus(data.data.Status.nome)
               setStatusId(data.data.Status.id)
               setValueArea(data.data.Area.nome)
+              setSetorSolicitante(data.data.Usuario.Area.Unidade.nome)
               setValueUnidade(data.data.Area.Unidade.nome)
               getFkUnidadeExecutor(data.data.Area.fkUnidade)
-
               setUsuarioSolicitante(data.data.Usuario.nome)
-
               setEmailUsuarioSolicitante(data.data.Usuario.email)
               setTelefoneSolicitante(data.data.Usuario.telefone)
               setFkDemandante(data.data.fkDemandante)
               setCategoriaChamado(data.data.categoria)
-
               setTitle(data.data.titulo)
               setFkAreaDemandada(data.data.fkArea)
               setIdChamado(data.data.id)
               setFkUsuarioSolicitante(data.data.fkUsuarioSolicitante)
-
-
-              // alert(JSON.stringify(data.data.UsuarioExecutor))
-
-
               getNomeExecutor(data.data.UsuarioExecutor.nome)
               getEmailExecutor(data.data.UsuarioExecutor.email)
               getTelefoneExecutor(data.data.UsuarioExecutor.telefone)
               getFkExecutor(data.data.UsuarioExecutor.id)
-              setSetorSolicitante(data.data.Usuario.Area.Unidade.nome)
+             
+
 
 
               carregarMensagem()
@@ -189,6 +184,7 @@ const AtividadeForm = (props) => {
               setMessage(data.message)
               setOpenMessageDialog(true)
             } else if (status === 200) {
+              
               setOpenLoadingDialog(false)
               setMensagens(data.data)
             }
@@ -479,6 +475,7 @@ const AtividadeForm = (props) => {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
+      
       body: JSON.stringify({
         listaDeArquivosEnviados,
         caminho,
@@ -584,7 +581,7 @@ const AtividadeForm = (props) => {
             setOpenMessageDialog(true)
           } else if (status === 200) {
             // alert(JSON.stringify(data.data))
-            alert(JSON.stringify(arquivoDoChamado))
+            // alert(JSON.stringify(arquivoDoChamado))
             setAtividade(data.data)
             setMessage(data.message)
             setOpenMessageDialog(true)
@@ -689,7 +686,7 @@ const AtividadeForm = (props) => {
         setListaDeArquivosEnviados([...listaDeArquivosEnviados, data])
         setCaminho(data.caminho)
         setOpenLoadingDialog(false)
-        alert(JSON.stringify(listaDeArquivosEnviados))
+        // alert(JSON.stringify(listaDeArquivosEnviados))
 
         // alert(JSON.stringify(response))
       })
@@ -725,7 +722,6 @@ const AtividadeForm = (props) => {
           solicitante={usuarioSolicitante}
           status={status}
           titulo={title}
-          // setorSolicitante={setorSolicitante}
           emailUsuarioSolicitante={emailUsuarioSolicitante}
           telefoneSolicitante={telefoneSolicitante}
           setorSol={valueUnidade}
@@ -733,7 +729,6 @@ const AtividadeForm = (props) => {
           emailExecutor={emailExecutor}
           telefoneExecutor={telefoneExecutor}
           setorSolicitante={setorSolicitante}
-        // nomeUsuarioSolicitante={nomeUsuarioSolicitante}
 
 
         />
@@ -872,7 +867,7 @@ const AtividadeForm = (props) => {
             </div> */}
             {/* <UploadButton></UploadButton> */}
             <input type={"file"} onChange={(e) => enviarArquivo(e.target.files[0])} />
-            {listaDeArquivosEnviados.map((item, key) => <b style={{ color: 'red' }}>{item.nomeApresentacao + ' Adicionado'}</b>)}
+            {listaDeArquivosEnviados.map((item, key) => <b style={{ color: 'blue', fontSize: 11 }}>{item.nomeApresentacao + ' Adicionado'}</b>)}
             <hr></hr>
 
             {/* 
@@ -934,15 +929,15 @@ const AtividadeForm = (props) => {
               borderTop: '1px solid #e0e0e0',
               padding: 2, background: '#F5FFFA', borderRadius: 10, marginBottom: 1,
               border: '2px solid #e0e0e0'
-            }}><div style={{marginLeft:20}}><b>Anexos</b></div>
-             
+            }}><div style={{ marginLeft: 20 }}><b>Anexos</b></div>
+
               {
 
                 <ol>
-                 
-                  {arquivoDoChamado.map((item, index) => 
-                    <li>  
-                    {<Button size="small"  variant="contained" color="primary" style={{ color: '#fff', marginLeft:5, marginBottom:5, fontSize:10}} onClick={() => [setOpenDialogFile(true), setOpenFile(item.id)]}>{item.nomeApresentacao} <AttachFileIcon></AttachFileIcon></Button>}
+
+                  {arquivoDoChamado.map((item, index) =>
+                    <li>
+                      {<Button size="small" variant="contained" color="primary" style={{ color: '#fff', marginLeft: 5, marginBottom: 5, fontSize: 10 }} onClick={() => [setOpenDialogFile(true), setOpenFile(item.id)]}><AttachFileIcon></AttachFileIcon>{item.nomeApresentacao} </Button>}
                     </li>)}
                 </ol>
 
@@ -969,7 +964,7 @@ const AtividadeForm = (props) => {
 
             <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
               <h4>Histórico da Atividade</h4>
-              <Button size="small" variant="contained" onClick={() => [setOpenMsg(true)]}>Mensagem</Button>
+              <Button size="small" variant="contained" onClick={() => [setOpenMsg(true)]}>Comentário</Button>
             </div>
 
             :
@@ -983,20 +978,26 @@ const AtividadeForm = (props) => {
 
 
 
-          {mensagens.map((item, index) => <div style={{
-            borderTop: '1px solid #e0e0e0',
-            padding: 2, background: '#FFFFE0', borderRadius: 10, marginBottom: 1,
-            border: '2px solid #e0e0e0'
-          }}>
-            <div style={{ display: 'flex', flexDirection: 'colrowumn' }}>
-              <div style={{ display: 'flex', flexDirection: 'row' }}>
-                <b style={{ fontSize: 10, marginRight: 5 }}>{item.Usuario.nome}</b>
-                <div style={{ flex: 1 }}></div>
-                <b style={{ fontSize: 10 }}>{new Date(item.createdAt).toLocaleString()}</b>
+          {mensagens.map((item, index) =>
+         
+            
+            <div style={{
+              borderTop: '1px solid #e0e0e0',
+              padding: 2, background: '#FFFFE0', borderRadius: 10, marginBottom: 1,
+              border: '2px solid #e0e0e0'
+            }}>
+
+              <div style={{ display: 'flex', flexDirection: 'colrowumn' }}>
+                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                  <b style={{ fontSize: 10, marginRight: 5 }}>{item.Usuario.nome}</b>
+                  <div style={{ flex: 1 }}></div>
+                  <b style={{ fontSize: 10 }}>{new Date(item.createdAt).toLocaleString()}</b>
+                </div>
               </div>
-            </div>
-            <p>{item.conteudo}</p>
-          </div>)}
+              <div >
+                <p style={{ wordBreak: "break-all" }}>{item.conteudo}</p>
+              </div>
+            </div>)}
         </> : ''}
 
       </div>
@@ -1026,27 +1027,27 @@ const AtividadeForm = (props) => {
         </DialogActions>
       </Dialog>
 
-      {openFile.length?
+      {openFile.length ?
         <Dialog
-          open={openDialogFile}    onClose={() => setOpenDialogFile(false)}
+          open={openDialogFile} onClose={() => setOpenDialogFile(false)}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description">
           <DialogTitle id="alert-dialog-title">
             Anexo
           </DialogTitle>
           <DialogContent >
-          <DialogContentText id="alert-dialog-description">
-          <embed src={window.location.href = `${process.env.REACT_APP_DOMAIN_API}/api/arquivo/${openFile}`} type="application/pdf" width="100%" height="100%"></embed>
+            <DialogContentText id="alert-dialog-description">
+              <embed src={window.location.href = `${process.env.REACT_APP_DOMAIN_API}/api/arquivo/${openFile}`} type="application/pdf" width="100%" height="100%"></embed>
 
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button >
-            OK
-          </Button>
-        </DialogActions>
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button >
+              OK
+            </Button>
+          </DialogActions>
 
-          
+
         </Dialog>
         :
         ''
@@ -1230,30 +1231,7 @@ const AtividadeForm = (props) => {
 
       </Dialog>
 
-      <Dialog open={openImg}  >
 
-        <DialogContent>
-
-          {/* <div style={{ flex: 1, marginBottom: 16 }}>
-             
-              <Button  type="file" color="success" variant="contained"  onClick={() => setOpenImg(true)}>{'cliique para inserir'}<AttachFileSharpIcon></AttachFileSharpIcon></Button>
-            </div> */}
-          <Button
-            variant="contained"
-            component="label"
-          >
-            Arquivos: PDF, JPG, PNG<AttachFileSharpIcon></AttachFileSharpIcon>
-            <input
-              type="file"
-              hidden
-            />
-          </Button><p>
-          </p>
-          <Button onClick={() => setOpenImg(false)}>Cancelar</Button>
-
-        </DialogContent>
-
-      </Dialog>
 
 
 

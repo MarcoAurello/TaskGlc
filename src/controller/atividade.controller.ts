@@ -577,8 +577,6 @@ class AtividadeController implements IController {
   async search(req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
       const { pesquisa } = req.query;
-      const area = await Area.findOne({ where: { id: req.usuario.fkArea } });
-      const mensagem = await Mensagem.findOne({});
 
       // console.log('pesquisa: ' + pesquisa);
       const registros = await Atividade.findAll({
@@ -586,13 +584,35 @@ class AtividadeController implements IController {
           { model: Area, include: [Unidade] },
           Classificacao,
           Status,
-          Usuario,
+          {
+            model: Usuario,
+            foreignKey: "fkUsuarioExecutor",
+            as: "UsuarioExecutor",
+            include: [{ model: Area, include: [Unidade] }],
+          },
+          {
+            model: Usuario,
+            foreignKey: "fkUsuarioSolicitante",
+
+            include: [{ model: Area, include: [Unidade] }],
+          },
         ],
         order: [["createdAt", "DESC"]],
         where: {
+          // "$UsuarioExecutor.Area.fkUnidade$": req.usuario.area.fkUnidade,
+
           [Op.or]: [
             { titulo: { [Op.like]: `%${pesquisa}%` } },
             { protocolo: { [Op.like]: `%${pesquisa}%` } },
+            { categoria: { [Op.like]: `%${pesquisa}%` } },
+            { "$UsuarioExecutor.nome$": { [Op.like]: `%${pesquisa}%` } },
+            { "$Usuario.nome$": { [Op.like]: `%${pesquisa}%` } },
+            {
+              "$UsuarioExecutor.Area.Unidade.nome$": {
+                [Op.like]: `%${pesquisa}%`,
+              },
+            },
+
             // {"$Mensagem$.conteudo" : { [Op.like]: `%${pesquisa}%`} }
           ],
         },
@@ -788,7 +808,23 @@ class AtividadeController implements IController {
   ): Promise<any> {
     try {
       const registros = await Atividade.findAll({
-        include: [Classificacao, Usuario, Status],
+        include: [
+          Classificacao,
+          Status,
+          {
+            model: Usuario,
+            foreignKey: "fkUsuarioExecutor",
+            as: "UsuarioExecutor",
+            include: [{ model: Area, include: [Unidade] }],
+          },
+          {
+            model: Usuario,
+            foreignKey: "fkUsuarioSolicitante",
+
+            include: [{ model: Area, include: [Unidade] }],
+          },
+        ],
+
         order: [["createdAt", "DESC"]],
         where: {
           fkUsuarioSolicitante: req.usuario.id,

@@ -49,14 +49,14 @@ class MensagemController implements IController {
         }
       )
 
-      // const txEmail =
-      //   'Sua Solicitação: ' + titulo?.protocolo + '.\n tem nova interação! ' + conteudo;
+      const txEmail =
+        'Sua Solicitação: ' + titulo?.protocolo + '.\n tem nova interação! ' + conteudo;
 
-      // emailUtils.enviar(email, txEmail);
+      emailUtils.enviar(email, txEmail);
 
-      // const txEmailExecutor =
-      //   'Sua Atividade: \n' + titulo?.titulo + '. \n recebeu uma nova mensagem! ' + conteudo;
-      // emailUtils.enviar(emailExecutor, txEmailExecutor);
+      const txEmailExecutor =
+        'Sua Atividade: \n' + titulo?.titulo + '. \n recebeu uma nova mensagem! ' + conteudo;
+      emailUtils.enviar(emailExecutor, txEmailExecutor);
 
       const atividade = await Atividade.findOne({ where: { id: fkAtividade } });
 
