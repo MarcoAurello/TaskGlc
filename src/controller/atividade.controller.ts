@@ -468,7 +468,6 @@ class AtividadeController implements IController {
         ...registrosUrgentes,
         ...registrosImportantes,
         ...registroCircunstancial,
-        ...registroNaoDefinidos
       ];
 
       res.status(200).json({ data: registosOrdenados });
@@ -646,11 +645,10 @@ class AtividadeController implements IController {
             { titulo: { [Op.like]: `%${pesquisa}%` } },
             { protocolo: { [Op.like]: `%${pesquisa}%` } },
             { categoria: { [Op.like]: `%${pesquisa}%` } },
+            { "$Area.nome$": { [Op.like]: `%${pesquisa}%` } },
             { "$UsuarioExecutor.nome$": { [Op.like]: `%${pesquisa}%` } },
             { "$Usuario.nome$": { [Op.like]: `%${pesquisa}%` } },
-            {
-              "$UsuarioExecutor.Area.Unidade.nome$": {
-                [Op.like]: `%${pesquisa}%`,
+            {"$UsuarioExecutor.Area.Unidade.nome$": { [Op.like]: `%${pesquisa}%`,
               },
             },
 

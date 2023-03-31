@@ -1,9 +1,8 @@
-import { Button, InputAdornment, SpeedDial, TextField} from "@mui/material";
+import { Button, FormControl, InputAdornment, InputLabel, MenuItem, Select, SpeedDial, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import EditIcon from '@mui/icons-material/Edit';
 import TaskFilter from '../components/task-filter'
-import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
-import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
+import Switch from '@mui/material/Switch';
 
 import { Box } from "@mui/system";
 
@@ -19,13 +18,22 @@ const Home = (props) => {
   const { logged } = props
   const [pesquisa, setPesquisa] = useState('')
   const [respostas, setrespostas] = useState([])
+  const [setor, setSetor] = useState([])
   // alert(JSON.stringify(props.logged))
+  const [openLoadingDialog, setOpenLoadingDialog] = useState(false)
+  const [openMessageDialog, setOpenMessageDialog] = useState(false)
+  const [checked, setChecked] = React.useState(false);
+  const [fkArea, setfkArea]=useState('')
+  const [subarea, setSubArea]=useState([])
+
+
 
 
   //  const nome = Logged.Perfil.nome;
   const [minhasAtividades, setMinhasAtividades] = useState([])
   const [solicitacaoAtividades, setSolicitacaoAtividades] = useState([])
   const [nomeUsuario, setNomeUsuario] = useState('')
+  // const [fkUnidade, setFkUnidade]= useState(props.logged.Area.fkUnidade)
 
 
 
@@ -132,6 +140,100 @@ const Home = (props) => {
         }).catch(err => console.log(err))
       })
   }
+  function carregarSetor() {
+    // setOpenLoadingDialog(true)
+    const token = getCookie('_token_task_manager')
+    const params = {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    }
+    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/area/?fkUnidade=${logged ? logged.Area.fkUnidade:''}`, params)
+      .then(response => {
+        const { status } = response
+        response.json().then(data => {
+          setOpenLoadingDialog(false)
+
+          if (status === 401) {
+            // alert(status)
+          } else if (status === 200) {
+            setSetor(data.data)
+            // filtrarUsuariosDemandados()
+
+          }
+        }).catch(err => setOpenLoadingDialog(true))
+      })
+  }
+
+  useEffect(() => {
+    function carregarSetor() {
+      // setOpenLoadingDialog(true)
+      const token = getCookie('_token_task_manager')
+      const params = {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      }
+      fetch(`${process.env.REACT_APP_DOMAIN_API}/api/area/?fkUnidade=${logged ? logged.Area.fkUnidade:''}`, params)
+      .then(response => {
+          const { status } = response
+          response.json().then(data => {
+            setOpenLoadingDialog(false)
+            if (status === 401) {
+            } else if (status === 200) {
+              setSetor(data.data)
+              setOpenLoadingDialog(false)
+
+            }
+          }).catch(err => setOpenLoadingDialog(true))
+        })
+    }
+
+    if (checked) {
+      carregarSetor()
+
+
+    }
+  }, [checked])
+
+  
+
+  useEffect(() => {
+    function carregarSubArea() {
+      // setOpenLoadingDialog(true)
+      const token = getCookie('_token_task_manager')
+      const params = {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      }
+      fetch(`${process.env.REACT_APP_DOMAIN_API}/api/subarea/?fkArea=${fkArea}`, params)
+        .then(response => {
+          const { status } = response
+          response.json().then(data => {
+            setOpenLoadingDialog(false)
+            if (status === 401) {
+            } else if (status === 200) {
+              setSubArea(data.data)
+              setOpenLoadingDialog(false)
+
+            }
+          }).catch(err => setOpenLoadingDialog(true))
+        })
+    }
+
+    if (fkArea) {
+      carregarSubArea()
+
+
+    }
+  }, [fkArea])
+
+
+
+  const handleChange = (event) => {
+    setChecked(event.target.checked);
+  }
 
 
 
@@ -155,41 +257,117 @@ const Home = (props) => {
       }
 
       <center>
-        <Box
-          sx={{
-            width: 500,
-            maxWidth: '100%',
-          }}
-        >
-          <TextField error fullWidth id="outlined-error-helper-text" label="Pesquise Palavra chave, protocolo, funcionario ou setor" name='pesquisa' value={pesquisa} onChange={e => setPesquisa(e.target.value)} />
-          <p></p>
+       
+        Selecione por área <Switch
+        label="Selecionar por Area"
+        checked={checked}
+        onChange={handleChange}
+        inputProps={{ 'aria-label': 'controlled' }
+
+        }
+
+      />
     
-          {/* <Button type="button" className="btn btn-primary" onClick={(e) => { pesquisar() }}>Buscar </Button> */}
+    
+        
 
-          {respostas ? <centre>
-            <table className="table table-striped" style={{ fontFamily: "arial", fontSize: '12px', marginLeft: 10, marginRight: 20 }}>
+        {!checked ?
+          <Box
+            sx={{
+              width: 500,
+              maxWidth: '100%',
+            }}
+          >
+            <TextField error fullWidth id="outlined-error-helper-text" label="Pesquise Palavra chave, protocolo, funcionario ou setor" name='pesquisa' value={pesquisa} onChange={e => setPesquisa(e.target.value)} />
+            <p></p>
 
-              <tbody>
-                {respostas.map((item, index) =>
-                  <tr key={index}>
-                    <th scope="row" style={{ wordBreak: "break-all" }}>{item.titulo}</th>
-                    <th>
-                      <Button variant="contained" size="small" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`}>
-                        abrir atividade
-                      </Button>
-                    </th>
+            {/* <Button type="button" className="btn btn-primary" onClick={(e) => { pesquisar() }}>Buscar </Button> */}
 
 
-                  </tr>)}
 
-              </tbody>
-            </table>
+          </Box>
 
-          </centre> :
-            ''
-          }
+          :
+          ''
 
-        </Box>
+        }
+
+        {checked  ?
+          <Box
+            sx={{
+              width: 500,
+              maxWidth: '100%',
+            }}
+          >
+
+            <div style={{ flex: 1, marginBottom: 16 }}>
+              <FormControl size="small" fullWidth>
+                <InputLabel id="demo-select-small">Área</InputLabel>
+                <Select
+                  fullWidth
+
+                  labelId="demo-select-small"
+                  id="demo-select-small"
+                  label="pesquisa"
+                  value={pesquisa}>
+
+                  {setor.map((item, index) => <MenuItem key={index} value={item.nome} onClick={() =>[ setPesquisa(item.nome),
+                  setfkArea(item.id)]}>{item.nome}</MenuItem>)}
+
+
+                </Select><p></p>
+              </FormControl>
+              <FormControl size="small" fullWidth>
+                <InputLabel id="demo-select-small">Sub Área </InputLabel>
+                <Select
+                  fullWidth
+
+                  labelId="demo-select-small"
+                  id="demo-select-small"
+                  label="pesquisa"
+                  value={pesquisa}>
+
+                  {subarea.map((item, index) => <MenuItem key={index} value={item.nome} onClick={() => setPesquisa(item.nome)}>{item.nome}</MenuItem>)}
+
+
+                </Select>
+              </FormControl>
+            </div>
+          </Box>
+
+          :
+          ''
+
+        }
+
+        {respostas ? <centre>
+          <table className="table table-striped" style={{ fontFamily: "arial", fontSize: '12px', marginLeft: 10, marginRight: 20, width: '80%' }}>
+
+            <tbody>
+              {respostas.map((item, index) =>
+                <tr key={index}>
+                  <th scope="row" style={{ wordBreak: "break-all" }}>{item.titulo}<br></br>
+                    {'Categoria : '+item.categoria}<br></br>
+                    {'Status : '+item.Status.nome}
+                    </th><br></br>
+                    
+                  <th>
+                    <Button variant="contained" size="small" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`}>
+                      abrir atividade
+                    </Button>
+                  </th>
+
+                </tr>)}
+
+            </tbody>
+          </table>
+
+        </centre> :
+          ''
+        }
+
+
+
         <div >
           {/* <Button size="large" variant="contained" style={{ marginRight: 20, marginTop: 20 }}
             onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/minhasAtividades/`} >
