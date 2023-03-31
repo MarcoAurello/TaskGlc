@@ -785,7 +785,7 @@ const AtividadeForm = (props) => {
         {!id ? <>
           <FormGroup>
 
-            <div style={{ flex: 1, marginBottom: 16 }}>
+            <div style={{ flex: 1, marginBottom: 16,wordBreak:'break-all' }}>
               Solicitar Atividade<br></br>
 
 
@@ -813,7 +813,7 @@ const AtividadeForm = (props) => {
               </FormControl>
             </div>
 
-            <div style={{ flex: 1, marginBottom: 16 }}>
+            <div style={{ flex: 1, marginBottom: 16, wordBreak:"break-all" }}>
               <FormControl fullWidth size="small">
                 <InputLabel id="demo-select-small">Área</InputLabel>
                 <Select
@@ -832,10 +832,11 @@ const AtividadeForm = (props) => {
             {dep === 'DEP'
               ?
               <div style={{ flex: 1, marginBottom: 16 }}>
-                <FormControl fullWidth size="small">
+                <FormControl  size="small" fullWidth>
                   <InputLabel id="demo-select-small">Categoria</InputLabel>
                   <Select
-                    fullWidth
+                  fullWidth
+                   
                     labelId="demo-select-small"
                     id="demo-select-small"
                     label="categoria"
@@ -874,7 +875,7 @@ const AtividadeForm = (props) => {
             classificarChamado.map((classificacao, key) => <option name={classificacao.nome} value={classificacao.id} >
                   {classificacao.nome}</option>) */}
 
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'row' }}>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'row', alignSelf:"self-start" }}>
               {/* <Button variant="outlined" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/area/`}>Voltar</Button> */}
               <div style={{ flex: 1 }}></div>
               <Button variant="contained" onClick={onSave}>{'Criar'}</Button>

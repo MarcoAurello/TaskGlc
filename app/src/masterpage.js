@@ -31,10 +31,11 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import FormatAlignJustifyIcon from '@mui/icons-material/FormatAlignJustify';
 
 import CssBaseline from '@mui/material/CssBaseline'
 import Toolbar from './components/toolbar'
-import { Badge, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, IconButton, InputLabel, Menu, MenuItem, Select, TextField, Tooltip } from "@mui/material";
+import { Badge, Button, Chip, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, IconButton, InputLabel, Menu, MenuItem, Select, TextField, Tooltip } from "@mui/material";
 
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -655,9 +656,14 @@ const Masterpage = (props) => {
                 id="panel1a-header"
               >
 
-                <Typography style={{ fontSize: 14, color: '#2c73d1' }}>Atividades Solicitadas<ArrowForwardIcon style={{color:'FFA500'}}></ArrowForwardIcon>{solicitacaoAtividade.length}</Typography>
+                <Typography style={{ fontSize: 13, color: '#2c73d1' }}>Atividades Solicitadas<ArrowForwardIcon ></ArrowForwardIcon><b style={{color:'FFA500', fontSize:20}}>
+                <Chip size="small" style={{color:'#EAF807', backgroundColor:'#0C9FF2', fontSize:14}} label={solicitacaoAtividade.length} />
+                  </b></Typography>
               </AccordionSummary>
               <AccordionDetails>
+              
+             
+            
 
                 <ListItem disablePadding>
                   <ListItemButton>
@@ -677,14 +683,14 @@ const Masterpage = (props) => {
                   </ListItemButton>
                 </ListItem>
 
-                <ListItem disablePadding>
+                {/* <ListItem disablePadding>
                   <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/solicitadasSetor/`}>
                     <ListItemIcon>
                       <LeaderboardIcon style={{color:'FFA500'}} />
                     </ListItemIcon>
                     <ListItemText primary='Solicitações do Setor' />
                   </ListItemButton>
-                </ListItem>
+                </ListItem> */}
 
               </AccordionDetails>
             </Accordion>
@@ -697,7 +703,9 @@ const Masterpage = (props) => {
                 id="panel1a-header"
               >
 
-                <Typography style={{ fontSize: 14, color: '#2c73d1' }}>Atividades Recebidas <ArrowBackIcon style={{color:'FFA500'}} />{minhasAtividades.length}</Typography>
+                <Typography style={{ fontSize: 13, color: '#2c73d1' }}>Atividades Recebidas <ArrowBackIcon  /><b>
+                <Chip size="small" style={{color:'#EAF807', backgroundColor:'#0C9FF2', fontSize:14}} label={minhasAtividades.length} />
+                 </b></Typography>
               </AccordionSummary>
               <AccordionDetails>
 
@@ -722,12 +730,49 @@ const Masterpage = (props) => {
 
 
 
+                {/* <ListItem disablePadding>
+                  <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/recebidasSetor/`}>
+                    <ListItemIcon>
+                      <LeaderboardIcon style={{color:'FFA500'}} />
+                    </ListItemIcon>
+                    <ListItemText primary='Recebidas do Setor' />
+                  </ListItemButton>
+                </ListItem> */}
+
+              </AccordionDetails>
+            </Accordion>
+
+            <Accordion>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+
+                <Typography style={{ fontSize: 14, color: '#2c73d1' }}>Relatórios <FormatAlignJustifyIcon/></Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+
+              
+
+
+
+
                 <ListItem disablePadding>
                   <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/recebidasSetor/`}>
                     <ListItemIcon>
                       <LeaderboardIcon style={{color:'FFA500'}} />
                     </ListItemIcon>
                     <ListItemText primary='Recebidas do Setor' />
+                  </ListItemButton>
+                </ListItem>
+
+                <ListItem disablePadding>
+                  <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/solicitadasSetor/`}>
+                    <ListItemIcon>
+                      <LeaderboardIcon style={{color:'FFA500'}} />
+                    </ListItemIcon>
+                    <ListItemText primary='Solicitações do Setor' />
                   </ListItemButton>
                 </ListItem>
 

@@ -1,4 +1,4 @@
-import { Chip, MenuItem } from '@mui/material'
+import { Button, Chip, MenuItem } from '@mui/material'
 import React, { useState } from 'react'
 import Avatar from '@mui/material/Avatar';
 
@@ -49,17 +49,19 @@ const AtividadeNotificationItem = (props) => {
     borderBottom: '2px solid #EEEEEE', minWidth: 150, maxWidth:400}}
      onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`}>
       
-      <div style={{ marginLeft: 16,marginBottom:5 }}><b>Encaminhar chamado &#10145; </b>
+      <div style={{ marginLeft: 16,marginBottom:5 }}><b style={{color:'red'}}>Encaminhar chamado &#10145; </b>
+      <div style={{ width: '80%', fontSize: 12,  color: '#424242', wordBreak:"break-all", whiteSpace:'pre-wrap' }}><b>{'Assunto: '+item.titulo}</b></div>
+        
       <div style={{ width: '100%', fontSize: 12, color: '#424242'}}>{'Solicitado por: '+ item.Usuario.nome}</div>
       <div style={{ width: '100%', fontSize: 12, color: '#424242'}}>{'Unidade: '+ item.Usuario.Area.Unidade.nome}</div>
      
       {/* <div style={{ width: '100%', fontSize: 12, color: '#424242'}}>{'Unidade: '+ item.Area.nome}</div> */}
-        <div style={{ width: '80%', fontSize: 12,  color: '#424242', wordBreak:"break-all", whiteSpace:'pre-wrap' }}>{'Assunto: '+item.titulo}</div>
-        {item.categoria ==='' ?'' :
-         <div style={{ width: '100%', fontSize: 12,  color: '#424242'}}>{item.categoria}</div>  }
         
-        <div style={{ width: '100%' , marginTop: 4, backgroundColor:'#1E90FF', borderRadius:51, paddingLeft: 8 }}>
-          Selecionar Funcionario
+        {item.categoria ==='' ?'' :
+         <div style={{ width: '100%', fontSize: 12,  color: '#424242'}}>{'Categoria:'+ item.categoria}</div>  }
+        
+        <div style={{ width: '70%' , marginTop: 4, paddingLeft: 8 }}>
+          <Button  variant="contained" size="small" >Selecionar Funcionario</Button>
         </div>
       </div>
     </MenuItem>

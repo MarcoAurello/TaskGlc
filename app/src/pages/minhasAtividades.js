@@ -121,7 +121,7 @@ const MinhasAtividades = (props) => {
       fklogado={props.logged.id}
       categoria={item.categoria}
       Arquivado={item.arquivado}
-      usuarioExecutor={item.fkUsuarioExecutor}
+      usuarioExecutor={item.UsuarioExecutor.nome}
       tempoEstimado={item.tempoEstimado}
       fkSetorDemandante={item.Usuario.Area.Unidade.nome}
       

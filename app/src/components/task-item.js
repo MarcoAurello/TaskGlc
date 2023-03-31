@@ -11,8 +11,9 @@ const TaskItem = (props) => {
 
   const { idChamado, tituloChamado, protocoloChamado, Arquivado, usuarioExecutor,
     classificacao, criacaoChamado, status, fkUsuarioSoloicitante, fklogado, categoria
-    , setorSolicitante, usuarioDemandanteTelefone, usuarioDemandanteEmail, tela, tempoEstimado,
-    solicitante} = props
+    , setorExecutor, usuarioDemandanteTelefone, usuarioDemandanteEmail, tela, tempoEstimado,
+    solicitante, usuarioExector } = props
+
   const [statusAtividade, setStatus, fkSetorDemandante] = useState('')
 
 
@@ -218,7 +219,7 @@ const TaskItem = (props) => {
           </div>
           {props.categoria != '' ?
 
-            <div style={{ fontSize: 12,wordBreak: "break-all", fontWeight: 'bold', marginLeft: 5, marginRight: 8, marginBottom: 5, position: 'relative' }}>
+            <div style={{ fontSize: 12, wordBreak: "break-all", width:'80%', fontWeight: 'bold', marginLeft: 5, marginRight: 8, marginBottom: 5, position: 'relative' }}>
               <Chip size="small" label={"Categoria: " + props.categoria} />
             </div>
 
@@ -251,11 +252,21 @@ const TaskItem = (props) => {
 
         </div>
         <div style={{ fontSize: 13, color: '#424242', marginTop: 16 }}>
+         
+
+            {tela !== 'minhas' ? <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+            Setor Executor : {props.setorExecutor}</div>: ''}
+
+            
+            {tela !== 'minhas' ? <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+            Usuario Executor : {props.usuarioExecutor}</div>: ''}
+
+         
 
           <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
             Abertura : {date}</div>
 
-
+            
 
 
           {tela == 'minhas' ? <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
@@ -263,7 +274,7 @@ const TaskItem = (props) => {
 
           {tela == 'minhas' ? <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
             Setor : {props.fkSetorDemandante}</div> : ''}
-            
+
 
 
 

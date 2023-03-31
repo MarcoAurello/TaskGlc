@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from "express";
-import { IController } from "./controller.inteface";
-import Area from "../model/area.model";
-import Unidade from "../model/unidade.model";
+import { Request, Response, NextFunction } from 'express';
+import { IController } from './controller.inteface';
+import Area from '../model/area.model';
+import Unidade from '../model/unidade.model';
 
 class AreaController implements IController {
   async all(req: Request, res: Response, next: NextFunction): Promise<any> {
@@ -37,8 +37,6 @@ class AreaController implements IController {
     try {
       const { fkArea } = req.params;
       console.log(fkArea)
-      
-
       const registros = await Area.findOne({
         where: { 
           id: fkArea,

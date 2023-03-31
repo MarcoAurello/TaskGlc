@@ -256,6 +256,8 @@ class AtividadeController implements IController {
       });
       const statusParado = await Status.findOne({ where: { nome: "Parado" } });
 
+
+
       const claImediata = await Classificacao.findOne({
         where: { nome: "Execução Imediata" },
       });
@@ -267,6 +269,10 @@ class AtividadeController implements IController {
       });
       const claCircunstancial = await Classificacao.findOne({
         where: { nome: "Circunstancial" },
+      });
+
+      const claNaoDef = await Classificacao.findOne({
+        where: { nome: "Não Definido" },
       });
 
       // const registros = await Atividade.findAll({
@@ -423,11 +429,46 @@ class AtividadeController implements IController {
           },
         },
       });
+
+      const registroNaoDefinidos = await Atividade.findAll({
+        include: [
+          { model: Area, include: [Unidade] },
+          Classificacao,
+          Status,
+          {
+            model: Usuario,
+            foreignKey: "fkUsuarioExecutor",
+            as: "UsuarioExecutor",
+            include: [{ model: Area, include: [Unidade] }],
+          },
+          {
+            model: Usuario,
+            foreignKey: "fkUsuarioSolicitante",
+
+            include: [{ model: Area, include: [Unidade] }],
+          },
+        ],
+        where: {
+          fkClassificacao: claNaoDef?.id,
+          fkUsuarioExecutor: req.usuario.id,
+          arquivado: false,
+          fkStatus: {
+            [Op.or]: [
+              statusAberto?.id,
+              statusIniciado?.id,
+              statusPlanejado?.id,
+              statusPendente?.id,
+              statusParado?.id,
+            ],
+          },
+        },
+      });
       const registosOrdenados = [
         ...registrosImediatos,
         ...registrosUrgentes,
         ...registrosImportantes,
         ...registroCircunstancial,
+        ...registroNaoDefinidos
       ];
 
       res.status(200).json({ data: registosOrdenados });
