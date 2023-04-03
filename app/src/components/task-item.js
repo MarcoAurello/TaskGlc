@@ -83,12 +83,10 @@ const TaskItem = (props) => {
   // }
 
   function arquivarAtividade() {
-    // alert(arquivado)
+    alert(props.status)
 
 
-    if (props.status != 'Concluido' || props.status != 'Cancelado') {
-      alert('para arquivar a atividade deve ser Concluida ou Cancelada')
-    } else {
+    
 
       const token = getCookie('_token_task_manager')
       const params = {
@@ -127,7 +125,7 @@ const TaskItem = (props) => {
 
 
 
-    }
+    
   }
 
   // function carregarArea() {
@@ -254,12 +252,12 @@ const TaskItem = (props) => {
         <div style={{ fontSize: 13, color: '#424242', marginTop: 16 }}>
          
 
-            {tela !== 'minhas' ? <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+            {/* {tela !== 'minhas' ? <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
             Setor Executor : {props.setorExecutor}</div>: ''}
 
             
             {tela !== 'minhas' ? <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-            Usuario Executor : {props.usuarioExecutor}</div>: ''}
+            Usuario Executor : {props.usuarioExecutor}</div>: ''} */}
 
          
 

@@ -49,7 +49,7 @@ const AtividadeNotificationItem = (props) => {
     borderBottom: '2px solid #EEEEEE', minWidth: 150, maxWidth:400}}
      onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`}>
       
-      <div style={{ marginLeft: 16,marginBottom:5 }}><b style={{color:'red'}}>Encaminhar chamado &#10145; </b>
+      <div style={{ marginLeft: 16,marginBottom:5 }}><b style={{color:'red'}}>Selecionar Executor &#10145; </b>
       <div style={{ width: '80%', fontSize: 12,  color: '#424242', wordBreak:"break-all", whiteSpace:'pre-wrap' }}><b>{'Assunto: '+item.titulo}</b></div>
         
       <div style={{ width: '100%', fontSize: 12, color: '#424242'}}>{'Solicitado por: '+ item.Usuario.nome}</div>
@@ -60,7 +60,7 @@ const AtividadeNotificationItem = (props) => {
         {item.categoria ==='' ?'' :
          <div style={{ width: '100%', fontSize: 12,  color: '#424242'}}>{'Categoria:'+ item.categoria}</div>  }
         
-        <div style={{ width: '70%' , marginTop: 4, paddingLeft: 8 }}>
+        <div style={{ width: '70%' , marginTop: 4 }}>
           <Button  variant="contained" size="small" >Selecionar Funcionario</Button>
         </div>
       </div>

@@ -24,12 +24,12 @@ class MensagemController implements IController {
   }
 
   async create(req: any, res: Response, next: NextFunction): Promise<any> {
+
     try {
       const { fkAtividade, conteudo, email, emailExecutor} = req.body;
       const titulo = await Atividade.findOne({ where: { id: fkAtividade } });
       // const status = await Atividade.findOne({where: { id: fkAtividade } })
       // console.log(titulo?.fkStatus)
-
       await Mensagem.create(
         {
           fkAtividade,
@@ -49,14 +49,14 @@ class MensagemController implements IController {
         }
       )
 
-      // const txEmail =
-      //   'Sua Solicitação: ' + titulo?.protocolo + '.\n tem nova interação! ' + conteudo;
+      const txEmail =
+        'Atividade: ' + titulo?.titulo + '.\n tem nova interação! ' + conteudo;
 
-      // emailUtils.enviar(email, txEmail);
+      emailUtils.enviar(email, txEmail);
 
-      // const txEmailExecutor =
-      //   'Sua Atividade: \n' + titulo?.titulo + '. \n recebeu uma nova mensagem! ' + conteudo;
-      // emailUtils.enviar(emailExecutor, txEmailExecutor);
+      if (emailExecutor) {
+        emailUtils.enviar(emailExecutor, 'Atividade: \n'+ titulo?.titulo + '. \n recebeu uma nova mensagem! ' + conteudo);
+      }
 
       const atividade = await Atividade.findOne({ where: { id: fkAtividade } });
 

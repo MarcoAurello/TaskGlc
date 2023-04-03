@@ -1,4 +1,4 @@
-import { Chip, MenuItem } from '@mui/material'
+import { Button, Chip, MenuItem } from '@mui/material'
 import React, { useState } from 'react'
 import Avatar from '@mui/material/Avatar';
 
@@ -67,12 +67,12 @@ const AtividadeRecebidaNotificationItem = (props) => {
         <MenuItem style={{ display: 'flex', marginBottom: 5, flexDirection: 'row', borderBottom: '1px solid #EEEEEE', minWidth: 350 }}
             onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`}>
 
-            <div style={{ marginLeft: 16, marginBottom: 5 }}><b>Chegou Atividade &#9997; </b>
+            <div style={{ marginLeft: 16, marginBottom: 5, color: 'red' }}><b>Nova Atividade para você &#9997; </b>
 
                 <div style={{ width: '100%', fontSize: 12, color: '#424242' }}>{'Chamado: ' + item.titulo}</div>
                 <div style={{ width: '100%', fontSize: 12, color: '#424242' }}>{'Solicitante: ' + item.Usuario.nome}</div>
-                <div style={{ width: '100%', fontSize: 12, color: '#424242'}}>{'Unidade: '+ item.Usuario.Area.Unidade.nome}</div>
-     
+                <div style={{ width: '100%', fontSize: 12, color: '#424242' }}>{'Unidade: ' + item.Usuario.Area.Unidade.nome}</div>
+
                 {item.categoria === '' ? '' :
                     <div style={{ width: '100%', fontSize: 12, color: '#424242' }}>{'Categoria: ' + item.categoria}</div>}
 
@@ -80,8 +80,8 @@ const AtividadeRecebidaNotificationItem = (props) => {
                 {/* <div style={{ width: '100%', 
                 fontSize: 12, color: '#424242' }}>{'Problema: ' + item.titulo}</div> */}
 
-                <div style={{ width: '135px', marginTop: 8, backgroundColor: '#1E90FF', borderRadius: 50, paddingLeft: 8 }}>
-                    ver o chamado
+                <div style={{ width: '70%', marginTop: 4 }}>
+                    <Button variant="contained" size="small" >Ver Atividade</Button>
                 </div>
             </div>
         </MenuItem>

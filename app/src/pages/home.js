@@ -23,8 +23,8 @@ const Home = (props) => {
   const [openLoadingDialog, setOpenLoadingDialog] = useState(false)
   const [openMessageDialog, setOpenMessageDialog] = useState(false)
   const [checked, setChecked] = React.useState(false);
-  const [fkArea, setfkArea]=useState('')
-  const [subarea, setSubArea]=useState([])
+  const [fkArea, setfkArea] = useState('')
+  const [subarea, setSubArea] = useState([])
 
 
 
@@ -140,30 +140,6 @@ const Home = (props) => {
         }).catch(err => console.log(err))
       })
   }
-  function carregarSetor() {
-    // setOpenLoadingDialog(true)
-    const token = getCookie('_token_task_manager')
-    const params = {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    }
-    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/area/?fkUnidade=${logged ? logged.Area.fkUnidade:''}`, params)
-      .then(response => {
-        const { status } = response
-        response.json().then(data => {
-          setOpenLoadingDialog(false)
-
-          if (status === 401) {
-            // alert(status)
-          } else if (status === 200) {
-            setSetor(data.data)
-            // filtrarUsuariosDemandados()
-
-          }
-        }).catch(err => setOpenLoadingDialog(true))
-      })
-  }
 
   useEffect(() => {
     function carregarSetor() {
@@ -174,8 +150,8 @@ const Home = (props) => {
           'Authorization': `Bearer ${token}`
         }
       }
-      fetch(`${process.env.REACT_APP_DOMAIN_API}/api/area/?fkUnidade=${logged ? logged.Area.fkUnidade:''}`, params)
-      .then(response => {
+      fetch(`${process.env.REACT_APP_DOMAIN_API}/api/area/?fkUnidade=${logged ? logged.Area.fkUnidade : ''}`, params)
+        .then(response => {
           const { status } = response
           response.json().then(data => {
             setOpenLoadingDialog(false)
@@ -196,7 +172,7 @@ const Home = (props) => {
     }
   }, [checked])
 
-  
+
 
   useEffect(() => {
     function carregarSubArea() {
@@ -257,19 +233,21 @@ const Home = (props) => {
       }
 
       <center>
-       
-        Selecione por área <Switch
-        label="Selecionar por Area"
-        checked={checked}
-        onChange={handleChange}
-        inputProps={{ 'aria-label': 'controlled' }
 
-        }
+        <div style={{ fontSize: 20 }}>Recebidas  por área
+          <Switch
+            label="Selecionar por Area"
+            checked={checked}
+            onChange={handleChange}
+            inputProps={{ 'aria-label': 'controlled' }
 
-      />
-    
-    
-        
+            }
+
+          />
+        </div> <hr></hr>
+
+
+
 
         {!checked ?
           <Box
@@ -278,7 +256,13 @@ const Home = (props) => {
               maxWidth: '100%',
             }}
           >
-            <TextField error fullWidth id="outlined-error-helper-text" label="Pesquise Palavra chave, protocolo, funcionario ou setor" name='pesquisa' value={pesquisa} onChange={e => setPesquisa(e.target.value)} />
+            <TextField fullWidth id="filled-basic" variant="filled"
+              label="Pesquise por Protocolo"
+              name='pesquisa' value={pesquisa}
+              type='number'
+
+              style={{ backgroundColor: '#fff3d1' }}
+              onChange={e => setPesquisa(e.target.value)} />
             <p></p>
 
             {/* <Button type="button" className="btn btn-primary" onClick={(e) => { pesquisar() }}>Buscar </Button> */}
@@ -292,7 +276,7 @@ const Home = (props) => {
 
         }
 
-        {checked  ?
+        {checked ?
           <Box
             sx={{
               width: 500,
@@ -309,29 +293,36 @@ const Home = (props) => {
                   labelId="demo-select-small"
                   id="demo-select-small"
                   label="pesquisa"
+                  style={{ backgroundColor: '#fff3d1' }}
                   value={pesquisa}>
 
-                  {setor.map((item, index) => <MenuItem key={index} value={item.nome} onClick={() =>[ setPesquisa(item.nome),
+                  {setor.map((item, index) => <MenuItem key={index} value={item.nome} onClick={() => [setPesquisa(item.nome),
                   setfkArea(item.id)]}>{item.nome}</MenuItem>)}
 
 
                 </Select><p></p>
+
               </FormControl>
-              <FormControl size="small" fullWidth>
-                <InputLabel id="demo-select-small">Sub Área </InputLabel>
-                <Select
-                  fullWidth
+              {subarea ?
+                <FormControl size="small" fullWidth>
+                  <InputLabel id="demo-select-small">Sub Área </InputLabel>
+                  <Select
+                    fullWidth
 
-                  labelId="demo-select-small"
-                  id="demo-select-small"
-                  label="pesquisa"
-                  value={pesquisa}>
+                    labelId="demo-select-small"
+                    id="demo-select-small"
+                    label="pesquisa"
+                    style={{ backgroundColor: '#fff3d1' }}
+                    value={pesquisa}>
 
-                  {subarea.map((item, index) => <MenuItem key={index} value={item.nome} onClick={() => setPesquisa(item.nome)}>{item.nome}</MenuItem>)}
+                    {subarea.map((item, index) => <MenuItem key={index} value={item.nome} onClick={() => setPesquisa(item.nome)}>{item.nome}</MenuItem>)}
 
 
-                </Select>
-              </FormControl>
+                  </Select>
+                </FormControl>
+                : ''
+              }
+
             </div>
           </Box>
 
@@ -341,16 +332,21 @@ const Home = (props) => {
         }
 
         {respostas ? <centre>
-          <table className="table table-striped" style={{ fontFamily: "arial", fontSize: '12px', marginLeft: 10, marginRight: 20, width: '80%' }}>
+          <table className="table table-striped" style={{ fontFamily: "arial", fontSize: '12px', marginLeft: 10, marginRight: 10, width: '100%' }}>
 
             <tbody>
               {respostas.map((item, index) =>
                 <tr key={index}>
-                  <th scope="row" style={{ wordBreak: "break-all" }}>{item.titulo}<br></br>
-                    {'Categoria : '+item.categoria}<br></br>
-                    {'Status : '+item.Status.nome}
-                    </th><br></br>
-                    
+                  <th scope="row" style={{ wordBreak: "break-all" }}>
+                    {!item.fkUsuarioExecutor ? <div style={{ color: 'red', size: 28 }}> &#128587; Atividade aguardando executor </div> :
+                      <div style={{ color: 'Blue' }}> &#9989; Atividade já possui executor </div>}
+                    {'Titulo: ' + item.titulo}<br></br>
+                    {'Status : ' + item.Status.nome}<br></br>
+                    {item.categoria === '' ? '' : 'Categoria : ' + item.categoria}<br></br>
+
+
+                  </th><br></br>
+
                   <th>
                     <Button variant="contained" size="small" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`}>
                       abrir atividade

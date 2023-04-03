@@ -18,7 +18,7 @@ module.exports = {
       id: uuid(),
       autenticacaoAd: false,
       email: 'semresposta@pe.senac.br',
-      password: 'Gti22122022',
+      password: 'Gti23032023',
       host: 'smtp.office365.com',
       porta: '587',
       ssl: true,

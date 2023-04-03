@@ -614,9 +614,13 @@ class AtividadeController implements IController {
   //   }
   // }
 
-  async search(req: Request, res: Response, next: NextFunction): Promise<any> {
+  async search(req: any, res: Response, next: NextFunction): Promise<any> {
     try {
       const { pesquisa } = req.query;
+
+      // const unidade = await Unidade.findOne({ where: { id: req.usuario.area.fkUnidade } });
+      // const { Usuario } = req;
+      // console.log(JSON.stringify(unidade))
 
       // console.log('pesquisa: ' + pesquisa);
       const registros = await Atividade.findAll({
@@ -640,17 +644,17 @@ class AtividadeController implements IController {
         order: [["createdAt", "DESC"]],
         where: {
           // "$UsuarioExecutor.Area.fkUnidade$": req.usuario.area.fkUnidade,
+          // "$Area.fkUnidade$" : unidade?.id,
+          arquivado: false,
 
           [Op.or]: [
-            { titulo: { [Op.like]: `%${pesquisa}%` } },
-            { protocolo: { [Op.like]: `%${pesquisa}%` } },
-            { categoria: { [Op.like]: `%${pesquisa}%` } },
-            { "$Area.nome$": { [Op.like]: `%${pesquisa}%` } },
-            { "$UsuarioExecutor.nome$": { [Op.like]: `%${pesquisa}%` } },
-            { "$Usuario.nome$": { [Op.like]: `%${pesquisa}%` } },
-            {"$UsuarioExecutor.Area.Unidade.nome$": { [Op.like]: `%${pesquisa}%`,
-              },
-            },
+            // { titulo: { [Op.like]: `%${pesquisa}%` } },
+            { protocolo: { [Op.like]: `${pesquisa}` } },
+            { categoria: { [Op.like]: `${pesquisa}` } },
+            { "$Area.nome$": { [Op.like]: `${pesquisa}` } },
+            { "$UsuarioExecutor.nome$": { [Op.like]: `${pesquisa}` } },
+            { "$Usuario.nome$": { [Op.like]: `${pesquisa}` } },
+            {"$UsuarioExecutor.Area.Unidade.nome$": { [Op.like]: `${pesquisa}`, }, },
 
             // {"$Mensagem$.conteudo" : { [Op.like]: `%${pesquisa}%`} }
           ],

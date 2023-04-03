@@ -67,7 +67,7 @@ const ChamadosAbertos = (props) => {
       idChamado= {item.id}
       tituloChamado={item.titulo}
       protocoloChamado={item.protocolo}
-      // setorExecutor={item.UsuarioExecutor.Area.Unidade.nome}
+      setorExecutor={'item.Area.nome'}
       // usuarioExecutor={item.UsuarioExecutor.nome}
       criacaoChamado={item.createdAt}
       classificacao={item.Classificacao.nome}
