@@ -129,7 +129,7 @@ module.exports = {
     },
     {
       id: uuid(),
-      nome: 'MMXM',
+      nome: 'MXM',
       fkArea: ProcessosDep[0][0].id,
       createdAt: new Date(),
       updatedAt: new Date()
