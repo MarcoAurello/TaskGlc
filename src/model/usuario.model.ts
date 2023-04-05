@@ -143,7 +143,7 @@ Usuario.init({
   hooks: {
     async beforeCreate (instance) {
       instance.id = uuid()
-      // instance.passwordHash = await bcrypt.hash(instance.password, 8)
+      instance.passwordHash = await bcrypt.hash(instance.password, 8)
     }
   }
 })

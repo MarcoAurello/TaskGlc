@@ -8,7 +8,7 @@ require('dotenv').config({ path: process.env.DEVMODE?.trim() === 'test' ? '.env.
 //   logging: false
 // })
 
-const sequelize = new Sequelize('TaskManager', 'sa', 'local', {
+const sequelize = new Sequelize('TaskManager', 'taskmanager', '#@dmSENAC#', {
   host: '10.9.8.15',
   dialect: 'mssql',
   logging: false
