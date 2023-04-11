@@ -53,6 +53,11 @@ const routes = [
     exact: true,
     main: MeuPerfil,
   },
+  {
+    path: "/video",
+    exact: true,
+    main: video,
+  },
   // {
   //   path: "/configuracoes",
   //   main: Configuracoes,

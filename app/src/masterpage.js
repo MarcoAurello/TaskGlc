@@ -4,6 +4,7 @@ import { Switch, BrowserRouter as Router, Route } from "react-router-dom";
 import Content from "./components/content";
 
 import Home from './pages/home';
+import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Usuario from './pages/usuario'
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
@@ -73,6 +74,7 @@ import AtividadeForm from "./pages/chamado-form";
 import TaskItem from "./components/task-item";
 import TodasAsPendencias from "./pages/todasAsPendencias";
 import SolicitadasSetor from "./pages/solicitadasSetor";
+import Video from "./pages/video";
 
 const getCookie = require("./utils/getCookie")
 
@@ -779,6 +781,19 @@ const Masterpage = (props) => {
               </AccordionDetails>
             </Accordion>
 
+            
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+
+                <Typography style={{ fontSize: 14, color: '#2c73d1' }}
+                 onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/video/`}>Tutorial <OndemandVideoIcon/></Typography>
+              </AccordionSummary>
+              
+            
+
             {/* <ListItem disablePadding>
                   <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/recebidasSetor/`}>
                     <ListItemIcon>
@@ -1032,6 +1047,11 @@ const Masterpage = (props) => {
             exact
             path="/home"
             render={(props) => <Home {...props} logged={logged} />}
+          />
+           <Route
+            exact
+            path="/video"
+            render={(props) => <Video {...props} logged={logged} />}
           />
 
 
