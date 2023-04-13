@@ -52,7 +52,7 @@ const RecebidasSetor = (props) => {
           if (status === 401) {
           } else if (status === 200) {
 
-            alert(JSON.stringify(data.data))
+            // alert(JSON.stringify(data.data))
 
             setMeuSetor(data.data)
 
