@@ -8,6 +8,7 @@ import Area from "../model/area.model";
 import Usuario from "../model/usuario.model";
 import Classificacao from "../model/classificacao.model";
 import Arquivo from "../model/arquivo.model";
+import emailUtils from "../utils/email.utils";
 
 // import UsuarioAtividade from "../model/usuarioAtividade.model";
 import Unidade from "../model/unidade.model";
@@ -67,6 +68,9 @@ class AtividadeController implements IController {
         where: { nome: "Aberto" },
       });
 
+    
+
+
       const atividade = await Atividade.create({
         titulo,
         fkClassificacao: classificacao?.id,
@@ -81,11 +85,22 @@ class AtividadeController implements IController {
         caminho,
       });
 
+      // const emailCoordenadores = await queryInterface.sequelize.query('select email from usuario where fkArea = \'Aberto\'')
+      // const status = await queryInterface.sequelize.query('select id from status where nome = \'Aberto\'')
+
       await Mensagem.create({
         conteudo,
         fkAtividade: atividade.id,
         fkUsuario: req.usuario.id,
       });
+
+      const funcionarioDaArea = await Usuario.findAll({
+        where: { fkArea: fkArea },
+      })
+
+      funcionarioDaArea.map((usuario, index) =>
+      emailUtils.enviar(usuario.email, 'Chegou atividade para demandar'))
+
 
       const atividadeSalva = await Atividade.findOne({
         where: { titulo: titulo },
@@ -798,6 +813,8 @@ class AtividadeController implements IController {
         ],
         where: whereCustum,
       });
+
+
 
       res.status(200).json({ data: registros });
     } catch (err) {

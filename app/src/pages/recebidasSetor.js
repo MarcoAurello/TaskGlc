@@ -52,7 +52,7 @@ const RecebidasSetor = (props) => {
           if (status === 401) {
           } else if (status === 200) {
 
-            // alert(JSON.stringify(data.data))
+            alert(JSON.stringify(data.data))
 
             setMeuSetor(data.data)
 
@@ -192,7 +192,7 @@ const RecebidasSetor = (props) => {
 
   const data = [
 
-    ["Status", '11111'],
+    // ["Status", '11111'],
     ["Iniciadas", meuSetor.reduce((contador, item) => contador += item.Status.nome === 'Iniciado', 0)],
     ["Em Aberto", meuSetor.reduce((contador, item) => contador += item.Status.nome === 'Aberto', 0)],
     ["Para iniciar", meuSetor.reduce((contador, item) => contador += item.Status.nome === 'Planejado para Iniciar', 0)],

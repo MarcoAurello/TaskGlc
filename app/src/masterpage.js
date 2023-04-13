@@ -262,6 +262,10 @@ const Masterpage = (props) => {
             } else if (status === 200) {
               setAtividadesNaoAtribuidas(data.data)
               setFkNaoAtrib(data.data.fkArea)
+              // if(naoAtrib.length){
+              //   alert(naoAtrib)
+              // }
+                // alert(naoAtrib)
               // alert(JSON.stringify(naoAtrib))
               // setUsuariosNaoValidados(data.data)
             }

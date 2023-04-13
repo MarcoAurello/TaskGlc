@@ -1147,6 +1147,8 @@ const AtividadeForm = (props) => {
               }
             </Select>
 
+            
+
           </FormControl>
 
 
@@ -1177,6 +1179,7 @@ const AtividadeForm = (props) => {
 
 
             </Select>
+           
 
             <hr></hr>
 
@@ -1184,8 +1187,15 @@ const AtividadeForm = (props) => {
           </FormControl>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenStatus(false)}>Cancelar</Button>
-          <Button onClick={() => { onSaveStatus() }} >Alterar</Button>
+        {tempoEstimado != '' && newStatus != '' ?
+          <div>
+            <DialogActions>
+              <Button onClick={() => setOpenStatus(false)}>Cancelar</Button>
+              <Button onClick={() => { onSaveStatus() }} >Alterar</Button>
+            </DialogActions>
+
+          </div>
+          : ''}
         </DialogActions>
       </Dialog>
 
