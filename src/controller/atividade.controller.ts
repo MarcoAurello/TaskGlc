@@ -8,13 +8,12 @@ import Area from "../model/area.model";
 import Usuario from "../model/usuario.model";
 import Classificacao from "../model/classificacao.model";
 import Arquivo from "../model/arquivo.model";
-import emailUtils from "../utils/email.utils";
 
 // import UsuarioAtividade from "../model/usuarioAtividade.model";
 import Unidade from "../model/unidade.model";
 import PerfilUtils from "../utils/perfil.utils";
 const multer = require("multer");
-// import emailUtils from "../utils/email.utils";
+import emailUtils from "../utils/email.utils";
 const { Op } = require("sequelize");
 
 class AtividadeController implements IController {
@@ -68,9 +67,6 @@ class AtividadeController implements IController {
         where: { nome: "Aberto" },
       });
 
-    
-
-
       const atividade = await Atividade.create({
         titulo,
         fkClassificacao: classificacao?.id,
@@ -94,12 +90,7 @@ class AtividadeController implements IController {
         fkUsuario: req.usuario.id,
       });
 
-      const funcionarioDaArea = await Usuario.findAll({
-        where: { fkArea: fkArea },
-      })
-
-      funcionarioDaArea.map((usuario, index) =>
-      emailUtils.enviar(usuario.email, 'Chegou atividade para demandar'))
+     
 
 
       const atividadeSalva = await Atividade.findOne({
@@ -116,6 +107,13 @@ class AtividadeController implements IController {
           }
         );
       });
+
+      const funcionarioDaArea = await Usuario.findAll({
+        where: { fkArea: fkArea },
+      })
+
+      funcionarioDaArea.map((usuario, index) =>
+      emailUtils.enviar(usuario.email, 'Chegou atividade para seu setor'))
 
       res
         .status(200)
