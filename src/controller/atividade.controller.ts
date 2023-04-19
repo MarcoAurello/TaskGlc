@@ -32,8 +32,8 @@ class AtividadeController implements IController {
         caminho,
         listaDeArquivosEnviados,
       } = req.body;
-      console.log(req.body);
-      console.log(listaDeArquivosEnviados);
+      // console.log(req.body);
+      // console.log(listaDeArquivosEnviados);
 
       if (!fkUnidade) {
         return res.status(401).json({

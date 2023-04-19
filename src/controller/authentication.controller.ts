@@ -58,6 +58,7 @@ class AuthenticationController {
         if (!await bcrypt.compare(password, registro.passwordHash)) {
           return res.status(401).json({ message: 'Senha inválida.' })
         }
+        
 
         return res.status(200).json({ message: 'Usuário validado com sucesso.', token: registro.generateToken() })
       }
