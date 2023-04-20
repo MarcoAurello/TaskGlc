@@ -331,7 +331,7 @@ const Home = (props) => {
 
         }
 
-        {respostas ? <centre>
+        {respostas ? <center>
           <table className="table table-striped" style={{ fontFamily: "arial", fontSize: '12px', marginLeft: 10, marginRight: 10, width: '100%' }}>
 
             <tbody>
@@ -358,7 +358,7 @@ const Home = (props) => {
             </tbody>
           </table>
 
-        </centre> :
+        </center> :
           ''
         }
 

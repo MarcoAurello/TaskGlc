@@ -42,6 +42,7 @@ class ArquivoController implements IController {
         console.log(arquivo)
 
         let extension = ".pdf";
+
         switch (arquivo.mimetype) {
             case "image/jpeg": {
                 extension = ".jpeg";
@@ -55,10 +56,18 @@ class ArquivoController implements IController {
                 extension = ".pdf";
                 break;
             }
+            case "application/vnd.openxmlformats-officedocument.wordprocessingml.document": {
+              extension = ".docx";
+              break;
+          }
+          case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+            extension = ".xlsx";
+            break;
+          }
             default: {
                 return res.status(401).json({
                     message:
-                    "Atenção só é permitido upload de arquivos nos formatos: .pdf, .jpeg, .png.",
+                    "arquivo não suportado",
                 });
             }
         }

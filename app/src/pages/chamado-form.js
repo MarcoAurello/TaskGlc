@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from "react";
 import styled from 'styled-components'
 import {
-  Alert, Avatar, Button, Checkbox, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel,
+  Alert, Avatar, Box, Button, Checkbox, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel,
   FormGroup, Hidden, IconButton, InputLabel, MenuItem, Select, Switch, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination,
   TableRow, TextField, Tooltip
 } from "@mui/material";
 
 import TaskItemDoChamado from "../components/task-item-do-chamado";
 import PerfilUtils from "../utils/perfil.utils";
-import AttachFileSharpIcon from '@mui/icons-material/AttachFileSharp';
+import MessageIcon from '@mui/icons-material/Message';
+
 
 import PersonIcon from '@mui/icons-material/Person';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import UploadButton from "../components/UploadButton";
 import { color } from "@mui/system";
+import TaskFilter from "../components/task-filter";
 
 
 const getCookie = require('../utils/getCookie')
@@ -49,6 +51,7 @@ const AtividadeForm = (props) => {
   const [newStatus, setNewStatus] = useState('')
   const [newStatusControler, setNewStatusControler] = useState('')
   const [statusId, setStatusId] = useState('')
+  const [setorDemandante, setSetorDemandante] = useState('')
 
   const [protocolo, setProtocolo] = useState('')
   const [status, setStatus] = useState('')
@@ -64,7 +67,7 @@ const AtividadeForm = (props) => {
   const [tempoEstimado, setTempoEstimado] = useState('')
   const [createdAt, setCreatedAt] = useState('')
   const [title, setTitle] = useState('')
- 
+
 
   const [titulo, setTitulo] = useState('')
   const [conteudo, setConteudo] = useState('')
@@ -153,7 +156,7 @@ const AtividadeForm = (props) => {
               getEmailExecutor(data.data.UsuarioExecutor.email)
               getTelefoneExecutor(data.data.UsuarioExecutor.telefone)
               getFkExecutor(data.data.UsuarioExecutor.id)
-             
+
 
 
 
@@ -184,7 +187,7 @@ const AtividadeForm = (props) => {
               setMessage(data.message)
               setOpenMessageDialog(true)
             } else if (status === 200) {
-              
+
               setOpenLoadingDialog(false)
               setMensagens(data.data)
             }
@@ -468,6 +471,8 @@ const AtividadeForm = (props) => {
 
 
   const onSave = () => {
+    // setSetorSolicitante(props.logged.Area.Unidade.nome)
+
     const token = getCookie('_token_task_manager')
     const params = {
       method: 'POST',
@@ -475,8 +480,9 @@ const AtividadeForm = (props) => {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
-      
+
       body: JSON.stringify({
+        setorSolicitante: props.logged.Area.Unidade.nome,
         listaDeArquivosEnviados,
         caminho,
         fkUnidade,
@@ -565,6 +571,8 @@ const AtividadeForm = (props) => {
         conteudo,
         email: emailUsuarioSolicitante,
         emailExecutor: emailExecutor,
+        caminho,
+        listaDeArquivosEnviados
 
 
 
@@ -700,6 +708,7 @@ const AtividadeForm = (props) => {
 
 
   return (
+
     <PageContainer>
 
 
@@ -783,9 +792,14 @@ const AtividadeForm = (props) => {
           <TextField size="small" fullWidth label="Chamado" disabled variant="outlined" value={title} />
         </div> : ''} */}
         {!id ? <>
+          {logged ? <TaskFilter nome={props.logged.nome + ', solicite uma atividade'} setSetorSolicitante={props.logged.Area?.Unidade.nome} />
+            :
+            ''
+          }
           <FormGroup>
 
-            <div style={{ flex: 1, marginBottom: 16,wordBreak:'break-all' }}>
+            <div style={{ flex: 1, marginBottom: 16, wordBreak: 'break-all' }}
+            >
               Solicitar Atividade<br></br>
 
 
@@ -813,7 +827,7 @@ const AtividadeForm = (props) => {
               </FormControl>
             </div>
 
-            <div style={{ flex: 1, marginBottom: 16, wordBreak:"break-all" }}>
+            <div style={{ flex: 1, marginBottom: 16, wordBreak: "break-all" }}>
               <FormControl fullWidth size="small">
                 <InputLabel id="demo-select-small">Área</InputLabel>
                 <Select
@@ -832,11 +846,11 @@ const AtividadeForm = (props) => {
             {dep === 'DEP'
               ?
               <div style={{ flex: 1, marginBottom: 16 }}>
-                <FormControl  size="small" fullWidth>
+                <FormControl size="small" fullWidth>
                   <InputLabel id="demo-select-small">Categoria</InputLabel>
                   <Select
-                  fullWidth
-                   
+                    fullWidth
+
                     labelId="demo-select-small"
                     id="demo-select-small"
                     label="categoria"
@@ -875,11 +889,16 @@ const AtividadeForm = (props) => {
             classificarChamado.map((classificacao, key) => <option name={classificacao.nome} value={classificacao.id} >
                   {classificacao.nome}</option>) */}
 
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'row', alignSelf:"self-start" }}>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'row', alignSelf: "self-start" }}>
               {/* <Button variant="outlined" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/area/`}>Voltar</Button> */}
               <div style={{ flex: 1 }}></div>
               <Button variant="contained" onClick={onSave}>{'Criar'}</Button>
             </div>
+            {/* <TextField
+              type="hidden"
+              value={setorSolicitante}
+              onChange={(event) => setSetorSolicitante(logged.Area.Unidade.nome)}
+            /> */}
           </FormGroup>
 
 
@@ -931,16 +950,23 @@ const AtividadeForm = (props) => {
               padding: 2, background: '#F5FFFA', borderRadius: 10, marginBottom: 1,
               border: '2px solid #e0e0e0'
             }}><div style={{ marginLeft: 20 }}><b>Anexos</b></div>
+              <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
+
+                <Button size="small" variant="contained" onClick={() => [setOpenMsg(true)]}><AttachFileIcon />Anexar Mais Arquivos  </Button>
+              </div>
 
               {
-
+              
                 <ol>
 
                   {arquivoDoChamado.map((item, index) =>
                     <li>
-                      {<Button size="small" variant="contained" color="primary" style={{ color: '#fff', marginLeft: 5, marginBottom: 5, fontSize: 10 }} onClick={() => [setOpenDialogFile(true), setOpenFile(item.id)]}><AttachFileIcon></AttachFileIcon>{item.nomeApresentacao} </Button>}
+                       
+                      {<Button size="small"  style={{  marginLeft: 5, marginBottom: 5, fontSize: 10 }} onClick={() => [setOpenDialogFile(true), setOpenFile(item.id)]}><AttachFileIcon></AttachFileIcon>{item.nomeApresentacao} </Button>}
                     </li>)}
+                    
                 </ol>
+                
 
               }
             </div>
@@ -965,7 +991,7 @@ const AtividadeForm = (props) => {
 
             <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
               <h4>Histórico da Atividade</h4>
-              <Button size="small" variant="contained" onClick={() => [setOpenMsg(true)]}>Comentário</Button>
+              <Button size="small" variant="contained" onClick={() => [setOpenMsg(true)]}><MessageIcon />Comentar </Button>
             </div>
 
             :
@@ -980,8 +1006,8 @@ const AtividadeForm = (props) => {
 
 
           {mensagens.map((item, index) =>
-         
-            
+
+
             <div style={{
               borderTop: '1px solid #e0e0e0',
               padding: 2, background: '#FFFFE0', borderRadius: 10, marginBottom: 1,
@@ -1147,7 +1173,7 @@ const AtividadeForm = (props) => {
               }
             </Select>
 
-            
+
 
           </FormControl>
 
@@ -1179,7 +1205,7 @@ const AtividadeForm = (props) => {
 
 
             </Select>
-           
+
 
             <hr></hr>
 
@@ -1187,15 +1213,15 @@ const AtividadeForm = (props) => {
           </FormControl>
         </DialogContent>
         <DialogActions>
-        {tempoEstimado != '' && newStatus != '' ?
-          <div>
-            <DialogActions>
-              <Button onClick={() => setOpenStatus(false)}>Cancelar</Button>
-              <Button onClick={() => { onSaveStatus() }} >Alterar</Button>
-            </DialogActions>
+          {tempoEstimado != '' && newStatus != '' ?
+            <div>
+              <DialogActions>
+                <Button onClick={() => setOpenStatus(false)}>Cancelar</Button>
+                <Button onClick={() => { onSaveStatus() }} >Alterar</Button>
+              </DialogActions>
 
-          </div>
-          : ''}
+            </div>
+            : ''}
         </DialogActions>
       </Dialog>
 
@@ -1210,23 +1236,22 @@ const AtividadeForm = (props) => {
             <h2>Deixe uma mensagem</h2>
             : <h4>Informe o motivo da alteração do Status</h4>}
 
-
-
-
-
-
-
-
-          {/* {classificacao == "Não Definido" && status == "Aberto" ?
-            <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
-              <Button variant="contained" onClick={() => setOpen(true)}>{'Encaminhar chamado'}</Button>
-            </div> : ''
-
-          } */}
-
           <div style={{ flex: 1, marginBottom: 2 }}>
             <TextField fullWidth sx={{ m: 1 }} size='200px' label='Digite sua mensagem...' multiline rows={8} variant="outlined" value={conteudo} onChange={e => setConteudo(e.target.value)} />
           </div>
+          <hr></hr>
+          <h4>Anexar arquivo</h4>
+
+          <input type={"file"} style={{
+             border: '2px solid #ccc',
+             padding: '10px',
+             fontSize: '16px',
+             color: '#fff',
+             borderRadius: '5px',
+             backgroundColor: '#176DD3'
+          }} onChange={(e) => enviarArquivo(e.target.files[0])} /><br></br>
+          {listaDeArquivosEnviados.map((item, key) => <b style={{ color: 'blue', fontSize: 11 }}>{item.nomeApresentacao + ' Adicionado'}</b>)}
+          <hr></hr>
 
           <div style={{ flex: 1, display: 'flex', flexDirection: 'row' }}>
             {/* <Button variant="outlined" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/area/`}>Voltar</Button> */}

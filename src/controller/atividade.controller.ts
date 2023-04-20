@@ -20,6 +20,7 @@ class AtividadeController implements IController {
   async all(req: Request, res: Response, next: NextFunction): Promise<any> {
     throw new Error("Method not implemented.");
   }
+  
 
   async create(req: any, res: Response, next: NextFunction): Promise<any> {
     try {
@@ -31,9 +32,11 @@ class AtividadeController implements IController {
         categoria,
         caminho,
         listaDeArquivosEnviados,
+        setorSolicitante
+       
       } = req.body;
       // console.log(req.body);
-      // console.log(listaDeArquivosEnviados);
+      // console.log(setorSolicitante);
 
       if (!fkUnidade) {
         return res.status(401).json({
@@ -66,6 +69,7 @@ class AtividadeController implements IController {
       const status = await Status.findOne({
         where: { nome: "Aberto" },
       });
+
 
       const atividade = await Atividade.create({
         titulo,
@@ -108,12 +112,15 @@ class AtividadeController implements IController {
         );
       });
 
+      // enviar email para funcionarios da area demandada
       const funcionarioDaArea = await Usuario.findAll({
         where: { fkArea: fkArea },
       })
+      const mensagem = 'Chegou atividade da unidade:' + setorSolicitante
 
       funcionarioDaArea.map((usuario, index) =>
-      emailUtils.enviar(usuario.email, 'Chegou atividade para seu setor'))
+
+      emailUtils.enviar(usuario.email, mensagem))
 
       res
         .status(200)
