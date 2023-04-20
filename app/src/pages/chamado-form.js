@@ -680,6 +680,12 @@ const AtividadeForm = (props) => {
     });
   };
 
+  function baixar(item){
+    window.location.href = `${process.env.REACT_APP_DOMAIN_API}/api/arquivo/${item}`
+    // window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${idChamado}/edit`
+
+  }
+
 
   const enviarArquivo = (e) => {
     setArquivo(e)
@@ -952,7 +958,7 @@ const AtividadeForm = (props) => {
             }}><div style={{ marginLeft: 20 }}><b>Anexos</b></div>
               <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
 
-                <Button size="small" variant="contained" onClick={() => [setOpenMsg(true)]}><AttachFileIcon />Anexar Mais Arquivos  </Button>
+               
               </div>
 
               {
@@ -962,7 +968,8 @@ const AtividadeForm = (props) => {
                   {arquivoDoChamado.map((item, index) =>
                     <li>
                        
-                      {<Button size="small"  style={{  marginLeft: 5, marginBottom: 5, fontSize: 10 }} onClick={() => [setOpenDialogFile(true), setOpenFile(item.id)]}><AttachFileIcon></AttachFileIcon>{item.nomeApresentacao} </Button>}
+                      {<Button size="small"  style={{  marginLeft: 5, marginBottom: 5, fontSize: 10 }} onClick={(e) => {
+                       baixar(item.id) }}><AttachFileIcon></AttachFileIcon>{item.nomeApresentacao} </Button>}
                     </li>)}
                     
                 </ol>
@@ -991,7 +998,7 @@ const AtividadeForm = (props) => {
 
             <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
               <h4>Histórico da Atividade</h4>
-              <Button size="small" variant="contained" onClick={() => [setOpenMsg(true)]}><MessageIcon />Comentar </Button>
+              <Button size="small" variant="contained" onClick={() => [setOpenMsg(true)]}><MessageIcon />Comentar ou anexar </Button>
             </div>
 
             :
@@ -1064,7 +1071,7 @@ const AtividadeForm = (props) => {
           </DialogTitle>
           <DialogContent >
             <DialogContentText id="alert-dialog-description">
-              <embed src={window.location.href = `${process.env.REACT_APP_DOMAIN_API}/api/arquivo/${openFile}`} type="application/pdf" width="100%" height="100%"></embed>
+              <embed src={window.location.href = `${process.env.REACT_APP_DOMAIN_API}/api/arquivo/${openFile}`} ></embed>
 
             </DialogContentText>
           </DialogContent>
