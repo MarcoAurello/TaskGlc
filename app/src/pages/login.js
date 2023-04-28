@@ -126,6 +126,9 @@ const Login = () => {
             <Typography component="h1" variant="h5" style={{ marginTop: 16 }}>
               {process.env.REACT_APP_NAME}
             </Typography>
+           
+           
+            <Box component="form" noValidate sx={{ mt: 1 }}>
             <Button
                 fullWidth
                 variant="contained" style={{backgroundColor:'#FF9900'}}
@@ -134,8 +137,6 @@ const Login = () => {
                   baixar() }}
              
               >Leia o manual aqui antes de usar o Sistema</Button>
-           
-            <Box component="form" noValidate sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
                 required
