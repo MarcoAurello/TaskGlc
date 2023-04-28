@@ -88,6 +88,12 @@ const Login = () => {
       </div>
     )
   }
+  function baixar(){
+    // window.location.href = `https://docs.google.com/presentation/d/1vnO8pXkGJIid6I-qdHTTXxySRzg-M13rrkwVNXH8l5I/edit?usp=sharing`
+    // window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${idChamado}/edit`
+    // window.location.href = `https://drive.google.com/file/d/1igAx68w_HlhoeSytnvczEFoCDy0GGu3g/view?usp=share_link`, target=bla
+    window.open('https://drive.google.com/file/d/1igAx68w_HlhoeSytnvczEFoCDy0GGu3g/view?usp=share_link', '_blank');
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -120,6 +126,7 @@ const Login = () => {
             <Typography component="h1" variant="h5" style={{ marginTop: 16 }}>
               {process.env.REACT_APP_NAME}
             </Typography>
+           
             <Box component="form" noValidate sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
@@ -143,10 +150,16 @@ const Login = () => {
                 autoComplete="current-password"
                 onChange={e => setPassword(e.target.value)}
               />
-              <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Lembrar Acesso"
-              />
+               
+              <div>Login e senha é o mesmo do seu email @pe.senac.br</div>
+              <Button
+                fullWidth
+                variant="contained" color="secondary"
+                sx={{ mt: 3, mb: 2 }}
+                onClick={(e) => {
+                  baixar() }}
+             
+              >Leia o manual aqui antes de usar o Sistema</Button>
               <Button
                 fullWidth
                 variant="contained"
@@ -155,8 +168,9 @@ const Login = () => {
               >
                 Entrar
               </Button>
+             
               <div style={{ marginTop: 16, display: 'flex', flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                <div style={{ color: 'rgb(117, 117, 117)', fontSize: 11 }}>@2023</div>
+                <div style={{ color: 'rgb(117, 117, 117)', fontSize: 11 }}>GTI@2023</div>
               </div>
             </Box>
           </Box>
