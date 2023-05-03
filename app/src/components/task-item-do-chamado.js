@@ -115,7 +115,7 @@ Unidade: {props.unidade}</div> */}
                     <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                         <b> Unidade: </b>{props.setorSol}</div>
 
-                    {props.nomeExecutor === '' ? <div style={{ color: 'red' }}>Aguardando Responsável pela Atividade</div>
+                    {props.nomeExecutor === '' ? <div style={{ color: 'red', fontSize:20 }}>Atividade aguardando responsável</div>
                         :
                         <div style={{ flex: 1, fontSize: 12, color: '#424242', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                             <b> Nome:</b>{props.nomeExecutor}</div>

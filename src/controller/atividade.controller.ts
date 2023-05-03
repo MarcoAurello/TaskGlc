@@ -557,7 +557,18 @@ class AtividadeController implements IController {
           { model: Area, include: [Unidade] },
           Classificacao,
           Status,
-          Usuario,
+          {
+            model: Usuario,
+            foreignKey: "fkUsuarioExecutor",
+            as: "UsuarioExecutor",
+            include: [{ model: Area, include: [Unidade] }],
+          },
+          {
+            model: Usuario,
+            foreignKey: "fkUsuarioSolicitante",
+
+            include: [{ model: Area, include: [Unidade] }],
+          },
         ],
         order: [["createdAt", "DESC"]],
         where: {
