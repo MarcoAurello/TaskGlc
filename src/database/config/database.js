@@ -1,4 +1,4 @@
-require('dotenv').config({ path: process.env.DEVMODE.trim() === 'test' ? '.env.test' : '.env' })
+require('dotenv').config({ path:'.env.test'})
 
 module.exports = {
   username: process.env.USER,
