@@ -19,7 +19,7 @@ const TaskFilter = (props) => {
       <div style={{flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center',  height: 48, padding: 16}}>
         <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
           <div style={{fontSize: 24, fontWeight: 'bold', marginBottom: 4, marginRight: 8}}>
-           Ola, {props.nome}
+           Olá, {props.nome}
           </div>
           <IconButton size="medium" edge="end" aria-label="account of current user" aria-haspopup="true"color="inherit">
             <CalendarMonthIcon />
