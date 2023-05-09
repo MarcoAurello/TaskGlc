@@ -6,6 +6,7 @@ import Usuario from "../model/usuario.model";
 import emailUtils from "../utils/email.utils";
 import { IController } from "./controller.inteface";
 import Arquivo from "../model/arquivo.model";
+import Area from "../model/area.model";
 
 class MensagemController implements IController {
   async all(req: Request, res: Response, next: NextFunction): Promise<any> {
@@ -80,6 +81,21 @@ class MensagemController implements IController {
           );
         });
       }
+
+  
+      const executor = await Usuario.findOne({ where: { email: emailExecutor } });
+      const solicitante = await Usuario.findOne({ where: { email: email } });
+
+      const Manutencao = await Area.findOne({ where: { nome:'Manutenção- Elétrica / Hidráulica / Refrigeração/ Mecânica' } });
+
+      if(executor?.fkArea === Manutencao?.id || solicitante?.fkArea === Manutencao?.id){
+        const txEmail = "Atividade: " + titulo?.titulo + ".\n tem nova interação! " + conteudo;
+        emailUtils.enviar('lucascruz@pe.senac.br', txEmail);
+        emailUtils.enviar('karenMiranda@pe.senac.br', txEmail);
+        emailUtils.enviar('gabrielvilela@pe.senac.br', txEmail);
+      }
+
+
 
       const txEmail =
         "Atividade: " + titulo?.titulo + ".\n tem nova interação! " + conteudo;

@@ -682,6 +682,7 @@ const AtividadeForm = (props) => {
 
   function baixar(item){
     window.location.href = `${process.env.REACT_APP_DOMAIN_API}/api/arquivo/${item}`
+    
     // window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${idChamado}/edit`
 
   }
@@ -759,7 +760,7 @@ const AtividadeForm = (props) => {
 
         }
 
-        {logged && props.logged.id === fkExecutor ?
+        {(logged && props.logged.id === fkExecutor) || logged && logged.Perfil.nome === PerfilUtils.Coordenador ?
           <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
             <Button variant="contained" size='small' color="error" onClick={() => setOpenStatus(true)}>Alterar Status da Atividade</Button>
           </div> : ''
