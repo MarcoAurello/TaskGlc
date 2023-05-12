@@ -11,7 +11,11 @@ require('dotenv').config({ path: process.env.DEVMODE?.trim() === 'test' ? '.env.
 const sequelize = new Sequelize('TaskManager', 'taskmanager', '#@dmSENAC#', {
   host: '10.9.8.74',
   dialect: 'mssql',
-  logging: false
+  logging: false,
+  dialectOptions: {
+    timezone: 'America/Sao_Paulo'
+  }
+  
 })
 
 export default sequelize
