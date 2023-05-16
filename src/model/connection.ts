@@ -8,6 +8,8 @@ require('dotenv').config({ path: process.env.DEVMODE?.trim() === 'test' ? '.env.
 //   logging: false
 // })
 
+
+
 const sequelize = new Sequelize('TaskManager', 'taskmanager', '#@dmSENAC#', {
   host: '10.9.8.74',
   dialect: 'mssql',
@@ -17,5 +19,17 @@ const sequelize = new Sequelize('TaskManager', 'taskmanager', '#@dmSENAC#', {
   }
   
 })
+
+// const sequelize = new Sequelize('Tasktest', 'sa', 'local', {
+//   host: '10.9.8.20',
+//   dialect: 'mssql',
+//   logging: false,
+//   dialectOptions: {
+//     timezone: 'America/Sao_Paulo'
+//   }
+  
+// })
+
+
 
 export default sequelize

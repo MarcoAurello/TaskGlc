@@ -16,7 +16,7 @@ module.exports = {
     */
     
    
-    const unidade = await queryInterface.sequelize.query('select * from unidade where nome = \'GNC\'')
+    const unidade = await queryInterface.sequelize.query('select * from unidade where nome = \'GCF\'')
   
  
 

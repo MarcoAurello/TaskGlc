@@ -15,6 +15,7 @@ import routerClassificacao from './router/classificacao.router'
 import routerUsuarioDemandado from './router/usurarioDemandado.router'
 import routerSubArea from './router/subarea.router'
 import routerArquivo from './router/arquivo.router'
+import routerBibliotecaDeErros from  './router/bibliotecaDeErros.router'
 
 import fileUpload from 'express-fileupload'
 
@@ -54,6 +55,7 @@ class Server {
     this.application.use('/api/classificacao/', routerClassificacao)
     this.application.use('/api/subarea/', routerSubArea)
     this.application.use('/api/arquivo/', routerArquivo)
+    this.application.use('/api/bibliotecaDeErros/', routerBibliotecaDeErros)
 
     this.application.use(express.static(path.resolve('app', 'build')))
     this.application.get('/*', (req, res) =>

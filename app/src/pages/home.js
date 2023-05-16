@@ -25,6 +25,7 @@ const Home = (props) => {
   const [checked, setChecked] = React.useState(false);
   const [fkArea, setfkArea] = useState('')
   const [subarea, setSubArea] = useState([])
+  const [meuSetor, setMeuSetor] = useState([])
 
 
 
@@ -57,6 +58,32 @@ const Home = (props) => {
 
             // alert('oi ' +JSON.stringify( minhasAtividades))
             // setUsuariosNaoValidados(data.data)
+          }
+        })
+      })
+
+
+  }
+
+  function carregarAtividadesDoSetor() {
+    const token = getCookie('_token_task_manager')
+    const params = {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    }
+
+    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/recebidasSetor/`, params)
+      .then(response => {
+        const { status } = response
+        response.json().then(data => {
+          if (status === 401) {
+          } else if (status === 200) {
+
+            // alert(JSON.stringify(data.data))
+
+            setMeuSetor(data.data)
+
           }
         })
       })
@@ -99,10 +126,12 @@ const Home = (props) => {
   useEffect(() => {
     carregarMinhasAtividades()
     carregarSolicitacaoAtividades()
+    carregarAtividadesDoSetor()
 
   }, [])
 
   useEffect(() => {
+    
     if (pesquisa) {
       pesquisar()
     }
@@ -227,14 +256,27 @@ const Home = (props) => {
         crossorigin="anonymous"
       />
 
-      {logged ? <TaskFilter nome={props.logged.nome} />
+      {/* {logged ? <TaskFilter nome={props.logged.nome} />
         :
         ''
-      }
+      } */}
+      <center>
+          <div >
+          {/* <Button size="large" variant="contained" style={{ marginRight: 20, marginTop: 20 }}
+            onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/minhasAtividades/`} >
+            Atividades Recebidas<KeyboardDoubleArrowLeftIcon /><div style={{ color: '#FFA500', fontWeight: 'bold', fontSize: 24 }}>{minhasAtividades.length}</div></Button><br></br>
 
+          <Button size="large" variant="contained" style={{ marginRight: 20, marginTop: 20 }}
+            onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/chamadosAbertos/`} >
+            Atividades Solicitadas<KeyboardDoubleArrowRightIcon /><div style={{ color: '#FFA500', fontWeight: 'bold', fontSize: 24 }}>{solicitacaoAtividades.length}</div></Button><br></br> */}
+
+          <Button size="large" variant="contained" style={{ marginRight: 20, marginTop: 20 }}
+            onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/cadastro`}>Solicitar Atividade</Button><br></br><p></p>
+
+        </div></center>
       <center>
 
-        <div style={{ fontSize: 20 }}>Recebidas  por área
+        <div style={{ fontSize: 20, color:'#5499FA' }}>Recebidas  por área
           <Switch
             label="Selecionar por Area"
             checked={checked}
@@ -338,10 +380,10 @@ const Home = (props) => {
               {respostas.map((item, index) =>
                 <tr key={index}>
                   <th scope="row" style={{ wordBreak: "break-all" }}>
-                    {!item.fkUsuarioExecutor ? <div style={{ color: 'red', size: 28 }}> &#128587; Atividade aguardando executor </div> :
-                      <div style={{ color: 'Blue' }}> &#9989; Atividade já possui executor </div>}
+                    {!item.fkUsuarioExecutor ? <div style={{ color: 'red', size: 28 }}> Executor: &#10067; </div> :
+                      <div style={{ color: 'Blue' }}> Executor: {item.UsuarioExecutor.nome}&#128587; </div>}
                     {'Titulo: ' + item.titulo}<br></br>
-                    {'Status : ' + item.Status.nome}<br></br>
+                    {'Status : ' + item.Status.nome}{item.Status.nome == 'Concluido' ? <a>&#9989;</a>  : <a> &#128341;</a> }<br></br>
                     {item.categoria === '' ? '' : 'Categoria : ' + item.categoria}<br></br>
 
 
@@ -364,19 +406,7 @@ const Home = (props) => {
 
 
 
-        <div >
-          {/* <Button size="large" variant="contained" style={{ marginRight: 20, marginTop: 20 }}
-            onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/minhasAtividades/`} >
-            Atividades Recebidas<KeyboardDoubleArrowLeftIcon /><div style={{ color: '#FFA500', fontWeight: 'bold', fontSize: 24 }}>{minhasAtividades.length}</div></Button><br></br>
-
-          <Button size="large" variant="contained" style={{ marginRight: 20, marginTop: 20 }}
-            onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/chamadosAbertos/`} >
-            Atividades Solicitadas<KeyboardDoubleArrowRightIcon /><div style={{ color: '#FFA500', fontWeight: 'bold', fontSize: 24 }}>{solicitacaoAtividades.length}</div></Button><br></br> */}
-
-          <Button size="large" variant="contained" style={{ marginRight: 20, marginTop: 20 }}
-            onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/cadastro`}>Solicitar Atividade</Button><br></br><p></p>
-
-        </div>
+    
       </center>
       <SpeedDial
         ariaLabel="Nova Tarefa"
@@ -384,7 +414,49 @@ const Home = (props) => {
         icon={<EditIcon />}
         onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/cadastro`}
       />
+
+
+
+
+<hr></hr>
+            
+           <div style={{fontSize: '18px'}}> <center>Atividades Recebidas do seu Setor</center></div> 
+           <table className="table table-striped" style={{ fontFamily: "arial", fontSize: '12px', marginLeft: 10, marginRight: 20 }}>
+
+<tbody>
+  {meuSetor.map((item, index) =>
+    <tr key={index}>
+    
+      < th scope="row"  style={{ wordBreak:"break-all"}}>Titulo: {item.titulo}<br></br> 
+      Solicitado: {new Date(item.createdAt).toLocaleString()} <br></br> 
+      Demandante: {item.Usuario.Area.Unidade.nome}<br></br> 
+      
+
+       {item.fkUsuarioExecutor ? <div  style={{ color: 'blue' }}>Executor: {item.UsuarioExecutor.nome} &#128590;</div>  : 
+       <div style={{ color: 'red' }}>Selecione o executor &#10067;</div> }
+       
+      {item.Status.nome === "Concluido" ? <div style={{ color: 'blue' }}>Status: {item.Status.nome} &#9989;</div> :
+        <div style={{ color: 'red' }}>Status:  {item.Status.nome}&#x23F3;</div>} 
+      </th><th>
+        <Button variant="contained" size="small" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`}>
+          ver
+        </Button>
+      </th>
+
+
+    </tr>)}<p></p>
+    
+
+</tbody>
+</table>
+
+
+
+
+
     </div>
+
+
   );
 };
 

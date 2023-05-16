@@ -677,6 +677,7 @@ class AtividadeController implements IController {
           // "$UsuarioExecutor.Area.fkUnidade$": req.usuario.area.fkUnidade,
           // "$Area.fkUnidade$" : unidade?.id,
           arquivado: false,
+         
 
           [Op.or]: [
             // { titulo: { [Op.like]: `%${pesquisa}%` } },
