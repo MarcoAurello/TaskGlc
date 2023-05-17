@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import EditIcon from '@mui/icons-material/Edit';
 import TaskFilter from '../components/task-filter'
 import Switch from '@mui/material/Switch';
+import Checkbox from '@mui/material/Checkbox';
 
 import { Box } from "@mui/system";
 
@@ -34,6 +35,7 @@ const Home = (props) => {
   const [minhasAtividades, setMinhasAtividades] = useState([])
   const [solicitacaoAtividades, setSolicitacaoAtividades] = useState([])
   const [nomeUsuario, setNomeUsuario] = useState('')
+  const [minhas, setMinhas] = useState(false);
   // const [fkUnidade, setFkUnidade]= useState(props.logged.Area.fkUnidade)
 
 
@@ -120,17 +122,26 @@ const Home = (props) => {
 
 
   }
+  const handleChange = (event) => {
+    setChecked(event.target.checked);
+  }
 
+  const Change = (event) => {
+    setMinhas(event.target.checked);
+  }
 
 
   useEffect(() => {
     carregarMinhasAtividades()
     carregarSolicitacaoAtividades()
     carregarAtividadesDoSetor()
+    
 
   }, [])
 
   useEffect(() => {
+
+   
     
     if (pesquisa) {
       pesquisar()
@@ -236,9 +247,6 @@ const Home = (props) => {
 
 
 
-  const handleChange = (event) => {
-    setChecked(event.target.checked);
-  }
 
 
 
@@ -420,10 +428,24 @@ const Home = (props) => {
 
 <hr></hr>
             
-           <div style={{fontSize: '18px'}}> <center>Atividades Recebidas do seu Setor</center></div> 
+           <div style={{fontSize: '18px'}}> <center>Atividades Recebidas do seu Setor<br></br></center></div> 
+           <div></div>
+           <table style={{backgroundColor:'#FFFACD', height:'100%', paddingRight:'10px'}}>
+           <Checkbox
+           id="meu"
+        minhas={minhas}
+        onChange={Change}
+        color="primary"
+        inputProps={{ 'aria-label': 'checkbox example' }}
+      />
+      <label htmlFor="meu" style={{paddingRight:'10px'}}>Ver somente Minhas</label>
+
+           </table>
+          
            <table className="table table-striped" style={{ fontFamily: "arial", fontSize: '12px', marginLeft: 10, marginRight: 20 }}>
 
-<tbody>
+{minhas === false ?
+  <tbody>
   {meuSetor.map((item, index) =>
     <tr key={index}>
     
@@ -447,7 +469,34 @@ const Home = (props) => {
     </tr>)}<p></p>
     
 
+</tbody> :
+<tbody>
+{meuSetor.filter((item) => item.fkUsuarioExecutor === logged.id).map((item, index) =>
+    <tr key={index}>
+    
+      < th scope="row"  style={{ wordBreak:"break-all"}}>Titulo: {item.titulo}<br></br> 
+      Solicitado: {new Date(item.createdAt).toLocaleString()} <br></br> 
+      Demandante: {item.Usuario.Area.Unidade.nome}<br></br> 
+      
+
+       {item.fkUsuarioExecutor ? <div  style={{ color: 'blue' }}>Executor: {item.UsuarioExecutor.nome} &#128590;</div>  : 
+       <div style={{ color: 'red' }}>Selecione o executor &#10067;</div> }
+       
+      {item.Status.nome === "Concluido" ? <div style={{ color: 'blue' }}>Status: {item.Status.nome} &#9989;</div> :
+        <div style={{ color: 'red' }}>Status:  {item.Status.nome}&#x23F3;</div>} 
+      </th><th>
+        <Button variant="contained" size="small" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`}>
+          ver
+        </Button>
+      </th>
+
+
+    </tr>)}<p></p>
+    
+
 </tbody>
+
+}
 </table>
 
 
