@@ -326,8 +326,6 @@ module.exports = {
               >
                 @EmailBody
 
-                <a href="https://www7.pe.senac.br/taskmanager/login">Entrar no Sistema de Atividades</a>
-
 
               </table>
             </td>

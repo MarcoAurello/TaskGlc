@@ -89,26 +89,28 @@ class MensagemController implements IController {
       const Manutencao = await Area.findOne({ where: { nome:'Manutenção- Elétrica / Hidráulica / Refrigeração/ Mecânica' } });
 
       if(executor?.fkArea === Manutencao?.id || solicitante?.fkArea === Manutencao?.id){
-        const txEmail = "Atividade: " + titulo?.titulo + ".\n tem nova interação! " + conteudo;
+        const txEmail = `
+        <b>Atividade: ${titulo?.titulo}</b> tem nova interação<br>
+        <a href="https://www7.pe.senac.br/taskmanager/atividade/${titulo?.id}/edit">CLIQUE PARA VER</a><p>
+    `;
         emailUtils.enviar('lucascruz@pe.senac.br', txEmail);
         emailUtils.enviar('karenMiranda@pe.senac.br', txEmail);
         emailUtils.enviar('gabrielvilela@pe.senac.br', txEmail);
       }
 
+      const txEmail = `
+      <b>Atividade: ${titulo?.titulo}</b> tem nova interação<br>
+      <a href="https://www7.pe.senac.br/taskmanager/atividade/${titulo?.id}/edit">CLIQUE PARA VER</a><p>
+  `;
 
 
-      const txEmail =
-        "Atividade: " + titulo?.titulo + ".\n tem nova interação! " + conteudo;
 
       emailUtils.enviar(email, txEmail);
 
       if (emailExecutor) {
         emailUtils.enviar(
           emailExecutor,
-          "Atividade: \n" +
-            titulo?.titulo +
-            ". \n recebeu uma nova mensagem! " +
-            conteudo
+          txEmail
         );
       }
 
