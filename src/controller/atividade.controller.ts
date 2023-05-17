@@ -120,7 +120,7 @@ class AtividadeController implements IController {
    Titulo: <strong>${titulo}</strong><br>
     Mensagem: <strong>${conteudo}</strong><br>
   <br/>
-  <a href="https://www7.pe.senac.br/taskmanager/home">CLIQUE PARA VER</a><p>
+  <a href="https://www7.pe.senac.br/taskmanager/atividade/${atividadeSalva?.id}/edit">CLIQUE PARA VER</a><p>
   
   `;
       const funcionarioDaArea = await Usuario.findAll({
