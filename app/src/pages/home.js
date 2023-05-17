@@ -430,7 +430,14 @@ const Home = (props) => {
             
            <div style={{fontSize: '18px'}}> <center>Atividades Recebidas do seu Setor<br></br></center></div> 
            <div></div>
-           <table style={{backgroundColor:'#FFFACD', height:'100%', paddingRight:'10px'}}>
+           <table style={{
+    backgroundColor: '#FFFACD',
+    height: '100%',
+    paddingRight: '10px',
+    borderCollapse: 'collapse',
+    boxShadow: '0 0 5px rgba(0, 0, 0, 0.8)',
+    borderRadius: '10px',
+  }}>
            <Checkbox
            id="meu"
         minhas={minhas}
