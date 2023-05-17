@@ -311,7 +311,7 @@ const Home = (props) => {
               name='pesquisa' value={pesquisa}
               type='number'
 
-              style={{ backgroundColor: '#fff3d1' }}
+              style={{ backgroundColor: '#FFFACD' }}
               onChange={e => setPesquisa(e.target.value)} />
             <p></p>
 
