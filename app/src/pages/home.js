@@ -435,7 +435,7 @@ const Home = (props) => {
     height: '100%',
     paddingRight: '10px',
     borderCollapse: 'collapse',
-    boxShadow: '0 0 5px rgba(0, 0, 0, 0.8)',
+    boxShadow: '0 0 5px rgba(0, 0, 0, 0.5)',
     borderRadius: '10px',
   }}>
            <Checkbox
@@ -445,11 +445,16 @@ const Home = (props) => {
         color="primary"
         inputProps={{ 'aria-label': 'checkbox example' }}
       />
-      <label htmlFor="meu" style={{paddingRight:'10px'}}>Ver somente Minhas</label>
+      <label htmlFor="meu" style={{paddingRight:'10px'}}>Somente as Minhas</label>
 
-           </table>
+           </table><p></p>
           
-           <table className="table table-striped" style={{ fontFamily: "arial", fontSize: '12px', marginLeft: 10, marginRight: 20 }}>
+           <table className="table table-striped" style={{ fontFamily: "arial",
+            fontSize: '12px',
+             marginLeft: 10, marginRight: 20,
+             borderCollapse: 'collapse',
+             boxShadow: '0 0 5px rgba(0, 0, 0, 0.3)',
+             borderRadius: '3px', }}>
 
 {minhas === false ?
   <tbody>
