@@ -508,7 +508,7 @@ const AtividadeForm = (props) => {
             setAtividade(data.data)
             setMessage(data.message)
             setOpenMessageDialog(true)
-            window.location.href = `${process.env.REACT_APP_DOMAIN}/home/`
+            window.location.href = `${process.env.REACT_APP_DOMAIN}/chamadosAbertos/`
 
 
             // setArea(data.data)

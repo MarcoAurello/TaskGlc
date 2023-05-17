@@ -112,16 +112,24 @@ class AtividadeController implements IController {
         );
       });
 
-      // enviar email para funcionarios da area demandada
+      
+      const txEmail = `
+      <b>Nova Atividade para sua àrea</b><br>
+
+  Unidade: <strong>${setorSolicitante}</strong><br>
+   Tirulo: <strong>${titulo}</strong><br>
+    Mensagem: <strong>${conteudo}</strong><br>
+  <br/>
+  
+  `;
       const funcionarioDaArea = await Usuario.findAll({
         where: { fkArea: fkArea },
       })
-      const mensagem = 'Chegou atividade da unidade:' + setorSolicitante
-
-      funcionarioDaArea.map((usuario, index) =>
-
-      emailUtils.enviar(usuario.email, mensagem))
-
+      funcionarioDaArea.map((usuario, index) => {
+        setTimeout(() => {
+          emailUtils.enviar(usuario.email, txEmail);
+        }, index * 2000); // Atraso de 2 segundos (2000 milissegundos) multiplicado pelo índice
+      });
       res
         .status(200)
         .json({ data: atividade, message: "Cadastro realizado com sucesso." });
@@ -677,7 +685,6 @@ class AtividadeController implements IController {
           // "$UsuarioExecutor.Area.fkUnidade$": req.usuario.area.fkUnidade,
           // "$Area.fkUnidade$" : unidade?.id,
           arquivado: false,
-         
 
           [Op.or]: [
             // { titulo: { [Op.like]: `%${pesquisa}%` } },
