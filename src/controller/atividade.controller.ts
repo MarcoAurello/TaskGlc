@@ -117,7 +117,7 @@ class AtividadeController implements IController {
       <b>Nova Atividade para sua àrea</b><br>
 
   Unidade: <strong>${setorSolicitante}</strong><br>
-   Tirulo: <strong>${titulo}</strong><br>
+   Titulo: <strong>${titulo}</strong><br>
     Mensagem: <strong>${conteudo}</strong><br>
   <br/>
   
