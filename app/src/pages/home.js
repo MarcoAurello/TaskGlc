@@ -431,7 +431,7 @@ const Home = (props) => {
       {minhas== true ? 
       <div style={{ fontSize: '18px' }}> <center>Minhas Pendências<br></br></center></div>
       :<div style={{ fontSize: '18px' }}> <center>Pêndencias do Setor<br></br></center></div>}
-      {meuSetor.length === 0 ?<div style={{color:'red'}}><center>Seu setor nao usa o Task Manager para receber e gerênciar tarefas?<br></br>
+      {meuSetor.length === 0 ?<div style={{color:'red'}}><center>Seu setor não usa o Task Manager para receber e gerenciar tarefas?<br></br>
       Controle por Funcionário, por Status, por criticidade, tudo no celular.<br></br>Habilite essa função com a GTI</center> </div> :""}
       <div></div>
       <table style={{
