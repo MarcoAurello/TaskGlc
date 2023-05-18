@@ -4,6 +4,7 @@ import UsuarioAtividade from '../model/usuarioAtividade.model'
 import Area from '../model/area.model'
 import Atividade from '../model/atividade.model'
 import Usuario from '../model/usuario.model'
+import emailUtils from '../utils/email.utils';
 // import emailUtils from '../utils/email.utils'
 // import Chamado from '../models/chamado-model';
 
@@ -30,6 +31,8 @@ class UsuarioAtividadeController implements IController {
   async create(req: any, res: Response, next: NextFunction): Promise<any> {
     try {
       const { fkClassificacao, fkAtividade, fkUsuario, ativo} = req.body
+      const emailExecutor = await Usuario.findOne({ where: { id: fkUsuario } });
+     
 
       const registro = await UsuarioAtividade.create({
         fkUsuario,
@@ -46,7 +49,13 @@ class UsuarioAtividadeController implements IController {
           where: { id: fkAtividade }
         }
       )
-      // emailUtils.enviar(email, 'Chegou nova Atividade para você')
+
+      const msg = `
+      <b>Chegou atividade para você.<br>
+      <a href="https://www7.pe.senac.br/taskmanager/atividade/${fkAtividade}/edit">CLIQUE PARA VER</a><p>
+  `;
+
+      emailUtils.enviar(emailExecutor?.email, msg)
 
       res.status(200).json({ data: registro, message: "Chamado enviado para o funcionario " });
     } catch (err) {
