@@ -15,7 +15,7 @@ import routerClassificacao from './router/classificacao.router'
 import routerUsuarioDemandado from './router/usurarioDemandado.router'
 import routerSubArea from './router/subarea.router'
 import routerArquivo from './router/arquivo.router'
-import routerBibliotecaDeErros from  './router/bibliotecaDeErros.router'
+import routerBibliotecaDeErros from './router/bibliotecaDeErros.router'
 
 import fileUpload from 'express-fileupload'
 

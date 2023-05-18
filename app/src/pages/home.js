@@ -68,6 +68,7 @@ const Home = (props) => {
   }
 
   function carregarAtividadesDoSetor() {
+    setOpenLoadingDialog(true)
     const token = getCookie('_token_task_manager')
     const params = {
       headers: {
@@ -79,8 +80,10 @@ const Home = (props) => {
       .then(response => {
         const { status } = response
         response.json().then(data => {
+          setOpenLoadingDialog(false)
           if (status === 401) {
           } else if (status === 200) {
+            setOpenLoadingDialog(false)
 
             // alert(JSON.stringify(data.data))
 
