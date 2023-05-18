@@ -135,14 +135,14 @@ const Home = (props) => {
     carregarMinhasAtividades()
     carregarSolicitacaoAtividades()
     carregarAtividadesDoSetor()
-    
+
 
   }, [])
 
   useEffect(() => {
 
-   
-    
+
+
     if (pesquisa) {
       pesquisar()
     }
@@ -269,7 +269,7 @@ const Home = (props) => {
         ''
       } */}
       <center>
-          <div >
+        <div >
           {/* <Button size="large" variant="contained" style={{ marginRight: 20, marginTop: 20 }}
             onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/minhasAtividades/`} >
             Atividades Recebidas<KeyboardDoubleArrowLeftIcon /><div style={{ color: '#FFA500', fontWeight: 'bold', fontSize: 24 }}>{minhasAtividades.length}</div></Button><br></br>
@@ -284,7 +284,7 @@ const Home = (props) => {
         </div></center>
       <center>
 
-        <div style={{ fontSize: 20, color:'#5499FA' }}>Recebidas  por área
+        <div style={{ fontSize: 20, color: '#5499FA' }}>Recebidas  por área
           <Switch
             label="Selecionar por Area"
             checked={checked}
@@ -391,7 +391,7 @@ const Home = (props) => {
                     {!item.fkUsuarioExecutor ? <div style={{ color: 'red', size: 28 }}> Executor: &#10067; </div> :
                       <div style={{ color: 'Blue' }}> Executor: {item.UsuarioExecutor.nome}&#128587; </div>}
                     {'Titulo: ' + item.titulo}<br></br>
-                    {'Status : ' + item.Status.nome}{item.Status.nome == 'Concluido' ? <a>&#9989;</a>  : <a> &#128341;</a> }<br></br>
+                    {'Status : ' + item.Status.nome}{item.Status.nome == 'Concluido' ? <a>&#9989;</a> : <a> &#128341;</a>}<br></br>
                     {item.categoria === '' ? '' : 'Categoria : ' + item.categoria}<br></br>
 
 
@@ -414,7 +414,7 @@ const Home = (props) => {
 
 
 
-    
+
       </center>
       <SpeedDial
         ariaLabel="Nova Tarefa"
@@ -426,90 +426,97 @@ const Home = (props) => {
 
 
 
-<hr></hr>
-            
-           <div style={{fontSize: '18px'}}> <center>Atividades Recebidas do seu Setor<br></br></center></div> 
-           <div></div>
-           <table style={{
-    backgroundColor: '#FFFACD',
-    height: '100%',
-    paddingRight: '10px',
-    borderCollapse: 'collapse',
-    boxShadow: '0 0 5px rgba(0, 0, 0, 0.5)',
-    borderRadius: '10px',
-  }}>
-           <Checkbox
-           id="meu"
-        minhas={minhas}
-        onChange={Change}
-        color="primary"
-        inputProps={{ 'aria-label': 'checkbox example' }}
-      />
-      <label htmlFor="meu" style={{paddingRight:'10px'}}>Somente as Minhas</label>
+      <hr></hr>
 
-           </table><p></p>
-          
-           <table className="table table-striped" style={{ fontFamily: "arial",
-            fontSize: '12px',
-             marginLeft: 10, marginRight: 20,
-             borderCollapse: 'collapse',
-             boxShadow: '0 0 5px rgba(0, 0, 0, 0.3)',
-             borderRadius: '3px', }}>
+      {minhas== true ? 
+      <div style={{ fontSize: '18px' }}> <center>Minhas Pendências<br></br></center></div>
+      :<div style={{ fontSize: '18px' }}> <center>Pêndencias do Setor<br></br></center></div>}
+      {meuSetor.length === 0 ?<div style={{color:'red'}}><center>Seu setor nao usa o Task Manager para receber e gerênciar tarefas?<br></br>
+      Controle por Funcionário, por Status, por criticidade, tudo no celular.<br></br>Habilite essa função com a GTI</center> </div> :""}
+      <div></div>
+      <table style={{
+        backgroundColor: '#FFFACD',
+        height: '100%',
+        paddingRight: '10px',
+        borderCollapse: 'collapse',
+        boxShadow: '0 0 5px rgba(0, 0, 0, 0.5)',
+        borderRadius: '10px',
+      }}>
+        <Checkbox
+          id="meu"
+          minhas={minhas}
+          onChange={Change}
+          color="primary"
+          inputProps={{ 'aria-label': 'checkbox example' }}
+        />
+        <label htmlFor="meu" style={{ paddingRight: '10px' }}>Minhas Pendências</label>
 
-{minhas === false ?
-  <tbody>
-  {meuSetor.map((item, index) =>
-    <tr key={index}>
-    
-      < th scope="row"  style={{ wordBreak:"break-all"}}>Titulo: {item.titulo}<br></br> 
-      Solicitado: {new Date(item.createdAt).toLocaleString()} <br></br> 
-      Demandante: {item.Usuario.Area.Unidade.nome}<br></br> 
-      
+      </table><p></p>
 
-       {item.fkUsuarioExecutor ? <div  style={{ color: 'blue' }}>Executor: {item.UsuarioExecutor.nome} &#128590;</div>  : 
-       <div style={{ color: 'red' }}>Selecione o executor &#10067;</div> }
-       
-      {item.Status.nome === "Concluido" ? <div style={{ color: 'blue' }}>Status: {item.Status.nome} &#9989;</div> :
-        <div style={{ color: 'red' }}>Status:  {item.Status.nome}&#x23F3;</div>} 
-      </th><th>
-        <Button variant="contained" size="small" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`}>
-          ver
-        </Button>
-      </th>
+      <table className="table table-striped" style={{
+        fontFamily: "arial",
+        fontSize: '12px',
+        marginLeft: 10, marginRight: 20,
+        borderCollapse: 'collapse',
+        boxShadow: '0 0 5px rgba(0, 0, 0, 0.3)',
+        borderRadius: '3px',
+      }}>
+
+        {minhas === false ?
+          <tbody>
+            {meuSetor.filter((item) =>  item.Status.nome != "Concluido").map((item, index) =>
+              <tr key={index}>
+
+                < th scope="row" style={{ wordBreak: "break-all" }}>Titulo: {item.titulo}<br></br>
+                  Solicitado: {new Date(item.createdAt).toLocaleString()} <br></br>
+                  Demandante: {item.Usuario.Area.Unidade.nome}<br></br>
 
 
-    </tr>)}<p></p>
-    
+                  {item.fkUsuarioExecutor ? <div style={{ color: 'blue' }}>Executor: {item.UsuarioExecutor.nome} &#128590;</div> :
+                    <div style={{ color: 'red' }}>Selecione o executor &#10067;</div>}
 
-</tbody> :
-<tbody>
-{meuSetor.filter((item) => item.fkUsuarioExecutor === logged.id).map((item, index) =>
-    <tr key={index}>
-    
-      < th scope="row"  style={{ wordBreak:"break-all"}}>Titulo: {item.titulo}<br></br> 
-      Solicitado: {new Date(item.createdAt).toLocaleString()} <br></br> 
-      Demandante: {item.Usuario.Area.Unidade.nome}<br></br> 
-      
-
-       {item.fkUsuarioExecutor ? <div  style={{ color: 'blue' }}>Executor: {item.UsuarioExecutor.nome} &#128590;</div>  : 
-       <div style={{ color: 'red' }}>Selecione o executor &#10067;</div> }
-       
-      {item.Status.nome === "Concluido" ? <div style={{ color: 'blue' }}>Status: {item.Status.nome} &#9989;</div> :
-        <div style={{ color: 'red' }}>Status:  {item.Status.nome}&#x23F3;</div>} 
-      </th><th>
-        <Button variant="contained" size="small" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`}>
-          ver
-        </Button>
-      </th>
+                  {item.Status.nome === "Concluido" ? <div style={{ color: 'blue' }}>Status: {item.Status.nome} &#9989;</div> :
+                    <div style={{ color: 'red' }}>Status:  {item.Status.nome}&#x23F3;</div>}
+                </th>
+                <th>
+                  <Button variant="contained" size="small" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`}>
+                    ver
+                  </Button>
+                </th>
 
 
-    </tr>)}<p></p>
-    
+              </tr>)}<p></p>
 
-</tbody>
 
-}
-</table>
+          </tbody> :
+          <tbody>
+            {meuSetor.filter((item) => item.fkUsuarioExecutor === logged.id &&(item.Status.nome != "Concluido" && item.Status.nome != "Cancelado") ).map((item, index) =>
+              <tr key={index}>
+
+                < th scope="row" style={{ wordBreak: "break-all" }}>Titulo: {item.titulo}<br></br>
+                  Solicitado: {new Date(item.createdAt).toLocaleString()} <br></br>
+                  Demandante: {item.Usuario.Area.Unidade.nome}<br></br>
+
+
+                  {item.fkUsuarioExecutor ? <div style={{ color: 'blue' }}>Executor: {item.UsuarioExecutor.nome} &#128590;</div> :
+                    <div style={{ color: 'red' }}>Selecione o executor &#10067;</div>}
+
+                  {item.Status.nome === "Concluido" ? <div style={{ color: 'blue' }}>Status: {item.Status.nome} &#9989;</div> :
+                    <div style={{ color: 'red' }}>Status:  {item.Status.nome}&#x23F3;</div>}
+                </th><th>
+                  <Button variant="contained" size="small" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`}>
+                    ver
+                  </Button>
+                </th>
+
+
+              </tr>)}<p></p>
+
+
+          </tbody>
+
+        }
+      </table>
 
 
 
