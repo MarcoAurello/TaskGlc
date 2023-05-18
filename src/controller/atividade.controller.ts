@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { IController } from "./controller.inteface";
+import { IController } from './controller.inteface'
 import Atividade from "../model/atividade.model";
 import Mensagem from "../model/mensagem.model";
 import Status from "../model/status.model";
