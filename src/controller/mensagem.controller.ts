@@ -4,7 +4,7 @@ import Mensagem from "../model/mensagem.model";
 import Status from "../model/status.model";
 import Usuario from "../model/usuario.model";
 import emailUtils from "../utils/email.utils";
-import { IController } from "./controller.inteface";
+import { IController } from './controller.inteface'
 import Arquivo from "../model/arquivo.model";
 import Area from "../model/area.model";
 
