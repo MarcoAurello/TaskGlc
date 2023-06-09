@@ -35,7 +35,7 @@ const Home = (props) => {
   const [minhasAtividades, setMinhasAtividades] = useState([])
   const [solicitacaoAtividades, setSolicitacaoAtividades] = useState([])
   const [nomeUsuario, setNomeUsuario] = useState('')
-  const [minhas, setMinhas] = useState(false);
+  const [minhas, setMinhas] = useState(true);
   // const [fkUnidade, setFkUnidade]= useState(props.logged.Area.fkUnidade)
 
 
@@ -451,6 +451,7 @@ const Home = (props) => {
           onChange={Change}
           color="primary"
           inputProps={{ 'aria-label': 'checkbox example' }}
+          checked={minhas}
         />
         <label htmlFor="meu" style={{ paddingRight: '10px' }}>Minhas Pendências</label>
 

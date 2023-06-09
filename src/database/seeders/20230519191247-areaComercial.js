@@ -16,7 +16,7 @@ module.exports = {
     */
     
    
-    const unidade = await queryInterface.sequelize.query('select * from unidade where nome = \'Comercial\'')
+    // const unidade = await queryInterface.sequelize.query('select * from unidade where nome = \'Comercial\'')
   
  
 
@@ -26,8 +26,24 @@ module.exports = {
       
       {
         id: uuid(),
-        nome: 'Administrativo-Comercial',
-        fkUnidade: unidade[0][0].id,
+        nome: 'Manutenção - Hidráulica',
+        fkUnidade: '2ce4e1c8-790d-4154-9a95-509183a1889e',
+        createdAt: new Date(),
+        updatedAt: new Date()
+
+      },
+      {
+        id: uuid(),
+        nome: 'Manutenção - Refrigeração',
+        fkUnidade: '2ce4e1c8-790d-4154-9a95-509183a1889e',
+        createdAt: new Date(),
+        updatedAt: new Date()
+
+      },
+      {
+        id: uuid(),
+        nome: 'Manutenção - Mecânica',
+        fkUnidade: '2ce4e1c8-790d-4154-9a95-509183a1889e',
         createdAt: new Date(),
         updatedAt: new Date()
 
