@@ -468,7 +468,7 @@ const Home = (props) => {
 
         {minhas === false ?
           <tbody>
-            {meuSetor.filter((item) =>  item.Status.nome != "Concluido").map((item, index) =>
+            {meuSetor.filter((item) =>  item.Status.nome != "Concluido" && item.Status.nome != "Cancelado" ).map((item, index) =>
               <tr key={index}>
 
                 < th scope="row" style={{ wordBreak: "break-all" }}>Titulo: {item.titulo}<br></br>
