@@ -578,7 +578,7 @@ class AtividadeController implements IController {
       res.status(200).json({ data: registros });
     } catch (err) {
       console.log(err);
-      res.status(401).json({ message: "fkUnidade inválido ou indefinido." });
+      res.status(401).json({ message: "fkUnidade é inválido ou indefinido." });
     }
   }
 
