@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { IController } from './controller.inteface'
+import { IController } from "./controller.inteface";
 import Atividade from "../model/atividade.model";
 import Mensagem from "../model/mensagem.model";
 import Status from "../model/status.model";
@@ -20,7 +20,6 @@ class AtividadeController implements IController {
   async all(req: Request, res: Response, next: NextFunction): Promise<any> {
     throw new Error("Method not implemented.");
   }
-  
 
   async create(req: any, res: Response, next: NextFunction): Promise<any> {
     try {
@@ -32,8 +31,7 @@ class AtividadeController implements IController {
         categoria,
         caminho,
         listaDeArquivosEnviados,
-        setorSolicitante
-       
+        setorSolicitante,
       } = req.body;
       // console.log(req.body);
       // console.log(setorSolicitante);
@@ -70,7 +68,6 @@ class AtividadeController implements IController {
         where: { nome: "Aberto" },
       });
 
-
       const atividade = await Atividade.create({
         titulo,
         fkClassificacao: classificacao?.id,
@@ -94,9 +91,6 @@ class AtividadeController implements IController {
         fkUsuario: req.usuario.id,
       });
 
-     
-
-
       const atividadeSalva = await Atividade.findOne({
         where: { titulo: titulo },
       });
@@ -112,7 +106,6 @@ class AtividadeController implements IController {
         );
       });
 
-      
       const txEmail = `
       <b>Nova Atividade para sua área</b><br>
 
@@ -125,7 +118,7 @@ class AtividadeController implements IController {
   `;
       const funcionarioDaArea = await Usuario.findAll({
         where: { fkArea: fkArea },
-      })
+      });
       funcionarioDaArea.map((usuario, index) => {
         setTimeout(() => {
           emailUtils.enviar(usuario.email, txEmail);
@@ -284,8 +277,6 @@ class AtividadeController implements IController {
         where: { nome: "Pendente" },
       });
       const statusParado = await Status.findOne({ where: { nome: "Parado" } });
-
-
 
       const claImediata = await Classificacao.findOne({
         where: { nome: "Execução Imediata" },
@@ -587,7 +578,7 @@ class AtividadeController implements IController {
       res.status(200).json({ data: registros });
     } catch (err) {
       console.log(err);
-      res.status(401).json({ message: err.errors[0].message });
+      res.status(401).json({ message: "fkUnidade inválido ou indefinido." });
     }
   }
 
@@ -694,7 +685,11 @@ class AtividadeController implements IController {
             { "$Area.nome$": { [Op.like]: `${pesquisa}` } },
             { "$UsuarioExecutor.nome$": { [Op.like]: `${pesquisa}` } },
             { "$Usuario.nome$": { [Op.like]: `${pesquisa}` } },
-            {"$UsuarioExecutor.Area.Unidade.nome$": { [Op.like]: `${pesquisa}`, }, },
+            {
+              "$UsuarioExecutor.Area.Unidade.nome$": {
+                [Op.like]: `${pesquisa}`,
+              },
+            },
 
             // {"$Mensagem$.conteudo" : { [Op.like]: `%${pesquisa}%`} }
           ],
@@ -838,8 +833,6 @@ class AtividadeController implements IController {
         ],
         where: whereCustum,
       });
-
-
 
       res.status(200).json({ data: registros });
     } catch (err) {

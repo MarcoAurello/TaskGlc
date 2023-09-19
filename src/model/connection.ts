@@ -1,6 +1,8 @@
-const Sequelize = require('sequelize')
+const Sequelize = require("sequelize");
 
-require('dotenv').config({ path: process.env.DEVMODE?.trim() === 'test' ? '.env.test' : '.env' })
+require("dotenv").config({
+  path: process.env.DEVMODE?.trim() === "test" ? ".env.test" : ".env",
+});
 
 // const sequelize = new Sequelize(process.env.DATABASE, process.env.USER, process.env.PWD, {
 //   host: process.env.SERVER,
@@ -8,17 +10,14 @@ require('dotenv').config({ path: process.env.DEVMODE?.trim() === 'test' ? '.env.
 //   logging: false
 // })
 
-
-
-const sequelize = new Sequelize('TaskManager', 'taskmanager', '#@dmSENAC#', {
-  host: '10.9.8.74',
-  dialect: 'mssql',
+const sequelize = new Sequelize("TaskManager", "taskmanager", "#@dmSENAC#", {
+  host: "10.9.8.74",
+  dialect: "mssql",
   logging: false,
   dialectOptions: {
-    timezone: 'America/Sao_Paulo'
-  }
-  
-})
+    timezone: "America/Sao_Paulo",
+  },
+});
 
 // const sequelize = new Sequelize('Tasktest', 'sa', 'local', {
 //   host: '10.9.8.20',
@@ -27,9 +26,7 @@ const sequelize = new Sequelize('TaskManager', 'taskmanager', '#@dmSENAC#', {
 //   dialectOptions: {
 //     timezone: 'America/Sao_Paulo'
 //   }
-  
+
 // })
 
-
-
-export default sequelize
+export default sequelize;

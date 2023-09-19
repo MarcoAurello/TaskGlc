@@ -1,50 +1,48 @@
-import { Request, Response, NextFunction } from "express";
-import { IController } from "./controller.inteface";
-import Area from "../model/area.model";
-import SubArea from "../model/subarea.model";
-
+import { Request, Response, NextFunction } from 'express'
+import { IController } from './controller.inteface'
+import SubArea from '../model/subarea.model'
 
 class SubAreaController implements IController {
-  async all(req: Request, res: Response, next: NextFunction): Promise<any> {
+  async all (req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
-      const { fkArea } = req.query;
+      const { fkArea } = req.query
 
       if (fkArea) {
         const registros = await SubArea.findAll({
-          where: { fkArea },
+          where: { fkArea }
 
-        });
+        })
 
-        return res.status(200).json({ data: registros });
+        return res.status(200).json({ data: registros })
       } else {
-        const registros = await SubArea.findAll();
+        const registros = await SubArea.findAll()
 
-        return res.status(200).json({ data: registros });
+        return res.status(200).json({ data: registros })
       }
     } catch (err) {
-      res.status(401).json({ message: err.errors[0].message });
+      res.status(401).json({ message: err.errors[0].message })
     }
   }
 
-  async create(req: Request, res: Response, next: NextFunction): Promise<any> {
-    throw new Error("Method not implemented.");
+  async create (req: Request, res: Response, next: NextFunction): Promise<any> {
+    throw new Error('Method not implemented.')
   }
 
-  async find(req: Request, res: Response, next: NextFunction): Promise<any> {
-    throw new Error("Method not implemented.");
+  async find (req: Request, res: Response, next: NextFunction): Promise<any> {
+    throw new Error('Method not implemented.')
   }
 
-  async update(req: Request, res: Response, next: NextFunction): Promise<any> {
-    throw new Error("Method not implemented.");
+  async update (req: Request, res: Response, next: NextFunction): Promise<any> {
+    throw new Error('Method not implemented.')
   }
 
-  async delete(req: Request, res: Response, next: NextFunction): Promise<any> {
-    throw new Error("Method not implemented.");
+  async delete (req: Request, res: Response, next: NextFunction): Promise<any> {
+    throw new Error('Method not implemented.')
   }
 
-  async search(req: Request, res: Response, next: NextFunction): Promise<any> {
-    throw new Error("Method not implemented.");
+  async search (req: Request, res: Response, next: NextFunction): Promise<any> {
+    throw new Error('Method not implemented.')
   }
 }
 
-export default new SubAreaController();
+export default new SubAreaController()
