@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from 'express';
-import { IController } from './controller.inteface';
-import Area from '../model/area.model';
-import Unidade from '../model/unidade.model';
+import { Request, Response, NextFunction } from "express";
+import { IController } from "./controller.inteface";
+import Area from "../model/area.model";
+import Unidade from "../model/unidade.model";
 
 class AreaController implements IController {
   async all(req: Request, res: Response, next: NextFunction): Promise<any> {
@@ -25,7 +25,11 @@ class AreaController implements IController {
         return res.status(200).json({ data: registros });
       }
     } catch (err) {
-      res.status(401).json({ message: err.errors[0].message });
+      if (typeof err.errors[0].message === "undefined") {
+        res.status(401).json({ message: JSON.stringify(err) });
+      } else {
+        res.status(401).json({ message: err.errors[0].message });
+      }
     }
   }
 
@@ -36,19 +40,22 @@ class AreaController implements IController {
   ): Promise<any> {
     try {
       const { fkArea } = req.params;
-      console.log(fkArea)
+      console.log(fkArea);
       const registros = await Area.findOne({
-        where: { 
+        where: {
           id: fkArea,
-         },
+        },
         include: [Unidade],
-      
       });
 
       return res.status(200).json({ data: registros });
     } catch (err) {
-      console.log(err)
-      res.status(401).json({ message: err.errors[0].message });
+      console.log(err);
+      if (typeof err.errors[0].message === "undefined") {
+        res.status(401).json({ message: JSON.stringify(err) });
+      } else {
+        res.status(401).json({ message: err.errors[0].message });
+      }
     }
   }
 
@@ -62,7 +69,11 @@ class AreaController implements IController {
         .status(200)
         .json({ data: registro, message: "Cadastro realizado com sucesso." });
     } catch (err) {
-      res.status(401).json({ message: err.errors[0].message });
+      if (typeof err.errors[0].message === "undefined") {
+        res.status(401).json({ message: JSON.stringify(err) });
+      } else {
+        res.status(401).json({ message: err.errors[0].message });
+      }
     }
   }
 
@@ -74,7 +85,11 @@ class AreaController implements IController {
 
       res.status(200).json({ data: registro });
     } catch (err) {
-      res.status(401).json({ message: err.errors[0].message });
+      if (typeof err.errors[0].message === "undefined") {
+        res.status(401).json({ message: JSON.stringify(err) });
+      } else {
+        res.status(401).json({ message: err.errors[0].message });
+      }
     }
   }
 
@@ -107,7 +122,11 @@ class AreaController implements IController {
         .status(200)
         .json({ data: registro, message: "Alteração realizada com sucesso." });
     } catch (err) {
-      res.status(401).json({ message: err.errors[0].message });
+      if (typeof err.errors[0].message === "undefined") {
+        res.status(401).json({ message: JSON.stringify(err) });
+      } else {
+        res.status(401).json({ message: err.errors[0].message });
+      }
     }
   }
 

@@ -31,7 +31,11 @@ class UsuarioController implements IController {
         },
       });
     } catch (err) {
-      res.status(401).json({ message: err.errors[0].message });
+      if (typeof err.errors[0].message === "undefined") {
+        res.status(401).json({ message: JSON.stringify(err) });
+      } else {
+        res.status(401).json({ message: err.errors[0].message });
+      }
     }
   }
 
@@ -60,7 +64,11 @@ class UsuarioController implements IController {
       res.status(200).json({ data: registro });
     } catch (err) {
       console.log(err);
-      res.status(401).json({ message: err.errors[0].message });
+      if (typeof err.errors[0].message === "undefined") {
+        res.status(401).json({ message: JSON.stringify(err) });
+      } else {
+        res.status(401).json({ message: err.errors[0].message });
+      }
     }
   }
 
@@ -109,7 +117,11 @@ class UsuarioController implements IController {
         .json({ data: registro, message: "Alteração realizada com sucesso." });
     } catch (err) {
       console.log(err);
-      res.status(401).json({ message: err.errors[0].message });
+      if (typeof err.errors[0].message === "undefined") {
+        res.status(401).json({ message: JSON.stringify(err) });
+      } else {
+        res.status(401).json({ message: err.errors[0].message });
+      }
     }
   }
 
@@ -158,7 +170,11 @@ class UsuarioController implements IController {
         .json({ data: registro, message: "Usuário validado com sucesso." });
     } catch (err) {
       console.log(err);
-      res.status(401).json({ message: err.errors[0].message });
+      if (typeof err.errors[0].message === "undefined") {
+        res.status(401).json({ message: JSON.stringify(err) });
+      } else {
+        res.status(401).json({ message: err.errors[0].message });
+      }
     }
   }
 
@@ -231,7 +247,11 @@ class UsuarioController implements IController {
         .json({ data: registro, message: "Alteração realizada com sucesso." });
     } catch (err) {
       console.log(err);
-      res.status(401).json({ message: err.errors[0].message });
+      if (typeof err.errors[0].message === "undefined") {
+        res.status(401).json({ message: JSON.stringify(err) });
+      } else {
+        res.status(401).json({ message: err.errors[0].message });
+      }
     }
   }
 
@@ -275,43 +295,61 @@ class UsuarioController implements IController {
       });
     } catch (err) {
       console.log(err);
-      res.status(401).json({ message: err.errors[0].message });
+      if (typeof err.errors[0].message === "undefined") {
+        res.status(401).json({ message: JSON.stringify(err) });
+      } else {
+        res.status(401).json({ message: err.errors[0].message });
+      }
     }
   }
 
-  async naoValidado (req: any, res: Response, next: NextFunction): Promise<any> {
+  async naoValidado(req: any, res: Response, next: NextFunction): Promise<any> {
     try {
-      const area = await Area.findOne({ where: { id: req.usuario.fkArea } })
+      const area = await Area.findOne({ where: { id: req.usuario.fkArea } });
 
-      const pagina = parseInt(req.query.pagina) || 1
-      const tamanho = parseInt(req.query.tamanho) || 10
+      const pagina = parseInt(req.query.pagina) || 1;
+      const tamanho = parseInt(req.query.tamanho) || 10;
 
-      const offset = (pagina - 1) * tamanho
-      const limit = tamanho
+      const offset = (pagina - 1) * tamanho;
+      const limit = tamanho;
 
-      const numeroDePaginas = Math.ceil((await Usuario.count({ include: [Perfil, { model: Area, include: [{ model: Unidade, where: { id: area?.fkUnidade } }] }] })) / tamanho)
+      const numeroDePaginas = Math.ceil(
+        (await Usuario.count({
+          include: [
+            Perfil,
+            {
+              model: Area,
+              include: [{ model: Unidade, where: { id: area?.fkUnidade } }],
+            },
+          ],
+        })) / tamanho
+      );
 
       const registros = await Usuario.findAll({
         limit,
         offset,
         include: [Perfil, { model: Area, include: [Unidade] }],
         where: {
-          '$Area.fkUnidade$': area?.fkUnidade,
-          validado: false
-        }
-      })
+          "$Area.fkUnidade$": area?.fkUnidade,
+          validado: false,
+        },
+      });
 
       res.status(200).json({
         data: registros,
         paginacao: {
           pagina,
           tamanho,
-          numeroDePaginas
-        }
-      })
+          numeroDePaginas,
+        },
+      });
     } catch (err) {
-      console.log(err)
-      res.status(401).json({ message: err.errors[0].message })
+      console.log(err);
+      if (typeof err.errors[0].message === "undefined") {
+        res.status(401).json({ message: JSON.stringify(err) });
+      } else {
+        res.status(401).json({ message: err.errors[0].message });
+      }
     }
   }
 }

@@ -23,7 +23,11 @@ class ArquivoController implements IController {
       res.status(200).json({ data: registros });
     } catch (err) {
       console.log(err)
-      res.status(401).json({ message: err.errors[0].message });
+      if (typeof err.errors[0].message === "undefined") {
+        res.status(401).json({ message: JSON.stringify(err) });
+      } else {
+        res.status(401).json({ message: err.errors[0].message });
+      }
     }
 
   }
@@ -131,7 +135,11 @@ class ArquivoController implements IController {
     //     .json({ data: registro, message: "Alteração realizada com sucesso." });
     // } catch (err) {
     //   console.log(err);
-    //   res.status(401).json({ message: err.errors[0].message });
+    //   if (typeof err.errors[0].message === "undefined") {
+        res.status(401).json({ message: JSON.stringify(err) });
+      } else {
+        res.status(401).json({ message: err.errors[0].message });
+      }
     // }
     throw new Error("Method not implemented.");
   }

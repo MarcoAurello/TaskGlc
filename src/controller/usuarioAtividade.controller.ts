@@ -1,10 +1,10 @@
-import { IController } from './controller.inteface'
-import { Request, Response, NextFunction } from 'express'
-import UsuarioAtividade from '../model/usuarioAtividade.model'
-import Area from '../model/area.model'
-import Atividade from '../model/atividade.model'
-import Usuario from '../model/usuario.model'
-import emailUtils from '../utils/email.utils';
+import { IController } from "./controller.inteface";
+import { Request, Response, NextFunction } from "express";
+import UsuarioAtividade from "../model/usuarioAtividade.model";
+import Area from "../model/area.model";
+import Atividade from "../model/atividade.model";
+import Usuario from "../model/usuario.model";
+import emailUtils from "../utils/email.utils";
 // import emailUtils from '../utils/email.utils'
 // import Chamado from '../models/chamado-model';
 
@@ -17,7 +17,7 @@ class UsuarioAtividadeController implements IController {
       const registros = await Usuario.findAll({
         include: [Area],
         where: {
-          "$Area.fkUnidade$": area?.fkUnidade
+          "$Area.fkUnidade$": area?.fkUnidade,
           // validado: true,
         },
       });
@@ -30,15 +30,14 @@ class UsuarioAtividadeController implements IController {
 
   async create(req: any, res: Response, next: NextFunction): Promise<any> {
     try {
-      const { fkClassificacao, fkAtividade, fkUsuario, ativo} = req.body
+      const { fkClassificacao, fkAtividade, fkUsuario, ativo } = req.body;
       const emailExecutor = await Usuario.findOne({ where: { id: fkUsuario } });
-     
 
       const registro = await UsuarioAtividade.create({
         fkUsuario,
         fkAtividade,
-        ativo
-      })
+        ativo,
+      });
 
       await Atividade.update(
         {
@@ -46,21 +45,30 @@ class UsuarioAtividadeController implements IController {
           fkUsuarioExecutor: fkUsuario,
         },
         {
-          where: { id: fkAtividade }
+          where: { id: fkAtividade },
         }
-      )
+      );
 
       const msg = `
       <b>Chegou atividade para você.<br>
       <a href="https://www7.pe.senac.br/taskmanager/atividade/${fkAtividade}/edit">CLIQUE PARA VER</a><p>
   `;
 
-      emailUtils.enviar(emailExecutor?.email, msg)
+      emailUtils.enviar(emailExecutor?.email, msg);
 
-      res.status(200).json({ data: registro, message: "Chamado enviado para o funcionario " });
+      res
+        .status(200)
+        .json({
+          data: registro,
+          message: "Chamado enviado para o funcionario ",
+        });
     } catch (err) {
-      console.log(err)
-      res.status(401).json({ message: err.errors[0].message });
+      console.log(err);
+      if (typeof err.errors[0].message === "undefined") {
+        res.status(401).json({ message: JSON.stringify(err) });
+      } else {
+        res.status(401).json({ message: err.errors[0].message });
+      }
     }
   }
 
@@ -76,7 +84,11 @@ class UsuarioAtividadeController implements IController {
 
       res.status(200).json({ data: registro });
     } catch (err) {
-      res.status(401).json({ message: err.errors[0].message });
+      if (typeof err.errors[0].message === "undefined") {
+        res.status(401).json({ message: JSON.stringify(err) });
+      } else {
+        res.status(401).json({ message: err.errors[0].message });
+      }
     }
   }
 

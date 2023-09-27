@@ -129,7 +129,11 @@ class AtividadeController implements IController {
         .json({ data: atividade, message: "Cadastro realizado com sucesso." });
     } catch (err) {
       console.log(err);
-      res.status(401).json({ message: err.errors[0].message });
+      if (typeof err.errors[0].message === "undefined") {
+        res.status(401).json({ message: JSON.stringify(err) });
+      } else {
+        res.status(401).json({ message: err.errors[0].message });
+      }
     }
   }
 
@@ -163,7 +167,11 @@ class AtividadeController implements IController {
       res.status(200).json({ data: registro });
     } catch (err) {
       console.log(err);
-      res.status(401).json({ message: err.errors[0].message });
+      if (typeof err.errors[0].message === "undefined") {
+        res.status(401).json({ message: JSON.stringify(err) });
+      } else {
+        res.status(401).json({ message: err.errors[0].message });
+      }
     }
   }
 
@@ -201,7 +209,11 @@ class AtividadeController implements IController {
         .json({ data: registro, message: "Alteração realizada com sucesso." });
     } catch (err) {
       console.log(err);
-      res.status(401).json({ message: err.errors[0].message });
+      if (typeof err.errors[0].message === "undefined") {
+        res.status(401).json({ message: JSON.stringify(err) });
+      } else {
+        res.status(401).json({ message: err.errors[0].message });
+      }
     }
   }
 
@@ -256,7 +268,11 @@ class AtividadeController implements IController {
       res.status(200).json({ data: registros });
     } catch (err) {
       console.log(err);
-      res.status(401).json({ message: err.errors[0].message });
+      if (typeof err.errors[0].message === "undefined") {
+        res.status(401).json({ message: JSON.stringify(err) });
+      } else {
+        res.status(401).json({ message: err.errors[0].message });
+      }
     }
   }
 
@@ -493,7 +509,11 @@ class AtividadeController implements IController {
       res.status(200).json({ data: registosOrdenados });
     } catch (err) {
       console.log(err);
-      res.status(401).json({ message: err.errors[0].message });
+      if (typeof err.errors[0].message === "undefined") {
+        res.status(401).json({ message: JSON.stringify(err) });
+      } else {
+        res.status(401).json({ message: err.errors[0].message });
+      }
     }
   }
 
@@ -540,7 +560,11 @@ class AtividadeController implements IController {
       res.status(200).json({ data: registros });
     } catch (err) {
       console.log(err);
-      res.status(401).json({ message: err.errors[0].message });
+      if (typeof err.errors[0].message === "undefined") {
+        res.status(401).json({ message: JSON.stringify(err) });
+      } else {
+        res.status(401).json({ message: err.errors[0].message });
+      }
     }
   }
 
@@ -616,7 +640,11 @@ class AtividadeController implements IController {
       res.status(200).json({ data: registros });
     } catch (err) {
       console.log(err);
-      res.status(401).json({ message: err.errors[0].message });
+      if (typeof err.errors[0].message === "undefined") {
+        res.status(401).json({ message: JSON.stringify(err) });
+      } else {
+        res.status(401).json({ message: err.errors[0].message });
+      }
     }
   }
 
@@ -641,7 +669,11 @@ class AtividadeController implements IController {
 
   //   } catch (err) {
   //     console.log(err);
-  //     res.status(401).json({ message: err.errors[0].message });
+  //     if (typeof err.errors[0].message === "undefined") {
+        res.status(401).json({ message: JSON.stringify(err) });
+      } else {
+        res.status(401).json({ message: err.errors[0].message });
+      }
   //   }
   // }
 
@@ -699,7 +731,11 @@ class AtividadeController implements IController {
       res.status(200).json({ data: registros });
     } catch (err) {
       console.log(err);
-      res.status(401).json({ message: err.errors[0].message });
+      if (typeof err.errors[0].message === "undefined") {
+        res.status(401).json({ message: JSON.stringify(err) });
+      } else {
+        res.status(401).json({ message: err.errors[0].message });
+      }
     }
   }
 
@@ -747,7 +783,11 @@ class AtividadeController implements IController {
       res.status(200).json({ data: registros });
     } catch (err) {
       console.log(err);
-      res.status(401).json({ message: err.errors[0].message });
+      if (typeof err.errors[0].message === "undefined") {
+        res.status(401).json({ message: JSON.stringify(err) });
+      } else {
+        res.status(401).json({ message: err.errors[0].message });
+      }
     }
   }
 
@@ -792,7 +832,11 @@ class AtividadeController implements IController {
       res.status(200).json({ data: registros });
     } catch (err) {
       console.log(err);
-      res.status(401).json({ message: err.errors[0].message });
+      if (typeof err.errors[0].message === "undefined") {
+        res.status(401).json({ message: JSON.stringify(err) });
+      } else {
+        res.status(401).json({ message: err.errors[0].message });
+      }
     }
   }
 

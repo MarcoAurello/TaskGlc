@@ -4,7 +4,7 @@ import Mensagem from "../model/mensagem.model";
 import Status from "../model/status.model";
 import Usuario from "../model/usuario.model";
 import emailUtils from "../utils/email.utils";
-import { IController } from './controller.inteface'
+import { IController } from "./controller.inteface";
 import Arquivo from "../model/arquivo.model";
 import Area from "../model/area.model";
 
@@ -21,7 +21,11 @@ class MensagemController implements IController {
 
       res.status(200).json({ data: registros });
     } catch (err) {
-      res.status(401).json({ message: err.errors[0].message });
+      if (typeof err.errors[0].message === "undefined") {
+        res.status(401).json({ message: JSON.stringify(err) });
+      } else {
+        res.status(401).json({ message: err.errors[0].message });
+      }
     }
   }
 
@@ -54,7 +58,7 @@ class MensagemController implements IController {
           },
         }
       );
-      if (caminho ) {
+      if (caminho) {
         await Atividade.update(
           {
             caminho: caminho,
@@ -82,20 +86,28 @@ class MensagemController implements IController {
         });
       }
 
-  
-      const executor = await Usuario.findOne({ where: { email: emailExecutor } });
+      const executor = await Usuario.findOne({
+        where: { email: emailExecutor },
+      });
       const solicitante = await Usuario.findOne({ where: { email: email } });
 
-      const Manutencao = await Area.findOne({ where: { nome:'Manutenção- Elétrica / Hidráulica / Refrigeração/ Mecânica' } });
+      const Manutencao = await Area.findOne({
+        where: {
+          nome: "Manutenção- Elétrica / Hidráulica / Refrigeração/ Mecânica",
+        },
+      });
 
-      if(executor?.fkArea === Manutencao?.id || solicitante?.fkArea === Manutencao?.id){
+      if (
+        executor?.fkArea === Manutencao?.id ||
+        solicitante?.fkArea === Manutencao?.id
+      ) {
         const txEmail = `
         <b>Atividade: ${titulo?.titulo}</b> tem nova interação<br>
         <a href="https://www7.pe.senac.br/taskmanager/atividade/${titulo?.id}/edit">CLIQUE PARA VER</a><p>
     `;
-        emailUtils.enviar('lucascruz@pe.senac.br', txEmail);
-        emailUtils.enviar('karenMiranda@pe.senac.br', txEmail);
-        emailUtils.enviar('gabrielvilela@pe.senac.br', txEmail);
+        emailUtils.enviar("lucascruz@pe.senac.br", txEmail);
+        emailUtils.enviar("karenMiranda@pe.senac.br", txEmail);
+        emailUtils.enviar("gabrielvilela@pe.senac.br", txEmail);
       }
 
       const txEmail = `
@@ -103,15 +115,10 @@ class MensagemController implements IController {
       <a href="https://www7.pe.senac.br/taskmanager/atividade/${titulo?.id}/edit">CLIQUE PARA VER</a><p>
   `;
 
-
-
       emailUtils.enviar(email, txEmail);
 
       if (emailExecutor) {
-        emailUtils.enviar(
-          emailExecutor,
-          txEmail
-        );
+        emailUtils.enviar(emailExecutor, txEmail);
       }
 
       const atividade = await Atividade.findOne({ where: { id: fkAtividade } });
@@ -120,7 +127,11 @@ class MensagemController implements IController {
         .status(200)
         .json({ data: atividade, message: "Cadastro realizado com sucesso." });
     } catch (err) {
-      res.status(401).json({ message: err.errors[0].message });
+      if (typeof err.errors[0].message === "undefined") {
+        res.status(401).json({ message: JSON.stringify(err) });
+      } else {
+        res.status(401).json({ message: err.errors[0].message });
+      }
     }
   }
 
@@ -138,7 +149,11 @@ class MensagemController implements IController {
 
       res.status(200).json({ data: registros });
     } catch (err) {
-      res.status(401).json({ message: err.errors[0].message });
+      if (typeof err.errors[0].message === "undefined") {
+        res.status(401).json({ message: JSON.stringify(err) });
+      } else {
+        res.status(401).json({ message: err.errors[0].message });
+      }
     }
   }
 
@@ -152,7 +167,11 @@ class MensagemController implements IController {
 
       res.status(200).json({ data: registros });
     } catch (err) {
-      res.status(401).json({ message: err.errors[0].message });
+      if (typeof err.errors[0].message === "undefined") {
+        res.status(401).json({ message: JSON.stringify(err) });
+      } else {
+        res.status(401).json({ message: err.errors[0].message });
+      }
     }
   }
 

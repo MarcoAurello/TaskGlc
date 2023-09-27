@@ -12,7 +12,11 @@ class UsuarioDemandadoController implements IController {
 
       res.status(200).json({ data: registros });
     } catch (err) {
-      res.status(401).json({ message: err.errors[0].message });
+      if (typeof err.errors[0].message === "undefined") {
+        res.status(401).json({ message: JSON.stringify(err) });
+      } else {
+        res.status(401).json({ message: err.errors[0].message });
+      }
     }
   }
 
