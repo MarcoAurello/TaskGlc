@@ -10,7 +10,6 @@ const path = require("path");
 const { promisify } = require("util");
 const fs = require("fs");
 
-
 class ArquivoController implements IController {
   async all(req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
@@ -22,98 +21,99 @@ class ArquivoController implements IController {
 
       res.status(200).json({ data: registros });
     } catch (err) {
-      console.log(err)
+      console.log(err);
       if (typeof err.errors[0].message === "undefined") {
         res.status(401).json({ message: JSON.stringify(err) });
       } else {
         res.status(401).json({ message: err.errors[0].message });
       }
     }
-
   }
 
   async create(req: any, res: Response, next: NextFunction): Promise<any> {
     try {
-        if (!req.files || Object.keys(req.files).length === 0) {
-            return res
-              .status(401)
-              .json({ message: 'Não há arquivo para guardar!' });
-          }
+      if (!req.files || Object.keys(req.files).length === 0) {
+        return res
+          .status(401)
+          .json({ message: "Não há arquivo para guardar!" });
+      }
 
-        const { arquivo } = req.files;
-        const diretorioArquivos = "./uploads/";
+      const { arquivo } = req.files;
+      const diretorioArquivos = "./uploads/";
 
-        console.log(arquivo)
+      console.log(arquivo);
 
-        let extension = ".pdf";
+      let extension = ".pdf";
 
-        switch (arquivo.mimetype) {
-            case "image/jpeg": {
-                extension = ".jpeg";
-                break;
-            }
-            case "image/png": {
-                extension = ".png";
-                break;
-            }
-                case "application/pdf": {
-                extension = ".pdf";
-                break;
-            }
-            case "application/vnd.openxmlformats-officedocument.wordprocessingml.document": {
-              extension = ".docx";
-              break;
-          }
-          case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
-            extension = ".xlsx";
-            break;
-          }
-            default: {
-                return res.status(401).json({
-                    message:
-                    "arquivo não suportado",
-                });
-            }
+      switch (arquivo.mimetype) {
+        case "image/jpeg": {
+          extension = ".jpeg";
+          break;
         }
+        case "image/png": {
+          extension = ".png";
+          break;
+        }
+        case "application/pdf": {
+          extension = ".pdf";
+          break;
+        }
+        case "application/vnd.openxmlformats-officedocument.wordprocessingml.document": {
+          extension = ".docx";
+          break;
+        }
+        case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+          extension = ".xlsx";
+          break;
+        }
+        default: {
+          return res.status(401).json({
+            message: "arquivo não suportado",
+          });
+        }
+      }
 
+      const nomeArquivo = `${hash.generate(
+        `${arquivo.name}${new Date().toLocaleString()}`
+      )}${extension}`;
 
-        const nomeArquivo = `${hash.generate(`${arquivo.name}${new Date().toLocaleString()}`)}${extension}`;
-        
-        arquivo.mv(`${path.join(__dirname, diretorioArquivos)}${nomeArquivo}`, async (err) => {
-            if(err) {
-                res.status(401).json({message: err})
-            }
+      arquivo.mv(
+        `${path.join(__dirname, diretorioArquivos)}${nomeArquivo}`,
+        async (err) => {
+          if (err) {
+            res.status(401).json({ message: err });
+          }
 
-            const registro = await Arquivo.create({
-                nome: nomeArquivo,
-                nomeApresentacao: arquivo.name,
-                caminho: diretorioArquivos + nomeArquivo
-            });
+          const registro = await Arquivo.create({
+            nome: nomeArquivo,
+            nomeApresentacao: arquivo.name,
+            caminho: diretorioArquivos + nomeArquivo,
+          });
 
-            return res.status(200).json({data: registro, message: 'Upload realizado com sucesso.'});
-        });
-    }
-    catch(err) {
-        console.log(err);
-        res.status(401).json({message: err.errors[0].message})
+          return res
+            .status(200)
+            .json({ data: registro, message: "Upload realizado com sucesso." });
+        }
+      );
+    } catch (err) {
+      console.log(err);
+      res.status(401).json({ message: err.errors[0].message });
     }
   }
 
   async find(req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
-      const { id } = req.params
+      const { id } = req.params;
 
       const registro = await Arquivo.findOne({
         where: {
-          id
-        }
-      })
-
+          id,
+        },
+      });
 
       return res.status(200).sendFile(join(__dirname, registro?.caminho));
-    }
-    catch(err) {
-      return res.status(401).json({message: err.errors[0].message})
+    } catch (err) {
+      return res.status(401).json({ message: err.errors[0].message });
     }
   }
 
@@ -123,7 +123,7 @@ class ArquivoController implements IController {
     //   await Atividade.update(
     //     {
     //       fkAtividade
-    //     }, 
+    //     },
     //     {
     //       where:{
     //         id: '0c44ead6-4c86-49e3-b687-1d56fcb6ae7a'
@@ -136,10 +136,10 @@ class ArquivoController implements IController {
     // } catch (err) {
     //   console.log(err);
     //   if (typeof err.errors[0].message === "undefined") {
-        res.status(401).json({ message: JSON.stringify(err) });
-      } else {
-        res.status(401).json({ message: err.errors[0].message });
-      }
+    //   res.status(401).json({ message: JSON.stringify(err) });
+    // } else {
+    //   res.status(401).json({ message: err.errors[0].message });
+    // }
     // }
     throw new Error("Method not implemented.");
   }

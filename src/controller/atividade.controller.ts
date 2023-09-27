@@ -670,10 +670,10 @@ class AtividadeController implements IController {
   //   } catch (err) {
   //     console.log(err);
   //     if (typeof err.errors[0].message === "undefined") {
-        res.status(401).json({ message: JSON.stringify(err) });
-      } else {
-        res.status(401).json({ message: err.errors[0].message });
-      }
+  //   res.status(401).json({ message: JSON.stringify(err) });
+  // } else {
+  //   res.status(401).json({ message: err.errors[0].message });
+  // }
   //   }
   // }
 
