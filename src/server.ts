@@ -56,6 +56,9 @@ class Server {
     this.application.use('/api/subarea/', routerSubArea)
     this.application.use('/api/arquivo/', routerArquivo)
     this.application.use('/api/bibliotecaDeErros/', routerBibliotecaDeErros)
+    this.application.get('/api/status', (req, res) => {
+      res.status(200).json({message: 'The server is running on port 3354'})
+    })
 
     this.application.use(express.static(path.resolve('app', 'build')))
     this.application.get('/*', (req, res) =>

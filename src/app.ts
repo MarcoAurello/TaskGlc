@@ -1,7 +1,10 @@
 import app from './server'
 
-const PORT = process.env.PORT || 3354
+const PORT = 3354
+const HOST = '0.0.0.0'
 
-app.listen(PORT, () => {
+app.listen(PORT, HOST, () => {
   console.log(`The server is running on port ${PORT}`)
 })
+
+app.listen()
