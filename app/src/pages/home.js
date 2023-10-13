@@ -1,4 +1,4 @@
-import { Button, FormControl, InputAdornment, InputLabel, MenuItem, Select, SpeedDial, TextField } from "@mui/material";
+import { Button, FormControl, InputAdornment,Dialog,DialogContent, InputLabel, MenuItem, Select, SpeedDial, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import EditIcon from '@mui/icons-material/Edit';
 import TaskFilter from '../components/task-filter'
@@ -27,6 +27,8 @@ const Home = (props) => {
   const [fkArea, setfkArea] = useState('')
   const [subarea, setSubArea] = useState([])
   const [meuSetor, setMeuSetor] = useState([])
+  const [todosEmails, setEmails] = useState([])
+  const [emailNaoEncontrado, setEmailNaoEncontrado]=useState(false)
 
 
 
@@ -96,6 +98,36 @@ const Home = (props) => {
 
   }
 
+  function carregarEmails() {
+    setOpenLoadingDialog(true)
+    const token = getCookie('_token_task_manager')
+    const params = {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    }
+
+    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/email/`, params)
+      .then(response => {
+        const { status } = response
+        response.json().then(data => {
+          setOpenLoadingDialog(false)
+          if (status === 401) {
+          } else if (status === 200) {
+            setOpenLoadingDialog(false)
+
+            // alert(JSON.stringify(data.data))
+
+            setEmails(data.data)
+
+          }
+        })
+      })
+
+
+  }
+
+
 
 
   function carregarMinhasAtividades() {
@@ -138,9 +170,28 @@ const Home = (props) => {
     carregarMinhasAtividades()
     carregarSolicitacaoAtividades()
     carregarAtividadesDoSetor()
+    carregarEmails()
 
 
-  }, [])
+    if(todosEmails && logged){
+      let encontrado = false;
+      todosEmails.forEach(emailObj => {
+        if (emailObj.email === props.logged.email) {
+          encontrado = true;
+        }
+      });
+
+      if (!encontrado) {
+        setEmailNaoEncontrado(true);
+      }
+
+    }
+
+  
+
+   
+
+  }, [todosEmails, emailNaoEncontrado])
 
   useEffect(() => {
 
@@ -267,7 +318,7 @@ const Home = (props) => {
         crossorigin="anonymous"
       />
 
-      {/* {logged ? <TaskFilter nome={props.logged.nome} />
+      {/* {logged ? <TaskFilter nome={props.logged.email} />
         :
         ''
       } */}
@@ -521,6 +572,32 @@ const Home = (props) => {
 
         }
       </table>
+
+      <Dialog open={emailNaoEncontrado}  >
+
+<DialogContent>
+
+
+  <hr></hr>
+  <h4>Pesquisa de satisfação GTI</h4>
+
+ 
+ <center>
+ <Button variant="contained" 
+    onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/pesquisa/`}>Responder</Button>
+  
+ </center>
+   
+   
+    {/* <Button variant="contained" onClick={novaInteracao}>{'Enviar'}</Button>
+
+
+    <Button onClick={() => setOpenMsg(false)}>Cancelar</Button> */}
+
+
+</DialogContent>
+
+</Dialog>
 
 
 

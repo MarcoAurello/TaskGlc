@@ -1,9 +1,9 @@
-import controller from '../controller/email.controller'
+import controller from '../controller/questionario.controller'
 import { Router } from 'express'
 
 import routerMiddleware from '../middleware/router.middleware'
 
-class EmailRouter {
+class QuestionarioRouter {
   public router!: Router
 
   constructor () {
@@ -22,4 +22,4 @@ class EmailRouter {
   }
 }
 
-export default new EmailRouter().router
+export default new QuestionarioRouter().router
