@@ -28,6 +28,7 @@ const Home = (props) => {
   const [subarea, setSubArea] = useState([])
   const [meuSetor, setMeuSetor] = useState([])
   const [todosEmails, setEmails] = useState([])
+  const[fechar, setFechar]=useState(false)
   const [emailNaoEncontrado, setEmailNaoEncontrado]=useState(false)
 
 
@@ -181,7 +182,7 @@ const Home = (props) => {
         }
       });
 
-      if (!encontrado) {
+      if (!encontrado && !fechar) {
         
         setEmailNaoEncontrado(true);
       }
@@ -588,8 +589,8 @@ const Home = (props) => {
  <center>
  <Button variant="contained" 
     onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/pesquisa/`}>Responder</Button><p></p>
-     {/* <Button variant="contained" 
-    onClick={() => setEmailNaoEncontrado(false)}>Sair</Button> */}
+     <Button variant="contained" 
+    onClick={() => [setEmailNaoEncontrado(false), setFechar(true)]}>Sair</Button>
   
  </center>
    
