@@ -1,27 +1,27 @@
-import { Request, Response, NextFunction } from "express";
-import { IController } from "./controller.inteface";
-import Atividade from "../model/atividade.model";
-import Mensagem from "../model/mensagem.model";
-import Status from "../model/status.model";
-import protocolo from "../utils/protocolo.utils";
-import Area from "../model/area.model";
-import Usuario from "../model/usuario.model";
-import Classificacao from "../model/classificacao.model";
-import Arquivo from "../model/arquivo.model";
+import { Request, Response, NextFunction } from 'express'
+import { IController } from './controller.inteface'
+import Atividade from '../model/atividade.model'
+import Mensagem from '../model/mensagem.model'
+import Status from '../model/status.model'
+import protocolo from '../utils/protocolo.utils'
+import Area from '../model/area.model'
+import Usuario from '../model/usuario.model'
+import Classificacao from '../model/classificacao.model'
+import Arquivo from '../model/arquivo.model'
 
 // import UsuarioAtividade from "../model/usuarioAtividade.model";
-import Unidade from "../model/unidade.model";
-import PerfilUtils from "../utils/perfil.utils";
-const multer = require("multer");
-import emailUtils from "../utils/email.utils";
-const { Op } = require("sequelize");
+import Unidade from '../model/unidade.model'
+import PerfilUtils from '../utils/perfil.utils'
+import emailUtils from '../utils/email.utils'
+const multer = require('multer')
+const { Op } = require('sequelize')
 
 class AtividadeController implements IController {
-  async all(req: Request, res: Response, next: NextFunction): Promise<any> {
-    throw new Error("Method not implemented.");
+  async all (req: Request, res: Response, next: NextFunction): Promise<any> {
+    throw new Error('Method not implemented.')
   }
 
-  async create(req: any, res: Response, next: NextFunction): Promise<any> {
+  async create (req: any, res: Response, next: NextFunction): Promise<any> {
     try {
       const {
         fkUnidade,
@@ -31,42 +31,42 @@ class AtividadeController implements IController {
         categoria,
         caminho,
         listaDeArquivosEnviados,
-        setorSolicitante,
-      } = req.body;
+        setorSolicitante
+      } = req.body
       // console.log(req.body);
       // console.log(setorSolicitante);
 
       if (!fkUnidade) {
         return res.status(401).json({
-          message: "O campo unidade deve ser preenchido corretamente.",
-        });
+          message: 'O campo unidade deve ser preenchido corretamente.'
+        })
       }
 
       if (!fkArea) {
         return res
           .status(401)
-          .json({ message: "O campo área deve ser preenchido corretamente." });
+          .json({ message: 'O campo área deve ser preenchido corretamente.' })
       }
 
       if (!titulo) {
         return res.status(401).json({
-          message: "O campo título deve ser preenchido corretamente.",
-        });
+          message: 'O campo título deve ser preenchido corretamente.'
+        })
       }
 
       if (!conteudo) {
         return res.status(401).json({
-          message: "O campo conteudo deve ser preenchido corretamente.",
-        });
+          message: 'O campo conteudo deve ser preenchido corretamente.'
+        })
       }
 
       const classificacao = await Classificacao.findOne({
-        where: { nome: "Não Definido" },
-      });
+        where: { nome: 'Não Definido' }
+      })
 
       const status = await Status.findOne({
-        where: { nome: "Aberto" },
-      });
+        where: { nome: 'Aberto' }
+      })
 
       const atividade = await Atividade.create({
         titulo,
@@ -79,8 +79,8 @@ class AtividadeController implements IController {
         pessoal: false,
         // fkUsuarioExecutor,
         categoria,
-        caminho,
-      });
+        caminho
+      })
 
       // const emailCoordenadores = await queryInterface.sequelize.query('select email from usuario where fkArea = \'Aberto\'')
       // const status = await queryInterface.sequelize.query('select id from status where nome = \'Aberto\'')
@@ -88,23 +88,23 @@ class AtividadeController implements IController {
       await Mensagem.create({
         conteudo,
         fkAtividade: atividade.id,
-        fkUsuario: req.usuario.id,
-      });
+        fkUsuario: req.usuario.id
+      })
 
       const atividadeSalva = await Atividade.findOne({
-        where: { titulo: titulo },
-      });
+        where: { titulo }
+      })
 
       listaDeArquivosEnviados.map((item) => {
         Arquivo.update(
           {
-            fkAtividade: atividadeSalva?.id,
+            fkAtividade: atividadeSalva?.id
           },
           {
-            where: { id: item.id },
+            where: { id: item.id }
           }
-        );
-      });
+        )
+      })
 
       const txEmail = `
       <b>Nova Atividade para sua área</b><br>
@@ -115,86 +115,90 @@ class AtividadeController implements IController {
   <br/>
   <a href="https://www7.pe.senac.br/taskmanager/atividade/${atividadeSalva?.id}/edit">CLIQUE PARA VER</a><p>
   
-  `;
+  `
       const funcionarioDaArea = await Usuario.findAll({
-        where: { fkArea: fkArea },
-      });
+        where: { fkArea }
+      })
       funcionarioDaArea.map((usuario, index) => {
         setTimeout(() => {
-          emailUtils.enviar(usuario.email, txEmail);
-        }, index * 2000); // Atraso de 2 segundos (2000 milissegundos) multiplicado pelo índice
-      });
+          emailUtils.enviar(usuario.email, txEmail)
+        }, index * 2000) // Atraso de 2 segundos (2000 milissegundos) multiplicado pelo índice
+      })
       res
         .status(200)
-        .json({ data: atividade, message: "Cadastro realizado com sucesso." });
+        .json({ data: atividade, message: 'Cadastro realizado com sucesso.' })
     } catch (err) {
-      console.log(err);
-      if (typeof err.errors[0].message === "undefined") {
-        res.status(401).json({ message: JSON.stringify(err) });
+      console.log(err)
+      if (typeof err.errors !== 'undefined') {
+        res.status(401).json({ message: err.errors[0].message })
+      } else if (typeof err.message !== 'undefined') {
+        res.status(401).json({ message: err.message })
       } else {
-        res.status(401).json({ message: err.errors[0].message });
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
       }
     }
   }
 
-  async find(req: Request, res: Response, next: NextFunction): Promise<any> {
+  async find (req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
-      const { id } = req.params;
+      const { id } = req.params
 
       const registro = await Atividade.findOne({
         include: [
           { model: Area, include: [Unidade] },
           {
             model: Usuario,
-            foreignKey: "fkUsuarioExecutor",
-            as: "UsuarioExecutor",
-            include: [{ model: Area, include: [Unidade] }],
+            foreignKey: 'fkUsuarioExecutor',
+            as: 'UsuarioExecutor',
+            include: [{ model: Area, include: [Unidade] }]
           },
           {
             model: Usuario,
-            foreignKey: "fkUsuarioSolicitante",
+            foreignKey: 'fkUsuarioSolicitante',
 
-            include: [{ model: Area, include: [Unidade] }],
+            include: [{ model: Area, include: [Unidade] }]
           },
           Area,
           Classificacao,
           Status,
-          Usuario,
+          Usuario
         ],
-        where: { id },
-      });
+        where: { id }
+      })
 
-      res.status(200).json({ data: registro });
+      res.status(200).json({ data: registro })
     } catch (err) {
-      console.log(err);
-      if (typeof err.errors[0].message === "undefined") {
-        res.status(401).json({ message: JSON.stringify(err) });
+      console.log(err)
+      if (typeof err.errors !== 'undefined') {
+        res.status(401).json({ message: err.errors[0].message })
+      } else if (typeof err.message !== 'undefined') {
+        res.status(401).json({ message: err.message })
       } else {
-        res.status(401).json({ message: err.errors[0].message });
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
       }
     }
   }
 
-  async update(req: Request, res: Response, next: NextFunction): Promise<any> {
+  async update (req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
-      const { id } = req.params;
+      const { id } = req.params
       // console.log(id)
-      const { fkStatus, arquivado, tempoEstimado } = req.body;
-      console.log(req.body.fkStatus);
+      const { fkStatus, arquivado, tempoEstimado } = req.body
+      console.log(req.body.fkStatus)
 
       await Atividade.update(
         {
-          fkStatus: fkStatus,
-          arquivado: arquivado,
-          tempoEstimado: tempoEstimado,
+          fkStatus,
+          arquivado,
+          tempoEstimado
         },
         {
           where: {
-            id: id,
+            id
           },
-          individualHooks: false,
+          individualHooks: false
         }
-      );
+      )
 
       // if (newStatus) {
       //   const status1 = status?.nome
@@ -203,21 +207,23 @@ class AtividadeController implements IController {
       //   // emailUtils.enviar(email, txEmail)
       // }
 
-      const registro = await Atividade.findOne({ where: { id } });
+      const registro = await Atividade.findOne({ where: { id } })
       res
         .status(200)
-        .json({ data: registro, message: "Alteração realizada com sucesso." });
+        .json({ data: registro, message: 'Alteração realizada com sucesso.' })
     } catch (err) {
-      console.log(err);
-      if (typeof err.errors[0].message === "undefined") {
-        res.status(401).json({ message: JSON.stringify(err) });
+      console.log(err)
+      if (typeof err.errors !== 'undefined') {
+        res.status(401).json({ message: err.errors[0].message })
+      } else if (typeof err.message !== 'undefined') {
+        res.status(401).json({ message: err.message })
       } else {
-        res.status(401).json({ message: err.errors[0].message });
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
       }
     }
   }
 
-  async todasAsPendencias(
+  async todasAsPendencias (
     req: any,
     res: Response,
     next: NextFunction
@@ -225,15 +231,15 @@ class AtividadeController implements IController {
     try {
       // const status = await queryInterface.sequelize.query('select id from status where nome = \'Aberto\'')
       const statusPendente = await Status.findOne({
-        where: { nome: "Pendente" },
-      });
+        where: { nome: 'Pendente' }
+      })
       const statusConcluido = await Status.findOne({
-        where: { nome: "Concluido" },
-      });
+        where: { nome: 'Concluido' }
+      })
       const statusCancelado = await Status.findOne({
-        where: { nome: "Cancelado" },
-      });
-      const statusParado = await Status.findOne({ where: { nome: "Parado" } });
+        where: { nome: 'Cancelado' }
+      })
+      const statusParado = await Status.findOne({ where: { nome: 'Parado' } })
       const registros = await Atividade.findAll({
         include: [
           { model: Area, include: [Unidade] },
@@ -241,16 +247,16 @@ class AtividadeController implements IController {
           Status,
           {
             model: Usuario,
-            foreignKey: "fkUsuarioExecutor",
-            as: "UsuarioExecutor",
-            include: [{ model: Area, include: [Unidade] }],
+            foreignKey: 'fkUsuarioExecutor',
+            as: 'UsuarioExecutor',
+            include: [{ model: Area, include: [Unidade] }]
           },
           {
             model: Usuario,
-            foreignKey: "fkUsuarioSolicitante",
+            foreignKey: 'fkUsuarioSolicitante',
 
-            include: [{ model: Area, include: [Unidade] }],
-          },
+            include: [{ model: Area, include: [Unidade] }]
+          }
         ],
         where: {
           fkUsuarioExecutor: req.usuario.id,
@@ -260,56 +266,58 @@ class AtividadeController implements IController {
               statusPendente?.id,
               statusConcluido?.id,
               statusCancelado?.id,
-              statusParado?.id,
-            ],
-          },
-        },
-      });
-      res.status(200).json({ data: registros });
+              statusParado?.id
+            ]
+          }
+        }
+      })
+      res.status(200).json({ data: registros })
     } catch (err) {
-      console.log(err);
-      if (typeof err.errors[0].message === "undefined") {
-        res.status(401).json({ message: JSON.stringify(err) });
+      console.log(err)
+      if (typeof err.errors !== 'undefined') {
+        res.status(401).json({ message: err.errors[0].message })
+      } else if (typeof err.message !== 'undefined') {
+        res.status(401).json({ message: err.message })
       } else {
-        res.status(401).json({ message: err.errors[0].message });
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
       }
     }
   }
 
-  async minhasAtividades(
+  async minhasAtividades (
     req: any,
     res: Response,
     next: NextFunction
   ): Promise<any> {
     try {
-      const statusAberto = await Status.findOne({ where: { nome: "Aberto" } });
+      const statusAberto = await Status.findOne({ where: { nome: 'Aberto' } })
       const statusIniciado = await Status.findOne({
-        where: { nome: "Iniciado" },
-      });
+        where: { nome: 'Iniciado' }
+      })
       const statusPlanejado = await Status.findOne({
-        where: { nome: "Planejado para Iniciar" },
-      });
+        where: { nome: 'Planejado para Iniciar' }
+      })
       const statusPendente = await Status.findOne({
-        where: { nome: "Pendente" },
-      });
-      const statusParado = await Status.findOne({ where: { nome: "Parado" } });
+        where: { nome: 'Pendente' }
+      })
+      const statusParado = await Status.findOne({ where: { nome: 'Parado' } })
 
       const claImediata = await Classificacao.findOne({
-        where: { nome: "Execução Imediata" },
-      });
+        where: { nome: 'Execução Imediata' }
+      })
       const claUrgente = await Classificacao.findOne({
-        where: { nome: "Urgente" },
-      });
+        where: { nome: 'Urgente' }
+      })
       const claImportente = await Classificacao.findOne({
-        where: { nome: "Importante" },
-      });
+        where: { nome: 'Importante' }
+      })
       const claCircunstancial = await Classificacao.findOne({
-        where: { nome: "Circunstancial" },
-      });
+        where: { nome: 'Circunstancial' }
+      })
 
       const claNaoDef = await Classificacao.findOne({
-        where: { nome: "Não Definido" },
-      });
+        where: { nome: 'Não Definido' }
+      })
 
       // const registros = await Atividade.findAll({
       //   include: [
@@ -337,16 +345,16 @@ class AtividadeController implements IController {
           Status,
           {
             model: Usuario,
-            foreignKey: "fkUsuarioExecutor",
-            as: "UsuarioExecutor",
-            include: [{ model: Area, include: [Unidade] }],
+            foreignKey: 'fkUsuarioExecutor',
+            as: 'UsuarioExecutor',
+            include: [{ model: Area, include: [Unidade] }]
           },
           {
             model: Usuario,
-            foreignKey: "fkUsuarioSolicitante",
+            foreignKey: 'fkUsuarioSolicitante',
 
-            include: [{ model: Area, include: [Unidade] }],
-          },
+            include: [{ model: Area, include: [Unidade] }]
+          }
         ],
         where: {
           fkClassificacao: claImediata?.id,
@@ -358,11 +366,11 @@ class AtividadeController implements IController {
               statusIniciado?.id,
               statusPlanejado?.id,
               statusPendente?.id,
-              statusParado?.id,
-            ],
-          },
-        },
-      });
+              statusParado?.id
+            ]
+          }
+        }
+      })
 
       const registrosUrgentes = await Atividade.findAll({
         include: [
@@ -371,16 +379,16 @@ class AtividadeController implements IController {
           Status,
           {
             model: Usuario,
-            foreignKey: "fkUsuarioExecutor",
-            as: "UsuarioExecutor",
-            include: [{ model: Area, include: [Unidade] }],
+            foreignKey: 'fkUsuarioExecutor',
+            as: 'UsuarioExecutor',
+            include: [{ model: Area, include: [Unidade] }]
           },
           {
             model: Usuario,
-            foreignKey: "fkUsuarioSolicitante",
+            foreignKey: 'fkUsuarioSolicitante',
 
-            include: [{ model: Area, include: [Unidade] }],
-          },
+            include: [{ model: Area, include: [Unidade] }]
+          }
         ],
         where: {
           fkClassificacao: claUrgente?.id,
@@ -392,11 +400,11 @@ class AtividadeController implements IController {
               statusIniciado?.id,
               statusPlanejado?.id,
               statusPendente?.id,
-              statusParado?.id,
-            ],
-          },
-        },
-      });
+              statusParado?.id
+            ]
+          }
+        }
+      })
 
       const registrosImportantes = await Atividade.findAll({
         include: [
@@ -405,16 +413,16 @@ class AtividadeController implements IController {
           Status,
           {
             model: Usuario,
-            foreignKey: "fkUsuarioExecutor",
-            as: "UsuarioExecutor",
-            include: [{ model: Area, include: [Unidade] }],
+            foreignKey: 'fkUsuarioExecutor',
+            as: 'UsuarioExecutor',
+            include: [{ model: Area, include: [Unidade] }]
           },
           {
             model: Usuario,
-            foreignKey: "fkUsuarioSolicitante",
+            foreignKey: 'fkUsuarioSolicitante',
 
-            include: [{ model: Area, include: [Unidade] }],
-          },
+            include: [{ model: Area, include: [Unidade] }]
+          }
         ],
         where: {
           fkClassificacao: claImportente?.id,
@@ -426,11 +434,11 @@ class AtividadeController implements IController {
               statusIniciado?.id,
               statusPlanejado?.id,
               statusPendente?.id,
-              statusParado?.id,
-            ],
-          },
-        },
-      });
+              statusParado?.id
+            ]
+          }
+        }
+      })
 
       const registroCircunstancial = await Atividade.findAll({
         include: [
@@ -439,16 +447,16 @@ class AtividadeController implements IController {
           Status,
           {
             model: Usuario,
-            foreignKey: "fkUsuarioExecutor",
-            as: "UsuarioExecutor",
-            include: [{ model: Area, include: [Unidade] }],
+            foreignKey: 'fkUsuarioExecutor',
+            as: 'UsuarioExecutor',
+            include: [{ model: Area, include: [Unidade] }]
           },
           {
             model: Usuario,
-            foreignKey: "fkUsuarioSolicitante",
+            foreignKey: 'fkUsuarioSolicitante',
 
-            include: [{ model: Area, include: [Unidade] }],
-          },
+            include: [{ model: Area, include: [Unidade] }]
+          }
         ],
         where: {
           fkClassificacao: claCircunstancial?.id,
@@ -460,11 +468,11 @@ class AtividadeController implements IController {
               statusIniciado?.id,
               statusPlanejado?.id,
               statusPendente?.id,
-              statusParado?.id,
-            ],
-          },
-        },
-      });
+              statusParado?.id
+            ]
+          }
+        }
+      })
 
       const registroNaoDefinidos = await Atividade.findAll({
         include: [
@@ -473,16 +481,16 @@ class AtividadeController implements IController {
           Status,
           {
             model: Usuario,
-            foreignKey: "fkUsuarioExecutor",
-            as: "UsuarioExecutor",
-            include: [{ model: Area, include: [Unidade] }],
+            foreignKey: 'fkUsuarioExecutor',
+            as: 'UsuarioExecutor',
+            include: [{ model: Area, include: [Unidade] }]
           },
           {
             model: Usuario,
-            foreignKey: "fkUsuarioSolicitante",
+            foreignKey: 'fkUsuarioSolicitante',
 
-            include: [{ model: Area, include: [Unidade] }],
-          },
+            include: [{ model: Area, include: [Unidade] }]
+          }
         ],
         where: {
           fkClassificacao: claNaoDef?.id,
@@ -494,43 +502,43 @@ class AtividadeController implements IController {
               statusIniciado?.id,
               statusPlanejado?.id,
               statusPendente?.id,
-              statusParado?.id,
-            ],
-          },
-        },
-      });
+              statusParado?.id
+            ]
+          }
+        }
+      })
       const registosOrdenados = [
         ...registrosImediatos,
         ...registrosUrgentes,
         ...registrosImportantes,
-        ...registroCircunstancial,
-      ];
+        ...registroCircunstancial
+      ]
 
-      res.status(200).json({ data: registosOrdenados });
+      res.status(200).json({ data: registosOrdenados })
     } catch (err) {
-      console.log(err);
+      console.log(err)
       if (typeof err.errors !== 'undefined') {
-        res.status(401).json({ message: err.errors[0].message });
+        res.status(401).json({ message: err.errors[0].message })
       } else if (typeof err.message !== 'undefined') {
-        res.status(401).json({ message: err.message });
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
       }
-
-      res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' });
     }
   }
 
-  async minhasAtividadesArquivadas(
+  async minhasAtividadesArquivadas (
     req: any,
     res: Response,
     next: NextFunction
   ): Promise<any> {
     try {
       const statusConcluido = await Status.findOne({
-        where: { nome: "Concluido" },
-      });
+        where: { nome: 'Concluido' }
+      })
       const statusCancelado = await Status.findOne({
-        where: { nome: "Cancelado" },
-      });
+        where: { nome: 'Cancelado' }
+      })
 
       const registros = await Atividade.findAll({
         include: [
@@ -539,46 +547,46 @@ class AtividadeController implements IController {
           Status,
           {
             model: Usuario,
-            foreignKey: "fkUsuarioExecutor",
-            as: "UsuarioExecutor",
-            include: [{ model: Area, include: [Unidade] }],
+            foreignKey: 'fkUsuarioExecutor',
+            as: 'UsuarioExecutor',
+            include: [{ model: Area, include: [Unidade] }]
           },
           {
             model: Usuario,
-            foreignKey: "fkUsuarioSolicitante",
+            foreignKey: 'fkUsuarioSolicitante',
 
-            include: [{ model: Area, include: [Unidade] }],
-          },
+            include: [{ model: Area, include: [Unidade] }]
+          }
         ],
         where: {
           fkUsuarioExecutor: req.usuario.id,
           [Op.or]: [
             { arquivado: true },
             { fkStatus: statusConcluido?.id },
-            { fkStatus: statusCancelado?.id },
-          ],
-        },
-      });
-      res.status(200).json({ data: registros });
+            { fkStatus: statusCancelado?.id }
+          ]
+        }
+      })
+      res.status(200).json({ data: registros })
     } catch (err) {
-      console.log(err);
+      console.log(err)
       if (typeof err.errors !== 'undefined') {
-        res.status(401).json({ message: err.errors[0].message });
+        res.status(401).json({ message: err.errors[0].message })
       } else if (typeof err.message !== 'undefined') {
-        res.status(401).json({ message: err.message });
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
       }
-
-      res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' });
     }
   }
 
-  async recebidasSetor(
+  async recebidasSetor (
     req: any,
     res: Response,
     next: NextFunction
   ): Promise<any> {
     try {
-      const area = await Area.findOne({ where: { id: req.usuario.fkArea } });
+      const area = await Area.findOne({ where: { id: req.usuario.fkArea } })
 
       const registros = await Atividade.findAll({
         include: [
@@ -587,36 +595,36 @@ class AtividadeController implements IController {
           Status,
           {
             model: Usuario,
-            foreignKey: "fkUsuarioExecutor",
-            as: "UsuarioExecutor",
-            include: [{ model: Area, include: [Unidade] }],
+            foreignKey: 'fkUsuarioExecutor',
+            as: 'UsuarioExecutor',
+            include: [{ model: Area, include: [Unidade] }]
           },
           {
             model: Usuario,
-            foreignKey: "fkUsuarioSolicitante",
+            foreignKey: 'fkUsuarioSolicitante',
 
-            include: [{ model: Area, include: [Unidade] }],
-          },
+            include: [{ model: Area, include: [Unidade] }]
+          }
         ],
-        order: [["createdAt", "DESC"]],
+        order: [['createdAt', 'DESC']],
         where: {
-          "$Area.fkUnidade$": area?.fkUnidade,
-        },
-      });
-      res.status(200).json({ data: registros });
+          '$Area.fkUnidade$': area?.fkUnidade
+        }
+      })
+      res.status(200).json({ data: registros })
     } catch (err) {
-      console.log(err);
-      res.status(401).json({ message: "fkUnidade é inválido ou indefinido." });
+      console.log(err)
+      res.status(401).json({ message: 'fkUnidade é inválido ou indefinido.' })
     }
   }
 
-  async solicitadasSetor(
+  async solicitadasSetor (
     req: any,
     res: Response,
     next: NextFunction
   ): Promise<any> {
     try {
-      const area = await Area.findOne({ where: { id: req.usuario.fkArea } });
+      const area = await Area.findOne({ where: { id: req.usuario.fkArea } })
 
       const registros = await Atividade.findAll({
         include: [
@@ -625,37 +633,37 @@ class AtividadeController implements IController {
           Status,
           {
             model: Usuario,
-            foreignKey: "fkUsuarioExecutor",
-            as: "UsuarioExecutor",
-            include: [{ model: Area, include: [Unidade] }],
+            foreignKey: 'fkUsuarioExecutor',
+            as: 'UsuarioExecutor',
+            include: [{ model: Area, include: [Unidade] }]
           },
           {
             model: Usuario,
-            foreignKey: "fkUsuarioSolicitante",
+            foreignKey: 'fkUsuarioSolicitante',
 
-            include: [{ model: Area, include: [Unidade] }],
-          },
+            include: [{ model: Area, include: [Unidade] }]
+          }
         ],
-        order: [["createdAt", "DESC"]],
+        order: [['createdAt', 'DESC']],
         where: {
-          "$Usuario.fkArea$": area?.id,
-        },
-      });
-      res.status(200).json({ data: registros });
+          '$Usuario.fkArea$': area?.id
+        }
+      })
+      res.status(200).json({ data: registros })
     } catch (err) {
-      console.log(err);
+      console.log(err)
       if (typeof err.errors !== 'undefined') {
-        res.status(401).json({ message: err.errors[0].message });
+        res.status(401).json({ message: err.errors[0].message })
       } else if (typeof err.message !== 'undefined') {
-        res.status(401).json({ message: err.message });
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
       }
-
-      res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' });
     }
   }
 
-  async delete(req: Request, res: Response, next: NextFunction): Promise<any> {
-    throw new Error("Method not implemented.");
+  async delete (req: Request, res: Response, next: NextFunction): Promise<any> {
+    throw new Error('Method not implemented.')
   }
 
   // async upload(req: Request, res: Response, next: NextFunction): Promise<any> {
@@ -683,9 +691,9 @@ class AtividadeController implements IController {
   //   }
   // }
 
-  async search(req: any, res: Response, next: NextFunction): Promise<any> {
+  async search (req: any, res: Response, next: NextFunction): Promise<any> {
     try {
-      const { pesquisa } = req.query;
+      const { pesquisa } = req.query
 
       // const unidade = await Unidade.findOne({ where: { id: req.usuario.area.fkUnidade } });
       // const { Usuario } = req;
@@ -699,18 +707,18 @@ class AtividadeController implements IController {
           Status,
           {
             model: Usuario,
-            foreignKey: "fkUsuarioExecutor",
-            as: "UsuarioExecutor",
-            include: [{ model: Area, include: [Unidade] }],
+            foreignKey: 'fkUsuarioExecutor',
+            as: 'UsuarioExecutor',
+            include: [{ model: Area, include: [Unidade] }]
           },
           {
             model: Usuario,
-            foreignKey: "fkUsuarioSolicitante",
+            foreignKey: 'fkUsuarioSolicitante',
 
-            include: [{ model: Area, include: [Unidade] }],
-          },
+            include: [{ model: Area, include: [Unidade] }]
+          }
         ],
-        order: [["createdAt", "DESC"]],
+        order: [['createdAt', 'DESC']],
         where: {
           // "$UsuarioExecutor.Area.fkUnidade$": req.usuario.area.fkUnidade,
           // "$Area.fkUnidade$" : unidade?.id,
@@ -720,43 +728,43 @@ class AtividadeController implements IController {
             // { titulo: { [Op.like]: `%${pesquisa}%` } },
             { protocolo: { [Op.like]: `${pesquisa}` } },
             { categoria: { [Op.like]: `${pesquisa}` } },
-            { "$Area.nome$": { [Op.like]: `${pesquisa}` } },
-            { "$UsuarioExecutor.nome$": { [Op.like]: `${pesquisa}` } },
-            { "$Usuario.nome$": { [Op.like]: `${pesquisa}` } },
+            { '$Area.nome$': { [Op.like]: `${pesquisa}` } },
+            { '$UsuarioExecutor.nome$': { [Op.like]: `${pesquisa}` } },
+            { '$Usuario.nome$': { [Op.like]: `${pesquisa}` } },
             {
-              "$UsuarioExecutor.Area.Unidade.nome$": {
-                [Op.like]: `${pesquisa}`,
-              },
-            },
+              '$UsuarioExecutor.Area.Unidade.nome$': {
+                [Op.like]: `${pesquisa}`
+              }
+            }
 
             // {"$Mensagem$.conteudo" : { [Op.like]: `%${pesquisa}%`} }
-          ],
-        },
-      });
+          ]
+        }
+      })
 
-      res.status(200).json({ data: registros });
+      res.status(200).json({ data: registros })
     } catch (err) {
-      console.log(err);
+      console.log(err)
       if (typeof err.errors !== 'undefined') {
-        res.status(401).json({ message: err.errors[0].message });
+        res.status(401).json({ message: err.errors[0].message })
       } else if (typeof err.message !== 'undefined') {
-        res.status(401).json({ message: err.message });
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
       }
-
-      res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' });
     }
   }
 
-  async searchRecebidos(
+  async searchRecebidos (
     req: any,
     res: Response,
     next: NextFunction
   ): Promise<any> {
     try {
-      const { pesquisa } = req.query;
-      const area = await Area.findOne({ where: { id: req.usuario.fkArea } });
+      const { pesquisa } = req.query
+      const area = await Area.findOne({ where: { id: req.usuario.fkArea } })
 
-      console.log("pesquisa: " + pesquisa);
+      console.log('pesquisa: ' + pesquisa)
       const registros = await Atividade.findAll({
         include: [
           { model: Area, include: [Unidade] },
@@ -764,53 +772,53 @@ class AtividadeController implements IController {
           Status,
           {
             model: Usuario,
-            foreignKey: "fkUsuarioExecutor",
-            as: "UsuarioExecutor",
-            include: [{ model: Area, include: [Unidade] }],
+            foreignKey: 'fkUsuarioExecutor',
+            as: 'UsuarioExecutor',
+            include: [{ model: Area, include: [Unidade] }]
           },
           {
             model: Usuario,
-            foreignKey: "fkUsuarioSolicitante",
+            foreignKey: 'fkUsuarioSolicitante',
 
-            include: [{ model: Area, include: [Unidade] }],
-          },
+            include: [{ model: Area, include: [Unidade] }]
+          }
         ],
-        order: [["createdAt", "DESC"]],
+        order: [['createdAt', 'DESC']],
         where: {
           // fkArea: req.usuario.fkArea ,
-          "$Area.fkUnidade$": area?.fkUnidade,
+          '$Area.fkUnidade$': area?.fkUnidade,
 
           [Op.or]: [
             { fkUsuarioExecutor: pesquisa },
             { fkStatus: pesquisa },
-            { fkClassificacao: pesquisa },
-          ],
-        },
-      });
+            { fkClassificacao: pesquisa }
+          ]
+        }
+      })
 
-      res.status(200).json({ data: registros });
+      res.status(200).json({ data: registros })
     } catch (err) {
-      console.log(err);
+      console.log(err)
       if (typeof err.errors !== 'undefined') {
-        res.status(401).json({ message: err.errors[0].message });
+        res.status(401).json({ message: err.errors[0].message })
       } else if (typeof err.message !== 'undefined') {
-        res.status(401).json({ message: err.message });
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
       }
-
-      res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' });
     }
   }
 
-  async searchSolicitadas(
+  async searchSolicitadas (
     req: any,
     res: Response,
     next: NextFunction
   ): Promise<any> {
     try {
-      const { pesquisa } = req.query;
-      const area = await Area.findOne({ where: { id: req.usuario.fkArea } });
+      const { pesquisa } = req.query
+      const area = await Area.findOne({ where: { id: req.usuario.fkArea } })
 
-      console.log("pesquisa: " + pesquisa);
+      console.log('pesquisa: ' + pesquisa)
       const registros = await Atividade.findAll({
         include: [
           { model: Area, include: [Unidade] },
@@ -818,57 +826,57 @@ class AtividadeController implements IController {
           Status,
           {
             model: Usuario,
-            foreignKey: "fkUsuarioExecutor",
-            as: "UsuarioExecutor",
-            include: [{ model: Area, include: [Unidade] }],
+            foreignKey: 'fkUsuarioExecutor',
+            as: 'UsuarioExecutor',
+            include: [{ model: Area, include: [Unidade] }]
           },
           {
             model: Usuario,
-            foreignKey: "fkUsuarioSolicitante",
+            foreignKey: 'fkUsuarioSolicitante',
 
-            include: [{ model: Area, include: [Unidade] }],
-          },
+            include: [{ model: Area, include: [Unidade] }]
+          }
         ],
-        order: [["createdAt", "DESC"]],
+        order: [['createdAt', 'DESC']],
         where: {
           // fkArea: req.usuario.fkArea ,
           // "$Area.fkUnidade$": area?.fkUnidade,
           fkStatus: pesquisa,
 
-          [Op.or]: [{ "$Usuario.fkArea$": area?.id }],
-        },
-      });
+          [Op.or]: [{ '$Usuario.fkArea$': area?.id }]
+        }
+      })
 
-      res.status(200).json({ data: registros });
+      res.status(200).json({ data: registros })
     } catch (err) {
-      console.log(err);
+      console.log(err)
       if (typeof err.errors !== 'undefined') {
-        res.status(401).json({ message: err.errors[0].message });
+        res.status(401).json({ message: err.errors[0].message })
       } else if (typeof err.message !== 'undefined') {
-        res.status(401).json({ message: err.message });
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
       }
-
-      res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' });
     }
   }
 
-  async naoatribuida(
+  async naoatribuida (
     req: any,
     res: Response,
     next: NextFunction
   ): Promise<any> {
     try {
       // console.log(`${req.usuario.nome} - ${req.usuario.fkArea}`)
-      const area = await Area.findOne({ where: { id: req.usuario.fkArea } });
+      const area = await Area.findOne({ where: { id: req.usuario.fkArea } })
       // console.log(req.usuario)
       let whereCustum = {
         pessoal: false,
         fkUsuarioExecutor: null,
-        "$Area.fkUnidade$": area?.fkUnidade,
-      };
+        '$Area.fkUnidade$': area?.fkUnidade
+      }
 
       if (req.usuario.Perfil.nome == PerfilUtils.Coordenador) {
-        whereCustum = { ...whereCustum, "$Area.id$": area?.id };
+        whereCustum = { ...whereCustum, '$Area.id$': area?.id }
       }
 
       const registros = await Atividade.findAll({
@@ -876,41 +884,41 @@ class AtividadeController implements IController {
           { model: Area, include: [Unidade] },
           {
             model: Usuario,
-            foreignKey: "fkUsuarioExecutor",
-            as: "UsuarioExecutor",
-            include: [{ model: Area, include: [Unidade] }],
+            foreignKey: 'fkUsuarioExecutor',
+            as: 'UsuarioExecutor',
+            include: [{ model: Area, include: [Unidade] }]
           },
           {
             model: Usuario,
-            foreignKey: "fkUsuarioSolicitante",
+            foreignKey: 'fkUsuarioSolicitante',
 
-            include: [{ model: Area, include: [Unidade] }],
-          },
+            include: [{ model: Area, include: [Unidade] }]
+          }
         ],
-        where: whereCustum,
-      });
+        where: whereCustum
+      })
 
-      res.status(200).json({ data: registros });
+      res.status(200).json({ data: registros })
     } catch (err) {
-      console.log(err);
+      console.log(err)
       if (typeof err.errors !== 'undefined') {
-        res.status(401).json({ message: err.errors[0].message });
+        res.status(401).json({ message: err.errors[0].message })
       } else if (typeof err.message !== 'undefined') {
-        res.status(401).json({ message: err.message });
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
       }
-
-      res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' });
     }
   }
 
-  async atividadesRecebidas(
+  async atividadesRecebidas (
     req: any,
     res: Response,
     next: NextFunction
   ): Promise<any> {
     try {
       // const area = await Area.findOne({ where: { id: req.usuario.fkArea } });
-      const status = await Status.findOne({ where: { nome: "Aberto" } });
+      const status = await Status.findOne({ where: { nome: 'Aberto' } })
 
       const registros = await Atividade.findAll({
         include: [
@@ -918,38 +926,38 @@ class AtividadeController implements IController {
           Status,
           {
             model: Usuario,
-            foreignKey: "fkUsuarioExecutor",
-            as: "UsuarioExecutor",
-            include: [{ model: Area, include: [Unidade] }],
+            foreignKey: 'fkUsuarioExecutor',
+            as: 'UsuarioExecutor',
+            include: [{ model: Area, include: [Unidade] }]
           },
           {
             model: Usuario,
-            foreignKey: "fkUsuarioSolicitante",
+            foreignKey: 'fkUsuarioSolicitante',
 
-            include: [{ model: Area, include: [Unidade] }],
-          },
+            include: [{ model: Area, include: [Unidade] }]
+          }
         ],
-        order: [["createdAt", "DESC"]],
+        order: [['createdAt', 'DESC']],
         where: {
           fkUsuarioExecutor: req.usuario.id,
-          fkStatus: status?.id,
-        },
-      });
+          fkStatus: status?.id
+        }
+      })
 
-      res.status(200).json({ data: registros });
+      res.status(200).json({ data: registros })
     } catch (err) {
-      console.log(err);
+      console.log(err)
       if (typeof err.errors !== 'undefined') {
-        res.status(401).json({ message: err.errors[0].message });
+        res.status(401).json({ message: err.errors[0].message })
       } else if (typeof err.message !== 'undefined') {
-        res.status(401).json({ message: err.message });
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
       }
-
-      res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' });
     }
   }
 
-  async chamadosAbertos(
+  async chamadosAbertos (
     req: any,
     res: Response,
     next: NextFunction
@@ -961,36 +969,36 @@ class AtividadeController implements IController {
           Status,
           {
             model: Usuario,
-            foreignKey: "fkUsuarioExecutor",
-            as: "UsuarioExecutor",
-            include: [{ model: Area, include: [Unidade] }],
+            foreignKey: 'fkUsuarioExecutor',
+            as: 'UsuarioExecutor',
+            include: [{ model: Area, include: [Unidade] }]
           },
           {
             model: Usuario,
-            foreignKey: "fkUsuarioSolicitante",
+            foreignKey: 'fkUsuarioSolicitante',
 
-            include: [{ model: Area, include: [Unidade] }],
-          },
+            include: [{ model: Area, include: [Unidade] }]
+          }
         ],
 
-        order: [["createdAt", "DESC"]],
+        order: [['createdAt', 'DESC']],
         where: {
-          fkUsuarioSolicitante: req.usuario.id,
-        },
-      });
+          fkUsuarioSolicitante: req.usuario.id
+        }
+      })
 
-      res.status(200).json({ data: registros });
+      res.status(200).json({ data: registros })
     } catch (err) {
-      console.log(err);
+      console.log(err)
       if (typeof err.errors !== 'undefined') {
-        res.status(401).json({ message: err.errors[0].message });
+        res.status(401).json({ message: err.errors[0].message })
       } else if (typeof err.message !== 'undefined') {
-        res.status(401).json({ message: err.message });
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
       }
-
-      res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' });
     }
   }
 }
 
-export default new AtividadeController();
+export default new AtividadeController()

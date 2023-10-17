@@ -1,156 +1,156 @@
-import { Request, Response, NextFunction } from "express";
-import { IController } from "./controller.inteface";
-import Area from "../model/area.model";
-import Unidade from "../model/unidade.model";
+import { Request, Response, NextFunction } from 'express'
+import { IController } from './controller.inteface'
+import Area from '../model/area.model'
+import Unidade from '../model/unidade.model'
 
 class AreaController implements IController {
-  async all(req: Request, res: Response, next: NextFunction): Promise<any> {
+  async all (req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
-      const { fkUnidade } = req.query;
+      const { fkUnidade } = req.query
 
       if (fkUnidade) {
         const registros = await Area.findAll({
           where: { fkUnidade },
           include: [Unidade],
-          order: [["nome", "asc"]],
-        });
+          order: [['nome', 'asc']]
+        })
 
-        return res.status(200).json({ data: registros });
+        return res.status(200).json({ data: registros })
       } else {
         const registros = await Area.findAll({
           include: [Unidade],
-          order: [["nome", "asc"]],
-        });
+          order: [['nome', 'asc']]
+        })
 
-        return res.status(200).json({ data: registros });
+        return res.status(200).json({ data: registros })
       }
     } catch (err) {
-      console.log(err);
+      console.log(err)
       if (typeof err.errors !== 'undefined') {
-        res.status(401).json({ message: err.errors[0].message });
+        res.status(401).json({ message: err.errors[0].message })
       } else if (typeof err.message !== 'undefined') {
-        res.status(401).json({ message: err.message });
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
       }
-
-      res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' });
     }
   }
 
-  async areaSolicitacao(
+  async areaSolicitacao (
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<any> {
     try {
-      const { fkArea } = req.params;
-      console.log(fkArea);
+      const { fkArea } = req.params
+      console.log(fkArea)
       const registros = await Area.findOne({
         where: {
-          id: fkArea,
+          id: fkArea
         },
-        include: [Unidade],
-      });
+        include: [Unidade]
+      })
 
-      return res.status(200).json({ data: registros });
+      return res.status(200).json({ data: registros })
     } catch (err) {
-      console.log(err);
+      console.log(err)
       if (typeof err.errors !== 'undefined') {
-        res.status(401).json({ message: err.errors[0].message });
+        res.status(401).json({ message: err.errors[0].message })
       } else if (typeof err.message !== 'undefined') {
-        res.status(401).json({ message: err.message });
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
       }
-
-      res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' });
     }
   }
 
-  async create(req: Request, res: Response, next: NextFunction): Promise<any> {
+  async create (req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
-      const { nome, descricao, fkUnidade } = req.body;
+      const { nome, descricao, fkUnidade } = req.body
 
-      const registro = await Area.create({ nome, descricao, fkUnidade });
+      const registro = await Area.create({ nome, descricao, fkUnidade })
 
       res
         .status(200)
-        .json({ data: registro, message: "Cadastro realizado com sucesso." });
+        .json({ data: registro, message: 'Cadastro realizado com sucesso.' })
     } catch (err) {
-      console.log(err);
+      console.log(err)
       if (typeof err.errors !== 'undefined') {
-        res.status(401).json({ message: err.errors[0].message });
+        res.status(401).json({ message: err.errors[0].message })
       } else if (typeof err.message !== 'undefined') {
-        res.status(401).json({ message: err.message });
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
       }
-
-      res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' });
     }
   }
 
-  async find(req: Request, res: Response, next: NextFunction): Promise<any> {
+  async find (req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
-      const { id } = req.params;
+      const { id } = req.params
 
-      const registro = await Area.findOne({ where: { id } });
+      const registro = await Area.findOne({ where: { id } })
 
-      res.status(200).json({ data: registro });
+      res.status(200).json({ data: registro })
     } catch (err) {
-      console.log(err);
+      console.log(err)
       if (typeof err.errors !== 'undefined') {
-        res.status(401).json({ message: err.errors[0].message });
+        res.status(401).json({ message: err.errors[0].message })
       } else if (typeof err.message !== 'undefined') {
-        res.status(401).json({ message: err.message });
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
       }
-
-      res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' });
     }
   }
 
-  async update(req: Request, res: Response, next: NextFunction): Promise<any> {
+  async update (req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
-      const { id } = req.params;
-      const { nome, descricao, fkUnidade } = req.body;
+      const { id } = req.params
+      const { nome, descricao, fkUnidade } = req.body
 
-      console.log(fkUnidade);
+      console.log(fkUnidade)
 
-      let registro = await Area.findOne({ where: { id } });
+      let registro = await Area.findOne({ where: { id } })
 
-      let params = {};
-      params = registro?.nome !== nome ? { ...params, nome } : params;
+      let params = {}
+      params = registro?.nome !== nome ? { ...params, nome } : params
       params =
-        registro?.descricao !== descricao ? { ...params, descricao } : params;
+        registro?.descricao !== descricao ? { ...params, descricao } : params
       params =
-        registro?.fkUnidade !== fkUnidade ? { ...params, fkUnidade } : params;
+        registro?.fkUnidade !== fkUnidade ? { ...params, fkUnidade } : params
 
       await Area.update(params, {
         where: {
-          id,
+          id
         },
-        individualHooks: true,
-      });
+        individualHooks: true
+      })
 
-      registro = await Area.findOne({ where: { id } });
+      registro = await Area.findOne({ where: { id } })
 
       res
         .status(200)
-        .json({ data: registro, message: "Alteração realizada com sucesso." });
+        .json({ data: registro, message: 'Alteração realizada com sucesso.' })
     } catch (err) {
-      console.log(err);
+      console.log(err)
       if (typeof err.errors !== 'undefined') {
-        res.status(401).json({ message: err.errors[0].message });
+        res.status(401).json({ message: err.errors[0].message })
       } else if (typeof err.message !== 'undefined') {
-        res.status(401).json({ message: err.message });
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
       }
-
-      res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' });
     }
   }
 
-  async delete(req: Request, res: Response, next: NextFunction): Promise<any> {
-    throw new Error("Method not implemented.");
+  async delete (req: Request, res: Response, next: NextFunction): Promise<any> {
+    throw new Error('Method not implemented.')
   }
 
-  async search(req: Request, res: Response, next: NextFunction): Promise<any> {
-    throw new Error("Method not implemented.");
+  async search (req: Request, res: Response, next: NextFunction): Promise<any> {
+    throw new Error('Method not implemented.')
   }
 }
 
-export default new AreaController();
+export default new AreaController()

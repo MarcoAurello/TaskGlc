@@ -1,85 +1,85 @@
-import { Request, Response, NextFunction } from "express";
-import Area from "../model/area.model";
-import Perfil from "../model/perfil.model";
-import Unidade from "../model/unidade.model";
-import Usuario from "../model/usuario.model";
-import { IController } from "./controller.inteface";
+import { Request, Response, NextFunction } from 'express'
+import Area from '../model/area.model'
+import Perfil from '../model/perfil.model'
+import Unidade from '../model/unidade.model'
+import Usuario from '../model/usuario.model'
+import { IController } from './controller.inteface'
 
 class UsuarioController implements IController {
-  async all(req: any, res: Response, next: NextFunction): Promise<any> {
+  async all (req: any, res: Response, next: NextFunction): Promise<any> {
     try {
-      const pagina = parseInt(req.query.pagina) || 1;
-      const tamanho = parseInt(req.query.tamanho) || 10;
+      const pagina = parseInt(req.query.pagina) || 1
+      const tamanho = parseInt(req.query.tamanho) || 10
 
-      const offset = (pagina - 1) * tamanho;
-      const limit = tamanho;
+      const offset = (pagina - 1) * tamanho
+      const limit = tamanho
 
-      const numeroDePaginas = Math.ceil((await Usuario.count()) / tamanho);
+      const numeroDePaginas = Math.ceil((await Usuario.count()) / tamanho)
 
       const usuarios = await Usuario.findAll({
         limit,
         offset,
-        include: [Perfil],
-      });
+        include: [Perfil]
+      })
 
       res.status(200).json({
         data: usuarios,
         paginacao: {
           pagina,
           tamanho,
-          numeroDePaginas,
-        },
-      });
+          numeroDePaginas
+        }
+      })
     } catch (err) {
-      console.log(err);
+      console.log(err)
       if (typeof err.errors !== 'undefined') {
-        res.status(401).json({ message: err.errors[0].message });
+        res.status(401).json({ message: err.errors[0].message })
       } else if (typeof err.message !== 'undefined') {
-        res.status(401).json({ message: err.message });
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
       }
-
-      res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' });
     }
   }
 
-  async create(req: Request, res: Response, next: NextFunction): Promise<any> {
-    throw new Error("Method not implemented.");
+  async create (req: Request, res: Response, next: NextFunction): Promise<any> {
+    throw new Error('Method not implemented.')
   }
 
-  async find(req: Request, res: Response, next: NextFunction): Promise<any> {
+  async find (req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
-      const { id } = req.params;
+      const { id } = req.params
 
       const registro = await Usuario.findOne({
         where: {
-          id,
+          id
         },
         include: [
           {
             model: Area,
-            as: "Area",
-            include: [Unidade],
+            as: 'Area',
+            include: [Unidade]
           },
-          Perfil,
-        ],
-      });
+          Perfil
+        ]
+      })
 
-      res.status(200).json({ data: registro });
+      res.status(200).json({ data: registro })
     } catch (err) {
-      console.log(err);
+      console.log(err)
       if (typeof err.errors !== 'undefined') {
-        res.status(401).json({ message: err.errors[0].message });
+        res.status(401).json({ message: err.errors[0].message })
       } else if (typeof err.message !== 'undefined') {
-        res.status(401).json({ message: err.message });
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
       }
-
-      res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' });
     }
   }
 
-  async update(req: Request, res: Response, next: NextFunction): Promise<any> {
+  async update (req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
-      const { id } = req.params;
+      const { id } = req.params
       // console.log(id)
       const {
         nome,
@@ -90,10 +90,10 @@ class UsuarioController implements IController {
         fkUnidade,
         fkArea,
         ativo,
-        primeiroLogin,
-      } = req.body;
+        primeiroLogin
+      } = req.body
 
-      console.log(req.body);
+      console.log(req.body)
 
       await Usuario.update(
         {
@@ -105,37 +105,37 @@ class UsuarioController implements IController {
           fkUnidade,
           fkArea,
           ativo,
-          primeiroLogin,
+          primeiroLogin
         },
         {
           where: {
-            id,
+            id
           },
-          individualHooks: false,
+          individualHooks: false
         }
-      );
+      )
 
-      const registro = await Usuario.findOne({ where: { id } });
+      const registro = await Usuario.findOne({ where: { id } })
 
       res
         .status(200)
-        .json({ data: registro, message: "Alteração realizada com sucesso." });
+        .json({ data: registro, message: 'Alteração realizada com sucesso.' })
     } catch (err) {
-      console.log(err);
+      console.log(err)
       if (typeof err.errors !== 'undefined') {
-        res.status(401).json({ message: err.errors[0].message });
+        res.status(401).json({ message: err.errors[0].message })
       } else if (typeof err.message !== 'undefined') {
-        res.status(401).json({ message: err.message });
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
       }
-
-      res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' });
     }
   }
 
-  async validar(req: any, res: Response, next: NextFunction): Promise<any> {
+  async validar (req: any, res: Response, next: NextFunction): Promise<any> {
     try {
-      const { id } = req.params;
-      console.log(id);
+      const { id } = req.params
+      console.log(id)
       const {
         nome,
         telefone,
@@ -145,8 +145,8 @@ class UsuarioController implements IController {
         fkUnidade,
         fkArea,
         ativo,
-        primeiroLogin,
-      } = req.body;
+        primeiroLogin
+      } = req.body
 
       await Usuario.update(
         {
@@ -160,75 +160,75 @@ class UsuarioController implements IController {
           ativo,
           primeiroLogin,
           validado: true,
-          fkValidador: req.usuario.id,
+          fkValidador: req.usuario.id
         },
         {
           where: {
-            id,
+            id
           },
-          individualHooks: false,
+          individualHooks: false
         }
-      );
+      )
 
-      const registro = await Usuario.findOne({ where: { id } });
+      const registro = await Usuario.findOne({ where: { id } })
 
       res
         .status(200)
-        .json({ data: registro, message: "Usuário validado com sucesso." });
+        .json({ data: registro, message: 'Usuário validado com sucesso.' })
     } catch (err) {
-      console.log(err);
+      console.log(err)
       if (typeof err.errors !== 'undefined') {
-        res.status(401).json({ message: err.errors[0].message });
+        res.status(401).json({ message: err.errors[0].message })
       } else if (typeof err.message !== 'undefined') {
-        res.status(401).json({ message: err.message });
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
       }
-
-      res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' });
     }
   }
 
-  async updatePrimeiroAcesso(
+  async updatePrimeiroAcesso (
     req: any,
     res: Response,
     next: NextFunction
   ): Promise<any> {
     try {
-      const { nome, telefone, chapa, fkPerfil, fkUnidade, fkArea } = req.body;
+      const { nome, telefone, chapa, fkPerfil, fkUnidade, fkArea } = req.body
 
       if (!nome) {
         return res
           .status(401)
-          .json({ message: "O campo nome deve ser preenchido corretamente." });
+          .json({ message: 'O campo nome deve ser preenchido corretamente.' })
       }
 
       if (!chapa) {
         return res
           .status(401)
-          .json({ message: "O campo chapa deve ser preenchido corretamente." });
+          .json({ message: 'O campo chapa deve ser preenchido corretamente.' })
       }
 
       if (!telefone) {
         return res.status(401).json({
-          message: "O campo telefone deve ser preenchido corretamente.",
-        });
+          message: 'O campo telefone deve ser preenchido corretamente.'
+        })
       }
 
       if (!fkPerfil) {
         return res.status(401).json({
-          message: "O campo perfil deve ser preenchido corretamente.",
-        });
+          message: 'O campo perfil deve ser preenchido corretamente.'
+        })
       }
 
       if (!fkUnidade) {
         return res.status(401).json({
-          message: "O campo unidade deve ser preenchido corretamente.",
-        });
+          message: 'O campo unidade deve ser preenchido corretamente.'
+        })
       }
 
       if (!fkArea) {
         return res
           .status(401)
-          .json({ message: "O campo área deve ser preenchido corretamente." });
+          .json({ message: 'O campo área deve ser preenchido corretamente.' })
       }
 
       await Usuario.update(
@@ -239,92 +239,92 @@ class UsuarioController implements IController {
           fkPerfil,
           fkUnidade,
           fkArea,
-          primeiroLogin: false,
+          primeiroLogin: false
         },
         {
           where: {
-            id: req.usuario.id,
+            id: req.usuario.id
           },
-          individualHooks: false,
+          individualHooks: false
         }
-      );
+      )
 
-      const registro = await Usuario.findOne({ where: { id: req.usuario.id } });
+      const registro = await Usuario.findOne({ where: { id: req.usuario.id } })
 
       res
         .status(200)
-        .json({ data: registro, message: "Alteração realizada com sucesso." });
+        .json({ data: registro, message: 'Alteração realizada com sucesso.' })
     } catch (err) {
-      console.log(err);
+      console.log(err)
       if (typeof err.errors !== 'undefined') {
-        res.status(401).json({ message: err.errors[0].message });
+        res.status(401).json({ message: err.errors[0].message })
       } else if (typeof err.message !== 'undefined') {
-        res.status(401).json({ message: err.message });
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
       }
-
-      res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' });
     }
   }
 
-  async delete(req: Request, res: Response, next: NextFunction): Promise<any> {
-    throw new Error("Method not implemented.");
+  async delete (req: Request, res: Response, next: NextFunction): Promise<any> {
+    throw new Error('Method not implemented.')
   }
 
-  async search(req: Request, res: Response, next: NextFunction): Promise<any> {
-    throw new Error("Method not implemented.");
+  async search (req: Request, res: Response, next: NextFunction): Promise<any> {
+    throw new Error('Method not implemented.')
   }
 
-  async equipe(req: any, res: Response, next: NextFunction): Promise<any> {
+  async equipe (req: any, res: Response, next: NextFunction): Promise<any> {
     try {
-      const area = await Area.findOne({ where: { id: req.usuario.fkArea } });
+      const area = await Area.findOne({ where: { id: req.usuario.fkArea } })
 
-      const pagina = parseInt(req.query.pagina) || 1;
-      const tamanho = parseInt(req.query.tamanho) || 10;
+      const pagina = parseInt(req.query.pagina) || 1
+      const tamanho = parseInt(req.query.tamanho) || 10
 
-      const offset = (pagina - 1) * tamanho;
-      const limit = tamanho;
+      const offset = (pagina - 1) * tamanho
+      const limit = tamanho
 
-      const numeroDePaginas = Math.ceil((await Usuario.count()) / tamanho);
+      const numeroDePaginas = Math.ceil((await Usuario.count()) / tamanho)
 
       const registros = await Usuario.findAll({
         limit,
         offset,
         include: [Perfil, { model: Area, include: [Unidade] }],
         where: {
-          "$Area.fkUnidade$": area?.fkUnidade,
-          validado: true,
-        },
-      });
+          '$Area.fkUnidade$': area?.fkUnidade,
+          validado: true
+        }
+      })
 
       res.status(200).json({
         data: registros,
         paginacao: {
           pagina,
           tamanho,
-          numeroDePaginas,
-        },
-      });
+          numeroDePaginas
+        }
+      })
     } catch (err) {
-      console.log(err);
+      console.log(err)
       if (typeof err.errors !== 'undefined') {
-        res.status(401).json({ message: err.errors[0].message });
+        res.status(401).json({ message: err.errors[0].message })
       } else if (typeof err.message !== 'undefined') {
-        res.status(401).json({ message: err.message });
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
       }
-
-      res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' });
     }
   }
 
-  async naoValidado(req: any, res: Response, next: NextFunction): Promise<any> {
+  async naoValidado (req: any, res: Response, next: NextFunction): Promise<any> {
     try {
-      const area = await Area.findOne({ where: { id: req.usuario.fkArea } });
+      const area = await Area.findOne({ where: { id: req.usuario.fkArea } })
 
-      const pagina = parseInt(req.query.pagina) || 1;
-      const tamanho = parseInt(req.query.tamanho) || 10;
+      const pagina = parseInt(req.query.pagina) || 1
+      const tamanho = parseInt(req.query.tamanho) || 10
 
-      const offset = (pagina - 1) * tamanho;
-      const limit = tamanho;
+      const offset = (pagina - 1) * tamanho
+      const limit = tamanho
 
       const numeroDePaginas = Math.ceil(
         (await Usuario.count({
@@ -332,40 +332,40 @@ class UsuarioController implements IController {
             Perfil,
             {
               model: Area,
-              include: [{ model: Unidade, where: { id: area?.fkUnidade } }],
-            },
-          ],
+              include: [{ model: Unidade, where: { id: area?.fkUnidade } }]
+            }
+          ]
         })) / tamanho
-      );
+      )
 
       const registros = await Usuario.findAll({
         limit,
         offset,
         include: [Perfil, { model: Area, include: [Unidade] }],
         where: {
-          "$Area.fkUnidade$": area?.fkUnidade,
-          validado: false,
-        },
-      });
+          '$Area.fkUnidade$': area?.fkUnidade,
+          validado: false
+        }
+      })
 
       res.status(200).json({
         data: registros,
         paginacao: {
           pagina,
           tamanho,
-          numeroDePaginas,
-        },
-      });
+          numeroDePaginas
+        }
+      })
     } catch (err) {
-      console.log(err);
+      console.log(err)
       if (typeof err.errors !== 'undefined') {
-        res.status(401).json({ message: err.errors[0].message });
+        res.status(401).json({ message: err.errors[0].message })
       } else if (typeof err.message !== 'undefined') {
-        res.status(401).json({ message: err.message });
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
       }
-
-      res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' });
     }
   }
 }
-export default new UsuarioController();
+export default new UsuarioController()

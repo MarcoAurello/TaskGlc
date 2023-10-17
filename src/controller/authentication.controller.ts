@@ -58,19 +58,18 @@ class AuthenticationController {
         if (!await bcrypt.compare(password, registro.passwordHash)) {
           return res.status(401).json({ message: 'Senha inválida.' })
         }
-        
 
         return res.status(200).json({ message: 'Usuário validado com sucesso.', token: registro.generateToken() })
       }
     } catch (err) {
-      console.log(err);
+      console.log(err)
       if (typeof err.errors !== 'undefined') {
-        res.status(401).json({ message: err.errors[0].message });
+        res.status(401).json({ message: err.errors[0].message })
       } else if (typeof err.message !== 'undefined') {
-        res.status(401).json({ message: err.message });
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
       }
-
-      res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' });
     }
   }
 
@@ -78,14 +77,14 @@ class AuthenticationController {
     try {
       res.status(200).json({ data: req.usuario })
     } catch (err) {
-      console.log(err);
+      console.log(err)
       if (typeof err.errors !== 'undefined') {
-        res.status(401).json({ message: err.errors[0].message });
+        res.status(401).json({ message: err.errors[0].message })
       } else if (typeof err.message !== 'undefined') {
-        res.status(401).json({ message: err.message });
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
       }
-
-      res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' });
     }
   }
 }

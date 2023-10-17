@@ -3,7 +3,6 @@ import { IController } from './controller.inteface'
 import Unidade from '../model/unidade.model'
 
 class UnidadeController implements IController {
-  
   async all (req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
       const registros = await Unidade.findAll({
@@ -12,14 +11,14 @@ class UnidadeController implements IController {
 
       res.status(200).json({ data: registros })
     } catch (err) {
-      console.log(err);
+      console.log(err)
       if (typeof err.errors !== 'undefined') {
-        res.status(401).json({ message: err.errors[0].message });
+        res.status(401).json({ message: err.errors[0].message })
       } else if (typeof err.message !== 'undefined') {
-        res.status(401).json({ message: err.message });
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
       }
-
-      res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' });
     }
   }
 
@@ -32,14 +31,14 @@ class UnidadeController implements IController {
 
       res.status(200).json({ data: registros })
     } catch (err) {
-      console.log(err);
+      console.log(err)
       if (typeof err.errors !== 'undefined') {
-        res.status(401).json({ message: err.errors[0].message });
+        res.status(401).json({ message: err.errors[0].message })
       } else if (typeof err.message !== 'undefined') {
-        res.status(401).json({ message: err.message });
+        res.status(401).json({ message: err.message })
       }
 
-      res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' });
+      res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
     }
   }
 
@@ -57,14 +56,14 @@ class UnidadeController implements IController {
 
       res.status(200).json({ data: registro, message: 'Cadastro realizado com sucesso.' })
     } catch (err) {
-      console.log(err);
+      console.log(err)
       if (typeof err.errors !== 'undefined') {
-        res.status(401).json({ message: err.errors[0].message });
+        res.status(401).json({ message: err.errors[0].message })
       } else if (typeof err.message !== 'undefined') {
-        res.status(401).json({ message: err.message });
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
       }
-
-      res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' });
     }
   }
 
@@ -76,14 +75,14 @@ class UnidadeController implements IController {
 
       res.status(200).json({ data: registro })
     } catch (err) {
-      console.log(err);
+      console.log(err)
       if (typeof err.errors !== 'undefined') {
-        res.status(401).json({ message: err.errors[0].message });
+        res.status(401).json({ message: err.errors[0].message })
       } else if (typeof err.message !== 'undefined') {
-        res.status(401).json({ message: err.message });
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
       }
-
-      res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' });
     }
   }
 
@@ -112,14 +111,14 @@ class UnidadeController implements IController {
 
       res.status(200).json({ data: registro, message: 'Alteração realizada com sucesso.' })
     } catch (err) {
-      console.log(err);
+      console.log(err)
       if (typeof err.errors !== 'undefined') {
-        res.status(401).json({ message: err.errors[0].message });
+        res.status(401).json({ message: err.errors[0].message })
       } else if (typeof err.message !== 'undefined') {
-        res.status(401).json({ message: err.message });
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
       }
-
-      res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' });
     }
   }
 
