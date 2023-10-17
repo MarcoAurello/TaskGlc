@@ -7,7 +7,8 @@ class AreaController implements IController {
   async all(req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
       const { fkUnidade } = req.query;
-
+      console.log('qqqqqq')
+    
       if (fkUnidade) {
         const registros = await Area.findAll({
           where: { fkUnidade },
@@ -62,6 +63,7 @@ class AreaController implements IController {
   async create(req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
       const { nome, descricao, fkUnidade } = req.body;
+      console.log('sssssssss')
 
       const registro = await Area.create({ nome, descricao, fkUnidade });
 
@@ -80,6 +82,8 @@ class AreaController implements IController {
   async find(req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
       const { id } = req.params;
+    
+
 
       const registro = await Area.findOne({ where: { id } });
 
@@ -99,7 +103,7 @@ class AreaController implements IController {
       const { nome, descricao, fkUnidade } = req.body;
 
       console.log(fkUnidade);
-
+      console.log('xxxxxx')
       let registro = await Area.findOne({ where: { id } });
 
       let params = {};
@@ -116,7 +120,7 @@ class AreaController implements IController {
         individualHooks: true,
       });
 
-      registro = await Area.findOne({ where: { id } });
+      // registro = await Area.findOne({ where: { id } });
 
       res
         .status(200)

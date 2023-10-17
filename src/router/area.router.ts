@@ -1,4 +1,4 @@
-import controller from '../controller/email.controller'
+import controller from '../controller/area.controller'
 import { Router } from 'express'
 
 import routerMiddleware from '../middleware/router.middleware'

@@ -72,6 +72,7 @@ const AtividadeForm = (props) => {
   const [titulo, setTitulo] = useState('')
   const [conteudo, setConteudo] = useState('')
   const [fkUnidade, setFkUnidade] = useState('')
+  const [fkUnidadeDrop, setFkUnidadeDrop] = useState('')
   const [dep, setDep] = useState('')
   const [fkArea, setFkArea] = useState('')
   const [fkCategoria, setFkCategoria] = useState('')
@@ -354,11 +355,15 @@ const AtividadeForm = (props) => {
       carregarUnidade()
 
     }
-  }, [])
+
+
+
+  }, [fkUnidade,area])
 
 
   useEffect(() => {
     function carregarArea() {
+ 
       // setOpenLoadingDialog(true)
       const token = getCookie('_token_task_manager')
       const params = {
@@ -366,7 +371,7 @@ const AtividadeForm = (props) => {
           'Authorization': `Bearer ${token}`
         }
       }
-      fetch(`${process.env.REACT_APP_DOMAIN_API}/api/area/?fkUnidade=${fkUnidade}`, params)
+      fetch(`${process.env.REACT_APP_DOMAIN_API}/api/area/?fkUnidade=${fkUnidadeDrop}`, params)
         .then(response => {
           const { status } = response
           response.json().then(data => {
@@ -381,12 +386,12 @@ const AtividadeForm = (props) => {
         })
     }
 
-    if (fkUnidade) {
+    if (fkUnidadeDrop) {
       carregarArea()
 
 
     }
-  }, [fkUnidade])
+  }, [fkUnidadeDrop])
 
   useEffect(() => {
     function carregarSubArea() {
@@ -821,13 +826,13 @@ const AtividadeForm = (props) => {
                   labelId="demo-select-small"
                   id="demo-select-small"
                   label="Unidade"
-                  value={fkUnidade}>
-                  <MenuItem value="" onClick={() => setFkUnidade("")}>
+                  value={fkUnidadeDrop}>
+                  <MenuItem value="" onClick={() => setFkUnidadeDrop("")}>
                     {/* <em>Nenhum</em> */}
                   </MenuItem>
                   {unidade.map((item, index) => {
                     if (item.receber === true) {
-                      return <MenuItem key={index} value={item.id} onClick={(e) => [setFkUnidade(item.id), setDep(item.nome)]}>{item.nome}</MenuItem>
+                      return <MenuItem key={index} value={item.id} onClick={(e) => [setFkUnidadeDrop(item.id), setDep(item.nome)]}>{item.nome}</MenuItem>
                     }
                   })}
                 </Select>
