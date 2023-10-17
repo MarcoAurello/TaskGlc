@@ -182,6 +182,7 @@ const Home = (props) => {
       });
 
       if (!encontrado) {
+        
         setEmailNaoEncontrado(true);
       }
 
@@ -586,7 +587,9 @@ const Home = (props) => {
  
  <center>
  <Button variant="contained" 
-    onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/pesquisa/`}>Responder</Button>
+    onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/pesquisa/`}>Responder</Button><p></p>
+     {/* <Button variant="contained" 
+    onClick={() => setEmailNaoEncontrado(false)}>Sair</Button> */}
   
  </center>
    
