@@ -579,7 +579,7 @@ const Home = (props) => {
 
 
   <hr></hr>
-  <h4>Pesquisa de satisfação GTI</h4>
+  <h4>Pesquisa de Satisfação GTI</h4>
 
  
  <center>

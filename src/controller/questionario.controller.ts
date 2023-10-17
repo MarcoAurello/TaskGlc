@@ -73,7 +73,7 @@ class QuestionarioController implements IController {
 
             res
                 .status(200)
-                .json({  message: "Cadastro realizado com sucesso." });
+                .json({  message: "Seu feedback foi cadastrado, Obrigado." });
         } catch (err) {
             console.log(err)
             if (typeof err.errors[0].message === "undefined") {
