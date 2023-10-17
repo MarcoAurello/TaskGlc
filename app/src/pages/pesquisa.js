@@ -437,8 +437,7 @@ const Pesquisa = (props) => {
                 selectedValue4 &&
                 selectedValue5 &&
                 selectedValue6 &&
-                selectedValue7 &&
-                selectedValue8 ?
+                selectedValue7  ?
                 <Button variant="contained" onClick={() => { novaInteracao() }} >Enviar</Button>
 
 

@@ -579,7 +579,9 @@ const Home = (props) => {
 
 
   <hr></hr>
-  <h4>Pesquisa de Satisfação GTI</h4>
+  <h4>Questionário de Satisfação do Usuário de TI</h4>
+  Agradecemos por dedicar um tempo para nos fornecer feedback valioso sobre os serviços de Tecnologia da Informação (TI) da nossa organização.
+   Sua opinião é importante para melhorarmos continuamente nossos serviços. Este questionário levará apenas alguns minutos para ser concluído.
 
  
  <center>
