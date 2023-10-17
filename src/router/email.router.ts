@@ -1,14 +1,14 @@
-import controller from '../controller/area.controller'
+import controller from '../controller/email.controller'
 import { Router } from 'express'
 
 import routerMiddleware from '../middleware/router.middleware'
 
-class EmailRouter {
+class EmaillRouter {
   public router!: Router
 
   constructor () {
     this.router = Router()
-    // this.router.use(routerMiddleware.authenticated)
+    this.router.use(routerMiddleware.authenticated)
     this.routers()
   }
 
@@ -22,4 +22,4 @@ class EmailRouter {
   }
 }
 
-export default new EmailRouter().router
+export default new EmaillRouter().router

@@ -1,4 +1,4 @@
-import { Button, FormControl, InputAdornment, InputLabel, MenuItem, Select, SpeedDial, TextField } from "@mui/material";
+import { Button, FormControl, InputAdornment,Dialog,DialogContent, InputLabel, MenuItem, Select, SpeedDial, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import EditIcon from '@mui/icons-material/Edit';
 import TaskFilter from '../components/task-filter'
@@ -27,6 +27,9 @@ const Home = (props) => {
   const [fkArea, setfkArea] = useState('')
   const [subarea, setSubArea] = useState([])
   const [meuSetor, setMeuSetor] = useState([])
+  const [todosEmails, setEmails] = useState([])
+  const[fechar, setFechar]=useState(false)
+  const [emailNaoEncontrado, setEmailNaoEncontrado]=useState(false)
 
 
 
@@ -96,6 +99,36 @@ const Home = (props) => {
 
   }
 
+  function carregarEmails() {
+    setOpenLoadingDialog(true)
+    const token = getCookie('_token_task_manager')
+    const params = {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    }
+
+    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/email/`, params)
+      .then(response => {
+        const { status } = response
+        response.json().then(data => {
+          setOpenLoadingDialog(false)
+          if (status === 401) {
+          } else if (status === 200) {
+            setOpenLoadingDialog(false)
+
+            // alert(JSON.stringify(data.data))
+
+            setEmails(data.data)
+
+          }
+        })
+      })
+
+
+  }
+
+
 
 
   function carregarMinhasAtividades() {
@@ -138,9 +171,29 @@ const Home = (props) => {
     carregarMinhasAtividades()
     carregarSolicitacaoAtividades()
     carregarAtividadesDoSetor()
+    carregarEmails()
 
 
-  }, [])
+    if(todosEmails && logged){
+      let encontrado = false;
+      todosEmails.forEach(emailObj => {
+        if (emailObj.email === props.logged.email) {
+          encontrado = true;
+        }
+      });
+
+      if (!encontrado && !fechar) {
+        
+        setEmailNaoEncontrado(true);
+      }
+
+    }
+
+  
+
+   
+
+  }, [todosEmails, emailNaoEncontrado])
 
   useEffect(() => {
 
@@ -267,7 +320,7 @@ const Home = (props) => {
         crossorigin="anonymous"
       />
 
-      {/* {logged ? <TaskFilter nome={props.logged.nome} />
+      {/* {logged ? <TaskFilter nome={props.logged.email} />
         :
         ''
       } */}
@@ -521,6 +574,36 @@ const Home = (props) => {
 
         }
       </table>
+
+      <Dialog open={emailNaoEncontrado}  >
+
+<DialogContent>
+
+
+  <hr></hr>
+  <h4>Questionário de Satisfação do Usuário de TI</h4>
+  Agradecemos por dedicar um tempo para nos fornecer feedback valioso sobre os serviços de Tecnologia da Informação (TI) da nossa organização.
+   Sua opinião é importante para melhorarmos continuamente nossos serviços. Este questionário levará apenas alguns minutos para ser concluído.
+
+ 
+ <center>
+ <Button variant="contained" 
+    onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/pesquisa/`}>Responder</Button><p></p>
+     <Button variant="contained" 
+    onClick={() => [setEmailNaoEncontrado(false), setFechar(true)]}>Sair</Button>
+  
+ </center>
+   
+   
+    {/* <Button variant="contained" onClick={novaInteracao}>{'Enviar'}</Button>
+
+
+    <Button onClick={() => setOpenMsg(false)}>Cancelar</Button> */}
+
+
+</DialogContent>
+
+</Dialog>
 
 
 

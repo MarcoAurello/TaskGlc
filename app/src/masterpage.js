@@ -74,6 +74,7 @@ import AtividadeForm from "./pages/chamado-form";
 import TaskItem from "./components/task-item";
 import TodasAsPendencias from "./pages/todasAsPendencias";
 import SolicitadasSetor from "./pages/solicitadasSetor";
+import Pesquisa from "./pages/pesquisa";
 import Video from "./pages/video";
 
 const getCookie = require("./utils/getCookie")
@@ -121,8 +122,8 @@ const Masterpage = (props) => {
   const [usuariosNaoValidados, setUsuariosNaoValidados] = useState([])
   const [atividadesNaoAtribuidas, setAtividadesNaoAtribuidas] = useState([])
   const [atividadesRecebida, setAtividadeRecebida] = useState([])
-  const[minhasAtividades,setMinhasAtividades]=useState([])
-  const[solicitacaoAtividade, setSolicitacaoAtividades]=useState([])
+  const [minhasAtividades, setMinhasAtividades] = useState([])
+  const [solicitacaoAtividade, setSolicitacaoAtividades] = useState([])
 
 
   useEffect(() => {
@@ -157,7 +158,7 @@ const Masterpage = (props) => {
         })
     }
 
-   
+
 
     function carregarUnidade() {
       // setOpenLoadingDialog(true)
@@ -265,7 +266,7 @@ const Masterpage = (props) => {
               // if(naoAtrib.length){
               //   alert(naoAtrib)
               // }
-                // alert(naoAtrib)
+              // alert(naoAtrib)
               // alert(JSON.stringify(naoAtrib))
               // setUsuariosNaoValidados(data.data)
             }
@@ -366,7 +367,7 @@ const Masterpage = (props) => {
   useEffect(() => {
     carregarMinhasAtividades()
     carregarSolicitacaoAtividades()
-  
+
 
   }, [])
 
@@ -457,7 +458,7 @@ const Masterpage = (props) => {
     </IconButton>
   ]
   const actionsCoordenador = [
-    
+
     <Tooltip Tooltip title="Aprovar Atividade" placement="bottom" >
       <IconButton size="small" color="inherit" id="positioned-msg-notification-icon-button"
         onClick={(e) => {
@@ -523,7 +524,7 @@ const Masterpage = (props) => {
       <AccountCircle />
     </IconButton>
   ]
-  const menu = <IconButton style={{ backgroundColor: '#2c73d1', color:'#f0f2f5' }} onClick={() => setOpenDrawer(true)} size="large" edge="start"  aria-label="menu" sx={{ mr: 2 }}>
+  const menu = <IconButton style={{ backgroundColor: '#2c73d1', color: '#f0f2f5' }} onClick={() => setOpenDrawer(true)} size="large" edge="start" aria-label="menu" sx={{ mr: 2 }}>
     <MenuIcon />
   </IconButton>
   const renderMenu = (
@@ -651,7 +652,7 @@ const Masterpage = (props) => {
                 <ListItemIcon>
                   <HomeIcon />
                 </ListItemIcon>
-                <ListItemText   style={{ fontSize: 14, color: '#2c73d1' }} primary='Home' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/home`} />
+                <ListItemText style={{ fontSize: 14, color: '#2c73d1' }} primary='Home' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/home`} />
               </ListItemButton>
             </ListItem>
 
@@ -662,19 +663,19 @@ const Masterpage = (props) => {
                 id="panel1a-header"
               >
 
-                <Typography style={{ fontSize: 13, color: '#2c73d1' }}>Atividades Solicitadas<ArrowForwardIcon ></ArrowForwardIcon><b style={{color:'FFA500', fontSize:20}}>
-                <Chip size="small" style={{color:'#EAF807', backgroundColor:'#0C9FF2', fontSize:14}} label={solicitacaoAtividade.length} />
-                  </b></Typography>
+                <Typography style={{ fontSize: 13, color: '#2c73d1' }}>Atividades Solicitadas<ArrowForwardIcon ></ArrowForwardIcon><b style={{ color: 'FFA500', fontSize: 20 }}>
+                  <Chip size="small" style={{ color: '#EAF807', backgroundColor: '#0C9FF2', fontSize: 14 }} label={solicitacaoAtividade.length} />
+                </b></Typography>
               </AccordionSummary>
               <AccordionDetails>
-              
-             
-            
+
+
+
 
                 <ListItem disablePadding>
                   <ListItemButton>
                     <ListItemIcon>
-                      <CampaignIcon style={{color:'FFA500'}}/>
+                      <CampaignIcon style={{ color: 'FFA500' }} />
                     </ListItemIcon>
                     <ListItemText primary='Nova Atividade' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/cadastro`} />
                   </ListItemButton>
@@ -683,7 +684,7 @@ const Masterpage = (props) => {
                 <ListItem disablePadding>
                   <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/chamadosAbertos/`}>
                     <ListItemIcon>
-                      <FormatListNumberedIcon style={{color:'FFA500'}}/>
+                      <FormatListNumberedIcon style={{ color: 'FFA500' }} />
                     </ListItemIcon>
                     <ListItemText primary='Minhas Solicitações' />
                   </ListItemButton>
@@ -709,16 +710,16 @@ const Masterpage = (props) => {
                 id="panel1a-header"
               >
 
-                <Typography style={{ fontSize: 13, color: '#2c73d1' }}>Atividades Recebidas <ArrowBackIcon  /><b>
-                <Chip size="small" style={{color:'#EAF807', backgroundColor:'#0C9FF2', fontSize:14}} label={minhasAtividades.length} />
-                 </b></Typography>
+                <Typography style={{ fontSize: 13, color: '#2c73d1' }}>Atividades Recebidas <ArrowBackIcon /><b>
+                  <Chip size="small" style={{ color: '#EAF807', backgroundColor: '#0C9FF2', fontSize: 14 }} label={minhasAtividades.length} />
+                </b></Typography>
               </AccordionSummary>
               <AccordionDetails>
 
                 <ListItem disablePadding>
                   <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/minhasAtividades/`}>
                     <ListItemIcon>
-                      <PlaylistAddCheckIcon  style={{color:'FFA500'}}/>
+                      <PlaylistAddCheckIcon style={{ color: 'FFA500' }} />
                     </ListItemIcon>
                     <ListItemText primary='Minhas Execuções' />
                   </ListItemButton>
@@ -727,7 +728,7 @@ const Masterpage = (props) => {
                 <ListItem disablePadding>
                   <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/minhasAtividadesArquivadas/`}>
                     <ListItemIcon>
-                      <AddTaskIcon  style={{color:'FFA500'}}/>
+                      <AddTaskIcon style={{ color: 'FFA500' }} />
                     </ListItemIcon>
                     <ListItemText primary='Concluidas e Arquivadas' />
                   </ListItemButton>
@@ -755,11 +756,11 @@ const Masterpage = (props) => {
                 id="panel1a-header"
               >
 
-                <Typography style={{ fontSize: 14, color: '#2c73d1' }}>Relatórios <FormatAlignJustifyIcon/></Typography>
+                <Typography style={{ fontSize: 14, color: '#2c73d1' }}>Relatórios <FormatAlignJustifyIcon /></Typography>
               </AccordionSummary>
               <AccordionDetails>
 
-              
+
 
 
 
@@ -767,7 +768,7 @@ const Masterpage = (props) => {
                 <ListItem disablePadding>
                   <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/recebidasSetor/`}>
                     <ListItemIcon>
-                      <LeaderboardIcon style={{color:'FFA500'}} />
+                      <LeaderboardIcon style={{ color: 'FFA500' }} />
                     </ListItemIcon>
                     <ListItemText primary='Recebidas do Setor' />
                   </ListItemButton>
@@ -776,7 +777,7 @@ const Masterpage = (props) => {
                 <ListItem disablePadding>
                   <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/solicitadasSetor/`}>
                     <ListItemIcon>
-                      <LeaderboardIcon style={{color:'FFA500'}} />
+                      <LeaderboardIcon style={{ color: 'FFA500' }} />
                     </ListItemIcon>
                     <ListItemText primary='Solicitações do Setor' />
                   </ListItemButton>
@@ -785,18 +786,18 @@ const Masterpage = (props) => {
               </AccordionDetails>
             </Accordion>
 
-            
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
 
-                <Typography style={{ fontSize: 14, color: '#2c73d1' }}
-                 onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/video/`}>Tutorial <OndemandVideoIcon/></Typography>
-              </AccordionSummary>
-              
-            
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+
+              <Typography style={{ fontSize: 14, color: '#2c73d1' }}
+                onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/video/`}>Tutorial <OndemandVideoIcon /></Typography>
+            </AccordionSummary>
+
+
 
             {/* <ListItem disablePadding>
                   <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/recebidasSetor/`}>
@@ -808,10 +809,10 @@ const Masterpage = (props) => {
                 </ListItem> */}
 
 
-            
 
 
-            
+
+
 
 
 
@@ -881,7 +882,7 @@ const Masterpage = (props) => {
         ''
 
       }
-         {logged && logged.Perfil && ( logged.Perfil.nome === PerfilUtils.Coordenador) ?
+      {logged && logged.Perfil && (logged.Perfil.nome === PerfilUtils.Coordenador) ?
         <Toolbar
           menu={menu}
           title='Atividades- Coordenador'
@@ -890,15 +891,15 @@ const Masterpage = (props) => {
         ''
 
       }
-         {logged && logged.Perfil && (logged.Perfil.nome === PerfilUtils.Funcionário) ?
+      {logged && logged.Perfil && (logged.Perfil.nome === PerfilUtils.Funcionário) ?
         <Toolbar
           menu={menu}
           title='Atividades- Funcionário'
           actions={actionsFuncionario} />
         :
-       ''
+        ''
       }
-     
+
       {renderMenu}
       {renderUserNotification}
       {renderNaoAtribuidosNotification}
@@ -1052,11 +1053,18 @@ const Masterpage = (props) => {
             path="/home"
             render={(props) => <Home {...props} logged={logged} />}
           />
-           <Route
+          <Route
             exact
             path="/video"
             render={(props) => <Video {...props} logged={logged} />}
           />
+
+          <Route
+            exact
+            path="/pesquisa"
+            render={(props) => <Pesquisa {...props} logged={logged} />}
+          />
+
 
 
         </Switch>
