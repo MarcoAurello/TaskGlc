@@ -6,14 +6,9 @@ import Unidade from '../model/unidade.model'
 class AreaController implements IController {
   async all (req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
-<<<<<<< HEAD
       const { fkUnidade } = req.query
-
-=======
-      const { fkUnidade } = req.query;
       console.log('qqqqqq')
-    
->>>>>>> 0ef0efcc55aa2f91f892a51182f4d09c10ba6d72
+
       if (fkUnidade) {
         const registros = await Area.findAll({
           where: { fkUnidade },
@@ -72,12 +67,8 @@ class AreaController implements IController {
 
   async create (req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
-<<<<<<< HEAD
       const { nome, descricao, fkUnidade } = req.body
-=======
-      const { nome, descricao, fkUnidade } = req.body;
       console.log('sssssssss')
->>>>>>> 0ef0efcc55aa2f91f892a51182f4d09c10ba6d72
 
       const registro = await Area.create({ nome, descricao, fkUnidade })
 
@@ -98,13 +89,7 @@ class AreaController implements IController {
 
   async find (req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
-<<<<<<< HEAD
       const { id } = req.params
-=======
-      const { id } = req.params;
-    
-
->>>>>>> 0ef0efcc55aa2f91f892a51182f4d09c10ba6d72
 
       const registro = await Area.findOne({ where: { id } })
 
@@ -126,9 +111,9 @@ class AreaController implements IController {
       const { id } = req.params
       const { nome, descricao, fkUnidade } = req.body
 
-      console.log(fkUnidade);
+      console.log(fkUnidade)
       console.log('xxxxxx')
-      let registro = await Area.findOne({ where: { id } });
+      const registro = await Area.findOne({ where: { id } })
 
       let params = {}
       params = registro?.nome !== nome ? { ...params, nome } : params
