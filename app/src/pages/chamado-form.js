@@ -371,7 +371,7 @@ const AtividadeForm = (props) => {
           'Authorization': `Bearer ${token}`
         }
       }
-      fetch(`${process.env.REACT_APP_DOMAIN_API}/api/area/?fkUnidade=${fkUnidadeDrop}`, params)
+      fetch(`${process.env.REACT_APP_DOMAIN_API}/api/area/?fkUnidade=${fkUnidade}`, params)
         .then(response => {
           const { status } = response
           response.json().then(data => {
@@ -386,12 +386,12 @@ const AtividadeForm = (props) => {
         })
     }
 
-    if (fkUnidadeDrop) {
+    if (fkUnidade) {
       carregarArea()
 
 
     }
-  }, [fkUnidadeDrop])
+  }, [fkUnidade])
 
   useEffect(() => {
     function carregarSubArea() {
@@ -826,13 +826,13 @@ const AtividadeForm = (props) => {
                   labelId="demo-select-small"
                   id="demo-select-small"
                   label="Unidade"
-                  value={fkUnidadeDrop}>
+                  value={fkUnidade}>
                   <MenuItem value="" onClick={() => setFkUnidadeDrop("")}>
                     {/* <em>Nenhum</em> */}
                   </MenuItem>
                   {unidade.map((item, index) => {
                     if (item.receber === true) {
-                      return <MenuItem key={index} value={item.id} onClick={(e) => [setFkUnidadeDrop(item.id), setDep(item.nome)]}>{item.nome}</MenuItem>
+                      return <MenuItem key={index} value={item.id} onClick={(e) => [setFkUnidade(item.id), setDep(item.nome)]}>{item.nome}</MenuItem>
                     }
                   })}
                 </Select>
