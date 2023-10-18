@@ -10,7 +10,14 @@ class ConfiguracaoGlobalController implements IController {
 
       res.status(200).json({ data: registro })
     } catch (err) {
-      res.status(401).json({ message: err.errors[0].message })
+      console.log(err)
+      if (typeof err.errors !== 'undefined') {
+        res.status(401).json({ message: err.errors[0].message })
+      } else if (typeof err.message !== 'undefined') {
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
+      }
     }
   }
 
@@ -62,7 +69,14 @@ class ConfiguracaoGlobalController implements IController {
 
       res.status(200).json({ data: registro, message: 'Alteração realizada com sucesso.' })
     } catch (err) {
-      res.status(401).json({ message: err.errors[0].message })
+      console.log(err)
+      if (typeof err.errors !== 'undefined') {
+        res.status(401).json({ message: err.errors[0].message })
+      } else if (typeof err.message !== 'undefined') {
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
+      }
     }
   }
 
@@ -89,7 +103,14 @@ class ConfiguracaoGlobalController implements IController {
           return res.status(401).json({ message: JSON.stringify(err) })
         })
     } catch (err) {
-      res.status(401).json({ message: err.errors[0].message })
+      console.log(err)
+      if (typeof err.errors !== 'undefined') {
+        res.status(401).json({ message: err.errors[0].message })
+      } else if (typeof err.message !== 'undefined') {
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
+      }
     }
   }
 }
