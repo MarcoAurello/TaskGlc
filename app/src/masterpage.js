@@ -3,61 +3,79 @@ import styled from "styled-components";
 import { Switch, BrowserRouter as Router, Route } from "react-router-dom";
 import Content from "./components/content";
 
-import Home from './pages/home';
-import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import Usuario from './pages/usuario'
-import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
-import MinhasAtividades from './pages/minhasAtividades'
-import CampaignIcon from '@mui/icons-material/Campaign';
-import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import Home from "./pages/home";
+import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import Usuario from "./pages/usuario";
+import ArrowCircleLeftIcon from "@mui/icons-material/ArrowCircleLeft";
+import MinhasAtividades from "./pages/minhasAtividades";
+import CampaignIcon from "@mui/icons-material/Campaign";
+import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import todasAsPendencias from "./pages/todasAsPendencias";
-import MinhasAtividadesArquivadas from './pages/minhasAtividadesArquivadas'
-import ChamadosAbertos from './pages/chamadosAbertos'
-import AddTaskIcon from '@mui/icons-material/AddTask';
-import MenuIcon from '@mui/icons-material/Menu'
-import LeaderboardIcon from '@mui/icons-material/Leaderboard';
-import NotificationsIcon from '@mui/icons-material/Notifications'
-import AccountCircle from '@mui/icons-material/AccountCircle'
-import ContactMailIcon from '@mui/icons-material/ContactMail';
-import PhonelinkSetupIcon from '@mui/icons-material/PhonelinkSetup';
-import HomeWorkIcon from '@mui/icons-material/HomeWork';
-import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
-import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
-import FaceIcon from '@mui/icons-material/Face';
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import Typography from '@mui/material/Typography';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import FormatAlignJustifyIcon from '@mui/icons-material/FormatAlignJustify';
+import MinhasAtividadesArquivadas from "./pages/minhasAtividadesArquivadas";
+import ChamadosAbertos from "./pages/chamadosAbertos";
+import AddTaskIcon from "@mui/icons-material/AddTask";
+import MenuIcon from "@mui/icons-material/Menu";
+import LeaderboardIcon from "@mui/icons-material/Leaderboard";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import ContactMailIcon from "@mui/icons-material/ContactMail";
+import PhonelinkSetupIcon from "@mui/icons-material/PhonelinkSetup";
+import HomeWorkIcon from "@mui/icons-material/HomeWork";
+import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
+import FaceIcon from "@mui/icons-material/Face";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import Typography from "@mui/material/Typography";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import FormatAlignJustifyIcon from "@mui/icons-material/FormatAlignJustify";
 
-import CssBaseline from '@mui/material/CssBaseline'
-import Toolbar from './components/toolbar'
-import { Badge, Button, Chip, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, IconButton, InputLabel, Menu, MenuItem, Select, TextField, Tooltip } from "@mui/material";
+import CssBaseline from "@mui/material/CssBaseline";
+import Toolbar from "./components/toolbar";
+import {
+  Badge,
+  Button,
+  Chip,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  FormControl,
+  IconButton,
+  InputLabel,
+  Menu,
+  MenuItem,
+  Select,
+  TextField,
+  Tooltip,
+} from "@mui/material";
 
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
-import AutoAwesomeMotionIcon from '@mui/icons-material/AutoAwesomeMotion';
+import Box from "@mui/material/Box";
+import Drawer from "@mui/material/Drawer";
+import AutoAwesomeMotionIcon from "@mui/icons-material/AutoAwesomeMotion";
 
-import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import LogoutIcon from '@mui/icons-material/Logout';
-import MailIcon from '@mui/icons-material/Mail';
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
-import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
-import AttachEmailIcon from '@mui/icons-material/AttachEmail';
-import PeopleIcon from '@mui/icons-material/People';
+import List from "@mui/material/List";
+import Divider from "@mui/material/Divider";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import LogoutIcon from "@mui/icons-material/Logout";
+import MailIcon from "@mui/icons-material/Mail";
+import AccountBoxIcon from "@mui/icons-material/AccountBox";
+import PlaylistAddCheckIcon from "@mui/icons-material/PlaylistAddCheck";
+import AttachEmailIcon from "@mui/icons-material/AttachEmail";
+import PeopleIcon from "@mui/icons-material/People";
 import UsuarioForm from "./pages/usuario-form";
-import HomeIcon from '@mui/icons-material/Home';
+import HomeIcon from "@mui/icons-material/Home";
 import RecebidasSetor from "./pages/recebidasSetor";
-import isAuthenticated from './utils/isAuthenticated'
+import isAuthenticated from "./utils/isAuthenticated";
 import ConfiguracaoForm from "./pages/configuracao-form";
 import Unidade from "./pages/unidade";
 import UnidadeForm from "./pages/unidade-form";
@@ -77,308 +95,333 @@ import SolicitadasSetor from "./pages/solicitadasSetor";
 import Pesquisa from "./pages/pesquisa";
 import Video from "./pages/video";
 
-const getCookie = require("./utils/getCookie")
-
-
+const getCookie = require("./utils/getCookie");
 
 const MasterPageContainer = styled.div`
-  position: 'absolute'; 
-  left: 0; 
-  right: 0; 
-  top: 0; 
-  bottom: 0; 
-  background-color: #F5F5F5;
+  position: "absolute";
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: #f5f5f5;
   overflow: none;
-  color: #424242
+  color: #424242;
 `;
 
 const Masterpage = (props) => {
   // const { logged } = props;
-  const [anchorElAtividadeNaoAtribuidaNotification, setAnchorElAtividadeNaoAtribuidaNotification] = useState(null)
-  const [anchorElAtividadeReceidaNotification, setAnchorElAtividadeRecebidaNotification] = useState(null)
-  const [openAtividadeNaoAtribuidaNotification, setOpenAtividadeNaoAtribuidaNotification] = useState(false)
-  const [openAtividadeRecebidaNotification, setOpenAtividadeRecebidaNotification] = useState(false)
-  const [openDrawer, setOpenDrawer] = useState(true)
-  const [openAccountMenu, setOpenAccountMenu] = useState(false)
-  const [anchorElAccountMenu, setAnchorElAccountMenu] = useState(null)
-  const [openUserNotification, setOpenUserNotification] = useState(false)
-  const [anchorElUserNotification, setAnchorElUserNotification] = useState(null)
-  const [primeiroLogin, setPrimeiroLogin] = useState(false)
-  const [openMessageDialog, setOpenMessageDialog] = useState(false)
-  const [message, setMessage] = useState('')
-  const [openDialogPrimeiroAcesso, setOpenDialogPrimeiroAcesso] = useState(false)
-  const [naoAtrib, setFkNaoAtrib] = useState('')
-  const [nome, setNome] = useState('')
-  const [telefone, setTelefone] = useState('')
-  const [chapa, setChapa] = useState('')
-  const [fkPerfil, setFkPerfil] = useState(null)
-  const [fkUnidade, setFkUnidade] = useState(null)
-  const [fkArea, setFkArea] = useState(null)
-  const [perfil, setPerfil] = useState([])
-  const [unidade, setUnidade] = useState([])
-  const [area, setArea] = useState([])
-  const [openLoadingDialog, setOpenLoadingDialog] = useState(false)
-  const [logged, setLogged] = useState(null)
-  const [usuariosNaoValidados, setUsuariosNaoValidados] = useState([])
-  const [atividadesNaoAtribuidas, setAtividadesNaoAtribuidas] = useState([])
-  const [atividadesRecebida, setAtividadeRecebida] = useState([])
-  const [minhasAtividades, setMinhasAtividades] = useState([])
-  const [solicitacaoAtividade, setSolicitacaoAtividades] = useState([])
-
+  const [
+    anchorElAtividadeNaoAtribuidaNotification,
+    setAnchorElAtividadeNaoAtribuidaNotification,
+  ] = useState(null);
+  const [
+    anchorElAtividadeReceidaNotification,
+    setAnchorElAtividadeRecebidaNotification,
+  ] = useState(null);
+  const [
+    openAtividadeNaoAtribuidaNotification,
+    setOpenAtividadeNaoAtribuidaNotification,
+  ] = useState(false);
+  const [
+    openAtividadeRecebidaNotification,
+    setOpenAtividadeRecebidaNotification,
+  ] = useState(false);
+  const [openDrawer, setOpenDrawer] = useState(true);
+  const [openAccountMenu, setOpenAccountMenu] = useState(false);
+  const [anchorElAccountMenu, setAnchorElAccountMenu] = useState(null);
+  const [openUserNotification, setOpenUserNotification] = useState(false);
+  const [anchorElUserNotification, setAnchorElUserNotification] =
+    useState(null);
+  const [primeiroLogin, setPrimeiroLogin] = useState(false);
+  const [openMessageDialog, setOpenMessageDialog] = useState(false);
+  const [message, setMessage] = useState("");
+  const [openDialogPrimeiroAcesso, setOpenDialogPrimeiroAcesso] =
+    useState(false);
+  const [naoAtrib, setFkNaoAtrib] = useState("");
+  const [nome, setNome] = useState("");
+  const [telefone, setTelefone] = useState("");
+  const [chapa, setChapa] = useState("");
+  const [fkPerfil, setFkPerfil] = useState(null);
+  const [fkUnidade, setFkUnidade] = useState(null);
+  const [fkArea, setFkArea] = useState(null);
+  const [perfil, setPerfil] = useState([]);
+  const [unidade, setUnidade] = useState([]);
+  const [area, setArea] = useState([]);
+  const [openLoadingDialog, setOpenLoadingDialog] = useState(false);
+  const [logged, setLogged] = useState(null);
+  const [usuariosNaoValidados, setUsuariosNaoValidados] = useState([]);
+  const [atividadesNaoAtribuidas, setAtividadesNaoAtribuidas] = useState([]);
+  const [atividadesRecebida, setAtividadeRecebida] = useState([]);
+  const [minhasAtividades, setMinhasAtividades] = useState([]);
+  const [solicitacaoAtividade, setSolicitacaoAtividades] = useState([]);
 
   useEffect(() => {
-    isAuthenticated().then(_ => {
-      setLogged(_.data.data)
+    isAuthenticated().then((_) => {
+      setLogged(_.data.data);
       // alert(JSON.stringify(logged))
-      setPrimeiroLogin(_.data.data.primeiroLogin)
-      setOpenDialogPrimeiroAcesso(_.data.data.primeiroLogin)
-    })
+      setPrimeiroLogin(_.data.data.primeiroLogin);
+      setOpenDialogPrimeiroAcesso(_.data.data.primeiroLogin);
+    });
   }, []);
-
 
   useEffect(() => {
     function carregarPerfil() {
-      setOpenLoadingDialog(true)
-      const token = getCookie('_token_task_manager')
+      setOpenLoadingDialog(true);
+      const token = getCookie("_token_task_manager");
       const params = {
         headers: {
-          'Authorization': `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      fetch(`${process.env.REACT_APP_DOMAIN_API}/api/perfil/`, params).then(
+        (response) => {
+          const { status } = response;
+          response
+            .json()
+            .then((data) => {
+              if (status === 401) {
+              } else if (status === 200) {
+                setPerfil(data.data);
+                carregarUnidade();
+              }
+            })
+            .catch((err) => setOpenLoadingDialog(false));
         }
-      }
-      fetch(`${process.env.REACT_APP_DOMAIN_API}/api/perfil/`, params)
-        .then(response => {
-          const { status } = response
-          response.json().then(data => {
-            if (status === 401) {
-            } else if (status === 200) {
-              setPerfil(data.data)
-              carregarUnidade()
-            }
-          }).catch(err => setOpenLoadingDialog(false))
-        })
+      );
     }
-
-
 
     function carregarUnidade() {
       // setOpenLoadingDialog(true)
-      const token = getCookie('_token_task_manager')
+      const token = getCookie("_token_task_manager");
       const params = {
         headers: {
-          'Authorization': `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      fetch(`${process.env.REACT_APP_DOMAIN_API}/api/unidade/`, params).then(
+        (response) => {
+          const { status } = response;
+          response
+            .json()
+            .then((data) => {
+              setOpenLoadingDialog(false);
+              if (status === 401) {
+              } else if (status === 200) {
+                setUnidade(data.data);
+                setOpenLoadingDialog(false);
+              }
+            })
+            .catch((err) => setOpenLoadingDialog(true));
         }
-      }
-      fetch(`${process.env.REACT_APP_DOMAIN_API}/api/unidade/`, params)
-        .then(response => {
-          const { status } = response
-          response.json().then(data => {
-            setOpenLoadingDialog(false)
-            if (status === 401) {
-            } else if (status === 200) {
-              setUnidade(data.data)
-              setOpenLoadingDialog(false)
-            }
-          }).catch(err => setOpenLoadingDialog(true))
-        })
+      );
     }
 
     if (primeiroLogin) {
-      carregarPerfil()
+      carregarPerfil();
     }
-  }, [primeiroLogin])
-
+  }, [primeiroLogin]);
 
   useEffect(() => {
     function carregarArea() {
-      setOpenLoadingDialog(true)
-      const token = getCookie('_token_task_manager')
+      setOpenLoadingDialog(true);
+      const token = getCookie("_token_task_manager");
       const params = {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      }
-      fetch(`${process.env.REACT_APP_DOMAIN_API}/api/area/?fkUnidade=${fkUnidade}`, params)
-        .then(response => {
-          const { status } = response
-          response.json().then(data => {
-            setOpenLoadingDialog(false)
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      fetch(
+        `${process.env.REACT_APP_DOMAIN_API}/api/area/?fkUnidade=${fkUnidade}`,
+        params
+      ).then((response) => {
+        const { status } = response;
+        response
+          .json()
+          .then((data) => {
+            setOpenLoadingDialog(false);
             if (status === 401) {
             } else if (status === 200) {
-              setArea(data.data)
+              setArea(data.data);
             }
-          }).catch(err => setOpenLoadingDialog(false))
-        })
+          })
+          .catch((err) => setOpenLoadingDialog(false));
+      });
     }
 
     if (fkUnidade) {
-      carregarArea()
+      carregarArea();
     }
-  }, [fkUnidade])
+  }, [fkUnidade]);
 
   useEffect(() => {
     function carregarUsuariosNaoValidados() {
-      const token = getCookie('_token_task_manager')
+      const token = getCookie("_token_task_manager");
       const params = {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      }
+          Authorization: `Bearer ${token}`,
+        },
+      };
 
-      fetch(`${process.env.REACT_APP_DOMAIN_API}/api/usuario/naovalidado/`, params)
-        .then(response => {
-          const { status } = response
-          response.json().then(data => {
-            if (status === 401) {
-              // alert('11')
-            } else if (status === 200) {
-              // alert(JSON.stringify(data))
-              setUsuariosNaoValidados(data.data)
-            }
-          })
-        })
+      fetch(
+        `${process.env.REACT_APP_DOMAIN_API}/api/usuario/naovalidado/`,
+        params
+      ).then((response) => {
+        const { status } = response;
+        response.json().then((data) => {
+          if (status === 401) {
+            // alert('11')
+          } else if (status === 200) {
+            // alert(JSON.stringify(data))
+            setUsuariosNaoValidados(data.data);
+          }
+        });
+      });
     }
 
-
-    if (logged && logged.Perfil && (logged.Perfil.nome === PerfilUtils.Gerente || logged.Perfil.nome === PerfilUtils.Coordenador)) {
-      setInterval(carregarUsuariosNaoValidados, 1000)
+    if (
+      logged &&
+      logged.Perfil &&
+      (logged.Perfil.nome === PerfilUtils.Gerente ||
+        logged.Perfil.nome === PerfilUtils.Coordenador)
+    ) {
+      setInterval(carregarUsuariosNaoValidados, 1000);
     }
-  }, [logged])
-
+  }, [logged]);
 
   useEffect(() => {
     function carregarAtividadesNaoAtribuidas() {
-      const token = getCookie('_token_task_manager')
+      const token = getCookie("_token_task_manager");
       const params = {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      }
+          Authorization: `Bearer ${token}`,
+        },
+      };
 
-      fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/naoatribuida/`, params)
-        .then(response => {
-          const { status } = response
-          response.json().then(data => {
-            if (status === 401) {
-              // alert('11')
-            } else if (status === 200) {
-              setAtividadesNaoAtribuidas(data.data)
-              setFkNaoAtrib(data.data.fkArea)
-              // if(naoAtrib.length){
-              //   alert(naoAtrib)
-              // }
-              // alert(naoAtrib)
-              // alert(JSON.stringify(naoAtrib))
-              // setUsuariosNaoValidados(data.data)
-            }
-          })
-        })
+      fetch(
+        `${process.env.REACT_APP_DOMAIN_API}/api/atividade/naoatribuida/`,
+        params
+      ).then((response) => {
+        const { status } = response;
+        response.json().then((data) => {
+          if (status === 401) {
+            // alert('11')
+          } else if (status === 200) {
+            setAtividadesNaoAtribuidas(data.data);
+            setFkNaoAtrib(data.data.fkArea);
+            // if(naoAtrib.length){
+            //   alert(naoAtrib)
+            // }
+            // alert(naoAtrib)
+            // alert(JSON.stringify(naoAtrib))
+            // setUsuariosNaoValidados(data.data)
+          }
+        });
+      });
     }
 
-
-
-    if (logged && logged.Perfil &&
-      (logged.Perfil.nome === PerfilUtils.Gerente || logged.Perfil.nome === PerfilUtils.Coordenador)) {
-      setInterval(carregarAtividadesNaoAtribuidas, 1000)
+    if (
+      logged &&
+      logged.Perfil &&
+      (logged.Perfil.nome === PerfilUtils.Gerente ||
+        logged.Perfil.nome === PerfilUtils.Coordenador)
+    ) {
+      setInterval(carregarAtividadesNaoAtribuidas, 1000);
     }
-  }, [logged])
+  }, [logged]);
 
   useEffect(() => {
     function carregarAtividadesRecebidas() {
-      const token = getCookie('_token_task_manager')
+      const token = getCookie("_token_task_manager");
       const params = {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      }
+          Authorization: `Bearer ${token}`,
+        },
+      };
 
-      fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/atividadesRecebidas/`, params)
-        .then(response => {
-          const { status } = response
-          response.json().then(data => {
-            if (status === 401) {
-              // alert('11')
-            } else if (status === 200) {
-              setAtividadeRecebida(data.data)
-              // alert(JSON.stringify(data))
-              // setUsuariosNaoValidados(data.data)
-            }
-          })
-        })
+      fetch(
+        `${process.env.REACT_APP_DOMAIN_API}/api/atividade/atividadesRecebidas/`,
+        params
+      ).then((response) => {
+        const { status } = response;
+        response.json().then((data) => {
+          if (status === 401) {
+            // alert('11')
+          } else if (status === 200) {
+            setAtividadeRecebida(data.data);
+            // alert(JSON.stringify(data))
+            // setUsuariosNaoValidados(data.data)
+          }
+        });
+      });
     }
-    setInterval(carregarAtividadesRecebidas, 1000)
-  }, [logged])
+    setInterval(carregarAtividadesRecebidas, 1000);
+  }, [logged]);
 
   function carregarMinhasAtividades() {
-    const token = getCookie('_token_task_manager')
+    const token = getCookie("_token_task_manager");
     const params = {
       headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    }
+        Authorization: `Bearer ${token}`,
+      },
+    };
 
-    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/minhasAtividades/`, params)
-      .then(response => {
-        const { status } = response
-        response.json().then(data => {
-          if (status === 401) {
-          } else if (status === 200) {
-            // alert(JSON.stringify(data.data))
+    fetch(
+      `${process.env.REACT_APP_DOMAIN_API}/api/atividade/minhasAtividades/`,
+      params
+    ).then((response) => {
+      const { status } = response;
+      response.json().then((data) => {
+        if (status === 401) {
+        } else if (status === 200) {
+          // alert(JSON.stringify(data.data))
 
-            setMinhasAtividades(data.data)
+          setMinhasAtividades(data.data);
 
-
-            // alert('oi ' +JSON.stringify( minhasAtividades))
-            // setUsuariosNaoValidados(data.data)
-          }
-        })
-      })
-
-
+          // alert('oi ' +JSON.stringify( minhasAtividades))
+          // setUsuariosNaoValidados(data.data)
+        }
+      });
+    });
   }
   function carregarSolicitacaoAtividades() {
-    const token = getCookie('_token_task_manager')
+    const token = getCookie("_token_task_manager");
     const params = {
       headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    }
+        Authorization: `Bearer ${token}`,
+      },
+    };
 
-    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/chamadosAbertos/`, params)
-      .then(response => {
-        const { status } = response
-        response.json().then(data => {
-          if (status === 401) {
-          } else if (status === 200) {
-            // alert(JSON.stringify(data.data))
+    fetch(
+      `${process.env.REACT_APP_DOMAIN_API}/api/atividade/chamadosAbertos/`,
+      params
+    ).then((response) => {
+      const { status } = response;
+      response.json().then((data) => {
+        if (status === 401) {
+        } else if (status === 200) {
+          // alert(JSON.stringify(data.data))
 
-            setSolicitacaoAtividades(data.data)
+          setSolicitacaoAtividades(data.data);
 
-            // alert('oi ' +JSON.stringify( minhasAtividades))
-            // setUsuariosNaoValidados(data.data)
-          }
-        })
-      })
-
-
+          // alert('oi ' +JSON.stringify( minhasAtividades))
+          // setUsuariosNaoValidados(data.data)
+        }
+      });
+    });
   }
 
-
-
   useEffect(() => {
-    carregarMinhasAtividades()
-    carregarSolicitacaoAtividades()
-
-
-  }, [])
-
+    carregarMinhasAtividades();
+    carregarSolicitacaoAtividades();
+  }, []);
 
   const salvarDadosPrimeiroAcesso = () => {
-    const token = getCookie('_token_task_manager')
+    const token = getCookie("_token_task_manager");
     const params = {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         nome,
@@ -387,57 +430,74 @@ const Masterpage = (props) => {
         fkPerfil,
         fkUnidade,
         fkArea,
-      })
-    }
-    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/usuario/edit/primeiroacesso/`, params)
-      .then(response => {
-        const { status } = response
-        response.json().then(data => {
-          setOpenLoadingDialog(false)
+      }),
+    };
+    fetch(
+      `${process.env.REACT_APP_DOMAIN_API}/api/usuario/edit/primeiroacesso/`,
+      params
+    ).then((response) => {
+      const { status } = response;
+      response
+        .json()
+        .then((data) => {
+          setOpenLoadingDialog(false);
           if (status === 401) {
-            setMessage(data.message)
-            setOpenMessageDialog(true)
+            setMessage(data.message);
+            setOpenMessageDialog(true);
           } else if (status === 200) {
             // alert(JSON.stringify(data.data))
-            setMessage(data.message)
-            setOpenMessageDialog(true)
-            setOpenDialogPrimeiroAcesso(false)
+            setMessage(data.message);
+            setOpenMessageDialog(true);
+            setOpenDialogPrimeiroAcesso(false);
             // setArea(data.data)
           }
-        }).catch(err => setOpenLoadingDialog(true))
-      })
-  }
+        })
+        .catch((err) => setOpenLoadingDialog(true));
+    });
+  };
 
   const actionsGerente = [
     <Tooltip title="Aprovação Equipe" placement="bottom">
-      <IconButton size="large" color="inherit" id="positioned-user-notification-icon-button"
+      <IconButton
+        size="large"
+        color="inherit"
+        id="positioned-user-notification-icon-button"
         onClick={(e) => {
-          setAnchorElUserNotification(e.currentTarget)
-          setOpenUserNotification(true)
-        }}>
+          setAnchorElUserNotification(e.currentTarget);
+          setOpenUserNotification(true);
+        }}
+      >
         <Badge badgeContent={usuariosNaoValidados.length} color="error">
           <ManageAccountsIcon />
         </Badge>
       </IconButton>
     </Tooltip>,
-    <Tooltip Tooltip title="Aprovar Atividade" placement="bottom" >
-      <IconButton size="small" color="inherit" id="positioned-msg-notification-icon-button"
+    <Tooltip Tooltip title="Aprovar Atividade" placement="bottom">
+      <IconButton
+        size="small"
+        color="inherit"
+        id="positioned-msg-notification-icon-button"
         onClick={(e) => {
-          setAnchorElAtividadeNaoAtribuidaNotification(e.currentTarget)
-          setOpenAtividadeNaoAtribuidaNotification(true)
-        }}>
+          setAnchorElAtividadeNaoAtribuidaNotification(e.currentTarget);
+          setOpenAtividadeNaoAtribuidaNotification(true);
+        }}
+      >
         <Badge badgeContent={atividadesNaoAtribuidas.length} color="error">
           <NotificationsIcon />
         </Badge>
       </IconButton>
-    </Tooltip >,
+    </Tooltip>,
 
     <Tooltip title="Chegou Atividade" placement="bottom">
-      <IconButton size="large" color="inherit" id="positioned-newmsg-notification-icon-button"
+      <IconButton
+        size="large"
+        color="inherit"
+        id="positioned-newmsg-notification-icon-button"
         onClick={(e) => {
-          setAnchorElAtividadeRecebidaNotification(e.currentTarget)
-          setOpenAtividadeRecebidaNotification(true)
-        }}>
+          setAnchorElAtividadeRecebidaNotification(e.currentTarget);
+          setOpenAtividadeRecebidaNotification(true);
+        }}
+      >
         <Badge badgeContent={atividadesRecebida.length} color="error">
           <AutoAwesomeMotionIcon></AutoAwesomeMotionIcon>
         </Badge>
@@ -451,32 +511,40 @@ const Masterpage = (props) => {
       color="inherit"
       id="positioned-account-icon-button"
       onClick={(e) => {
-        setAnchorElAccountMenu(e.currentTarget)
-        setOpenAccountMenu(true)
-      }}>
+        setAnchorElAccountMenu(e.currentTarget);
+        setOpenAccountMenu(true);
+      }}
+    >
       <AccountCircle />
-    </IconButton>
-  ]
+    </IconButton>,
+  ];
   const actionsCoordenador = [
-
-    <Tooltip Tooltip title="Aprovar Atividade" placement="bottom" >
-      <IconButton size="small" color="inherit" id="positioned-msg-notification-icon-button"
+    <Tooltip Tooltip title="Aprovar Atividade" placement="bottom">
+      <IconButton
+        size="small"
+        color="inherit"
+        id="positioned-msg-notification-icon-button"
         onClick={(e) => {
-          setAnchorElAtividadeNaoAtribuidaNotification(e.currentTarget)
-          setOpenAtividadeNaoAtribuidaNotification(true)
-        }}>
+          setAnchorElAtividadeNaoAtribuidaNotification(e.currentTarget);
+          setOpenAtividadeNaoAtribuidaNotification(true);
+        }}
+      >
         <Badge badgeContent={atividadesNaoAtribuidas.length} color="error">
           <NotificationsIcon />
         </Badge>
       </IconButton>
-    </Tooltip >,
+    </Tooltip>,
 
     <Tooltip title="Chegou Atividade" placement="bottom">
-      <IconButton size="large" color="inherit" id="positioned-newmsg-notification-icon-button"
+      <IconButton
+        size="large"
+        color="inherit"
+        id="positioned-newmsg-notification-icon-button"
         onClick={(e) => {
-          setAnchorElAtividadeRecebidaNotification(e.currentTarget)
-          setOpenAtividadeRecebidaNotification(true)
-        }}>
+          setAnchorElAtividadeRecebidaNotification(e.currentTarget);
+          setOpenAtividadeRecebidaNotification(true);
+        }}
+      >
         <Badge badgeContent={atividadesRecebida.length} color="error">
           <AutoAwesomeMotionIcon></AutoAwesomeMotionIcon>
         </Badge>
@@ -490,21 +558,25 @@ const Masterpage = (props) => {
       color="inherit"
       id="positioned-account-icon-button"
       onClick={(e) => {
-        setAnchorElAccountMenu(e.currentTarget)
-        setOpenAccountMenu(true)
-      }}>
+        setAnchorElAccountMenu(e.currentTarget);
+        setOpenAccountMenu(true);
+      }}
+    >
       <AccountCircle />
-    </IconButton>
-  ]
+    </IconButton>,
+  ];
 
   const actionsFuncionario = [
-
     <Tooltip title="Chegou Atividade" placement="bottom">
-      <IconButton size="large" color="inherit" id="positioned-newmsg-notification-icon-button"
+      <IconButton
+        size="large"
+        color="inherit"
+        id="positioned-newmsg-notification-icon-button"
         onClick={(e) => {
-          setAnchorElAtividadeRecebidaNotification(e.currentTarget)
-          setOpenAtividadeRecebidaNotification(true)
-        }}>
+          setAnchorElAtividadeRecebidaNotification(e.currentTarget);
+          setOpenAtividadeRecebidaNotification(true);
+        }}
+      >
         <Badge badgeContent={atividadesRecebida.length} color="error">
           <AutoAwesomeMotionIcon></AutoAwesomeMotionIcon>
         </Badge>
@@ -518,42 +590,55 @@ const Masterpage = (props) => {
       color="inherit"
       id="positioned-account-icon-button"
       onClick={(e) => {
-        setAnchorElAccountMenu(e.currentTarget)
-        setOpenAccountMenu(true)
-      }}>
+        setAnchorElAccountMenu(e.currentTarget);
+        setOpenAccountMenu(true);
+      }}
+    >
       <AccountCircle />
+    </IconButton>,
+  ];
+  const menu = (
+    <IconButton
+      style={{ backgroundColor: "#2c73d1", color: "#f0f2f5" }}
+      onClick={() => setOpenDrawer(true)}
+      size="large"
+      edge="start"
+      aria-label="menu"
+      sx={{ mr: 2 }}
+    >
+      <MenuIcon />
     </IconButton>
-  ]
-  const menu = <IconButton style={{ backgroundColor: '#2c73d1', color: '#f0f2f5' }} onClick={() => setOpenDrawer(true)} size="large" edge="start" aria-label="menu" sx={{ mr: 2 }}>
-    <MenuIcon />
-  </IconButton>
+  );
   const renderMenu = (
     <Menu
       anchorEl={anchorElAccountMenu}
       anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'right',
+        vertical: "bottom",
+        horizontal: "right",
       }}
       id="positioned-account-menu"
       keepMounted
       transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
+        vertical: "top",
+        horizontal: "right",
       }}
       open={openAccountMenu}
       onClose={() => setOpenAccountMenu(false)}
     >
       <MenuItem onClick={() => setOpenAccountMenu(false)} disableRipple>
-        <div style={{ width: 120, display: 'flex', flexDirection: 'row' }}>
+        <div style={{ width: 120, display: "flex", flexDirection: "row" }}>
           <AccountBoxIcon />
           <div style={{ paddingLeft: 16 }}>Meu Perfil</div>
         </div>
       </MenuItem>
-      <MenuItem onClick={() => {
-        setOpenAccountMenu(false)
-        window.location.href = `${process.env.REACT_APP_DOMAIN}/logout`
-      }} disableRipple>
-        <div style={{ width: 120, display: 'flex', flexDirection: 'row' }}>
+      <MenuItem
+        onClick={() => {
+          setOpenAccountMenu(false);
+          window.location.href = `${process.env.REACT_APP_DOMAIN}/logout`;
+        }}
+        disableRipple
+      >
+        <div style={{ width: 120, display: "flex", flexDirection: "row" }}>
           <LogoutIcon />
           <div style={{ paddingLeft: 16 }}>Sair</div>
         </div>
@@ -561,24 +646,25 @@ const Masterpage = (props) => {
     </Menu>
   );
 
-
   const renderUserNotification = (
     <Menu
       anchorEl={anchorElUserNotification}
       anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'right',
+        vertical: "bottom",
+        horizontal: "right",
       }}
       id="positioned-use-notification"
       keepMounted
       transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
+        vertical: "top",
+        horizontal: "right",
       }}
       open={openUserNotification}
       onClose={() => setOpenUserNotification(false)}
     >
-      {usuariosNaoValidados.map((item, index) => <UserNotificationItem key={index} item={item} />)}
+      {usuariosNaoValidados.map((item, index) => (
+        <UserNotificationItem key={index} item={item} />
+      ))}
     </Menu>
   );
 
@@ -586,19 +672,21 @@ const Masterpage = (props) => {
     <Menu
       anchorEl={anchorElAtividadeNaoAtribuidaNotification}
       anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'right',
+        vertical: "bottom",
+        horizontal: "right",
       }}
       id="positioned-naoAtribuido-notification"
       keepMounted
       transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
+        vertical: "top",
+        horizontal: "right",
       }}
       open={openAtividadeNaoAtribuidaNotification}
       onClose={() => setOpenAtividadeNaoAtribuidaNotification(false)}
     >
-      {atividadesNaoAtribuidas.map((item, index) => <AtividadeNotificationItem key={index} item={item} />)}
+      {atividadesNaoAtribuidas.map((item, index) => (
+        <AtividadeNotificationItem key={index} item={item} />
+      ))}
     </Menu>
   );
 
@@ -606,45 +694,37 @@ const Masterpage = (props) => {
     <Menu
       anchorEl={anchorElAtividadeReceidaNotification}
       anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'right',
+        vertical: "bottom",
+        horizontal: "right",
       }}
       id="positioned-recebido-notification"
       keepMounted
       transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
+        vertical: "top",
+        horizontal: "right",
       }}
       open={openAtividadeRecebidaNotification}
       onClose={() => setOpenAtividadeRecebidaNotification(false)}
     >
-      {atividadesRecebida.map((item, index) => <AtividadeRecebidaNotificationItem key={index} item={item} />)}
+      {atividadesRecebida.map((item, index) => (
+        <AtividadeRecebidaNotificationItem key={index} item={item} />
+      ))}
     </Menu>
-
   );
-
 
   useEffect(() => {
     const closeDrawerAfterAFewSecounds = () => {
       setTimeout(() => {
-        setOpenDrawer(false)
-      }, 200)
+        setOpenDrawer(false);
+      }, 200);
+    };
 
-    }
-
-    closeDrawerAfterAFewSecounds()
-  }, [])
-
-
-
-
+    closeDrawerAfterAFewSecounds();
+  }, []);
 
   return (
     <MasterPageContainer>
-
-      <Drawer
-        open={openDrawer}
-        onClose={() => setOpenDrawer(false)}>
+      <Drawer open={openDrawer} onClose={() => setOpenDrawer(false)}>
         <Box sx={{ width: 250 }} role="presentation">
           <List>
             <ListItem disablePadding>
@@ -652,7 +732,13 @@ const Masterpage = (props) => {
                 <ListItemIcon>
                   <HomeIcon />
                 </ListItemIcon>
-                <ListItemText style={{ fontSize: 14, color: '#2c73d1' }} primary='Home' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/home`} />
+                <ListItemText
+                  style={{ fontSize: 14, color: "#2c73d1" }}
+                  primary="Home"
+                  onClick={() =>
+                    (window.location.href = `${process.env.REACT_APP_DOMAIN}/home`)
+                  }
+                />
               </ListItemButton>
             </ListItem>
 
@@ -662,31 +748,46 @@ const Masterpage = (props) => {
                 aria-controls="panel1a-content"
                 id="panel1a-header"
               >
-
-                <Typography style={{ fontSize: 13, color: '#2c73d1' }}>Atividades Solicitadas<ArrowForwardIcon ></ArrowForwardIcon><b style={{ color: 'FFA500', fontSize: 20 }}>
-                  <Chip size="small" style={{ color: '#EAF807', backgroundColor: '#0C9FF2', fontSize: 14 }} label={solicitacaoAtividade.length} />
-                </b></Typography>
+                <Typography style={{ fontSize: 13, color: "#2c73d1" }}>
+                  Atividades Solicitadas<ArrowForwardIcon></ArrowForwardIcon>
+                  <b style={{ color: "FFA500", fontSize: 20 }}>
+                    <Chip
+                      size="small"
+                      style={{
+                        color: "#EAF807",
+                        backgroundColor: "#0C9FF2",
+                        fontSize: 14,
+                      }}
+                      label={solicitacaoAtividade.length}
+                    />
+                  </b>
+                </Typography>
               </AccordionSummary>
               <AccordionDetails>
-
-
-
-
                 <ListItem disablePadding>
                   <ListItemButton>
                     <ListItemIcon>
-                      <CampaignIcon style={{ color: 'FFA500' }} />
+                      <CampaignIcon style={{ color: "FFA500" }} />
                     </ListItemIcon>
-                    <ListItemText primary='Nova Atividade' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/cadastro`} />
+                    <ListItemText
+                      primary="Nova Atividade"
+                      onClick={() =>
+                        (window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/cadastro`)
+                      }
+                    />
                   </ListItemButton>
                 </ListItem>
 
                 <ListItem disablePadding>
-                  <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/chamadosAbertos/`}>
+                  <ListItemButton
+                    onClick={() =>
+                      (window.location.href = `${process.env.REACT_APP_DOMAIN}/chamadosAbertos/`)
+                    }
+                  >
                     <ListItemIcon>
-                      <FormatListNumberedIcon style={{ color: 'FFA500' }} />
+                      <FormatListNumberedIcon style={{ color: "FFA500" }} />
                     </ListItemIcon>
-                    <ListItemText primary='Minhas Solicitações' />
+                    <ListItemText primary="Minhas Solicitações" />
                   </ListItemButton>
                 </ListItem>
 
@@ -698,10 +799,8 @@ const Masterpage = (props) => {
                     <ListItemText primary='Solicitações do Setor' />
                   </ListItemButton>
                 </ListItem> */}
-
               </AccordionDetails>
             </Accordion>
-
 
             <Accordion>
               <AccordionSummary
@@ -709,33 +808,47 @@ const Masterpage = (props) => {
                 aria-controls="panel1a-content"
                 id="panel1a-header"
               >
-
-                <Typography style={{ fontSize: 13, color: '#2c73d1' }}>Atividades Recebidas <ArrowBackIcon /><b>
-                  <Chip size="small" style={{ color: '#EAF807', backgroundColor: '#0C9FF2', fontSize: 14 }} label={minhasAtividades.length} />
-                </b></Typography>
+                <Typography style={{ fontSize: 13, color: "#2c73d1" }}>
+                  Atividades Recebidas <ArrowBackIcon />
+                  <b>
+                    <Chip
+                      size="small"
+                      style={{
+                        color: "#EAF807",
+                        backgroundColor: "#0C9FF2",
+                        fontSize: 14,
+                      }}
+                      label={minhasAtividades.length}
+                    />
+                  </b>
+                </Typography>
               </AccordionSummary>
               <AccordionDetails>
-
                 <ListItem disablePadding>
-                  <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/minhasAtividades/`}>
+                  <ListItemButton
+                    onClick={() =>
+                      (window.location.href = `${process.env.REACT_APP_DOMAIN}/minhasAtividades/`)
+                    }
+                  >
                     <ListItemIcon>
-                      <PlaylistAddCheckIcon style={{ color: 'FFA500' }} />
+                      <PlaylistAddCheckIcon style={{ color: "FFA500" }} />
                     </ListItemIcon>
-                    <ListItemText primary='Minhas Execuções' />
+                    <ListItemText primary="Minhas Execuções" />
                   </ListItemButton>
                 </ListItem>
 
                 <ListItem disablePadding>
-                  <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/minhasAtividadesArquivadas/`}>
+                  <ListItemButton
+                    onClick={() =>
+                      (window.location.href = `${process.env.REACT_APP_DOMAIN}/minhasAtividadesArquivadas/`)
+                    }
+                  >
                     <ListItemIcon>
-                      <AddTaskIcon style={{ color: 'FFA500' }} />
+                      <AddTaskIcon style={{ color: "FFA500" }} />
                     </ListItemIcon>
-                    <ListItemText primary='Concluidas e Arquivadas' />
+                    <ListItemText primary="Concluidas e Arquivadas" />
                   </ListItemButton>
                 </ListItem>
-
-
-
 
                 {/* <ListItem disablePadding>
                   <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/recebidasSetor/`}>
@@ -745,7 +858,6 @@ const Masterpage = (props) => {
                     <ListItemText primary='Recebidas do Setor' />
                   </ListItemButton>
                 </ListItem> */}
-
               </AccordionDetails>
             </Accordion>
 
@@ -755,49 +867,53 @@ const Masterpage = (props) => {
                 aria-controls="panel1a-content"
                 id="panel1a-header"
               >
-
-                <Typography style={{ fontSize: 14, color: '#2c73d1' }}>Relatórios <FormatAlignJustifyIcon /></Typography>
+                <Typography style={{ fontSize: 14, color: "#2c73d1" }}>
+                  Relatórios <FormatAlignJustifyIcon />
+                </Typography>
               </AccordionSummary>
               <AccordionDetails>
-
-
-
-
-
-
                 <ListItem disablePadding>
-                  <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/recebidasSetor/`}>
+                  <ListItemButton
+                    onClick={() =>
+                      (window.location.href = `${process.env.REACT_APP_DOMAIN}/recebidasSetor/`)
+                    }
+                  >
                     <ListItemIcon>
-                      <LeaderboardIcon style={{ color: 'FFA500' }} />
+                      <LeaderboardIcon style={{ color: "FFA500" }} />
                     </ListItemIcon>
-                    <ListItemText primary='Recebidas do Setor' />
+                    <ListItemText primary="Recebidas do Setor" />
                   </ListItemButton>
                 </ListItem>
 
                 <ListItem disablePadding>
-                  <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/solicitadasSetor/`}>
+                  <ListItemButton
+                    onClick={() =>
+                      (window.location.href = `${process.env.REACT_APP_DOMAIN}/solicitadasSetor/`)
+                    }
+                  >
                     <ListItemIcon>
-                      <LeaderboardIcon style={{ color: 'FFA500' }} />
+                      <LeaderboardIcon style={{ color: "FFA500" }} />
                     </ListItemIcon>
-                    <ListItemText primary='Solicitações do Setor' />
+                    <ListItemText primary="Solicitações do Setor" />
                   </ListItemButton>
                 </ListItem>
-
               </AccordionDetails>
             </Accordion>
-
 
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel1a-content"
               id="panel1a-header"
             >
-
-              <Typography style={{ fontSize: 14, color: '#2c73d1' }}
-                onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/video/`}>Tutorial <OndemandVideoIcon /></Typography>
+              <Typography
+                style={{ fontSize: 14, color: "#2c73d1" }}
+                onClick={() =>
+                  (window.location.href = `${process.env.REACT_APP_DOMAIN}/video/`)
+                }
+              >
+                Tutorial <OndemandVideoIcon />
+              </Typography>
             </AccordionSummary>
-
-
 
             {/* <ListItem disablePadding>
                   <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/recebidasSetor/`}>
@@ -808,16 +924,6 @@ const Masterpage = (props) => {
                   </ListItemButton>
                 </ListItem> */}
 
-
-
-
-
-
-
-
-
-
-
             {/* <ListItem disablePadding>
               <ListItemButton>
                 <ListItemIcon>
@@ -827,78 +933,106 @@ const Masterpage = (props) => {
               </ListItemButton>
             </ListItem> */}
 
-
-
-            {
-              logged && logged.validado && logged.Perfil.nome === PerfilUtils.Administrador ?
-                <>
-                  <Divider />
-                  <ListItem disablePadding>
-                    <ListItemButton>
-                      <ListItemIcon>
-                        <PhonelinkSetupIcon />
-                      </ListItemIcon>
-                      <ListItemText primary='Configuração' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/configuracao`} />
-                    </ListItemButton>
-                  </ListItem>
-                  <ListItem disablePadding>
-                    <ListItemButton>
-                      <ListItemIcon>
-                        <ContactMailIcon />
-                      </ListItemIcon>
-                      <ListItemText primary='Usuário' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/usuario`} />
-                    </ListItemButton>
-                  </ListItem>
-                  <ListItem disablePadding>
-                    <ListItemButton>
-                      <ListItemIcon>
-                        <HomeWorkIcon />
-                      </ListItemIcon>
-                      <ListItemText primary='Unidade' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/unidade`} />
-                    </ListItemButton>
-                  </ListItem>
-                  <ListItem disablePadding>
-                    <ListItemButton>
-                      <ListItemIcon>
-                        <AccountBalanceIcon />
-                      </ListItemIcon>
-                      <ListItemText primary='Área' onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/area`} />
-                    </ListItemButton>
-                  </ListItem>
-                </> : ''
-            }
+            {logged &&
+            logged.validado &&
+            logged.Perfil.nome === PerfilUtils.Administrador ? (
+              <>
+                <Divider />
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <PhonelinkSetupIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Configuração"
+                      onClick={() =>
+                        (window.location.href = `${process.env.REACT_APP_DOMAIN}/configuracao`)
+                      }
+                    />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <ContactMailIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Usuário"
+                      onClick={() =>
+                        (window.location.href = `${process.env.REACT_APP_DOMAIN}/usuario`)
+                      }
+                    />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <HomeWorkIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Unidade"
+                      onClick={() =>
+                        (window.location.href = `${process.env.REACT_APP_DOMAIN}/unidade`)
+                      }
+                    />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <AccountBalanceIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Área"
+                      onClick={() =>
+                        (window.location.href = `${process.env.REACT_APP_DOMAIN}/area`)
+                      }
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </>
+            ) : (
+              ""
+            )}
           </List>
         </Box>
       </Drawer>
       <CssBaseline />
 
-      {logged && logged.Perfil && (logged.Perfil.nome === PerfilUtils.Gerente
-        || logged.Perfil.nome === PerfilUtils.Administrador) ?
+      {logged &&
+      logged.Perfil &&
+      (logged.Perfil.nome === PerfilUtils.Gerente ||
+        logged.Perfil.nome === PerfilUtils.Administrador) ? (
         <Toolbar
           menu={menu}
-          title='Atividades- Gerente'
-          actions={actionsGerente} />
-        :
-        ''
-
-      }
-      {logged && logged.Perfil && (logged.Perfil.nome === PerfilUtils.Coordenador) ?
+          title="Atividades- Gerente"
+          actions={actionsGerente}
+        />
+      ) : (
+        ""
+      )}
+      {logged &&
+      logged.Perfil &&
+      logged.Perfil.nome === PerfilUtils.Coordenador ? (
         <Toolbar
           menu={menu}
-          title='Atividades- Coordenador'
-          actions={actionsCoordenador} />
-        :
-        ''
-
-      }
-      {logged && logged.Perfil && (logged.Perfil.nome === PerfilUtils.Funcionário) ?
+          title="Atividades- Coordenador"
+          actions={actionsCoordenador}
+        />
+      ) : (
+        ""
+      )}
+      {logged &&
+      logged.Perfil &&
+      logged.Perfil.nome === PerfilUtils.Funcionário ? (
         <Toolbar
           menu={menu}
-          title='Atividades- Funcionário'
-          actions={actionsFuncionario} />
-        :
-        ''
-      }
+          title="Atividades- Funcionário"
+          actions={actionsFuncionario}
+        />
+      ) : (
+        ""
+      )}
 
       {renderMenu}
       {renderUserNotification}
@@ -942,7 +1076,9 @@ const Masterpage = (props) => {
           <Route
             exact
             path="/minhasAtividadesArquivadas"
-            render={(props) => <MinhasAtividadesArquivadas {...props} logged={logged} />}
+            render={(props) => (
+              <MinhasAtividadesArquivadas {...props} logged={logged} />
+            )}
           />
 
           <Route
@@ -957,8 +1093,6 @@ const Masterpage = (props) => {
             render={(props) => <ChamadosAbertos {...props} logged={logged} />}
           />
 
-
-
           <Route
             exact
             path="/recebidasSetor"
@@ -970,7 +1104,6 @@ const Masterpage = (props) => {
             path="/solicitadasSetor"
             render={(props) => <SolicitadasSetor {...props} logged={logged} />}
           />
-
 
           <Route
             exact
@@ -990,8 +1123,6 @@ const Masterpage = (props) => {
             render={(props) => <UnidadeForm {...props} logged={logged} />}
           />
 
-
-
           <Route
             exact
             path="/area"
@@ -1010,18 +1141,18 @@ const Masterpage = (props) => {
             render={(props) => <AreaForm {...props} logged={logged} />}
           />
 
-
           <Route
             exact
             path="/equipe"
             render={(props) => <Equipe {...props} logged={logged} />}
           />
 
-
           <Route
             exact
             path="/validar/:id"
-            render={(props) => <ValidarUsuarioForm {...props} logged={logged} />}
+            render={(props) => (
+              <ValidarUsuarioForm {...props} logged={logged} />
+            )}
           />
 
           <Route
@@ -1064,15 +1195,14 @@ const Masterpage = (props) => {
             path="/pesquisa"
             render={(props) => <Pesquisa {...props} logged={logged} />}
           />
-
-
-
         </Switch>
         <Dialog open={openDialogPrimeiroAcesso}>
           <DialogTitle>Primeiro Acesso</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Para a correta utilização do sistema é necessário o preenchimento dos campos abaixo. Estas informações passaram pela aprovação do gestor imediato.
+              Para a correta utilização do sistema é necessário o preenchimento
+              dos campos abaixo. Estas informações passaram pela aprovação do
+              gestor imediato.
             </DialogContentText>
             <TextField
               margin="dense"
@@ -1082,7 +1212,7 @@ const Masterpage = (props) => {
               variant="standard"
               size="small"
               value={nome}
-              onChange={e => setNome(e.target.value)}
+              onChange={(e) => setNome(e.target.value)}
             />
             <TextField
               margin="dense"
@@ -1092,7 +1222,7 @@ const Masterpage = (props) => {
               variant="standard"
               size="small"
               value={chapa}
-              onChange={e => setChapa(e.target.value)}
+              onChange={(e) => setChapa(e.target.value)}
             />
             <TextField
               margin="dense"
@@ -1102,45 +1232,87 @@ const Masterpage = (props) => {
               variant="standard"
               size="small"
               value={telefone}
-              onChange={e => setTelefone(e.target.value)}
+              onChange={(e) => setTelefone(e.target.value)}
             />
-            <FormControl fullWidth size="small" variant="standard" style={{ marginTop: 8 }}>
+            <FormControl
+              fullWidth
+              size="small"
+              variant="standard"
+              style={{ marginTop: 8 }}
+            >
               <InputLabel id="label-small-perfil">Perfil</InputLabel>
               <Select
                 fullWidth
                 labelId="label-small-perfil"
                 label="Area"
-                value={fkPerfil}>
+                value={fkPerfil}
+              >
                 <MenuItem value={null} onClick={() => setFkPerfil(null)}>
                   <em>Nenhum</em>
                 </MenuItem>
-                {perfil.map((item, index) => <MenuItem key={index} value={item.id} onClick={() => setFkPerfil(item.id)}>{item.nome}</MenuItem>)}
+                {perfil.map((item, index) => (
+                  <MenuItem
+                    key={index}
+                    value={item.id}
+                    onClick={() => setFkPerfil(item.id)}
+                  >
+                    {item.nome}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
-            <FormControl fullWidth size="small" variant="standard" style={{ marginTop: 16 }}>
+            <FormControl
+              fullWidth
+              size="small"
+              variant="standard"
+              style={{ marginTop: 16 }}
+            >
               <InputLabel id="label-small-unidade">Unidade</InputLabel>
               <Select
                 fullWidth
                 labelId="label-small-unidade"
                 label="Area"
-                value={fkUnidade}>
+                value={fkUnidade}
+              >
                 <MenuItem value={null} onClick={() => setFkUnidade(null)}>
                   <em>Nenhum</em>
                 </MenuItem>
-                {unidade.map((item, index) => <MenuItem key={index} value={item.id} onClick={() => setFkUnidade(item.id)}>{item.nome}</MenuItem>)}
+                {unidade.map((item, index) => (
+                  <MenuItem
+                    key={index}
+                    value={item.id}
+                    onClick={() => setFkUnidade(item.id)}
+                  >
+                    {item.nome}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
-            <FormControl fullWidth size="small" variant="standard" style={{ marginTop: 16 }}>
+            <FormControl
+              fullWidth
+              size="small"
+              variant="standard"
+              style={{ marginTop: 16 }}
+            >
               <InputLabel id="label-small-unidade">Área</InputLabel>
               <Select
                 fullWidth
                 labelId="label-small-unidade"
                 label="Area"
-                value={fkArea}>
+                value={fkArea}
+              >
                 <MenuItem value={null} onClick={() => setFkArea(null)}>
                   <em>Nenhum</em>
                 </MenuItem>
-                {area.map((item, index) => <MenuItem key={index} value={item.id} onClick={() => setFkArea(item.id)}>{item.nome}</MenuItem>)}
+                {area.map((item, index) => (
+                  <MenuItem
+                    key={index}
+                    value={item.id}
+                    onClick={() => setFkArea(item.id)}
+                  >
+                    {item.nome}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </DialogContent>
@@ -1150,7 +1322,16 @@ const Masterpage = (props) => {
         </Dialog>
 
         <Dialog open={openLoadingDialog}>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: 120, height: 120 }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              width: 120,
+              height: 120,
+            }}
+          >
             <CircularProgress />
           </div>
         </Dialog>
@@ -1158,19 +1339,16 @@ const Masterpage = (props) => {
         <Dialog
           open={openMessageDialog}
           aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description">
-          <DialogTitle id="alert-dialog-title">
-            Atenção
-          </DialogTitle>
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">Atenção</DialogTitle>
           <DialogContent style={{ width: 400 }}>
             <DialogContentText id="alert-dialog-description">
               {message}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => setOpenMessageDialog(false)}>
-              OK
-            </Button>
+            <Button onClick={() => setOpenMessageDialog(false)}>OK</Button>
           </DialogActions>
         </Dialog>
       </Content>
