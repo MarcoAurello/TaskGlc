@@ -75,6 +75,7 @@ class AuthenticationController {
 
   async logged (req: any, res: Response, next: NextFunction): Promise<any> {
     try {
+      console.log(req.usuario)
       res.status(200).json({ data: req.usuario })
     } catch (err) {
       console.log(err)

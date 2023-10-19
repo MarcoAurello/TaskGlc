@@ -17,13 +17,13 @@ const PrivateRoute = ({ component: Component, role, ...rest }) => {
   useEffect(() => {
     isAutenticated().then((_) => {
       setAutenticated(_.logged);
-      if(_.data){
+      if (_.data) {
         setLogged(_.data);
-      }else {
+      } else {
         setLogged(null);
       }
     });
-  });
+  }, []);
 
   if (!autenticated) {
     window.location.href = `${process.env.REACT_APP_DOMAIN}/login`;
