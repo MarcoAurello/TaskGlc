@@ -521,28 +521,37 @@ const Home = (props) => {
 
         {minhas === false ?
           <tbody>
-            {meuSetor.filter((item) => item.Status.nome != "Concluido" && item.Status.nome != "Cancelado").map((item, index) =>
-              <tr key={index}>
+          {meuSetor.map((item, index) => (
+  <tr key={index}>
+    <th scope="row" style={{ wordBreak: "break-all" }}>
+      Título: {item.titulo}<br></br>
+      Solicitado: {new Date(item.createdAt).toLocaleString()} <br></br>
+      Demandante: {item.Usuario.Area.Unidade.nome}<br></br>
 
-                < th scope="row" style={{ wordBreak: "break-all" }}>Titulo: {item.titulo}<br></br>
-                  Solicitado: {new Date(item.createdAt).toLocaleString()} <br></br>
-                  Demandante: {item.Usuario.Area.Unidade.nome}<br></br>
+      {item.fkUsuarioExecutor ? (
+        <div style={{ color: 'blue' }}>Executor: {item.UsuarioExecutor.nome} &#128590;</div>
+      ) : 
+        <div style={{ color: 'red' }}>Selecione o executor &#10067;</div>
+      }
 
-
-                  {item.fkUsuarioExecutor ? <div style={{ color: 'blue' }}>Executor: {item.UsuarioExecutor.nome} &#128590;</div> :
-                    <div style={{ color: 'red' }}>Selecione o executor &#10067;</div>}
-
-                  {item.Status.nome === "Concluido" ? <div style={{ color: 'blue' }}>Status: {item.Status.nome} &#9989;</div> :
-                    <div style={{ color: 'red' }}>Status:  {item.Status.nome}&#x23F3;</div>}
-                </th>
-                <th>
-                  <Button variant="contained" size="small" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`}>
-                    ver
-                  </Button>
-                </th>
-
-
-              </tr>)}<p></p>
+      {item.Status.nome === "Concluido" ? (
+        <div style={{ color: 'blue' }}>Status: {item.Status.nome} &#9989;</div>
+      ) : 
+        <div style={{ color: 'red' }}>Status:  {item.Status.nome}&#x23F3;</div>
+      }
+    </th>
+    <th>
+      <Button
+        variant="contained"
+        size="small"
+        onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`}
+      >
+        ver
+      </Button>
+    </th>
+  </tr>
+))}
+              <p></p>
 
 
           </tbody> :
