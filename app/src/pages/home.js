@@ -160,7 +160,7 @@ const Home = (props) => {
   };
 
   useEffect(() => {
-    // carregarMinhasAtividades();
+    carregarMinhasAtividades();
     // carregarSolicitacaoAtividades();
     // carregarAtividadesDoSetor()
     // carregarEmails();
