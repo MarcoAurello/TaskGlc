@@ -107,23 +107,23 @@ class AtividadeController implements IController {
       })
 
       const txEmail = `
-      <b>Nova Atividade para sua área</b><br>
+            <b>Nova Atividade para sua área</b><br>
 
-  Unidade: <strong>${setorSolicitante}</strong><br>
-   Titulo: <strong>${titulo}</strong><br>
-    Mensagem: <strong>${conteudo}</strong><br>
-  <br/>
-  <a href="https://www7.pe.senac.br/taskmanager/atividade/${atividadeSalva?.id}/edit">CLIQUE PARA VER</a><p>
-  
-  `
+        Unidade: <strong>${setorSolicitante}</strong><br>
+        Titulo: <strong>${titulo}</strong><br>
+          Mensagem: <strong>${conteudo}</strong><br>
+        <br/>
+        <a href="https://www7.pe.senac.br/taskmanager/atividade/${atividadeSalva?.id}/edit">CLIQUE PARA VER</a><p>  
+        `
+
       const funcionarioDaArea = await Usuario.findAll({
         where: { fkArea }
       })
-      funcionarioDaArea.map((usuario, index) => {
-        setTimeout(() => {
-          emailUtils.enviar(usuario.email, txEmail)
-        }, index * 2000) // Atraso de 2 segundos (2000 milissegundos) multiplicado pelo índice
+
+      funcionarioDaArea.map(async (usuario, index) => {
+        await emailUtils.enviar(usuario.email, txEmail)
       })
+
       res
         .status(200)
         .json({ data: atividade, message: 'Cadastro realizado com sucesso.' })
