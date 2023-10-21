@@ -120,11 +120,13 @@ class AtividadeController implements IController {
         where: { fkArea }
       })
 
-      console.log(JSON.stringify(funcionarioDaArea))
-      funcionarioDaArea.map(async (usuario, index) => {
-        console.log(usuario.email)
-        await emailUtils.enviar(usuario.email, txEmail)
+      const destinatario: string = ''
+
+      funcionarioDaArea.map((usuario, index) => {
+        usuario.email += `${usuario.email};`
       })
+
+      await emailUtils.enviar(destinatario, txEmail)
 
       res
         .status(200)
