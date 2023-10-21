@@ -1,15 +1,4 @@
-import {
-  Button,
-  FormControl,
-  InputAdornment,
-  Dialog,
-  DialogContent,
-  InputLabel,
-  MenuItem,
-  Select,
-  SpeedDial,
-  TextField,
-} from "@mui/material";
+import { Button, FormControl, InputAdornment, Dialog, DialogContent, InputLabel, MenuItem, Select, SpeedDial, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import TaskFilter from "../components/task-filter";
@@ -29,12 +18,15 @@ const Home = (props) => {
   const [openLoadingDialog, setOpenLoadingDialog] = useState(false);
   const [openMessageDialog, setOpenMessageDialog] = useState(false);
   const [checked, setChecked] = React.useState(false);
-  const [fkArea, setfkArea] = useState("");
-  const [subarea, setSubArea] = useState([]);
-  const [meuSetor, setMeuSetor] = useState([]);
-  const [todosEmails, setEmails] = useState([]);
-  const [fechar, setFechar] = useState(false);
-  const [emailNaoEncontrado, setEmailNaoEncontrado] = useState(false);
+  const [fkArea, setfkArea] = useState('')
+  const [subarea, setSubArea] = useState([])
+  const [meuSetor, setMeuSetor] = useState([])
+  const [todosEmails, setEmails] = useState([])
+  const [fechar, setFechar] = useState('false')
+  const [emailNaoEncontrado, setEmailNaoEncontrado] = useState(false)
+
+
+
 
   //  const nome = Logged.Perfil.nome;
   const [minhasAtividades, setMinhasAtividades] = useState([]);
@@ -177,7 +169,12 @@ const Home = (props) => {
         setEmailNaoEncontrado(true);
       }
     }
-  }, [todosEmails, emailNaoEncontrado]);
+
+
+
+
+
+  }, [todosEmails, emailNaoEncontrado])
 
   useEffect(() => {
     if (pesquisa) {
@@ -504,33 +501,11 @@ const Home = (props) => {
 
       <hr></hr>
 
-      {minhas == true ? (
-        <div style={{ fontSize: "18px" }}>
-          {" "}
-          <center>
-            Minhas Pendências<br></br>
-          </center>
-        </div>
-      ) : (
-        <div style={{ fontSize: "18px" }}>
-          {" "}
-          <center>
-            Pêndencias do Setor<br></br>
-          </center>
-        </div>
-      )}
-      {meuSetor.length === 0 ? (
-        <div style={{ color: "red" }}>
-          <center>
-            Seu setor não usa o Task Manager para receber e gerenciar tarefas?
-            <br></br>
-            Controle por Funcionário, por Status, por criticidade, tudo no
-            celular.<br></br>Habilite essa função com a GTI
-          </center>{" "}
-        </div>
-      ) : (
-        ""
-      )}
+      {minhas == true ?
+        <div style={{ fontSize: '18px' }}> <center>Minhas Pendências<br></br></center></div>
+        : <div style={{ fontSize: '18px' }}> <center>Pêndencias do Setor<br></br></center></div>}
+      {meuSetor.length === 0 ? <div style={{ color: 'red' }}><center>Seu setor não usa o Task Manager para receber e gerenciar tarefas?<br></br>
+        Controle por Funcionário, por Status, por criticidade, tudo no celular.<br></br>Habilite essa função com a GTI</center> </div> : ""}
       <div></div>
       <table
         style={{
@@ -570,54 +545,64 @@ const Home = (props) => {
       >
         {minhas === false ? (
           <tbody>
-            {meuSetor
-              .filter(
-                (item) =>
-                  item.Status.nome != "Concluido" &&
-                  item.Status.nome != "Cancelado"
-              )
-              .map((item, index) => (
-                <tr key={index}>
-                  <th scope="row" style={{ wordBreak: "break-all" }}>
-                    Titulo: {item.titulo}
-                    <br></br>
-                    Solicitado: {new Date(item.createdAt).toLocaleString()}{" "}
-                    <br></br>
-                    Demandante: {item.Usuario.Area.Unidade.nome}
-                    <br></br>
-                    {item.fkUsuarioExecutor ? (
-                      <div style={{ color: "blue" }}>
-                        Executor: {item.UsuarioExecutor.nome} &#128590;
-                      </div>
-                    ) : (
-                      <div style={{ color: "red" }}>
-                        Selecione o executor &#10067;
-                      </div>
-                    )}
-                    {item.Status.nome === "Concluido" ? (
-                      <div style={{ color: "blue" }}>
-                        Status: {item.Status.nome} &#9989;
-                      </div>
-                    ) : (
-                      <div style={{ color: "red" }}>
-                        Status: {item.Status.nome}&#x23F3;
-                      </div>
-                    )}
-                  </th>
-                  <th>
-                    <Button
-                      variant="contained"
-                      size="small"
-                      onClick={() =>
-                        (window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`)
-                      }
-                    >
-                      ver
-                    </Button>
-                  </th>
-                </tr>
-              ))}
-            <p></p>
+          {meuSetor.map((item, index) => (
+  <tr key={index}>
+    <th scope="row" style={{ wordBreak: "break-all" }}>
+      Título: {item.titulo}<br></br>
+      Solicitado: {new Date(item.createdAt).toLocaleString()} <br></br>
+      Demandante: {item.Usuario.Area.Unidade.nome}<br></br>
+
+      {item.fkUsuarioExecutor ? (
+        <div style={{ color: 'blue' }}>Executor: {item.UsuarioExecutor.nome} &#128590;</div>
+      ) : 
+        <div style={{ color: 'red' }}>Selecione o executor &#10067;</div>
+      }
+
+      {item.Status.nome === "Concluido" ? (
+        <div style={{ color: 'blue' }}>Status: {item.Status.nome} &#9989;</div>
+      ) : 
+        <div style={{ color: 'red' }}>Status:  {item.Status.nome}&#x23F3;</div>
+      }
+    </th>
+    <th>
+      <Button
+        variant="contained"
+        size="small"
+        onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`}
+      >
+        ver
+      </Button>
+    </th>
+  </tr>
+))}
+              <p></p>
+
+
+          </tbody> :
+          <tbody>
+            {meuSetor.filter((item) => item.fkUsuarioExecutor === logged.id && (item.Status.nome != "Concluido" && item.Status.nome != "Cancelado")).map((item, index) =>
+              <tr key={index}>
+
+                < th scope="row" style={{ wordBreak: "break-all" }}>Titulo: {item.titulo}<br></br>
+                  Solicitado: {new Date(item.createdAt).toLocaleString()} <br></br>
+                  Demandante: {item.Usuario.Area.Unidade.nome}<br></br>
+
+
+                  {item.fkUsuarioExecutor ? <div style={{ color: 'blue' }}>Executor: {item.UsuarioExecutor.nome} &#128590;</div> :
+                    <div style={{ color: 'red' }}>Selecione o executor &#10067;</div>}
+
+                  {item.Status.nome === "Concluido" ? <div style={{ color: 'blue' }}>Status: {item.Status.nome} &#9989;</div> :
+                    <div style={{ color: 'red' }}>Status:  {item.Status.nome}&#x23F3;</div>}
+                </th><th>
+                  <Button variant="contained" size="small" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`}>
+                    ver
+                  </Button>
+                </th>
+
+
+              </tr>)}<p></p>
+
+
           </tbody>
         ) : (
           <tbody>
@@ -674,38 +659,40 @@ const Home = (props) => {
         )}
       </table>
 
-      <Dialog open={emailNaoEncontrado}>
+      <Dialog open={emailNaoEncontrado}  >
+
         <DialogContent>
+
+
           <hr></hr>
           <h4>Questionário de Satisfação do Usuário de TI</h4>
-          Agradecemos por dedicar um tempo para nos fornecer feedback valioso
-          sobre os serviços de Tecnologia da Informação (TI) da nossa
-          organização. Sua opinião é importante para melhorarmos continuamente
-          nossos serviços. Este questionário levará apenas alguns minutos para
-          ser concluído.
+          Agradecemos por dedicar um tempo para nos fornecer feedback valioso sobre os serviços de Tecnologia da Informação (TI) da nossa organização.
+          Sua opinião é importante para melhorarmos continuamente nossos serviços. Este questionário levará apenas alguns minutos para ser concluído.
+
+
           <center>
-            <Button
-              variant="contained"
-              onClick={() =>
-                (window.location.href = `${process.env.REACT_APP_DOMAIN}/pesquisa/`)
-              }
-            >
-              Responder
-            </Button>
-            <p></p>
-            <Button
-              variant="contained"
-              onClick={() => [setEmailNaoEncontrado(false), setFechar(true)]}
-            >
-              Sair
-            </Button>
+            <Button variant="contained"
+              onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/pesquisa/`}>Responder</Button><p></p>
+            <Button variant="contained"
+              onClick={() => [setEmailNaoEncontrado(false), setFechar(true)]}>Sair</Button>
+
           </center>
+
+
           {/* <Button variant="contained" onClick={novaInteracao}>{'Enviar'}</Button>
 
 
     <Button onClick={() => setOpenMsg(false)}>Cancelar</Button> */}
+
+
         </DialogContent>
+
       </Dialog>
+
+
+
+
+
     </div>
   );
 };
