@@ -614,12 +614,10 @@ class AtividadeController implements IController {
             { '$Status.nome$': 'Aberto' },
             { '$Status.nome$': 'Parado' },
             { '$Status.nome$': 'Planejado para Iniciar' },
-            { '$Status.nome$': 'Pendente' },
+            { '$Status.nome$': 'Pendente' }
             // { '$Status.nome$': 'Concluido' },
-        
-           
+
           ]
-          
 
         }
       })
@@ -658,8 +656,8 @@ class AtividadeController implements IController {
         ],
         order: [['createdAt', 'DESC']],
         where: {
-          '$Usuario.fkArea$': area?.id,
-       
+          '$Usuario.fkArea$': area?.id
+
         }
       })
       res.status(200).json({ data: registros })
