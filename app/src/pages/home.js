@@ -161,7 +161,7 @@ const Home = (props) => {
 
   useEffect(() => {
     carregarMinhasAtividades();
-    // carregarSolicitacaoAtividades();
+    carregarSolicitacaoAtividades();
     // carregarAtividadesDoSetor()
     // carregarEmails();
 
