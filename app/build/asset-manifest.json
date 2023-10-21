@@ -1,11 +1,11 @@
 {
   "files": {
-    "main.js": "/taskmanager/static/js/main.6d982e05.js",
+    "main.js": "/taskmanager/static/js/main.09994439.js",
     "static/media/bg-image.jpeg": "/taskmanager/static/media/bg-image.59a6edfa99089e506f66.jpeg",
     "index.html": "/taskmanager/index.html",
-    "main.6d982e05.js.map": "/taskmanager/static/js/main.6d982e05.js.map"
+    "main.09994439.js.map": "/taskmanager/static/js/main.09994439.js.map"
   },
   "entrypoints": [
-    "static/js/main.6d982e05.js"
+    "static/js/main.09994439.js"
   ]
 }
