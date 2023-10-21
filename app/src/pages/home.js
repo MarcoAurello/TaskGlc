@@ -162,7 +162,7 @@ const Home = (props) => {
   useEffect(() => {
     carregarMinhasAtividades();
     carregarSolicitacaoAtividades();
-    // carregarAtividadesDoSetor()
+    carregarAtividadesDoSetor();
     // carregarEmails();
 
     if (todosEmails && logged) {
