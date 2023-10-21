@@ -120,12 +120,13 @@ class AtividadeController implements IController {
         where: { fkArea }
       })
 
-      const destinatario: string = ''
+      let destinatario: string = ''
 
-      funcionarioDaArea.map((usuario, index) => {
-        usuario.email += `${usuario.email};`
+      funcionarioDaArea.forEach((usuario, index) => {
+        destinatario += `${usuario.email};`
       })
 
+      console.log(`${destinatario}`)
       await emailUtils.enviar(destinatario, txEmail)
 
       res
