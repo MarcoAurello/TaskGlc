@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from 'express'
 import ActivityDirectory from 'activedirectory'
 import Usuario from '../model/usuario.model'
 import ConfiguracaoGlobal from '../model/configuracaoGeral.model'
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 
 class AuthenticationController {
   async login (req: Request, res: Response, next: NextFunction): Promise<any> {
