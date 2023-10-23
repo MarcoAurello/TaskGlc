@@ -108,9 +108,7 @@ class MensagemController implements IController {
         <b>Atividade: ${titulo?.titulo}</b> tem nova interação<br>
         <a href="https://www7.pe.senac.br/taskmanager/atividade/${titulo?.id}/edit">CLIQUE PARA VER</a><p>
     `
-        emailUtils.enviar('lucascruz@pe.senac.br', txEmail)
-        emailUtils.enviar('karenMiranda@pe.senac.br', txEmail)
-        emailUtils.enviar('gabrielvilela@pe.senac.br', txEmail)
+        await emailUtils.enviar('lucascruz@pe.senac.br;karenMiranda@pe.senac.br;gabrielvilela@pe.senac.br;', txEmail)
       }
 
       const txEmail = `
@@ -118,10 +116,10 @@ class MensagemController implements IController {
       <a href="https://www7.pe.senac.br/taskmanager/atividade/${titulo?.id}/edit">CLIQUE PARA VER</a><p>
   `
 
-      emailUtils.enviar(email, txEmail)
+      await emailUtils.enviar(email, txEmail)
 
       if (emailExecutor) {
-        emailUtils.enviar(emailExecutor, txEmail)
+        await emailUtils.enviar(emailExecutor, txEmail)
       }
 
       const atividade = await Atividade.findOne({ where: { id: fkAtividade } })

@@ -18,18 +18,16 @@ class Email {
             pass: configuracao?.password
           },
 
-        // const transportador = nodemailer.createTransport({
-        //   host: "sandbox.smtp.mailtrap.io",
-        //   port: 2525,
-        //   auth: {
-        //     user: "268e6b2a3eb0f1",
-        //     pass: "9f6b2bb6354591"
-        //   }
-        // });
+          // const transportador = nodemailer.createTransport({
+          //   host: "sandbox.smtp.mailtrap.io",
+          //   port: 2525,
+          //   auth: {
+          //     user: "268e6b2a3eb0f1",
+          //     pass: "9f6b2bb6354591"
+          //   }
+          // });
           tls: { ciphers: 'SSLv3' }
         })
-
-      
 
         const textHtml = configuracao?.template.replace('@EmailBody', mensagem)
 

@@ -1,5 +1,5 @@
 import { Model, DataTypes } from 'sequelize'
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 import { uuid } from 'uuidv4'
 import connection from './connection'
 import jwt from 'jsonwebtoken'
@@ -150,6 +150,5 @@ Usuario.init({
 
 Usuario.belongsTo(Area, { foreignKey: 'fkArea' })
 Usuario.belongsTo(Perfil, { foreignKey: 'fkPerfil' })
-
 
 export default Usuario
