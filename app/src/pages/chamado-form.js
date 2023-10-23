@@ -1180,7 +1180,7 @@ const AtividadeForm = (props) => {
                     .filter(user => user.Area.nome === 'Sistemas - Desenvolvimento')
                     .map((user, key) => (
                       <option name={user.nome} value={user.id}>
-                        {user.nome}-{meuSetor.map(i => i.fkUsuarioExecutor).filter(i => user.id === i ).length}
+                        {user.nome}-{meuSetor.map(i => i.fkUsuarioExecutor).filter(i => user.id === i ).length}  Chamados
                       </option>
                     ))
                 }
@@ -1190,7 +1190,7 @@ const AtividadeForm = (props) => {
                     .filter(user => user.Area.nome === 'Suporte e Infraestrutura')
                     .map((user, key) => (
                       <option name={user.nome} value={user.id}>
-                         {user.nome}-{meuSetor.map(i => i.fkUsuarioExecutor).filter(i => user.id === i ).length}
+                         {user.nome}-{meuSetor.map(i => i.fkUsuarioExecutor).filter(i => user.id === i ).length} Chamados
                       </option>
                     ))
                 }
