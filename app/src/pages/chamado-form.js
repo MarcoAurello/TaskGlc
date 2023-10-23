@@ -103,6 +103,7 @@ const AtividadeForm = (props) => {
   const [caminho, setCaminho] = useState()
   const [openDialogFile, setOpenDialogFile] = useState(false)
   const [openFile, setOpenFile] = useState('')
+  const[sub, setSub]= useState('')
 
 
 
@@ -358,12 +359,12 @@ const AtividadeForm = (props) => {
 
 
 
-  }, [fkUnidade,area])
+  }, [fkUnidade, area])
 
 
   useEffect(() => {
     function carregarArea() {
- 
+
       // setOpenLoadingDialog(true)
       const token = getCookie('_token_task_manager')
       const params = {
@@ -685,9 +686,9 @@ const AtividadeForm = (props) => {
     });
   };
 
-  function baixar(item){
+  function baixar(item) {
     window.location.href = `${process.env.REACT_APP_DOMAIN_API}/api/arquivo/${item}`
-    
+
     // window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${idChamado}/edit`
 
   }
@@ -964,22 +965,23 @@ const AtividadeForm = (props) => {
             }}><div style={{ marginLeft: 20 }}><b>Anexos</b></div>
               <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
 
-               
+
               </div>
 
               {
-              
+
                 <ol>
 
                   {arquivoDoChamado.map((item, index) =>
                     <li>
-                       
-                      {<Button size="small"  style={{  marginLeft: 5, marginBottom: 5, fontSize: 10 }} onClick={(e) => {
-                       baixar(item.id) }}><AttachFileIcon></AttachFileIcon>{item.nomeApresentacao} </Button>}
+
+                      {<Button size="small" style={{ marginLeft: 5, marginBottom: 5, fontSize: 10 }} onClick={(e) => {
+                        baixar(item.id)
+                      }}><AttachFileIcon></AttachFileIcon>{item.nomeApresentacao} </Button>}
                     </li>)}
-                    
+
                 </ol>
-                
+
 
               }
             </div>
@@ -1102,6 +1104,7 @@ const AtividadeForm = (props) => {
         <DialogContent>
           <DialogContentText>
 
+
           </DialogContentText>
 
           <InputLabel id="demo-select-small"><b>Titulo Atividade:</b></InputLabel>
@@ -1131,15 +1134,67 @@ const AtividadeForm = (props) => {
             <hr></hr>
 
 
-            <select style={{ fontSize: 14 }} onChange={e => setFKUsuarioExecutor(e.target.value)}>
+            {valueUnidade === 'GTI' ?
+              <div>
 
-              <option >SELECIONE  O EXECUTOR</option>)
-              {
-                usuarioExecutor.map((user, key) => <option name={user.nome} value={user.id} >
-                  {user.nome}</option>)
-              }
+                <select style={{ fontSize: 14 }} onChange={e => setSub(e.target.value)}>
 
-            </select>
+                  <option >Sub Área</option>
+
+                  
+                     <option name={'Sistemas - Desenvolvimento'} value={'Sistemas - Desenvolvimento'} >
+                     Sistemas - Desenvolvimento</option>
+                     <option name={'Suporte e Infraestrutura'} value={'Suporte e Infraestrutura'} >
+                     Suporte e Infraestrutura</option>
+                  
+
+                </select><p></p>
+
+                {sub ?
+                <select style={{ fontSize: 14 }} onChange={e => setFKUsuarioExecutor(e.target.value)}>
+                <option>SELECIONE O EXECUTOR</option>
+                {
+                  usuarioExecutor
+                    .filter(user => user.Area.nome === sub)
+                    .map((user, key) => (
+                      <option name={user.nome} value={user.id}>
+                        {user.nome}
+                      </option>
+                    ))
+                }
+              </select>
+                
+              
+              :''}
+
+
+               
+
+
+              </div>
+
+
+
+
+
+              :
+
+              <select style={{ fontSize: 14 }} onChange={e => setFKUsuarioExecutor(e.target.value)}>
+
+                <option >SELECIONE  O EXECUTOR</option>)
+                {
+                  usuarioExecutor.map((user, key) => <option name={user.nome} value={user.id} >
+                    {user.nome}</option>)
+                }
+
+              </select>
+
+            }
+
+
+
+
+
 
 
           </FormControl>
@@ -1256,12 +1311,12 @@ const AtividadeForm = (props) => {
           <h4>Anexar arquivo</h4>
 
           <input type={"file"} style={{
-             border: '2px solid #ccc',
-             padding: '10px',
-             fontSize: '16px',
-             color: '#fff',
-             borderRadius: '5px',
-             backgroundColor: '#176DD3'
+            border: '2px solid #ccc',
+            padding: '10px',
+            fontSize: '16px',
+            color: '#fff',
+            borderRadius: '5px',
+            backgroundColor: '#176DD3'
           }} onChange={(e) => enviarArquivo(e.target.files[0])} /><br></br>
           {listaDeArquivosEnviados.map((item, key) => <b style={{ color: 'blue', fontSize: 11 }}>{item.nomeApresentacao + ' Adicionado'}</b>)}
           <hr></hr>

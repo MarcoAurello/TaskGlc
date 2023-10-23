@@ -41,7 +41,488 @@ module.exports = {
        
         createdAt: new Date(),
         updatedAt: new Date()
-      }
+      },
+      {
+        id: uuid(),
+        pergunta1: 5,
+        pergunta2: 'fsrghrhtrh',
+        pergunta3: 5,
+        pergunta4: 5,
+        pergunta5: 5,
+        pergunta6: 5,
+        pergunta7: "faefaeFE",
+        pergunta8: "asfadf",
+        score: 5,
+   
+        fkUsuario: usuario[0][0].id,
+       
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },{
+        id: uuid(),
+        pergunta1: 5,
+        pergunta2: 'fsrghrhtrh',
+        pergunta3: 5,
+        pergunta4: 5,
+        pergunta5: 5,
+        pergunta6: 5,
+        pergunta7: "faefaeFE",
+        pergunta8: "asfadf",
+        score: 5,
+   
+        fkUsuario: usuario[0][0].id,
+       
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },{
+        id: uuid(),
+        pergunta1: 5,
+        pergunta2: 'fsrghrhtrh',
+        pergunta3: 5,
+        pergunta4: 5,
+        pergunta5: 5,
+        pergunta6: 5,
+        pergunta7: "faefaeFE",
+        pergunta8: "asfadf",
+        score: 5,
+   
+        fkUsuario: usuario[0][0].id,
+       
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },{
+        id: uuid(),
+        pergunta1: 5,
+        pergunta2: 'fsrghrhtrh',
+        pergunta3: 5,
+        pergunta4: 5,
+        pergunta5: 5,
+        pergunta6: 5,
+        pergunta7: "faefaeFE",
+        pergunta8: "asfadf",
+        score: 5,
+   
+        fkUsuario: usuario[0][0].id,
+       
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },{
+        id: uuid(),
+        pergunta1: 5,
+        pergunta2: 'fsrghrhtrh',
+        pergunta3: 5,
+        pergunta4: 5,
+        pergunta5: 5,
+        pergunta6: 5,
+        pergunta7: "faefaeFE",
+        pergunta8: "asfadf",
+        score: 5,
+   
+        fkUsuario: usuario[0][0].id,
+       
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },{
+        id: uuid(),
+        pergunta1: 5,
+        pergunta2: 'fsrghrhtrh',
+        pergunta3: 5,
+        pergunta4: 5,
+        pergunta5: 5,
+        pergunta6: 5,
+        pergunta7: "faefaeFE",
+        pergunta8: "asfadf",
+        score: 5,
+   
+        fkUsuario: usuario[0][0].id,
+       
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },{
+        id: uuid(),
+        pergunta1: 5,
+        pergunta2: 'fsrghrhtrh',
+        pergunta3: 5,
+        pergunta4: 5,
+        pergunta5: 5,
+        pergunta6: 5,
+        pergunta7: "faefaeFE",
+        pergunta8: "asfadf",
+        score: 5,
+   
+        fkUsuario: usuario[0][0].id,
+       
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },{
+        id: uuid(),
+        pergunta1: 5,
+        pergunta2: 'fsrghrhtrh',
+        pergunta3: 5,
+        pergunta4: 5,
+        pergunta5: 5,
+        pergunta6: 5,
+        pergunta7: "faefaeFE",
+        pergunta8: "asfadf",
+        score: 5,
+   
+        fkUsuario: usuario[0][0].id,
+       
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },{
+        id: uuid(),
+        pergunta1: 5,
+        pergunta2: 'fsrghrhtrh',
+        pergunta3: 5,
+        pergunta4: 5,
+        pergunta5: 5,
+        pergunta6: 5,
+        pergunta7: "faefaeFE",
+        pergunta8: "asfadf",
+        score: 5,
+   
+        fkUsuario: usuario[0][0].id,
+       
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },{
+        id: uuid(),
+        pergunta1: 5,
+        pergunta2: 'fsrghrhtrh',
+        pergunta3: 5,
+        pergunta4: 5,
+        pergunta5: 5,
+        pergunta6: 5,
+        pergunta7: "faefaeFE",
+        pergunta8: "asfadf",
+        score: 5,
+   
+        fkUsuario: usuario[0][0].id,
+       
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },{
+        id: uuid(),
+        pergunta1: 5,
+        pergunta2: 'fsrghrhtrh',
+        pergunta3: 5,
+        pergunta4: 5,
+        pergunta5: 5,
+        pergunta6: 5,
+        pergunta7: "faefaeFE",
+        pergunta8: "asfadf",
+        score: 5,
+   
+        fkUsuario: usuario[0][0].id,
+       
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },{
+        id: uuid(),
+        pergunta1: 5,
+        pergunta2: 'fsrghrhtrh',
+        pergunta3: 5,
+        pergunta4: 5,
+        pergunta5: 5,
+        pergunta6: 5,
+        pergunta7: "faefaeFE",
+        pergunta8: "asfadf",
+        score: 5,
+   
+        fkUsuario: usuario[0][0].id,
+       
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },{
+        id: uuid(),
+        pergunta1: 5,
+        pergunta2: 'fsrghrhtrh',
+        pergunta3: 5,
+        pergunta4: 5,
+        pergunta5: 5,
+        pergunta6: 5,
+        pergunta7: "faefaeFE",
+        pergunta8: "asfadf",
+        score: 5,
+   
+        fkUsuario: usuario[0][0].id,
+       
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },{
+        id: uuid(),
+        pergunta1: 5,
+        pergunta2: 'fsrghrhtrh',
+        pergunta3: 5,
+        pergunta4: 5,
+        pergunta5: 5,
+        pergunta6: 5,
+        pergunta7: "faefaeFE",
+        pergunta8: "asfadf",
+        score: 5,
+   
+        fkUsuario: usuario[0][0].id,
+       
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },{
+        id: uuid(),
+        pergunta1: 5,
+        pergunta2: 'fsrghrhtrh',
+        pergunta3: 5,
+        pergunta4: 5,
+        pergunta5: 5,
+        pergunta6: 5,
+        pergunta7: "faefaeFE",
+        pergunta8: "asfadf",
+        score: 5,
+   
+        fkUsuario: usuario[0][0].id,
+       
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },{
+        id: uuid(),
+        pergunta1: 5,
+        pergunta2: 'fsrghrhtrh',
+        pergunta3: 5,
+        pergunta4: 5,
+        pergunta5: 5,
+        pergunta6: 5,
+        pergunta7: "faefaeFE",
+        pergunta8: "asfadf",
+        score: 5,
+   
+        fkUsuario: usuario[0][0].id,
+       
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },{
+        id: uuid(),
+        pergunta1: 5,
+        pergunta2: 'fsrghrhtrh',
+        pergunta3: 5,
+        pergunta4: 5,
+        pergunta5: 5,
+        pergunta6: 5,
+        pergunta7: "faefaeFE",
+        pergunta8: "asfadf",
+        score: 5,
+   
+        fkUsuario: usuario[0][0].id,
+       
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },{
+        id: uuid(),
+        pergunta1: 5,
+        pergunta2: 'fsrghrhtrh',
+        pergunta3: 5,
+        pergunta4: 5,
+        pergunta5: 5,
+        pergunta6: 5,
+        pergunta7: "faefaeFE",
+        pergunta8: "asfadf",
+        score: 5,
+   
+        fkUsuario: usuario[0][0].id,
+       
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },{
+        id: uuid(),
+        pergunta1: 5,
+        pergunta2: 'fsrghrhtrh',
+        pergunta3: 5,
+        pergunta4: 5,
+        pergunta5: 5,
+        pergunta6: 5,
+        pergunta7: "faefaeFE",
+        pergunta8: "asfadf",
+        score: 5,
+   
+        fkUsuario: usuario[0][0].id,
+       
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },{
+        id: uuid(),
+        pergunta1: 5,
+        pergunta2: 'fsrghrhtrh',
+        pergunta3: 5,
+        pergunta4: 5,
+        pergunta5: 5,
+        pergunta6: 5,
+        pergunta7: "faefaeFE",
+        pergunta8: "asfadf",
+        score: 5,
+   
+        fkUsuario: usuario[0][0].id,
+       
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },{
+        id: uuid(),
+        pergunta1: 5,
+        pergunta2: 'fsrghrhtrh',
+        pergunta3: 5,
+        pergunta4: 5,
+        pergunta5: 5,
+        pergunta6: 5,
+        pergunta7: "faefaeFE",
+        pergunta8: "asfadf",
+        score: 5,
+   
+        fkUsuario: usuario[0][0].id,
+       
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },{
+        id: uuid(),
+        pergunta1: 5,
+        pergunta2: 'fsrghrhtrh',
+        pergunta3: 5,
+        pergunta4: 5,
+        pergunta5: 5,
+        pergunta6: 5,
+        pergunta7: "faefaeFE",
+        pergunta8: "asfadf",
+        score: 5,
+   
+        fkUsuario: usuario[0][0].id,
+       
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },{
+        id: uuid(),
+        pergunta1: 5,
+        pergunta2: 'fsrghrhtrh',
+        pergunta3: 5,
+        pergunta4: 5,
+        pergunta5: 5,
+        pergunta6: 5,
+        pergunta7: "faefaeFE",
+        pergunta8: "asfadf",
+        score: 5,
+   
+        fkUsuario: usuario[0][0].id,
+       
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },{
+        id: uuid(),
+        pergunta1: 5,
+        pergunta2: 'fsrghrhtrh',
+        pergunta3: 5,
+        pergunta4: 5,
+        pergunta5: 5,
+        pergunta6: 5,
+        pergunta7: "faefaeFE",
+        pergunta8: "asfadf",
+        score: 5,
+   
+        fkUsuario: usuario[0][0].id,
+       
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },{
+        id: uuid(),
+        pergunta1: 5,
+        pergunta2: 'fsrghrhtrh',
+        pergunta3: 5,
+        pergunta4: 5,
+        pergunta5: 5,
+        pergunta6: 5,
+        pergunta7: "faefaeFE",
+        pergunta8: "asfadf",
+        score: 5,
+   
+        fkUsuario: usuario[0][0].id,
+       
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },{
+        id: uuid(),
+        pergunta1: 5,
+        pergunta2: 'fsrghrhtrh',
+        pergunta3: 5,
+        pergunta4: 5,
+        pergunta5: 5,
+        pergunta6: 5,
+        pergunta7: "faefaeFE",
+        pergunta8: "asfadf",
+        score: 5,
+   
+        fkUsuario: usuario[0][0].id,
+       
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },{
+        id: uuid(),
+        pergunta1: 5,
+        pergunta2: 'fsrghrhtrh',
+        pergunta3: 5,
+        pergunta4: 5,
+        pergunta5: 5,
+        pergunta6: 5,
+        pergunta7: "faefaeFE",
+        pergunta8: "asfadf",
+        score: 5,
+   
+        fkUsuario: usuario[0][0].id,
+       
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },{
+        id: uuid(),
+        pergunta1: 5,
+        pergunta2: 'fsrghrhtrh',
+        pergunta3: 5,
+        pergunta4: 5,
+        pergunta5: 5,
+        pergunta6: 5,
+        pergunta7: "faefaeFE",
+        pergunta8: "asfadf",
+        score: 5,
+   
+        fkUsuario: usuario[0][0].id,
+       
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },{
+        id: uuid(),
+        pergunta1: 5,
+        pergunta2: 'fsrghrhtrh',
+        pergunta3: 5,
+        pergunta4: 5,
+        pergunta5: 5,
+        pergunta6: 5,
+        pergunta7: "faefaeFE",
+        pergunta8: "asfadf",
+        score: 5,
+   
+        fkUsuario: usuario[0][0].id,
+       
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },{
+        id: uuid(),
+        pergunta1: 5,
+        pergunta2: 'fsrghrhtrh',
+        pergunta3: 5,
+        pergunta4: 5,
+        pergunta5: 5,
+        pergunta6: 5,
+        pergunta7: "faefaeFE",
+        pergunta8: "asfadf",
+        score: 5,
+   
+        fkUsuario: usuario[0][0].id,
+       
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
 
     ], {})
   },

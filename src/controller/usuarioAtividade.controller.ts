@@ -19,7 +19,11 @@ class UsuarioAtividadeController implements IController {
         where: {
           '$Area.fkUnidade$': area?.fkUnidade
           // validado: true,
-        }
+        },
+        order: [
+          ['nome', 'ASC'] // ASC para ordenação crescente (ou 'DESC' para decrescente)
+        ]
+
       })
 
       res.status(200).json({ data: registros })
