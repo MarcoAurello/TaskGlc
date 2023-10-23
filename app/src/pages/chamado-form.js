@@ -86,6 +86,7 @@ const AtividadeForm = (props) => {
   const [classificarChamado, setClassificarChamado] = useState([])
   const [alterarStatus, setAltararStatus] = useState([])
   const [fkUnidadeExecutor, getFkUnidadeExecutor] = useState('')
+  const [meuSetor, setMeuSetor] = useState([]);
 
 
   const [usuarioExecutor, setusuarioExecutor] = useState([])
@@ -228,6 +229,34 @@ const AtividadeForm = (props) => {
           }).catch(err => setOpenLoadingDialog(true))
         })
     }
+    function carregarAtividadesDoSetor() {
+      setOpenLoadingDialog(true);
+      const token = getCookie("_token_task_manager");
+      const params = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+  
+      fetch(
+        `${process.env.REACT_APP_DOMAIN_API}/api/atividade/recebidasSetor/`,
+        params
+      ).then((response) => {
+        const { status } = response;
+        response.json().then((data) => {
+          setOpenLoadingDialog(false);
+          if (status === 401) {
+          } else if (status === 200) {
+            setOpenLoadingDialog(false);
+  
+            // alert(JSON.stringify(data.data))
+  
+            setMeuSetor(data.data);
+          }
+        });
+      });
+    }
+  
 
     function carregarArquivo() {
       // setOpenLoadingDialog(true)
@@ -350,12 +379,17 @@ const AtividadeForm = (props) => {
 
 
       carregarMensagem()
+      carregarAtividadesDoSetor()
 
 
     } else {
       carregarUnidade()
 
     }
+
+    // if(meuSetor){
+    //   alert(JSON.stringify(meuSetor))
+    // }
 
 
 
@@ -1137,38 +1171,35 @@ const AtividadeForm = (props) => {
             {valueUnidade === 'GTI' ?
               <div>
 
-                <select style={{ fontSize: 14 }} onChange={e => setSub(e.target.value)}>
-
-                  <option >Sub Área</option>
-
-                  
-                     <option name={'Sistemas - Desenvolvimento'} value={'Sistemas - Desenvolvimento'} >
-                     Sistemas - Desenvolvimento</option>
-                     <option name={'Suporte e Infraestrutura'} value={'Suporte e Infraestrutura'} >
-                     Suporte e Infraestrutura</option>
-                  
-
-                </select><p></p>
-
-                {sub ?
+              
                 <select style={{ fontSize: 14 }} onChange={e => setFKUsuarioExecutor(e.target.value)}>
-                <option>SELECIONE O EXECUTOR</option>
+               
+               <option style={{ fontWeight: 'bold', fontSize:'16px' }}>Sistemas - Desenvolvimento</option>
                 {
                   usuarioExecutor
-                    .filter(user => user.Area.nome === sub)
+                    .filter(user => user.Area.nome === 'Sistemas - Desenvolvimento')
                     .map((user, key) => (
                       <option name={user.nome} value={user.id}>
-                        {user.nome}
+                        {user.nome}-{meuSetor.map(i => i.fkUsuarioExecutor).filter(i => user.id === i ).length}
                       </option>
                     ))
                 }
+                <option  style={{ fontWeight: 'bold', fontSize:'16px' }}>Suporte e Infraestrutura</option>
+                 {
+                  usuarioExecutor
+                    .filter(user => user.Area.nome === 'Suporte e Infraestrutura')
+                    .map((user, key) => (
+                      <option name={user.nome} value={user.id}>
+                         {user.nome}-{meuSetor.map(i => i.fkUsuarioExecutor).filter(i => user.id === i ).length}
+                      </option>
+                    ))
+                }
+
+                
               </select>
                 
               
-              :''}
 
-
-               
 
 
               </div>
