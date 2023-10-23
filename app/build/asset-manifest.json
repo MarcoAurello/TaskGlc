@@ -1,11 +1,20 @@
 {
   "files": {
-    "main.js": "/taskmanager/static/js/main.09994439.js",
-    "static/media/bg-image.jpeg": "/taskmanager/static/media/bg-image.59a6edfa99089e506f66.jpeg",
+    "main.js": "/taskmanager/static/js/main.90cbe430.chunk.js",
+    "main.js.map": "/taskmanager/static/js/main.90cbe430.chunk.js.map",
+    "runtime-main.js": "/taskmanager/static/js/runtime-main.d5841d58.js",
+    "runtime-main.js.map": "/taskmanager/static/js/runtime-main.d5841d58.js.map",
+    "static/js/2.14a14fe0.chunk.js": "/taskmanager/static/js/2.14a14fe0.chunk.js",
+    "static/js/2.14a14fe0.chunk.js.map": "/taskmanager/static/js/2.14a14fe0.chunk.js.map",
     "index.html": "/taskmanager/index.html",
-    "main.09994439.js.map": "/taskmanager/static/js/main.09994439.js.map"
+    "precache-manifest.e0a58f5947d26ea2b5a6de4d4b6de395.js": "/taskmanager/precache-manifest.e0a58f5947d26ea2b5a6de4d4b6de395.js",
+    "service-worker.js": "/taskmanager/service-worker.js",
+    "static/js/2.14a14fe0.chunk.js.LICENSE.txt": "/taskmanager/static/js/2.14a14fe0.chunk.js.LICENSE.txt",
+    "static/media/bg-image.jpeg": "/taskmanager/static/media/bg-image.b0ed9ac9.jpeg"
   },
   "entrypoints": [
-    "static/js/main.09994439.js"
+    "static/js/runtime-main.d5841d58.js",
+    "static/js/2.14a14fe0.chunk.js",
+    "static/js/main.90cbe430.chunk.js"
   ]
 }
