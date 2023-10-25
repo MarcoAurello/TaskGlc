@@ -120,6 +120,8 @@ class AtividadeController implements IController {
       const gti = await Unidade.findOne({
         where: { nome :'GTI' }
       })
+      // console.log('jjjjjjjjjj' + fkUnidade)
+      // console.log('999999999999' +JSON.stringify(gti))
 
       if(gti?.id === fkUnidade){
         const txEmail1 = `
@@ -141,7 +143,7 @@ class AtividadeController implements IController {
         await emailUtils.enviar('marciohigo@pe.senac.br', txEmail1)
         await emailUtils.enviar('gracabezerra@pe.senac.br', txEmail1)
         await emailUtils.enviar('andrejar@pe.senac.br', txEmail1)
-        await emailUtils.enviar('marconunes@pe.senac.br', txEmail1)
+        // await emailUtils.enviar('marconunes@pe.senac.br', txEmail1)
 
         
         
@@ -165,6 +167,8 @@ class AtividadeController implements IController {
       await emailUtils.enviar(destinatario, txEmail)
 
       }
+
+      
 
 
       res
