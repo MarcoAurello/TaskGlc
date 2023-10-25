@@ -108,29 +108,15 @@ class AtividadeController implements IController {
 
 
       
-      const txEmail = `
-            <b>Nova Atividade para sua área</b><br>
-
-        Unidade: <strong>${setorSolicitante}</strong><br>
-        Titulo: <strong>${titulo}</strong><br>
-          Mensagem: <strong>${conteudo}</strong><br>
-        <br/>
-        <a href="https://www7.pe.senac.br/taskmanager/atividade/${atividadeSalva?.id}/edit">CLIQUE PARA VER</a><p>  
-        `
+     
 
       const funcionarioDaArea = await Usuario.findAll({
         where: { fkArea }
       })
 
-      let destinatario: string = ''
+      console.log(JSON.stringify("teste"+funcionarioDaArea))
 
-      funcionarioDaArea.forEach((usuario, index) => {
-        destinatario += `${usuario.email};`
-      })
-
-      console.log(`${destinatario}`)
-      await emailUtils.enviar(destinatario, txEmail)
-
+      
       const gti = await Unidade.findOne({
         where: { nome :'GTI' }
       })
@@ -145,10 +131,39 @@ class AtividadeController implements IController {
         <br/>
         <a href="https://www7.pe.senac.br/taskmanager/atividade/${atividadeSalva?.id}/edit">CLIQUE PARA VER.</a><p>  
         `
+      //   let destinatario: string = ''
+
+      // funcionarioDaArea.forEach((usuario, index) => {
+      //   destinatario += `${usuario.email};`
+      // })
+
+      // console.log(`${destinatario}`)
         await emailUtils.enviar('marciohigo@pe.senac.br', txEmail1)
+        await emailUtils.enviar('gracabezerra@pe.senac.br', txEmail1)
+        await emailUtils.enviar('andrejar@pe.senac.br', txEmail1)
+        await emailUtils.enviar('marconunes@pe.senac.br', txEmail1)
 
         
         
+      }else{
+        const txEmail = `
+        <b>Nova Atividade para sua área</b><br>
+
+    Unidade: <strong>${setorSolicitante}</strong><br>
+    Titulo: <strong>${titulo}</strong><br>
+      Mensagem: <strong>${conteudo}</strong><br>
+    <br/>
+    <a href="https://www7.pe.senac.br/taskmanager/atividade/${atividadeSalva?.id}/edit">CLIQUE PARA VER</a><p>  
+    `
+    let destinatario: string = ''
+
+      funcionarioDaArea.forEach((usuario, index) => {
+        destinatario += `${usuario.email};`
+      })
+
+      console.log(`${destinatario}`)
+      await emailUtils.enviar(destinatario, txEmail)
+
       }
 
 
