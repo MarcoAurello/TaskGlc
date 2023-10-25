@@ -106,6 +106,8 @@ class AtividadeController implements IController {
         )
       })
 
+
+      
       const txEmail = `
             <b>Nova Atividade para sua área</b><br>
 
@@ -128,6 +130,27 @@ class AtividadeController implements IController {
 
       console.log(`${destinatario}`)
       await emailUtils.enviar(destinatario, txEmail)
+
+      const gti = await Unidade.findOne({
+        where: { nome :'GTI' }
+      })
+
+      if(gti?.id === fkUnidade){
+        const txEmail1 = `
+            <b>Nova Atividade para sua área.</b><br>
+
+        Unidade: <strong>${setorSolicitante}</strong><br>
+        Titulo: <strong>${titulo}</strong><br>
+          Mensagem: <strong>${conteudo}</strong><br>
+        <br/>
+        <a href="https://www7.pe.senac.br/taskmanager/atividade/${atividadeSalva?.id}/edit">CLIQUE PARA VER.</a><p>  
+        `
+        await emailUtils.enviar('marciohigo@pe.senac.br', txEmail1)
+
+        
+        
+      }
+
 
       res
         .status(200)
