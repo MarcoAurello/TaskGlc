@@ -22,6 +22,7 @@ class AtividadeRouter {
     this.router.get('/searchSolicitadas/', controller.searchSolicitadas)
     this.router.get('/', controller.all)
     this.router.get('/recebidasSetor', controller.recebidasSetor)
+    this.router.get('/recebidasSetorCount', controller.recebidasSetorCount)
     this.router.get('/solicitadasSetor', controller.solicitadasSetor)
     this.router.get('/chamadosAbertos', controller.chamadosAbertos)
     this.router.get('/minhasAtividades', controller.minhasAtividades)

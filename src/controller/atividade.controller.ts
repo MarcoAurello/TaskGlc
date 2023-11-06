@@ -675,6 +675,54 @@ class AtividadeController implements IController {
     }
   }
 
+  async recebidasSetorCount (
+    req: any,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const area = await Area.findOne({ where: { id: req.usuario.fkArea } })
+
+      const registros = await Atividade.findAll({
+        include: [
+          { model: Area, include: [Unidade] },
+          Classificacao,
+          Status,
+          {
+            model: Usuario,
+            foreignKey: 'fkUsuarioExecutor',
+            as: 'UsuarioExecutor',
+            include: [{ model: Area, include: [Unidade] }]
+          },
+          {
+            model: Usuario,
+            foreignKey: 'fkUsuarioSolicitante',
+
+            include: [{ model: Area, include: [Unidade] }]
+          }
+        ],
+        order: [['createdAt', 'DESC']],
+        where: {
+          '$Area.fkUnidade$': area?.fkUnidade,
+          [Op.or]: [
+            { '$Status.nome$': 'Iniciado' },
+            { '$Status.nome$': 'Aberto' },
+            // { '$Status.nome$': 'Parado' },
+            // { '$Status.nome$': 'Planejado para Iniciar' },
+            // { '$Status.nome$': 'Pendente' }
+            // { '$Status.nome$': 'Concluido' },
+
+          ]
+
+        }
+      })
+      res.status(200).json({ data: registros })
+    } catch (err) {
+      console.log(err)
+      res.status(401).json({ message: 'fkUnidade é inválido ou indefinido.' })
+    }
+  }
+
   async solicitadasSetor (
     req: any,
     res: Response,

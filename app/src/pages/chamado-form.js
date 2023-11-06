@@ -87,6 +87,7 @@ const AtividadeForm = (props) => {
   const [alterarStatus, setAltararStatus] = useState([])
   const [fkUnidadeExecutor, getFkUnidadeExecutor] = useState('')
   const [meuSetor, setMeuSetor] = useState([]);
+  const [meuSetorCount, setMeuSetorCount] = useState([]);
 
 
   const [usuarioExecutor, setusuarioExecutor] = useState([])
@@ -229,6 +230,8 @@ const AtividadeForm = (props) => {
           }).catch(err => setOpenLoadingDialog(true))
         })
     }
+
+
     function carregarAtividadesDoSetor() {
       setOpenLoadingDialog(true);
       const token = getCookie("_token_task_manager");
@@ -252,6 +255,34 @@ const AtividadeForm = (props) => {
             // alert(JSON.stringify(data.data))
   
             setMeuSetor(data.data);
+          }
+        });
+      });
+    }
+
+    function carregarAtividadesDoSetorCount() {
+      setOpenLoadingDialog(true);
+      const token = getCookie("_token_task_manager");
+      const params = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+  
+      fetch(
+        `${process.env.REACT_APP_DOMAIN_API}/api/atividade/recebidasSetorCount/`,
+        params
+      ).then((response) => {
+        const { status } = response;
+        response.json().then((data) => {
+          setOpenLoadingDialog(false);
+          if (status === 401) {
+          } else if (status === 200) {
+            setOpenLoadingDialog(false);
+  
+            // alert(JSON.stringify(data.data))
+  
+            setMeuSetorCount(data.data);
           }
         });
       });
@@ -380,6 +411,7 @@ const AtividadeForm = (props) => {
 
       carregarMensagem()
       carregarAtividadesDoSetor()
+      carregarAtividadesDoSetorCount()
 
 
     } else {
@@ -1180,7 +1212,7 @@ const AtividadeForm = (props) => {
                     .filter(user => user.Area.nome === 'Sistemas - Desenvolvimento')
                     .map((user, key) => (
                       <option name={user.nome} value={user.id}>
-                        {user.nome}-{meuSetor.map(i => i.fkUsuarioExecutor).filter(i => user.id === i ).length}  Chamados
+                        {user.nome}-{meuSetorCount.map(i => i.fkUsuarioExecutor).filter(i => user.id === i ).length}  Chamados
                       </option>
                     ))
                 }
@@ -1190,7 +1222,7 @@ const AtividadeForm = (props) => {
                     .filter(user => user.Area.nome === 'Suporte e Infraestrutura')
                     .map((user, key) => (
                       <option name={user.nome} value={user.id}>
-                         {user.nome}-{meuSetor.map(i => i.fkUsuarioExecutor).filter(i => user.id === i ).length} Chamados
+                         {user.nome}-{meuSetorCount.map(i => i.fkUsuarioExecutor).filter(i => user.id === i ).length} Chamados
                       </option>
                     ))
                 }
