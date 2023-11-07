@@ -583,7 +583,7 @@ const Home = (props) => {
                     <br></br>
                     Solicitado: {new Date(item.createdAt).toLocaleString()}{" "}
                     <br></br>
-                    Demandante: {item.Usuario.Area.Unidade.nome}
+                    Demandante: {item.Usuario ?item.Usuario.Area.Unidade.nome :''}
                     <br></br>
                     {item.fkUsuarioExecutor ? (
                       <div style={{ color: "blue" }}>
