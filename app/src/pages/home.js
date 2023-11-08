@@ -33,7 +33,7 @@ const Home = (props) => {
   const [subarea, setSubArea] = useState([]);
   const [meuSetor, setMeuSetor] = useState([]);
   const [todosEmails, setEmails] = useState([]);
-  const [fechar, setFechar] = useState("false");
+  const [fechar, setFechar] = useState(false);
   const [emailNaoEncontrado, setEmailNaoEncontrado] = useState(false);
 
   //  const nome = Logged.Perfil.nome;
@@ -163,7 +163,7 @@ const Home = (props) => {
     carregarMinhasAtividades();
     carregarSolicitacaoAtividades();
     carregarAtividadesDoSetor();
-    // carregarEmails();
+    carregarEmails();
 
     if (todosEmails && logged) {
       let encontrado = false;
@@ -172,11 +172,14 @@ const Home = (props) => {
           encontrado = true;
         }
       });
+      console.log(encontrado)
 
       if (!encontrado && !fechar) {
         setEmailNaoEncontrado(true);
       }
     }
+
+  
   }, [todosEmails, emailNaoEncontrado]);
 
   useEffect(() => {
