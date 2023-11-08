@@ -64,13 +64,6 @@ class QuestionarioController implements IController {
             //     }
             // );
         
-
-
-
-
-
-
-
             res
                 .status(200)
                 .json({  message: "Seu feedback foi cadastrado, Obrigado." });

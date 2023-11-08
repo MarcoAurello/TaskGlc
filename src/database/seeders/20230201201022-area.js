@@ -127,7 +127,7 @@ module.exports = {
         fkUnidade: unidadeUIS[0][0].id,
         createdAt: new Date(),
         updatedAt: new Date()
-      },
+      }
       {
         id: uuid(),
         nome: 'Sistemas - Desenvolvimento',
