@@ -52,7 +52,16 @@ const AtividadeNotificationItem = (props) => {
       <div style={{ marginLeft: 16,marginBottom:5 }}><b style={{color:'red'}}>Selecionar Executor &#10145; </b>
       <div style={{ width: '80%', fontSize: 12,  color: '#424242', wordBreak:"break-all", whiteSpace:'pre-wrap' }}><b>{'Assunto: '+item.titulo}</b></div>
         
+      {/* <div style={{ width: '100%', fontSize: 12, color: '#424242'}}>{'Solicitado por: '+ item.Usuario.nome}</div> */}
+      {/* <div style={{ width: '100%', fontSize: 12, color: '#424242'}}>{'Solicitado por: '+ item.Usuario.nome}</div> */}
+
+      {item.Usuario?
       <div style={{ width: '100%', fontSize: 12, color: '#424242'}}>{'Solicitado por: '+ item.Usuario.nome}</div>
+
+      :
+      ""
+
+      }
       <div style={{ width: '100%', fontSize: 12, color: '#424242'}}>{'Unidade: '+ item.Usuario.Area.Unidade.nome}</div>
      
       {/* <div style={{ width: '100%', fontSize: 12, color: '#424242'}}>{'Unidade: '+ item.Area.nome}</div> */}
