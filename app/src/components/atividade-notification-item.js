@@ -62,7 +62,13 @@ const AtividadeNotificationItem = (props) => {
       ""
 
       }
-      <div style={{ width: '100%', fontSize: 12, color: '#424242'}}>{'Unidade: '+ item.Usuario.Area.Unidade.nome}</div>
+
+      {item.Usuario?
+          <div style={{ width: '100%', fontSize: 12, color: '#424242'}}>{'Unidade: '+ item.Usuario.Area.Unidade.nome}</div>:
+          ''}
+
+
+  
      
       {/* <div style={{ width: '100%', fontSize: 12, color: '#424242'}}>{'Unidade: '+ item.Area.nome}</div> */}
         
