@@ -70,9 +70,21 @@ const AtividadeRecebidaNotificationItem = (props) => {
             <div style={{ marginLeft: 16, marginBottom: 5, color: 'red' }}><b>Nova Atividade para você &#9997; </b>
 
                 <div style={{ width: '100%', fontSize: 12, color: '#424242' }}>{'Chamado: ' + item.titulo}</div>
-                <div style={{ width: '100%', fontSize: 12, color: '#424242' }}>{'Solicitante: ' + item.Usuario.nome}</div>
-                <div style={{ width: '100%', fontSize: 12, color: '#424242' }}>{'Unidade: ' + item.Usuario.Area.Unidade.nome}</div>
 
+                {item.Usuario ?
+                    <div style={{ width: '100%', fontSize: 12, color: '#424242' }}>{'Solicitante: ' + item.Usuario.nome}</div>
+                    : ''
+
+                }
+
+                {item.Usuario ?
+                  <div style={{ width: '100%', fontSize: 12, color: '#424242' }}>{'Unidade: ' + item.Usuario.Area.Unidade.nome}</div>
+
+                    : ''
+
+                }
+
+                
                 {item.categoria === '' ? '' :
                     <div style={{ width: '100%', fontSize: 12, color: '#424242' }}>{'Categoria: ' + item.categoria}</div>}
 
