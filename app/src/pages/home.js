@@ -172,7 +172,7 @@ const Home = (props) => {
           encontrado = true;
         }
       });
-      console.log(encontrado)
+   
 
       if (!encontrado && !fechar) {
         setEmailNaoEncontrado(true);
