@@ -1097,7 +1097,12 @@ const AtividadeForm = (props) => {
 
               <div style={{ display: 'flex', flexDirection: 'colrowumn' }}>
                 <div style={{ display: 'flex', flexDirection: 'row' }}>
-                  <b style={{ fontSize: 10, marginRight: 5 }}>{item.Usuario.nome}</b>
+                  {
+                    item.Usuario?
+                    <b style={{ fontSize: 10, marginRight: 5 }}>{item.Usuario.nome}</b>
+                    :
+                    ''
+                  }
                   <div style={{ flex: 1 }}></div>
                   <b style={{ fontSize: 10 }}>{new Date(item.createdAt).toLocaleString()}</b>
                 </div>
