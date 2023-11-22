@@ -8,6 +8,8 @@ import { IController } from './controller.inteface'
 import Arquivo from '../model/arquivo.model'
 import Area from '../model/area.model'
 
+const { Op } = require('sequelize')
+
 class MensagemController implements IController {
   async all (req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
@@ -96,7 +98,13 @@ class MensagemController implements IController {
 
       const Manutencao = await Area.findOne({
         where: {
-          nome: 'Manutenção- Elétrica / Hidráulica / Refrigeração/ Mecânica'
+          [Op.or]: [
+            { nome: 'Manutenção - Elétrica'  },
+            { nome:  'Manutenção - Refrigeração'  },
+            { nome: 'Manutenção - Mecânica'  },
+            { nome:  'Manutenção - Hidráulica'  },
+           
+          ]
         }
       })
 
@@ -108,7 +116,8 @@ class MensagemController implements IController {
         <b>Atividade: ${titulo?.titulo}</b> tem nova interação<br>
         <a href="https://www7.pe.senac.br/taskmanager/atividade/${titulo?.id}/edit">CLIQUE PARA VER</a><p>
     `
-        await emailUtils.enviar('lucascruz@pe.senac.br;karenMiranda@pe.senac.br;gabrielvilela@pe.senac.br;', txEmail)
+        // lucascruz@pe.senac.br;karenMiranda@pe.senac.br;gabrielvilela@pe.senac.br
+        await emailUtils.enviar('marconunes@pe.senac.br', txEmail)
       }
 
       const txEmail = `

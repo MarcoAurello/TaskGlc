@@ -67,6 +67,7 @@ const AtividadeForm = (props) => {
   const [tempoEstimado, setTempoEstimado] = useState('')
   const [createdAt, setCreatedAt] = useState('')
   const [title, setTitle] = useState('')
+  const [botaoDesabilitado, setBotaoDesabilitado] = useState(false);
 
 
   const [titulo, setTitulo] = useState('')
@@ -423,8 +424,7 @@ const AtividadeForm = (props) => {
     //   alert(JSON.stringify(meuSetor))
     // }
 
-
-
+   
   }, [fkUnidade, area])
 
 
@@ -543,8 +543,9 @@ const AtividadeForm = (props) => {
 
 
   const onSave = () => {
+    setBotaoDesabilitado(true);
     // setSetorSolicitante(props.logged.Area.Unidade.nome)
-
+   
     const token = getCookie('_token_task_manager')
     const params = {
       method: 'POST',
@@ -971,7 +972,9 @@ const AtividadeForm = (props) => {
             <div style={{ flex: 1, display: 'flex', flexDirection: 'row', alignSelf: "self-start" }}>
               {/* <Button variant="outlined" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/area/`}>Voltar</Button> */}
               <div style={{ flex: 1 }}></div>
-              <Button variant="contained" onClick={onSave}>{'Criar'}</Button>
+              <Button variant="contained" 
+               disabled={botaoDesabilitado}
+              onClick={onSave}>{'Criar'}</Button>
             </div>
             {/* <TextField
               type="hidden"

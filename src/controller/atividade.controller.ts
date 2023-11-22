@@ -47,18 +47,21 @@ class AtividadeController implements IController {
           .status(401)
           .json({ message: 'O campo área deve ser preenchido corretamente.' })
       }
+      console.log('3')
 
       if (!titulo) {
         return res.status(401).json({
           message: 'O campo título deve ser preenchido corretamente.'
         })
       }
+      console.log('2')
 
       if (!conteudo) {
         return res.status(401).json({
           message: 'O campo conteudo deve ser preenchido corretamente.'
         })
       }
+      console.log('1')
 
       const classificacao = await Classificacao.findOne({
         where: { nome: 'Não Definido' }
