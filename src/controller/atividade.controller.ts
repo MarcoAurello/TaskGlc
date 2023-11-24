@@ -70,10 +70,12 @@ class AtividadeController implements IController {
         where: { nome: 'Aberto' }
       })
 
+      const proc = protocolo()
+
       const atividade = await Atividade.create({
         titulo,
         fkClassificacao: classificacao?.id,
-        protocolo: protocolo(),
+        protocolo: proc,
         fkArea,
         fkStatus: status?.id,
         fkUsuarioSolicitante: req.usuario.id,
@@ -94,7 +96,9 @@ class AtividadeController implements IController {
       })
 
       const atividadeSalva = await Atividade.findOne({
-        where: { titulo }
+        where: { titulo,
+        protocolo: proc 
+      }
       })
 
       listaDeArquivosEnviados.map((item) => {
