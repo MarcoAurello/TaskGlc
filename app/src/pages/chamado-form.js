@@ -543,6 +543,7 @@ const AtividadeForm = (props) => {
 
 
   const onSave = () => {
+    setOpenLoadingDialog(true)
     setBotaoDesabilitado(true);
     // setSetorSolicitante(props.logged.Area.Unidade.nome)
    
@@ -579,6 +580,7 @@ const AtividadeForm = (props) => {
             setOpenMessageDialog(true)
           } else if (status === 200) {
             setAtividade(data.data)
+            setOpenLoadingDialog(false)
             setMessage(data.message)
             setOpenMessageDialog(true)
             window.location.href = `${process.env.REACT_APP_DOMAIN}/chamadosAbertos/`
