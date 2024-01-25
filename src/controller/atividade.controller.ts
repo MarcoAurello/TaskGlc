@@ -71,7 +71,6 @@ class AtividadeController implements IController {
       })
 
       const proc = protocolo()
-
       const atividade = await Atividade.create({
         titulo,
         fkClassificacao: classificacao?.id,
@@ -111,10 +110,6 @@ class AtividadeController implements IController {
           }
         )
       })
-
-
-      
-     
 
       const funcionarioDaArea = await Usuario.findAll({
         where: { fkArea }

@@ -22,6 +22,7 @@ const AtividadeNotificationItem = (props) => {
       const value = (hash >> (i * 8)) & 0xff;
       color += `00${value.toString(16)}`.slice(-2);
     }
+    
     /* eslint-enable no-bitwise */
   
     return color;
@@ -60,7 +61,6 @@ const AtividadeNotificationItem = (props) => {
 
       :
       ""
-
       }
 
       {item.Usuario?
@@ -68,7 +68,7 @@ const AtividadeNotificationItem = (props) => {
           ''}
 
 
-  
+
      
       {/* <div style={{ width: '100%', fontSize: 12, color: '#424242'}}>{'Unidade: '+ item.Area.nome}</div> */}
         

@@ -68,6 +68,10 @@ class ArquivoController implements IController {
           extension = '.xlsx'
           break
         }
+        case "video/mp4": {
+          extension = ".mp4";
+          break;
+        }
         default: {
           return res.status(401).json({
             message: 'arquivo não suportado'
