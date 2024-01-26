@@ -976,6 +976,8 @@ const AtividadeForm = (props) => {
             </div> */}
             {/* <UploadButton></UploadButton> */}
             <input type={"file"} accept="image/*, video/*" enctype="multipart/form-data" onChange={(e) => enviarArquivo(e.target.files[0])} />
+            <input type={"file"} accept="video/*" enctype="multipart/form-data" onChange={(e) => enviarArquivo(e.target.files[0])} />
+
 
             {listaDeArquivosEnviados.map((item, key) => <b style={{ color: 'blue', fontSize: 11 }}>{item.nomeApresentacao + ' Adicionado'}</b>)}
             <hr></hr>
