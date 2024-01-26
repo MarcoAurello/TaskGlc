@@ -14,6 +14,7 @@ class ArquivoRouter {
     this.router.get("/search/", controller.search);
     this.router.get("/", controller.all);
     this.router.post("/", controller.create);
+    this.router.post("/mp4", controller.createMp4);
     this.router.get("/:id", controller.find);
     this.router.post("/:id/edit", controller.update);
     this.router.post("/:id/delete", controller.delete);

@@ -46,13 +46,9 @@ class ArquivoController implements IController {
       console.log(arquivo.mimetype)
 
       let extension = '.pdf'
-      
 
       switch (arquivo.mimetype) {
-        case 'video/mp4': {
-          extension = '.mp4' 
-          break
-        }
+        
         case 'image/jpeg': {
           extension = '.jpeg'
           break
@@ -76,7 +72,7 @@ class ArquivoController implements IController {
        
         default: {
           return res.status(401).json({
-            message: 'arquivo não suportado' 
+            message: 'arquivo não suportado'
           })
         }
       }
@@ -114,6 +110,87 @@ class ArquivoController implements IController {
       }
     }
   }
+
+//   async createMp4(req: any, res: Response, next: NextFunction): Promise<any> {
+//     try {
+//         // Verifica se há arquivos enviados
+//         if (!req.files || !req.files.video) {
+//             return res.status(400).json({ message: 'Nenhum arquivo de vídeo foi enviado.22' });
+//         }
+
+//         const video = req.files.video;
+//         const diretorioVideos = './uploads/videos/';
+
+//         // Verifica se o arquivo é um vídeo MP4
+//         if (video.mimetype !== 'video/mp4') {
+//             return res.status(400).json({ message: 'Formato de arquivo não suportado. Envie um vídeo no formato MP4.' });
+//         }
+
+//         // Gera um nome único para o vídeo
+//         const nomeVideo = `${hash.generate(`${video.name}${new Date().toLocaleString()}`)}.mp4`;
+
+//         // Move o vídeo para o diretório de uploads
+//         await video.mv(`${diretorioVideos}${nomeVideo}`);
+
+//         // Salva o registro do vídeo no banco de dados
+//         const registro = await Arquivo.create({
+//             nome: nomeVideo,
+//             nomeApresentacao: video.name,
+//             caminho: diretorioVideos + nomeVideo
+//         });
+
+//         return res.status(200).json({ data: registro, message: 'Upload do vídeo realizado com sucesso.' });
+
+//     } catch (err) {
+//         console.error(err);
+//         if (typeof err.errors !== 'undefined') {
+//             res.status(401).json({ message: err.errors[0].message });
+//         } else if (typeof err.message !== 'undefined') {
+//             res.status(401).json({ message: err.message });
+//         } else {
+//             res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' });
+//         }
+//     }
+// }
+
+async createMp4(req: any, res: Response, next: NextFunction): Promise<any> {
+  try {
+      // Verifica se há arquivos enviados
+      if (!req.files || !req.files.video) {
+          return res.status(400).json({ message: 'Nenhum arquivo de vídeo foi enviado.' });
+      }
+
+      const video = req.files.video;
+      const diretorioVideos = './uploads';
+
+      // Verifica se o arquivo é um vídeo MP4
+      if (video.mimetype !== 'video/mp4') {
+          return res.status(400).json({ message: 'Formato de arquivo não suportado. Envie um vídeo no formato MP4.' });
+      }
+
+      // Gera um nome único para o vídeo
+      const nomeVideo = `${hash.generate(`${video.name}${new Date().toLocaleString()}`)}.mp4`;
+
+      // Move o vídeo para o diretório de uploads
+      await video.mv(`${diretorioVideos}${nomeVideo}`);
+
+      // Salva o registro do vídeo no banco de dados
+      const registro = await Arquivo.create({
+          nome: nomeVideo,
+          nomeApresentacao: video.name,
+          caminho: diretorioVideos + nomeVideo
+      });
+
+      return res.status(200).json({ data: registro, message: 'Upload do vídeo realizado com sucesso.' });
+
+  } catch (err) {
+      console.error(err);
+      return res.status(500).json({ message: 'Ocorreu um erro durante o processamento da requisição.' });
+  }
+}
+
+
+
 
   async find (req: Request, res: Response, next: NextFunction): Promise<any> {
     try {

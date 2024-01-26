@@ -766,10 +766,8 @@ const AtividadeForm = (props) => {
     });
   };
 
-  const sendFileMp4 = (method, url, file) => {
+  const sendFileMp4 = (method, url, formData) => {
     const token = getCookie('_token_task_manager');
-    const formData = new FormData();
-    formData.append('video', file);
 
     return new Promise(function (resolve, reject) {
         let req = new XMLHttpRequest();
@@ -791,6 +789,7 @@ const AtividadeForm = (props) => {
         req.send(formData);
     });
 };
+
 
   function baixar(item) {
     window.location.href = `${process.env.REACT_APP_DOMAIN_API}/api/arquivo/${item}`
@@ -824,11 +823,11 @@ const AtividadeForm = (props) => {
   }
 
   const enviarArquivoMp4 = (e) => {
-    const arquivo = e.target.files[0]; // Obtém o arquivo selecionado
+    const video = e.target.files[0]; // Obtém o arquivo selecionado
     const form = new FormData();
-    form.append('arquivo', arquivo); // Adiciona o arquivo ao FormData
+    form.append('video', video); // Adiciona o arquivo ao FormData
 
-    sendFile("POST", `${process.env.REACT_APP_DOMAIN_API}/api/arquivo/`, form)
+    sendFileMp4("POST", `${process.env.REACT_APP_DOMAIN_API}/api/arquivo/mp4`, form)
       .then(response => {
         const { data } = response;
         setOpenLoadingDialog(true);
@@ -840,6 +839,7 @@ const AtividadeForm = (props) => {
         alert(JSON.stringify(err));
       });
 }
+
 
 
 
@@ -1022,6 +1022,7 @@ const AtividadeForm = (props) => {
             </div> */}
             {/* <UploadButton></UploadButton> */}
             <input type={"file"} accept="image/*, video/*" enctype="multipart/form-data" onChange={(e) => enviarArquivo(e.target.files[0])} />
+           <p></p>
             <input type={"file"} accept="video/mp4" enctype="multipart/form-data" onChange={(e) => enviarArquivoMp4(e)} />
 
 
