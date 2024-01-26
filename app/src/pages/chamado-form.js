@@ -766,6 +766,32 @@ const AtividadeForm = (props) => {
     });
   };
 
+  const sendFileMp4 = (method, url, file) => {
+    const token = getCookie('_token_task_manager');
+    const formData = new FormData();
+    formData.append('video', file);
+
+    return new Promise(function (resolve, reject) {
+        let req = new XMLHttpRequest();
+        req.open(method, url);
+        req.setRequestHeader("Authorization", `Bearer ${token}`);
+
+        req.addEventListener(
+            "load",
+            () => {
+                if (req.status === 200) {
+                    resolve(JSON.parse(req.responseText));
+                } else {
+                    reject(JSON.parse(req.responseText));
+                }
+            },
+            false
+        );
+
+        req.send(formData);
+    });
+};
+
   function baixar(item) {
     window.location.href = `${process.env.REACT_APP_DOMAIN_API}/api/arquivo/${item}`
 
@@ -793,9 +819,29 @@ const AtividadeForm = (props) => {
         // alert(JSON.stringify(response))
       })
       .catch(err => {
-        alert("qqqqqqq"+JSON.stringify(err))
+        alert(JSON.stringify(err))
       })
   }
+
+  const enviarArquivoMp4 = (e) => {
+    const arquivo = e.target.files[0]; // Obtém o arquivo selecionado
+    const form = new FormData();
+    form.append('arquivo', arquivo); // Adiciona o arquivo ao FormData
+
+    sendFile("POST", `${process.env.REACT_APP_DOMAIN_API}/api/arquivo/`, form)
+      .then(response => {
+        const { data } = response;
+        setOpenLoadingDialog(true);
+        setListaDeArquivosEnviados([...listaDeArquivosEnviados, data]);
+        setCaminho(data.caminho);
+        setOpenLoadingDialog(false);
+      })
+      .catch(err => {
+        alert(JSON.stringify(err));
+      });
+}
+
+
 
 
 
@@ -976,7 +1022,7 @@ const AtividadeForm = (props) => {
             </div> */}
             {/* <UploadButton></UploadButton> */}
             <input type={"file"} accept="image/*, video/*" enctype="multipart/form-data" onChange={(e) => enviarArquivo(e.target.files[0])} />
-            <input type={"file"} accept="video/*" enctype="multipart/form-data" onChange={(e) => enviarArquivo(e.target.files[0])} />
+            <input type={"file"} accept="video/mp4" enctype="multipart/form-data" onChange={(e) => enviarArquivoMp4(e)} />
 
 
             {listaDeArquivosEnviados.map((item, key) => <b style={{ color: 'blue', fontSize: 11 }}>{item.nomeApresentacao + ' Adicionado'}</b>)}
