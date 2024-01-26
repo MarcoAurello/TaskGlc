@@ -43,11 +43,15 @@ class ArquivoController implements IController {
       const { arquivo } = req.files
       const diretorioArquivos = './uploads/'
 
-      console.log(arquivo)
+      console.log(arquivo.mimetype)
 
       let extension = '.pdf'
 
       switch (arquivo.mimetype) {
+        case 'video/mp4': {
+          extension = '.mp4'; 
+          break;
+        }
         case 'image/jpeg': {
           extension = '.jpeg'
           break
@@ -68,10 +72,7 @@ class ArquivoController implements IController {
           extension = '.xlsx'
           break
         }
-        case 'video/mp4': {
-          extension = '.mp4';
-          break;
-        }
+       
         default: {
           return res.status(401).json({
             message: 'arquivo não suportado'

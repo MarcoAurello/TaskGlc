@@ -9,6 +9,7 @@ import {
 import TaskItemDoChamado from "../components/task-item-do-chamado";
 import PerfilUtils from "../utils/perfil.utils";
 import MessageIcon from '@mui/icons-material/Message';
+import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
 
 
 import PersonIcon from '@mui/icons-material/Person';
@@ -427,6 +428,16 @@ const AtividadeForm = (props) => {
    
   }, [fkUnidade, area])
 
+  // useEffect(() => {
+  
+
+  //   if (arquivo) {
+  //     alert(JSON.stringify(arquivo))
+
+  //   }
+  // }, [arquivo])
+
+
 
   useEffect(() => {
     function carregarArea() {
@@ -765,6 +776,7 @@ const AtividadeForm = (props) => {
 
   const enviarArquivo = (e) => {
     setArquivo(e)
+    // alert(JSON.stringify(e))
     const form = new FormData()
     form.append('arquivo', e)
 
@@ -967,6 +979,7 @@ const AtividadeForm = (props) => {
 
             {listaDeArquivosEnviados.map((item, key) => <b style={{ color: 'blue', fontSize: 11 }}>{item.nomeApresentacao + ' Adicionado'}</b>)}
             <hr></hr>
+            {/* Enviar video<OndemandVideoIcon/> */}
 
             {/* 
             classificarChamado.map((classificacao, key) => <option name={classificacao.nome} value={classificacao.id} >
