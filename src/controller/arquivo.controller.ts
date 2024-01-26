@@ -154,6 +154,7 @@ class ArquivoController implements IController {
 // }
 
 async createMp4(req: any, res: Response, next: NextFunction): Promise<any> {
+  console.log('11111')
   try {
       // Verifica se há arquivos enviados
       if (!req.files || !req.files.video) {
@@ -172,22 +173,37 @@ async createMp4(req: any, res: Response, next: NextFunction): Promise<any> {
       const nomeVideo = `${hash.generate(`${video.name}${new Date().toLocaleString()}`)}.mp4`;
 
       // Move o vídeo para o diretório de uploads
-      await video.mv(`${diretorioVideos}${nomeVideo}`);
+      // await video.mv(`${diretorioVideos}${nomeVideo}`);
 
-      // Salva o registro do vídeo no banco de dados
-      const registro = await Arquivo.create({
-          nome: nomeVideo,
-          nomeApresentacao: video.name,
-          caminho: diretorioVideos + nomeVideo
-      });
+      video.mv(
+        `${path.join(__dirname, diretorioVideos)}${nomeVideo}`,
+        async (err) => {
+          if (err) {
+            res.status(401).json({ message: err })
+          }
 
-      return res.status(200).json({ data: registro, message: 'Upload do vídeo realizado com sucesso.' });
+          const registro = await Arquivo.create({
+            nome: nomeVideo,
+            nomeApresentacao: video.name,
+            caminho: diretorioVideos + nomeVideo
+        });
 
-  } catch (err) {
-      console.error(err);
-      return res.status(500).json({ message: 'Ocorreu um erro durante o processamento da requisição.' });
+          return res
+            .status(200)
+            .json({ data: registro, message: 'Upload realizado com sucesso.' })
+        }
+      )
+    } catch (err) {
+      console.log(err)
+      if (typeof err.errors !== 'undefined') {
+        res.status(401).json({ message: err.errors[0].message })
+      } else if (typeof err.message !== 'undefined') {
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
+      }
+    }
   }
-}
 
 
 
