@@ -154,18 +154,24 @@ class ArquivoController implements IController {
 // }
 
 async createMp4(req: any, res: Response, next: NextFunction): Promise<any> {
-  console.log('11111')
+  console.log('Iniciando a função createMp4...')
   try {
-      // Verifica se há arquivos enviados
+    console.log('Verificando se há arquivos enviados...');
+   
       if (!req.files || !req.files.video) {
-          return res.status(400).json({ message: 'Nenhum arquivo de vídeo foi enviado.' });
+        console.log('Nenhum arquivo de vídeo foi enviado.');
+       
+        return res.status(400).json({ message: 'Nenhum arquivo de vídeo foi enviado.' });
       }
 
       const video = req.files.video;
       const diretorioVideos = './uploads';
 
       // Verifica se o arquivo é um vídeo MP4
+      console.log('Verificando o mimetype do vídeo...');
       if (video.mimetype !== 'video/mp4') {
+        console.log('Formato de arquivo não suportado. Envie um vídeo no formato MP4.');
+     
           return res.status(400).json({ message: 'Formato de arquivo não suportado. Envie um vídeo no formato MP4.' });
       }
 
@@ -174,7 +180,9 @@ async createMp4(req: any, res: Response, next: NextFunction): Promise<any> {
 
       // Move o vídeo para o diretório de uploads
       // await video.mv(`${diretorioVideos}${nomeVideo}`);
-
+      
+      console.log('Movendo o vídeo para o diretório de uploads...');
+    
       video.mv(
         `${path.join(__dirname, diretorioVideos)}${nomeVideo}`,
         async (err) => {
@@ -182,18 +190,24 @@ async createMp4(req: any, res: Response, next: NextFunction): Promise<any> {
             res.status(401).json({ message: err })
           }
 
+          console.log('Salvando o registro do vídeo no banco de dados...');
+    
           const registro = await Arquivo.create({
             nome: nomeVideo,
             nomeApresentacao: video.name,
             caminho: diretorioVideos + nomeVideo
         });
 
-          return res
+        console.log('Upload do vídeo realizado com sucesso.');
+     
+        return res
             .status(200)
             .json({ data: registro, message: 'Upload realizado com sucesso.' })
         }
       )
     } catch (err) {
+      console.error('Ocorreu um erro durante o processamento da requisição:', err);
+   
       console.log(err)
       if (typeof err.errors !== 'undefined') {
         res.status(401).json({ message: err.errors[0].message })

@@ -766,7 +766,58 @@ const AtividadeForm = (props) => {
     });
   };
 
-  const sendFileMp4 = (method, url, formData) => {
+  function baixar(item) {
+    window.location.href = `${process.env.REACT_APP_DOMAIN_API}/api/arquivo/${item}`
+
+    // window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${idChamado}/edit`
+
+  }
+
+
+  const enviarArquivo = (e) => {
+    setArquivo(e)
+    // alert(JSON.stringify(e))
+    const form = new FormData()
+    form.append('arquivo', e)
+
+    sendFile("POST", `${process.env.REACT_APP_DOMAIN_API}/api/arquivo`, form)
+      .then(response => {
+        const { data } = response
+        setOpenLoadingDialog(true)
+
+        setListaDeArquivosEnviados([...listaDeArquivosEnviados, data])
+        setCaminho(data.caminho)
+        setOpenLoadingDialog(false)
+        // alert(JSON.stringify(listaDeArquivosEnviados))
+
+        // alert(JSON.stringify(response))
+      })
+      .catch(err => {
+        alert(JSON.stringify(err))
+      })
+  }
+
+  const enviarVideoMp4 = (e) => {
+    const video = e.target.files[0]; // Obtém o arquivo de vídeo selecionado
+    const form = new FormData();
+    form.append('video', video); // Adiciona o arquivo de vídeo ao FormData
+
+    sendVideoFile("POST", `${process.env.REACT_APP_DOMAIN_API}/api/arquivo/mp4`, form)
+        .then(response => {
+            const { data } = response;
+            setOpenLoadingDialog(true);
+            setListaDeArquivosEnviados([...listaDeArquivosEnviados, data]);
+            setCaminho(data.caminho);
+            setOpenLoadingDialog(false);
+        })
+        .catch(err => {
+            alert('Ocorreu um problema ao enviar o vídeo. Por favor, tente novamente.');
+            console.error('Erro:', err);
+        });
+}
+
+
+const sendVideoFile = (method, url, formData) => {
     const token = getCookie('_token_task_manager');
 
     return new Promise(function (resolve, reject) {
@@ -789,58 +840,6 @@ const AtividadeForm = (props) => {
         req.send(formData);
     });
 };
-
-
-  function baixar(item) {
-    window.location.href = `${process.env.REACT_APP_DOMAIN_API}/api/arquivo/${item}`
-
-    // window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${idChamado}/edit`
-
-  }
-
-
-  const enviarArquivo = (e) => {
-    setArquivo(e)
-    // alert(JSON.stringify(e))
-    const form = new FormData()
-    form.append('arquivo', e)
-
-    sendFile("POST", `${process.env.REACT_APP_DOMAIN_API}/api/arquivo/`, form)
-      .then(response => {
-        const { data } = response
-        setOpenLoadingDialog(true)
-
-        setListaDeArquivosEnviados([...listaDeArquivosEnviados, data])
-        setCaminho(data.caminho)
-        setOpenLoadingDialog(false)
-        // alert(JSON.stringify(listaDeArquivosEnviados))
-
-        // alert(JSON.stringify(response))
-      })
-      .catch(err => {
-        alert(JSON.stringify(err))
-      })
-  }
-
-  const enviarArquivoMp4 = (e) => {
-    const video = e.target.files[0]; // Obtém o arquivo selecionado
-    const form = new FormData();
-    form.append('video', video); // Adiciona o arquivo ao FormData
-
-    sendFileMp4("POST", `${process.env.REACT_APP_DOMAIN_API}/api/arquivo/mp4`, form)
-      .then(response => {
-        const { data } = response;
-        setOpenLoadingDialog(true);
-        setListaDeArquivosEnviados([...listaDeArquivosEnviados, data]);
-        setCaminho(data.caminho);
-        setOpenLoadingDialog(false);
-      })
-      .catch(err => {
-        alert(JSON.stringify(err));
-      });
-}
-
-
 
 
 
@@ -1022,9 +1021,11 @@ const AtividadeForm = (props) => {
             </div> */}
             {/* <UploadButton></UploadButton> */}
             <input type={"file"} accept="image/*, video/*" enctype="multipart/form-data" onChange={(e) => enviarArquivo(e.target.files[0])} />
-           <p></p>
-            <input type={"file"} accept="video/mp4" enctype="multipart/form-data" onChange={(e) => enviarArquivoMp4(e)} />
 
+            <p></p>
+            <input type="file" accept="video/mp4" onChange={(e) => enviarVideoMp4(e)} />
+
+            
 
             {listaDeArquivosEnviados.map((item, key) => <b style={{ color: 'blue', fontSize: 11 }}>{item.nomeApresentacao + ' Adicionado'}</b>)}
             <hr></hr>
