@@ -107,7 +107,7 @@ const AtividadeForm = (props) => {
   const [caminho, setCaminho] = useState()
   const [openDialogFile, setOpenDialogFile] = useState(false)
   const [openFile, setOpenFile] = useState('')
-  const[sub, setSub]= useState('')
+  const [sub, setSub] = useState('')
 
 
 
@@ -242,7 +242,7 @@ const AtividadeForm = (props) => {
           Authorization: `Bearer ${token}`,
         },
       };
-  
+
       fetch(
         `${process.env.REACT_APP_DOMAIN_API}/api/atividade/recebidasSetor/`,
         params
@@ -253,9 +253,9 @@ const AtividadeForm = (props) => {
           if (status === 401) {
           } else if (status === 200) {
             setOpenLoadingDialog(false);
-  
+
             // alert(JSON.stringify(data.data))
-  
+
             setMeuSetor(data.data);
           }
         });
@@ -270,7 +270,7 @@ const AtividadeForm = (props) => {
           Authorization: `Bearer ${token}`,
         },
       };
-  
+
       fetch(
         `${process.env.REACT_APP_DOMAIN_API}/api/atividade/recebidasSetorCount/`,
         params
@@ -281,15 +281,15 @@ const AtividadeForm = (props) => {
           if (status === 401) {
           } else if (status === 200) {
             setOpenLoadingDialog(false);
-  
+
             // alert(JSON.stringify(data.data))
-  
+
             setMeuSetorCount(data.data);
           }
         });
       });
     }
-  
+
 
     function carregarArquivo() {
       // setOpenLoadingDialog(true)
@@ -425,17 +425,17 @@ const AtividadeForm = (props) => {
     //   alert(JSON.stringify(meuSetor))
     // }
 
-   
+
   }, [fkUnidade, area])
 
-  // useEffect(() => {
-  
+  useEffect(() => {
 
-  //   if (arquivo) {
-  //     alert(JSON.stringify(arquivo))
 
-  //   }
-  // }, [arquivo])
+    if (arquivoDoChamado) {
+      alert(JSON.stringify(arquivoDoChamado))
+
+    }
+  }, [arquivoDoChamado])
 
 
 
@@ -557,7 +557,7 @@ const AtividadeForm = (props) => {
     setOpenLoadingDialog(true)
     setBotaoDesabilitado(true);
     // setSetorSolicitante(props.logged.Area.Unidade.nome)
-   
+
     const token = getCookie('_token_task_manager')
     const params = {
       method: 'POST',
@@ -803,43 +803,43 @@ const AtividadeForm = (props) => {
     form.append('video', video); // Adiciona o arquivo de vídeo ao FormData
 
     sendVideoFile("POST", `${process.env.REACT_APP_DOMAIN_API}/api/arquivo/mp4`, form)
-        .then(response => {
-            const { data } = response;
-            setOpenLoadingDialog(true);
-            setListaDeArquivosEnviados([...listaDeArquivosEnviados, data]);
-            setCaminho(data.caminho);
-            setOpenLoadingDialog(false);
-        })
-        .catch(err => {
-            alert('Ocorreu um problema ao enviar o vídeo. Por favor, tente novamente.');
-            console.error('Erro:', err);
-        });
-}
+      .then(response => {
+        const { data } = response;
+        setOpenLoadingDialog(true);
+        setListaDeArquivosEnviados([...listaDeArquivosEnviados, data]);
+        setCaminho(data.caminho);
+        setOpenLoadingDialog(false);
+      })
+      .catch(err => {
+        alert('Ocorreu um problema ao enviar o vídeo. Por favor, tente novamente.');
+        console.error('Erro:', err);
+      });
+  }
 
 
-const sendVideoFile = (method, url, formData) => {
+  const sendVideoFile = (method, url, formData) => {
     const token = getCookie('_token_task_manager');
 
     return new Promise(function (resolve, reject) {
-        let req = new XMLHttpRequest();
-        req.open(method, url);
-        req.setRequestHeader("Authorization", `Bearer ${token}`);
+      let req = new XMLHttpRequest();
+      req.open(method, url);
+      req.setRequestHeader("Authorization", `Bearer ${token}`);
 
-        req.addEventListener(
-            "load",
-            () => {
-                if (req.status === 200) {
-                    resolve(JSON.parse(req.responseText));
-                } else {
-                    reject(JSON.parse(req.responseText));
-                }
-            },
-            false
-        );
+      req.addEventListener(
+        "load",
+        () => {
+          if (req.status === 200) {
+            resolve(JSON.parse(req.responseText));
+          } else {
+            reject(JSON.parse(req.responseText));
+          }
+        },
+        false
+      );
 
-        req.send(formData);
+      req.send(formData);
     });
-};
+  };
 
 
 
@@ -1025,7 +1025,7 @@ const sendVideoFile = (method, url, formData) => {
             <p></p>
             <input type="file" accept="video/mp4" onChange={(e) => enviarVideoMp4(e)} />
 
-            
+
 
             {listaDeArquivosEnviados.map((item, key) => <b style={{ color: 'blue', fontSize: 11 }}>{item.nomeApresentacao + ' Adicionado'}</b>)}
             <hr></hr>
@@ -1038,9 +1038,9 @@ const sendVideoFile = (method, url, formData) => {
             <div style={{ flex: 1, display: 'flex', flexDirection: 'row', alignSelf: "self-start" }}>
               {/* <Button variant="outlined" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/area/`}>Voltar</Button> */}
               <div style={{ flex: 1 }}></div>
-              <Button variant="contained" 
-               disabled={botaoDesabilitado}
-              onClick={onSave}>{'Criar'}</Button>
+              <Button variant="contained"
+                disabled={botaoDesabilitado}
+                onClick={onSave}>{'Criar'}</Button>
             </div>
             {/* <TextField
               type="hidden"
@@ -1167,10 +1167,10 @@ const sendVideoFile = (method, url, formData) => {
               <div style={{ display: 'flex', flexDirection: 'colrowumn' }}>
                 <div style={{ display: 'flex', flexDirection: 'row' }}>
                   {
-                    item.Usuario?
-                    <b style={{ fontSize: 10, marginRight: 5 }}>{item.Usuario.nome}</b>
-                    :
-                    ''
+                    item.Usuario ?
+                      <b style={{ fontSize: 10, marginRight: 5 }}>{item.Usuario.nome}</b>
+                      :
+                      ''
                   }
                   <div style={{ flex: 1 }}></div>
                   <b style={{ fontSize: 10 }}>{new Date(item.createdAt).toLocaleString()}</b>
@@ -1277,34 +1277,34 @@ const sendVideoFile = (method, url, formData) => {
             {valueUnidade === 'GTI' ?
               <div>
 
-              
-                <select style={{ fontSize: 14 }} onChange={e => setFKUsuarioExecutor(e.target.value)}>
-               
-               <option style={{ fontWeight: 'bold', fontSize:'16px' }}>Sistemas - Desenvolvimento</option>
-                {
-                  usuarioExecutor
-                    .filter(user => user.Area.nome === 'Sistemas - Desenvolvimento')
-                    .map((user, key) => (
-                      <option name={user.nome} value={user.id}>
-                        {user.nome}-{meuSetorCount.map(i => i.fkUsuarioExecutor).filter(i => user.id === i ).length}  Chamados
-                      </option>
-                    ))
-                }
-                <option  style={{ fontWeight: 'bold', fontSize:'16px' }}>Suporte e Infraestrutura</option>
-                 {
-                  usuarioExecutor
-                    .filter(user => user.Area.nome === 'Suporte e Infraestrutura')
-                    .map((user, key) => (
-                      <option name={user.nome} value={user.id}>
-                         {user.nome}-{meuSetorCount.map(i => i.fkUsuarioExecutor).filter(i => user.id === i ).length} Chamados
-                      </option>
-                    ))
-                }
 
-                
-              </select>
-                
-              
+                <select style={{ fontSize: 14 }} onChange={e => setFKUsuarioExecutor(e.target.value)}>
+
+                  <option style={{ fontWeight: 'bold', fontSize: '16px' }}>Sistemas - Desenvolvimento</option>
+                  {
+                    usuarioExecutor
+                      .filter(user => user.Area.nome === 'Sistemas - Desenvolvimento')
+                      .map((user, key) => (
+                        <option name={user.nome} value={user.id}>
+                          {user.nome}-{meuSetorCount.map(i => i.fkUsuarioExecutor).filter(i => user.id === i).length}  Chamados
+                        </option>
+                      ))
+                  }
+                  <option style={{ fontWeight: 'bold', fontSize: '16px' }}>Suporte e Infraestrutura</option>
+                  {
+                    usuarioExecutor
+                      .filter(user => user.Area.nome === 'Suporte e Infraestrutura')
+                      .map((user, key) => (
+                        <option name={user.nome} value={user.id}>
+                          {user.nome}-{meuSetorCount.map(i => i.fkUsuarioExecutor).filter(i => user.id === i).length} Chamados
+                        </option>
+                      ))
+                  }
+
+
+                </select>
+
+
 
 
 
@@ -1455,6 +1455,9 @@ const sendVideoFile = (method, url, formData) => {
             borderRadius: '5px',
             backgroundColor: '#176DD3'
           }} onChange={(e) => enviarArquivo(e.target.files[0])} /><br></br>
+
+          <input type="file" accept="video/mp4" onChange={(e) => enviarVideoMp4(e)} />
+
           {listaDeArquivosEnviados.map((item, key) => <b style={{ color: 'blue', fontSize: 11 }}>{item.nomeApresentacao + ' Adicionado'}</b>)}
           <hr></hr>
 

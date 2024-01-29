@@ -11,7 +11,7 @@ const { promisify } = require('util')
 const fs = require('fs')
 
 class ArquivoController implements IController {
-  async all (req: Request, res: Response, next: NextFunction): Promise<any> {
+  async all(req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
       const { fkAtividade } = req.query
 
@@ -32,7 +32,7 @@ class ArquivoController implements IController {
     }
   }
 
-  async create (req: any, res: Response, next: NextFunction): Promise<any> {
+  async create(req: any, res: Response, next: NextFunction): Promise<any> {
     try {
       if (!req.files || Object.keys(req.files).length === 0) {
         return res
@@ -48,7 +48,7 @@ class ArquivoController implements IController {
       let extension = '.pdf'
 
       switch (arquivo.mimetype) {
-        
+
         case 'image/jpeg': {
           extension = '.jpeg'
           break
@@ -69,7 +69,7 @@ class ArquivoController implements IController {
           extension = '.xlsx'
           break
         }
-       
+
         default: {
           return res.status(401).json({
             message: 'arquivo não suportado'
@@ -111,56 +111,56 @@ class ArquivoController implements IController {
     }
   }
 
-//   async createMp4(req: any, res: Response, next: NextFunction): Promise<any> {
-//     try {
-//         // Verifica se há arquivos enviados
-//         if (!req.files || !req.files.video) {
-//             return res.status(400).json({ message: 'Nenhum arquivo de vídeo foi enviado.22' });
-//         }
+  //   async createMp4(req: any, res: Response, next: NextFunction): Promise<any> {
+  //     try {
+  //         // Verifica se há arquivos enviados
+  //         if (!req.files || !req.files.video) {
+  //             return res.status(400).json({ message: 'Nenhum arquivo de vídeo foi enviado.22' });
+  //         }
 
-//         const video = req.files.video;
-//         const diretorioVideos = './uploads/videos/';
+  //         const video = req.files.video;
+  //         const diretorioVideos = './uploads/videos/';
 
-//         // Verifica se o arquivo é um vídeo MP4
-//         if (video.mimetype !== 'video/mp4') {
-//             return res.status(400).json({ message: 'Formato de arquivo não suportado. Envie um vídeo no formato MP4.' });
-//         }
+  //         // Verifica se o arquivo é um vídeo MP4
+  //         if (video.mimetype !== 'video/mp4') {
+  //             return res.status(400).json({ message: 'Formato de arquivo não suportado. Envie um vídeo no formato MP4.' });
+  //         }
 
-//         // Gera um nome único para o vídeo
-//         const nomeVideo = `${hash.generate(`${video.name}${new Date().toLocaleString()}`)}.mp4`;
+  //         // Gera um nome único para o vídeo
+  //         const nomeVideo = `${hash.generate(`${video.name}${new Date().toLocaleString()}`)}.mp4`;
 
-//         // Move o vídeo para o diretório de uploads
-//         await video.mv(`${diretorioVideos}${nomeVideo}`);
+  //         // Move o vídeo para o diretório de uploads
+  //         await video.mv(`${diretorioVideos}${nomeVideo}`);
 
-//         // Salva o registro do vídeo no banco de dados
-//         const registro = await Arquivo.create({
-//             nome: nomeVideo,
-//             nomeApresentacao: video.name,
-//             caminho: diretorioVideos + nomeVideo
-//         });
+  //         // Salva o registro do vídeo no banco de dados
+  //         const registro = await Arquivo.create({
+  //             nome: nomeVideo,
+  //             nomeApresentacao: video.name,
+  //             caminho: diretorioVideos + nomeVideo
+  //         });
 
-//         return res.status(200).json({ data: registro, message: 'Upload do vídeo realizado com sucesso.' });
+  //         return res.status(200).json({ data: registro, message: 'Upload do vídeo realizado com sucesso.' });
 
-//     } catch (err) {
-//         console.error(err);
-//         if (typeof err.errors !== 'undefined') {
-//             res.status(401).json({ message: err.errors[0].message });
-//         } else if (typeof err.message !== 'undefined') {
-//             res.status(401).json({ message: err.message });
-//         } else {
-//             res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' });
-//         }
-//     }
-// }
+  //     } catch (err) {
+  //         console.error(err);
+  //         if (typeof err.errors !== 'undefined') {
+  //             res.status(401).json({ message: err.errors[0].message });
+  //         } else if (typeof err.message !== 'undefined') {
+  //             res.status(401).json({ message: err.message });
+  //         } else {
+  //             res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' });
+  //         }
+  //     }
+  // }
 
-async createMp4(req: any, res: Response, next: NextFunction): Promise<any> {
-  console.log('Iniciando a função createMp4...')
-  try {
-    console.log('Verificando se há arquivos enviados...');
-   
+  async createMp4(req: any, res: Response, next: NextFunction): Promise<any> {
+    console.log('Iniciando a função createMp4...')
+    try {
+      console.log('Verificando se há arquivos enviados...');
+
       if (!req.files || !req.files.video) {
         console.log('Nenhum arquivo de vídeo foi enviado.');
-       
+
         return res.status(400).json({ message: 'Nenhum arquivo de vídeo foi enviado.' });
       }
 
@@ -171,8 +171,8 @@ async createMp4(req: any, res: Response, next: NextFunction): Promise<any> {
       console.log('Verificando o mimetype do vídeo...');
       if (video.mimetype !== 'video/mp4') {
         console.log('Formato de arquivo não suportado. Envie um vídeo no formato MP4.');
-     
-          return res.status(400).json({ message: 'Formato de arquivo não suportado. Envie um vídeo no formato MP4.' });
+
+        return res.status(400).json({ message: 'Formato de arquivo não suportado. Envie um vídeo no formato MP4.' });
       }
 
       // Gera um nome único para o vídeo
@@ -180,35 +180,41 @@ async createMp4(req: any, res: Response, next: NextFunction): Promise<any> {
 
       // Move o vídeo para o diretório de uploads
       // await video.mv(`${diretorioVideos}${nomeVideo}`);
-      
+
       console.log('Movendo o vídeo para o diretório de uploads...');
-    
+
       video.mv(
         `${path.join(__dirname, diretorioVideos)}/${nomeVideo}`,
         async (err) => {
+          try {
             if (err) {
-                res.status(401).json({ message: err })
+              throw err; // Lança o erro para o bloco catch mais externo
             }
-    
+      
             console.log('Salvando o registro do vídeo no banco de dados...');
-    
+      
             const registro = await Arquivo.create({
-                nome: nomeVideo,
-                nomeApresentacao: video.name,
-                caminho: `${diretorioVideos}/${nomeVideo}`
+              nome: nomeVideo,
+              nomeApresentacao: video.name,
+              caminho: `${diretorioVideos}/${nomeVideo}`
             });
-    
+      
             console.log('Upload do vídeo realizado com sucesso.');
-    
+      
             return res
-                .status(200)
-                .json({ data: registro, message: 'Upload realizado com sucesso.' })
+              .status(200)
+              .json({ data: registro, message: 'Upload realizado com sucesso.' });
+          } catch (err) {
+            console.error('Ocorreu um erro durante o upload do vídeo:', err);
+            return res.status(500).json({ message: 'Erro durante o upload do vídeo.' });
+          }
         }
-    )
-    
+      );
+      
+
     } catch (err) {
       console.error('Ocorreu um erro durante o processamento da requisição:', err);
-   
+
       console.log(err)
       if (typeof err.errors !== 'undefined') {
         res.status(401).json({ message: err.errors[0].message })
@@ -223,7 +229,7 @@ async createMp4(req: any, res: Response, next: NextFunction): Promise<any> {
 
 
 
-  async find (req: Request, res: Response, next: NextFunction): Promise<any> {
+  async find(req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
       const { id } = req.params
 
@@ -246,7 +252,7 @@ async createMp4(req: any, res: Response, next: NextFunction): Promise<any> {
     }
   }
 
-  async update (req: Request, res: Response, next: NextFunction): Promise<any> {
+  async update(req: Request, res: Response, next: NextFunction): Promise<any> {
     // try{
     //   const {fkAtividade} = req.params
     //   await Atividade.update(
@@ -273,11 +279,11 @@ async createMp4(req: any, res: Response, next: NextFunction): Promise<any> {
     throw new Error('Method not implemented.')
   }
 
-  async delete (req: Request, res: Response, next: NextFunction): Promise<any> {
+  async delete(req: Request, res: Response, next: NextFunction): Promise<any> {
     throw new Error('Method not implemented.')
   }
 
-  async search (req: Request, res: Response, next: NextFunction): Promise<any> {
+  async search(req: Request, res: Response, next: NextFunction): Promise<any> {
     throw new Error('Method not implemented.')
   }
 }
