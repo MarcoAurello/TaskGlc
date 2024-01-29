@@ -428,14 +428,14 @@ const AtividadeForm = (props) => {
 
   }, [fkUnidade, area])
 
-  useEffect(() => {
+  // useEffect(() => {
 
 
-    if (arquivoDoChamado) {
-      alert(JSON.stringify(arquivoDoChamado))
+  //   if (arquivoDoChamado) {
+  //     alert(JSON.stringify(arquivoDoChamado))
 
-    }
-  }, [arquivoDoChamado])
+  //   }
+  // }, [arquivoDoChamado])
 
 
 
