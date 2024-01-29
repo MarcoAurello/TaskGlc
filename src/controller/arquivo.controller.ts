@@ -184,27 +184,28 @@ async createMp4(req: any, res: Response, next: NextFunction): Promise<any> {
       console.log('Movendo o vídeo para o diretório de uploads...');
     
       video.mv(
-        `${path.join(__dirname, diretorioVideos)}${nomeVideo}`,
+        `${path.join(__dirname, diretorioVideos)}/${nomeVideo}`,
         async (err) => {
-          if (err) {
-            res.status(401).json({ message: err })
-          }
-
-          console.log('Salvando o registro do vídeo no banco de dados...');
+            if (err) {
+                res.status(401).json({ message: err })
+            }
     
-          const registro = await Arquivo.create({
-            nome: nomeVideo,
-            nomeApresentacao: video.name,
-            caminho: diretorioVideos + nomeVideo
-        });
-
-        console.log('Upload do vídeo realizado com sucesso.');
-     
-        return res
-            .status(200)
-            .json({ data: registro, message: 'Upload realizado com sucesso.' })
+            console.log('Salvando o registro do vídeo no banco de dados...');
+    
+            const registro = await Arquivo.create({
+                nome: nomeVideo,
+                nomeApresentacao: video.name,
+                caminho: `${diretorioVideos}/${nomeVideo}`
+            });
+    
+            console.log('Upload do vídeo realizado com sucesso.');
+    
+            return res
+                .status(200)
+                .json({ data: registro, message: 'Upload realizado com sucesso.' })
         }
-      )
+    )
+    
     } catch (err) {
       console.error('Ocorreu um erro durante o processamento da requisição:', err);
    
