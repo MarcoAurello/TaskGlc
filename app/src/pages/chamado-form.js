@@ -1023,7 +1023,7 @@ const AtividadeForm = (props) => {
             <input type={"file"} accept="image/*, video/*" enctype="multipart/form-data" onChange={(e) => enviarArquivo(e.target.files[0])} />
 
             <p></p>
-            <input type="file" accept="video/mp4" onChange={(e) => enviarVideoMp4(e)} />
+            {/* <input type="file" accept="video/mp4" onChange={(e) => enviarVideoMp4(e)} /> */}
 
 
 
@@ -1456,7 +1456,7 @@ const AtividadeForm = (props) => {
             backgroundColor: '#176DD3'
           }} onChange={(e) => enviarArquivo(e.target.files[0])} /><br></br>
 
-          <input type="file" accept="video/mp4" onChange={(e) => enviarVideoMp4(e)} />
+          {/* <input type="file" accept="video/mp4" onChange={(e) => enviarVideoMp4(e)} /> */}
 
           {listaDeArquivosEnviados.map((item, key) => <b style={{ color: 'blue', fontSize: 11 }}>{item.nomeApresentacao + ' Adicionado'}</b>)}
           <hr></hr>
