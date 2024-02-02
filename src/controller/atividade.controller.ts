@@ -250,21 +250,24 @@ class AtividadeController implements IController {
   if (registro && registro[0] && registro[0].length > 0) {
       console.log("Registros encontrados:", registro[0]);
       // Faça algo com os registros encontrados
-      res.status(200).json({ message: 'Termo de Comproimisso validado, abra o chamado' });
+      
+      const retorno = { message: 'Termo de Comproimisso validado, abra o chamado'};
+      res.status(200).json(retorno);
+
   } else {
-      console.log("Nenhum registro encontrado.");
-      console.log("Quantidade de registros retornados:", registro[1]);
-      // Não foram encontrados registros, trate esse caso
-      res.status(200).json({ message: 'Termo de compromisso do funcionário não está validado, funcionario não pode acessar os sistemas' });
-  }
-  
-    }catch (err) {
-      console.log(err);
-      res.status(401).json({ message: err.errors[0].message });
+    const retorno = { message: 'Termo de Comproimisso validado, abra o chamado'}; 
+    res.status(200).json(retorno);
     }
   }
+    
+  catch (err) {
+    // Trate os erros adequadamente
+    console.error(err);
+    res.status(500).json({ error: 'Erro ao processar a solicitação' });
+}
+  }
 
-  
+
   async update(req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
       const { id } = req.params
