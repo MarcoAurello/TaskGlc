@@ -263,6 +263,8 @@ class AtividadeController implements IController {
       res.status(401).json({ message: err.errors[0].message });
     }
   }
+
+  
   async update(req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
       const { id } = req.params
