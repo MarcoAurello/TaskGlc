@@ -13,18 +13,15 @@ import Arquivo from '../model/arquivo.model'
 import Unidade from '../model/unidade.model'
 import PerfilUtils from '../utils/perfil.utils'
 import emailUtils from '../utils/email.utils'
-import { json } from 'body-parser'
 const multer = require('multer')
 const { Op } = require('sequelize')
 
 class AtividadeController implements IController {
-  async all(req: Request, res: Response, next: NextFunction): Promise<any> {
+  async all (req: Request, res: Response, next: NextFunction): Promise<any> {
     throw new Error('Method not implemented.')
   }
 
-
-
-  async create(req: any, res: Response, next: NextFunction): Promise<any> {
+  async create (req: any, res: Response, next: NextFunction): Promise<any> {
     try {
       const {
         fkUnidade,
@@ -50,20 +47,20 @@ class AtividadeController implements IController {
           .status(401)
           .json({ message: 'O campo área deve ser preenchido corretamente.' })
       }
-
+     
 
       if (!titulo) {
         return res.status(401).json({
           message: 'O campo título deve ser preenchido corretamente.'
         })
       }
-
+     
       if (!conteudo) {
         return res.status(401).json({
           message: 'O campo conteudo deve ser preenchido corretamente.'
         })
       }
-
+     
 
       const classificacao = await Classificacao.findOne({
         where: { nome: 'Não Definido' }
@@ -98,10 +95,9 @@ class AtividadeController implements IController {
       })
 
       const atividadeSalva = await Atividade.findOne({
-        where: {
-          titulo,
-          protocolo: proc
-        }
+        where: { titulo,
+        protocolo: proc 
+      }
       })
 
       listaDeArquivosEnviados.map((item) => {
@@ -119,16 +115,16 @@ class AtividadeController implements IController {
         where: { fkArea }
       })
 
-      console.log(JSON.stringify("teste" + funcionarioDaArea))
+      console.log(JSON.stringify("teste"+funcionarioDaArea))
 
-
+      
       const gti = await Unidade.findOne({
-        where: { nome: 'GTI' }
+        where: { nome :'GTI' }
       })
       // console.log('jjjjjjjjjj' + fkUnidade)
       // console.log('999999999999' +JSON.stringify(gti))
 
-      if (gti?.id === fkUnidade) {
+      if(gti?.id === fkUnidade){
         const txEmail1 = `
             <b>Nova Atividade para sua área.</b><br>
 
@@ -138,21 +134,21 @@ class AtividadeController implements IController {
         <br/>
         <a href="https://www7.pe.senac.br/taskmanager/atividade/${atividadeSalva?.id}/edit">CLIQUE PARA VER.</a><p>  
         `
-        //   let destinatario: string = ''
+      //   let destinatario: string = ''
 
-        // funcionarioDaArea.forEach((usuario, index) => {
-        //   destinatario += `${usuario.email};`
-        // })
+      // funcionarioDaArea.forEach((usuario, index) => {
+      //   destinatario += `${usuario.email};`
+      // })
 
-        // console.log(`${destinatario}`)
+      // console.log(`${destinatario}`)
         await emailUtils.enviar('marciohigo@pe.senac.br', txEmail1)
         await emailUtils.enviar('gracabezerra@pe.senac.br', txEmail1)
         await emailUtils.enviar('andrejar@pe.senac.br', txEmail1)
         await emailUtils.enviar('marconunes@pe.senac.br', txEmail1)
 
-
-
-      } else {
+        
+        
+      }else{
         const txEmail = `
         <b>Nova Atividade para sua área</b><br>
 
@@ -162,18 +158,18 @@ class AtividadeController implements IController {
     <br/>
     <a href="https://www7.pe.senac.br/taskmanager/atividade/${atividadeSalva?.id}/edit">CLIQUE PARA VER</a><p>  
     `
-        let destinatario: string = ''
+    let destinatario: string = ''
 
-        funcionarioDaArea.forEach((usuario, index) => {
-          destinatario += `${usuario.email};`
-        })
+      funcionarioDaArea.forEach((usuario, index) => {
+        destinatario += `${usuario.email};`
+      })
 
-        console.log(`${destinatario}`)
-        await emailUtils.enviar(destinatario, txEmail)
+      console.log(`${destinatario}`)
+      await emailUtils.enviar(destinatario, txEmail)
 
       }
 
-
+      
 
 
       res
@@ -191,7 +187,7 @@ class AtividadeController implements IController {
     }
   }
 
-  async find(req: Request, res: Response, next: NextFunction): Promise<any> {
+  async find (req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
       const { id } = req.params
 
@@ -231,44 +227,7 @@ class AtividadeController implements IController {
     }
   }
 
-  async termo(req: Request, res: Response, next: NextFunction): Promise<any> {
-    try {
-      const { cpfTermo } = req.params
-
-      console.log(cpfTermo)
-      // let cpf = id.replace(/\D/g, "");
-
-      const registro = await Atividade.sequelize?.query(`
-      SELECT [cpf]
-      FROM [TermoAceite].dbo.Colaborador C
-      INNER JOIN [TermoAceite].dbo.[Timeline] TL ON C.ID = TL.idColaborador
-      WHERE TL.idStatusTimeline = '3' AND CPF = ?
-  `, {
-      replacements: [cpfTermo]
-  });
-  
-  if (registro && registro[0] && registro[0].length > 0) {
-      console.log("Registros encontrados:", registro[0]);
-      // Faça algo com os registros encontrados
-      
-      const retorno = { message: 'Termo de Comproimisso validado, abra o chamado'};
-      res.status(200).json(retorno);
-
-  } else {
-    const retorno = { message: 'Termo de Comproimisso validado, abra o chamado'}; 
-    res.status(200).json(retorno);
-    }
-  }
-    
-  catch (err) {
-    // Trate os erros adequadamente
-    console.error(err);
-    res.status(500).json({ error: 'Erro ao processar a solicitação' });
-}
-  }
-
-
-  async update(req: Request, res: Response, next: NextFunction): Promise<any> {
+  async update (req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
       const { id } = req.params
       // console.log(id)
@@ -312,7 +271,7 @@ class AtividadeController implements IController {
     }
   }
 
-  async todasAsPendencias(
+  async todasAsPendencias (
     req: any,
     res: Response,
     next: NextFunction
@@ -373,7 +332,7 @@ class AtividadeController implements IController {
     }
   }
 
-  async minhasAtividades(
+  async minhasAtividades (
     req: any,
     res: Response,
     next: NextFunction
@@ -616,7 +575,7 @@ class AtividadeController implements IController {
     }
   }
 
-  async minhasAtividadesArquivadas(
+  async minhasAtividadesArquivadas (
     req: any,
     res: Response,
     next: NextFunction
@@ -669,7 +628,7 @@ class AtividadeController implements IController {
     }
   }
 
-  async recebidasSetor(
+  async recebidasSetor (
     req: any,
     res: Response,
     next: NextFunction
@@ -717,7 +676,7 @@ class AtividadeController implements IController {
     }
   }
 
-  async recebidasSetorCount(
+  async recebidasSetorCount (
     req: any,
     res: Response,
     next: NextFunction
@@ -765,7 +724,7 @@ class AtividadeController implements IController {
     }
   }
 
-  async solicitadasSetor(
+  async solicitadasSetor (
     req: any,
     res: Response,
     next: NextFunction
@@ -810,7 +769,7 @@ class AtividadeController implements IController {
     }
   }
 
-  async delete(req: Request, res: Response, next: NextFunction): Promise<any> {
+  async delete (req: Request, res: Response, next: NextFunction): Promise<any> {
     throw new Error('Method not implemented.')
   }
 
@@ -839,7 +798,7 @@ class AtividadeController implements IController {
   //   }
   // }
 
-  async search(req: any, res: Response, next: NextFunction): Promise<any> {
+  async search (req: any, res: Response, next: NextFunction): Promise<any> {
     try {
       const { pesquisa } = req.query
 
@@ -903,7 +862,7 @@ class AtividadeController implements IController {
     }
   }
 
-  async searchRecebidos(
+  async searchRecebidos (
     req: any,
     res: Response,
     next: NextFunction
@@ -957,7 +916,7 @@ class AtividadeController implements IController {
     }
   }
 
-  async searchSolicitadas(
+  async searchSolicitadas (
     req: any,
     res: Response,
     next: NextFunction
@@ -1008,7 +967,7 @@ class AtividadeController implements IController {
     }
   }
 
-  async naoatribuida(
+  async naoatribuida (
     req: any,
     res: Response,
     next: NextFunction
@@ -1059,7 +1018,7 @@ class AtividadeController implements IController {
     }
   }
 
-  async atividadesRecebidas(
+  async atividadesRecebidas (
     req: any,
     res: Response,
     next: NextFunction
@@ -1105,7 +1064,7 @@ class AtividadeController implements IController {
     }
   }
 
-  async chamadosAbertos(
+  async chamadosAbertos (
     req: any,
     res: Response,
     next: NextFunction
