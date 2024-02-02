@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from 'styled-components'
 import {
   Alert, Avatar, Box, Button, Checkbox, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel,
-  FormGroup, Hidden, IconButton, InputLabel, MenuItem, Select, Switch, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination,
+  FormGroup, FormLabel, Hidden, IconButton, InputLabel, MenuItem, Radio, RadioGroup, Select, Switch, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination,
   TableRow, TextField, Tooltip
 } from "@mui/material";
 
@@ -55,6 +55,8 @@ const AtividadeForm = (props) => {
   const [setorDemandante, setSetorDemandante] = useState('')
 
   const [protocolo, setProtocolo] = useState('')
+  const [openMensagens, setOpenMensagens] = useState(false)
+  const [mensagemAlert, setMensagemAlert] = useState('')
   const [status, setStatus] = useState('')
   const [valueArea, setValueArea] = useState('')
   const [valueUnidade, setValueUnidade] = useState('')
@@ -106,9 +108,10 @@ const AtividadeForm = (props) => {
   const [listaDeArquivosEnviados, setListaDeArquivosEnviados] = useState([])
   const [caminho, setCaminho] = useState()
   const [openDialogFile, setOpenDialogFile] = useState(false)
+  const [termo, setTermo] = useState(false)
   const [openFile, setOpenFile] = useState('')
   const [sub, setSub] = useState('')
-
+  const [cpfTermo, setCpfTermo] = useState('')
 
 
 
@@ -431,11 +434,11 @@ const AtividadeForm = (props) => {
   // useEffect(() => {
 
 
-  //   if (arquivoDoChamado) {
-  //     alert(JSON.stringify(arquivoDoChamado))
+  //   if (termo) {
+  //     alert(termo)
 
   //   }
-  // }, [arquivoDoChamado])
+  // }, [termo])
 
 
 
@@ -684,6 +687,96 @@ const AtividadeForm = (props) => {
 
 
             // setArea(data.data)
+
+          }
+        }).catch(err => setOpenLoadingDialog(true))
+      })
+
+  }
+
+  function isValidCPF(cpf) {
+    cpf = cpf.replace(/[^\d]/g, ''); // Remove caracteres não numéricos
+
+    // Verifica se o CPF tem 11 dígitos
+    if (cpf.length !== 11) {
+      return false;
+    }
+
+    // Verifica se todos os dígitos são iguais (ex: 000.000.000-00)
+    if (/^(\d)\1+$/.test(cpf)) {
+      return false;
+    }
+
+    // Validação dos dígitos verificadores
+    let sum = 0;
+    let remainder;
+
+    for (let i = 1; i <= 9; i++) {
+      sum += parseInt(cpf[i - 1]) * (11 - i);
+    }
+
+    remainder = (sum * 10) % 11;
+    if (remainder === 10 || remainder === parseInt(cpf[9])) {
+      sum = 0;
+      for (let i = 1; i <= 10; i++) {
+        sum += parseInt(cpf[i - 1]) * (12 - i);
+      }
+      remainder = (sum * 10) % 11;
+      return remainder === 10 || remainder === parseInt(cpf[10]);
+    }
+
+    return false;
+  }
+
+
+
+  function mensagensA(msg) {
+    setMensagemAlert(msg)
+    setOpenMensagens(true)
+  }
+
+
+  const checarTermo = () => {
+
+    const camposObrigatorios = ['cpf'];
+    if (!isValidCPF(cpfTermo)) {
+      mensagensA('CPF  Inválido')
+      setOpenLoadingDialog(false)
+      return;
+    }else{
+      checar()
+    }
+   
+  };
+
+
+  const checar = () => {
+
+    const token = getCookie('_token_task_manager')
+    const params = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        cpfTermo
+      })
+    }
+    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/termo`, params)
+      .then(response => {
+        const { status } = response
+        response.json().then(data => {
+          setOpenLoadingDialog(false)
+          if (status === 401) {
+            setMessage(data.message)
+            setOpenMessageDialog(true)
+          } else if (status === 200) {
+            // alert(JSON.stringify(data.data))
+            // alert(JSON.stringify(arquivoDoChamado))
+            // setAtividade(data.data)
+            setMessage(data.message)
+            setOpenMessageDialog(true)
 
           }
         }).catch(err => setOpenLoadingDialog(true))
@@ -1005,6 +1098,33 @@ const AtividadeForm = (props) => {
               </div>
               : ''}
 
+
+            {dep === 'GTI'
+              ?
+              <div style={{ flex: 1, marginBottom: 16 }}>
+               <tr>
+                <td style={{color:'red'}}>
+                Seu chamado e para solicitar liberação de sistema para funcionario?
+
+                </td>
+                <td>
+                <FormControl>
+                  <RadioGroup
+                   
+                    onChange={(event) => setTermo(event.target.value === 'sim')}
+                  >
+                    <FormControlLabel value="sim" control={<Radio />} label="sim" />
+                    {/* <FormControlLabel value="não" control={<Radio />} label="não" /> */}
+                  </RadioGroup>
+                </FormControl>
+
+                </td>
+               </tr>
+               
+              
+              </div>
+              : ''}
+
             <div style={{ flex: 1, marginBottom: 16 }}>
               <TextField size="small" fullWidth label="Título" variant="outlined" value={titulo} onChange={e => setTitulo(e.target.value)} />
             </div>
@@ -1203,8 +1323,8 @@ const AtividadeForm = (props) => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={atividade ? () => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${atividade.id}/edit` : () => setOpenMessageDialog(false)}>
-            OK
+        <Button onClick={() => [setOpenMessageDialog(false), setTermo(false)]}>
+            fechar
           </Button>
         </DialogActions>
       </Dialog>
@@ -1473,6 +1593,58 @@ const AtividadeForm = (props) => {
           </div>
         </DialogContent>
 
+      </Dialog>
+
+      
+      <Dialog open={termo}  >
+
+        <DialogContent>
+
+          {openStatus === false ?
+            <h2>Informe o cpf do funcionario</h2>
+            : <h4></h4>}
+
+          <div style={{ flex: 1, marginBottom: 2 }}>
+            <TextField fullWidth sx={{ m: 1 }} size='200px' label='Digite o CPF' variant="outlined" value={cpfTermo} onChange={e => setCpfTermo(e.target.value)} />
+          </div>
+          <hr></hr>
+            
+
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'row' }}>
+            {/* <Button variant="outlined" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/area/`}>Voltar</Button> */}
+            <div style={{ flex: 1 }}></div>
+            <Button variant="contained" onClick={checarTermo}>{'Checar termo de compromisso'}</Button>
+
+
+            <Button onClick={() => setTermo(false)}>sair</Button>
+
+
+          </div>
+        </DialogContent>
+
+      </Dialog>
+      <Dialog open={openMensagens}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: 350,
+            height: 200,
+            textAlign: 'center',
+          }}
+        >
+          {mensagemAlert}
+
+          <Button
+            variant="contained"
+            style={{ marginTop: '10px', textTransform: 'none', width: '60px' }}
+            onClick={() => setOpenMensagens(false)}
+          >
+            Sair
+          </Button>
+        </div>
       </Dialog>
 
 
