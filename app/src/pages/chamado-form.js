@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import {
   Alert, Avatar, Box, Button, Checkbox, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel,
   FormGroup, FormLabel, Hidden, IconButton, InputLabel, MenuItem, Radio, RadioGroup, Select, Switch, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination,
-  TableRow, TextField, Tooltip
+  TableRow, TextField, Tooltip, alertClasses
 } from "@mui/material";
 
 import TaskItemDoChamado from "../components/task-item-do-chamado";
@@ -112,6 +112,7 @@ const AtividadeForm = (props) => {
   const [openFile, setOpenFile] = useState('')
   const [sub, setSub] = useState('')
   const [cpfTermo, setCpfTermo] = useState('')
+  const[sistema,setSistema] = useState('')
 
 
 
@@ -749,40 +750,75 @@ const AtividadeForm = (props) => {
    
   };
 
-
   const checar = () => {
-
-    const token = getCookie('_token_task_manager')
+    setOpenLoadingDialog(true);
+    const token = getCookie('_token_task_manager');
     const params = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify({
-        cpfTermo
-      })
-    }
-    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/termo`, params)
-      .then(response => {
-        const { status } = response
-        response.json().then(data => {
-          setOpenLoadingDialog(false)
-          if (status === 401) {
-            setMessage(data.message)
-            setOpenMessageDialog(true)
-          } else if (status === 200) {
-            // alert(JSON.stringify(data.data))
-            // alert(JSON.stringify(arquivoDoChamado))
-            // setAtividade(data.data)
-            setMessage(data.message)
-            setOpenMessageDialog(true)
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    };
 
-          }
-        }).catch(err => setOpenLoadingDialog(true))
-      })
+    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/termo/${cpfTermo}`, params)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Ocorreu um erro ao processar a solicitação.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            setMessage(data.message);
+            if (data.message.includes('Termo de Comproimisso validado')) {
+                setOpenMessageDialog(true);
+                setConteudo("Liberação de sistemas para o cpf " + cpfTermo + " informe os sistemas:");
 
-  }
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error.message);
+            alert(error.message);
+        })
+        .finally(() => {
+            setOpenLoadingDialog(false);
+        });
+};
+
+
+
+
+  // const checar = () => {
+
+  //   const token = getCookie('_token_task_manager')
+  //   const params = {
+      
+  //     headers: {
+      
+  //       'Authorization': `Bearer ${token}`
+  //     },
+    
+  //   }
+  //   fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/termo/${cpfTermo}`, params)
+  //     .then(response => {
+  //       const { status } = response
+  //       response.json().then(data => {
+  //         setOpenLoadingDialog(false)
+  //         if (status === 401) {
+  //           setMessage(data.message)
+  //           setOpenMessageDialog(true)
+  //         } else if (status === 200) {
+  //           // alert(JSON.stringify(data.data))
+  //           // alert(JSON.stringify(arquivoDoChamado))
+  //           // setAtividade(data.data)
+  //           setMessage(data.message)
+  //           setOpenMessageDialog(true)
+
+  //         }
+  //       }).catch(err => setOpenLoadingDialog(true))
+  //     })
+
+  // }
 
 
 
@@ -1071,7 +1107,7 @@ const AtividadeForm = (props) => {
                   <MenuItem value="" onClick={() => setFkUnidade("")}>
                     <em>Nenhum</em>
                   </MenuItem>
-                  {area.map((item, index) => <MenuItem key={index} value={item.id} onClick={() => setFkArea(item.id)}>{item.nome}</MenuItem>)}
+                  {area.map((item, index) => <MenuItem key={index} value={item.id} onClick={() => [setFkArea(item.id), setSistema(item.nome)]}>{item.nome}</MenuItem>)}
                 </Select>
               </FormControl>
             </div>
@@ -1099,12 +1135,12 @@ const AtividadeForm = (props) => {
               : ''}
 
 
-            {dep === 'GTI'
+            {sistema === 'Sistemas - Desenvolvimento'
               ?
               <div style={{ flex: 1, marginBottom: 16 }}>
                <tr>
                 <td style={{color:'red'}}>
-                Seu chamado e para solicitar liberação de sistema para funcionario?
+                Seu chamado e para solicitar liberação de sistema para funcionário?
 
                 </td>
                 <td>

@@ -233,50 +233,36 @@ class AtividadeController implements IController {
 
   async termo(req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
-      const { cpfTermo } = req.body
+      const { cpfTermo } = req.params
 
       console.log(cpfTermo)
       // let cpf = id.replace(/\D/g, "");
 
-
-
-      const registro = await Atividade.sequelize?.query(`  SELECT 
-      [cpf]
-  FROM [TermoAceite].dbo.Colaborador C
-  INNER JOIN [TermoAceite].dbo.[Timeline] TL ON C.ID =TL.idColaborador
-    WHERE TL.idStatusTimeline = '3' AND CPF = ?
-
-`, {
-        replacements: [cpfTermo]
-      })
-      console.log(registro)
-      
-if (registro && registro[0] && registro[0].length > 0) {
-        console.log("aaa" + JSON.stringify(registro))
-        // A consulta retornou resultados
-        console.log('Funcionario Autorizado, prosiga com o chamado');
-        res.status(200).json({ data: registro, message: 'Termo de Comproimisso validado, abra o chamado' })
-      } else {
-        console.log("222" + JSON.stringify(registro))
-        console.log('Termo de aceite do funcionario não está validade, entre em comtato com RH');
-        res.status(200).json({ data: registro, message: 'Termo de aceite do funcionario não está validado, funcionario não pode acessar os sistemas' })
-      }
-
-
-
-
-    } catch (err) {
-      console.log(err)
-      if (typeof err.errors !== 'undefined') {
-        res.status(401).json({ message: err.errors[0].message })
-      } else if (typeof err.message !== 'undefined') {
-        res.status(401).json({ message: err.message })
-      } else {
-        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
-      }
+      const registro = await Atividade.sequelize?.query(`
+      SELECT [cpf]
+      FROM [TermoAceite].dbo.Colaborador C
+      INNER JOIN [TermoAceite].dbo.[Timeline] TL ON C.ID = TL.idColaborador
+      WHERE TL.idStatusTimeline = '3' AND CPF = ?
+  `, {
+      replacements: [cpfTermo]
+  });
+  
+  if (registro && registro[0] && registro[0].length > 0) {
+      console.log("Registros encontrados:", registro[0]);
+      // Faça algo com os registros encontrados
+      res.status(200).json({ message: 'Termo de Comproimisso validado, abra o chamado' });
+  } else {
+      console.log("Nenhum registro encontrado.");
+      console.log("Quantidade de registros retornados:", registro[1]);
+      // Não foram encontrados registros, trate esse caso
+      res.status(200).json({ message: 'Termo de compromisso do funcionário não está validado, funcionario não pode acessar os sistemas' });
+  }
+  
+    }catch (err) {
+      console.log(err);
+      res.status(401).json({ message: err.errors[0].message });
     }
   }
-
   async update(req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
       const { id } = req.params
