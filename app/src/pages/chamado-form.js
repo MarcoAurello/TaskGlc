@@ -69,6 +69,7 @@ const AtividadeForm = (props) => {
   const [createdAt, setCreatedAt] = useState('')
   const [title, setTitle] = useState('')
   const [botaoDesabilitado, setBotaoDesabilitado] = useState(false);
+  const[gti,setGti]=useState('')
 
 
   const [titulo, setTitulo] = useState('')
@@ -735,7 +736,7 @@ const AtividadeForm = (props) => {
 
     const camposObrigatorios = ['cpf'];
     if (!isValidCPF(cpfTermo)) {
-      mensagens('CPF  Inválido')
+      // mensagens1('CPF  Inválido')
       setOpenLoadingDialog(false)
       return;
     }else{
@@ -743,6 +744,11 @@ const AtividadeForm = (props) => {
     }
    
   };
+
+  // function mensagens1(msg) {
+  //   setMensagemAlert(msg)
+  //   setOpenMensagens(true)
+  // }
 
 
   const checar = () => {
@@ -1066,7 +1072,7 @@ const AtividadeForm = (props) => {
                   <MenuItem value="" onClick={() => setFkUnidade("")}>
                     <em>Nenhum</em>
                   </MenuItem>
-                  {area.map((item, index) => <MenuItem key={index} value={item.id} onClick={() => setFkArea(item.id)}>{item.nome}</MenuItem>)}
+                  {area.map((item, index) => <MenuItem key={index} value={item.id} onClick={() => [setFkArea(item.id), setGti(item.nome)]}>{item.nome}</MenuItem>)}
                 </Select>
               </FormControl>
             </div>
@@ -1094,7 +1100,7 @@ const AtividadeForm = (props) => {
               : ''}
 
 
-            {dep === 'GTI'
+            {gti === 'Sistemas - Desenvolvimento'
               ?
               <div style={{ flex: 1, marginBottom: 16 }}>
                <tr>
@@ -1596,7 +1602,7 @@ const AtividadeForm = (props) => {
         <DialogContent>
 
           {openStatus === false ?
-            <h2>Informe o cpf do funcionario</h2>
+            <h2>Informe o cpf do funcionário</h2>
             : <h4></h4>}
 
           <div style={{ flex: 1, marginBottom: 2 }}>

@@ -9,7 +9,7 @@ class AtividadeRouter {
 
   constructor () {
     this.router = Router()
-    // this.router.use(routerMiddleware.authenticated)
+    this.router.use(routerMiddleware.authenticated)
     this.routers()
   }
 
