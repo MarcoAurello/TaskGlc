@@ -772,24 +772,29 @@ const AtividadeForm = (props) => {
     
     //  alert(status)
         response.json().then(data => {
-          // alert(JSON.stringify(data.message))
+          alert('FFFFF'+JSON.stringify(data.message))
   
 
           setOpenLoadingDialog(false)
           if (status === 401) {
             alert(JSON.stringify(data.message))
+            alert('UUUUU'+JSON.stringify(data.message))
             // setMessage(data.message)
             // setOpenMessageDialog(true)
           } else if (status === 200) {
             alert(JSON.stringify(data.message))
             setTermo(false)
+            alert('XXXXXXX'+JSON.stringify(data.message))
             // alert(JSON.stringify(arquivoDoChamado))
             // setAtividade(data.data)
             // setMessage(data.message)
             // setOpenMessageDialog(true)
 
           }
-        }).catch(err => setOpenLoadingDialog(true))
+        }).catch(err => setOpenLoadingDialog(true)
+     
+
+        )
       })
 
   }
