@@ -19,6 +19,7 @@ class QuestionarioRouter {
     this.router.get('/:id', controller.find)
     this.router.post('/:id/edit', controller.update)
     this.router.post('/:id/delete', controller.delete)
+    this.router.get('/termo/:cpfTermo', controller.termo);
   }
 }
 

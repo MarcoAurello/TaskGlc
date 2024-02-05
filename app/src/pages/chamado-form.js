@@ -765,7 +765,7 @@ const AtividadeForm = (props) => {
       }
     }
   
-    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/termo/${cpfTermo}`, params)
+    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/questionario/termo/${cpfTermo}`, params)
        
     .then(response => {
       const { status} = response;
