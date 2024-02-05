@@ -460,6 +460,7 @@ const AtividadeForm = (props) => {
             } else if (status === 200) {
               setArea(data.data)
               setOpenLoadingDialog(false)
+            
 
             }
           }).catch(err => setOpenLoadingDialog(true))
@@ -732,18 +733,18 @@ const AtividadeForm = (props) => {
 
 
 
-  const checarTermo = () => {
+  // const checarTermo = () => {
 
-    const camposObrigatorios = ['cpf'];
-    if (!isValidCPF(cpfTermo)) {
-      // mensagens1('CPF  Inválido')
-      setOpenLoadingDialog(false)
-      return;
-    }else{
-      checar()
-    }
+  //   const camposObrigatorios = ['cpf'];
+  //   if (!isValidCPF(cpfTermo)) {
+  //     // mensagens1('CPF  Inválido')
+  //     setOpenLoadingDialog(false)
+  //     return;
+  //   }else{
+  //     checar()
+  //   }
    
-  };
+  // };
 
   // function mensagens1(msg) {
   //   setMensagemAlert(msg)
@@ -751,7 +752,7 @@ const AtividadeForm = (props) => {
   // }
 
 
-  function checar() {
+  function checarTermo() {
     // alert(cpfTermo)
   
   
@@ -781,6 +782,7 @@ const AtividadeForm = (props) => {
             // setOpenMessageDialog(true)
           } else if (status === 200) {
             alert(JSON.stringify(data.message))
+            setTermo(false)
             // alert(JSON.stringify(arquivoDoChamado))
             // setAtividade(data.data)
             // setMessage(data.message)

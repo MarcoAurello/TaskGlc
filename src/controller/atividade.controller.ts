@@ -1115,12 +1115,22 @@ class AtividadeController implements IController {
   
       console.log(cpfTermo);
 
-      const sql = `
-      SELECT cpf
-      FROM TermoAceite.dbo.Colaborador C
-      INNER JOIN TermoAceite.dbo.Timeline TL ON C.ID = TL.idColaborador
-      WHERE TL.idStatusTimeline = '3' AND CPF = '${cpfTermo}'
+    //   const sql = `
+    //   SELECT cpf
+    //   FROM TermoAceite.dbo.Colaborador C
+    //   INNER JOIN TermoAceite.dbo.Timeline TL ON C.ID = TL.idColaborador
+    //   WHERE TL.idStatusTimeline = '3' AND CPF = '${cpfTermo}'
+    // `;
+
+        const sql = `
+      SELECT nome
+      FROM usuario C
+    
+      WHERE C.chapa = '${cpfTermo}'
     `;
+
+
+    
     
 
       const registro = await conexao.query(sql, { type: QueryTypes.SELECT });
