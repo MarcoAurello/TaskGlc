@@ -1106,6 +1106,42 @@ class AtividadeController implements IController {
       }
     }
   }
+
+  async termo(req: Request, res: Response, next: NextFunction): Promise<any> {
+    try {
+      const { cpfTermo } = req.body; // Ajuste aqui para acessar os parâmetros da URL
+  
+      console.log(cpfTermo);
+      console.log("1212");
+  
+      const registro = await Atividade.sequelize?.query(`
+        SELECT cpf
+        FROM TermoAceite.dbo.Colaborador C
+        INNER JOIN TermoAceite.dbo.Timeline TL ON C.ID = TL.idColaborador
+        WHERE TL.idStatusTimeline = '3' AND CPF = ?
+      `, {
+        replacements: [cpfTermo]
+      });
+      
+      if (registro && registro[0] && registro[0].length > 0) {
+        console.log("Registros encontrados:", registro[0]);
+        res.status(200).json({ message: 'Termo de Compromisso validado, abra o chamado' });
+      } else {
+        console.log("Nenhum registro encontrado.");
+        console.log("Quantidade de registros retornados:", registro[1]);
+        res.status(200).json({ message: 'Termo de compromisso do funcionário não está assinado, funcionário não pode acessar os sistemas' });
+      }
+    } catch (err) {
+      console.log(err);
+      res.status(401).json({ message: err.message });
+    }
+  }
+  
+
+  
+
+
+
 }
 
 export default new AtividadeController()

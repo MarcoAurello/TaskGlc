@@ -732,18 +732,18 @@ const AtividadeForm = (props) => {
 
 
 
-  const checarTermo = () => {
+  // const checarTermo = () => {
 
-    const camposObrigatorios = ['cpf'];
-    if (!isValidCPF(cpfTermo)) {
-      // mensagens1('CPF  Inválido')
-      setOpenLoadingDialog(false)
-      return;
-    }else{
-      checar()
-    }
+  //   const camposObrigatorios = ['cpf'];
+  //   if (!isValidCPF(cpfTermo)) {
+  //     // mensagens1('CPF  Inválido')
+  //     setOpenLoadingDialog(false)
+  //     return;
+  //   }else{
+  //     checar()
+  //   }
    
-  };
+  // };
 
   // function mensagens1(msg) {
   //   setMensagemAlert(msg)
@@ -751,7 +751,8 @@ const AtividadeForm = (props) => {
   // }
 
 
-  const checar = () => {
+  const checarTermo = () => {
+    // alert(cpfTermo)
 
     const token = getCookie('_token_task_manager')
     const params = {
