@@ -8,11 +8,13 @@ import Area from '../model/area.model'
 import Usuario from '../model/usuario.model'
 import Classificacao from '../model/classificacao.model'
 import Arquivo from '../model/arquivo.model'
+import conexao from '../model/connection'
 
 // import UsuarioAtividade from "../model/usuarioAtividade.model";
 import Unidade from '../model/unidade.model'
 import PerfilUtils from '../utils/perfil.utils'
 import emailUtils from '../utils/email.utils'
+import { QueryTypes } from 'sequelize'
 const multer = require('multer')
 const { Op } = require('sequelize')
 
@@ -1114,18 +1116,18 @@ class AtividadeController implements IController {
       console.log(cpfTermo);
       console.log("1212");
   
-      const registro = await Atividade.sequelize?.query(`
+      const sql =`
         SELECT cpf
         FROM TermoAceite.dbo.Colaborador C
         INNER JOIN TermoAceite.dbo.Timeline TL ON C.ID = TL.idColaborador
-        WHERE TL.idStatusTimeline = '3' AND CPF = ?
-      `, {
-        replacements: [cpfTermo]
-      });
+        WHERE TL.idStatusTimeline = '3' AND CPF = '${cpfTermo}'
+      `;
+      const registro = await conexao.query(sql, { type: QueryTypes.SELECT });
+      console.log(JSON.stringify(registro))
       
-      if (registro && registro[0] && registro[0].length > 0) {
+      if ( registro.length > 0) {
         console.log("Registros encontrados:", registro[0]);
-        res.status(200).json({ message: 'Termo de Compromisso validado, abra o chamado' });
+        res.status(200).json({ message: 'Termo de Compromisso assinado, prossiga com o chamado' });
       } else {
         console.log("Nenhum registro encontrado.");
         console.log("Quantidade de registros retornados:", registro[1]);
