@@ -751,19 +751,21 @@ const AtividadeForm = (props) => {
   // }
 
 
-  const checar = () => {
+  function checar() {
     // alert(cpfTermo)
   
-    const token = getCookie('_token_task_manager');
-    const url = `${process.env.REACT_APP_DOMAIN_API}/api/atividade/termo/${cpfTermo}`;
   
-    fetch(url, {
-      method: 'GET',
+    // const url = `${process.env.REACT_APP_DOMAIN_API}/api/atividade/termo/${cpfTermo}`;
+
+    const token = getCookie('_token_task_manager')
+    const params = {
       headers: {
-        'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       }
-    })
+    }
+  
+    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/termo/${cpfTermo}`, params)
+       
     .then(response => {
       const { status} = response;
     
@@ -781,15 +783,10 @@ const AtividadeForm = (props) => {
             // alert(JSON.stringify(arquivoDoChamado))
             // setAtividade(data.data)
             setMessage(data.message)
-            setOpenLoadingDialog(false)
             setOpenMessageDialog(true)
 
           }
-        }).catch(err => {setOpenLoadingDialog(true)
-          alert(err)
-        }
-        
-        )
+        }).catch(err => setOpenLoadingDialog(true))
       })
 
   }

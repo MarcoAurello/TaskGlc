@@ -1137,13 +1137,11 @@ class AtividadeController implements IController {
   
       if (registro.length > 0) {
         console.log("Registros encontrados:", registro[0]);
-        res.status(200).json({registro: registro[0]});
+        res.status(200).json({ message: 'Termo de Compromisso assinado, prossiga com o chamado' });
       } else {
         console.log("Nenhum registro encontrado.");
-        res.status(200).json({ registro: registro[0]});
-        // res.status(200).json({ registro: registro[0]message: 'Termo de compromisso pendente, resolva para abrir o chamado.' });
+        res.status(200).json({ message: 'Termo de compromisso pendente, resolva para abrir o chamado.' });
       }
-      // }
     } catch (err) {
       console.log(err);
       res.status(401).json({ message: err.message });
