@@ -1114,23 +1114,33 @@ class AtividadeController implements IController {
       const { cpfTermo } = req.params; // Agora você está acessando os parâmetros da URL
   
       console.log(cpfTermo);
+
+      const sql = `
+      SELECT cpf
+      FROM TermoAceite.dbo.Colaborador C
+      INNER JOIN TermoAceite.dbo.Timeline TL ON C.ID = TL.idColaborador
+      WHERE TL.idStatusTimeline = '3' AND CPF = '${cpfTermo}'
+    `;
+    
+
+      const registro = await conexao.query(sql, { type: QueryTypes.SELECT });
      
   
-      const registro = await Atividade.sequelize?.query(`
-        SELECT cpf
-        FROM TermoAceite.dbo.Colaborador C
-        INNER JOIN TermoAceite.dbo.Timeline TL ON C.ID = TL.idColaborador
-        WHERE TL.idStatusTimeline = '3' AND CPF = '${cpfTermo}'
-      `);
+      // const registro = await Atividade.sequelize?.query(`
+      //   SELECT cpf
+      //   FROM TermoAceite.dbo.Colaborador C
+      //   INNER JOIN TermoAceite.dbo.Timeline TL ON C.ID = TL.idColaborador
+      //   WHERE TL.idStatusTimeline = '3' AND CPF = '${cpfTermo}'
+      // `);
   
-      console.log(JSON.stringify("vvvvvvv" + registro));
+      console.log("Registro:", registro);
   
-      if (registro && registro[0] && registro[0].length > 0) {
+      if (registro.length > 0) {
         console.log("Registros encontrados:", registro[0]);
         res.status(200).json({ message: 'Termo de Compromisso assinado, prossiga com o chamado' });
       } else {
         console.log("Nenhum registro encontrado.");
-        res.status(200).json({ message: 'Termo de compromisso do funcionário não está assinado, funcionário não pode acessar os sistemas' });
+        res.status(200).json({ message: 'Termo de compromisso pendente, resolva para abrir o chamado.' });
       }
     } catch (err) {
       console.log(err);
