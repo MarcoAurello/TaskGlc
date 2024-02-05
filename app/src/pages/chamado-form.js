@@ -774,6 +774,7 @@ const AtividadeForm = (props) => {
                     // Adicione o código para lidar com o erro 401 aqui
                 } else if (status === 200) {
                     console.log('Sucesso: Termo de Compromisso assinado');
+                    alert(data.message)
                     // Adicione o código para lidar com o sucesso aqui
                 }
             }).catch(err => {
@@ -782,6 +783,7 @@ const AtividadeForm = (props) => {
             });
         }).catch(err => {
             console.error('Erro na solicitação:', err);
+            console.log(err)
             setOpenLoadingDialog(true);
         });
 }
