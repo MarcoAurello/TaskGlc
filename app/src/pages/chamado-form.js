@@ -771,19 +771,20 @@ const AtividadeForm = (props) => {
     
     //  alert(status)
         response.json().then(data => {
-          alert(JSON.stringify(data))
+          // alert(JSON.stringify(data.message))
   
 
           setOpenLoadingDialog(false)
           if (status === 401) {
-            setMessage(data.message)
-            setOpenMessageDialog(true)
+            alert(JSON.stringify(data.message))
+            // setMessage(data.message)
+            // setOpenMessageDialog(true)
           } else if (status === 200) {
-            // alert(JSON.stringify(data.data))
+            alert(JSON.stringify(data.message))
             // alert(JSON.stringify(arquivoDoChamado))
             // setAtividade(data.data)
-            setMessage(data.message)
-            setOpenMessageDialog(true)
+            // setMessage(data.message)
+            // setOpenMessageDialog(true)
 
           }
         }).catch(err => setOpenLoadingDialog(true))
