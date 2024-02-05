@@ -753,58 +753,38 @@ const AtividadeForm = (props) => {
 
 
   function checarTermo() {
-    // alert(cpfTermo)
-  
-  
-    // const url = `${process.env.REACT_APP_DOMAIN_API}/api/atividade/termo/${cpfTermo}`;
-
-    const token = getCookie('_token_task_manager')
+    const token = getCookie('_token_task_manager');
     const params = {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    }
-  
-    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/questionario/termo/${cpfTermo}`, params)
-       
-    .then(response => {
-      const { status} = response;
-    
-    //  alert(status)
-        response.json().then(data => {
-          alert('FFFFF'+JSON.stringify(data.message))
-  
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    };
 
-          setOpenLoadingDialog(false)
-          if (status === 401) {
-            alert(JSON.stringify(data.message))
-            alert('UUUUU'+JSON.stringify(data.message))
-            // setMessage(data.message)
-            // setOpenMessageDialog(true)
-          } else if (status === 200) {
-            alert(JSON.stringify(data.message))
-            setTermo(false)
-            alert('XXXXXXX'+JSON.stringify(data.message))
-            // alert(JSON.stringify(arquivoDoChamado))
-            // setAtividade(data.data)
-            // setMessage(data.message)
-            // setOpenMessageDialog(true)
+    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/termo/${cpfTermo}`, params)
+        .then(response => {
+            const { status } = response;
+            console.log('Status da resposta:', status);
 
-          }
-        }).catch(err => setOpenLoadingDialog(true)
-     
+            response.json().then(data => {
+                console.log('Dados da resposta:', data);
 
-        )
-      })
-
-  }
-
-
-
-
-
-
-
+                setOpenLoadingDialog(false);
+                if (status === 401) {
+                    console.error('Erro 401: Não Autorizado');
+                    // Adicione o código para lidar com o erro 401 aqui
+                } else if (status === 200) {
+                    console.log('Sucesso: Termo de Compromisso assinado');
+                    // Adicione o código para lidar com o sucesso aqui
+                }
+            }).catch(err => {
+                console.error('Erro ao processar resposta JSON:', err);
+                setOpenLoadingDialog(true);
+            });
+        }).catch(err => {
+            console.error('Erro na solicitação:', err);
+            setOpenLoadingDialog(true);
+        });
+}
 
   const criarExecucao = () => {
 
