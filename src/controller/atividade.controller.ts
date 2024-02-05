@@ -1133,7 +1133,7 @@ class AtividadeController implements IController {
       //   WHERE TL.idStatusTimeline = '3' AND CPF = '${cpfTermo}'
       // `);
   
-      console.log("Registro:", registro);
+      console.log(JSON.stringify(registro));
   
       if (registro.length > 0) {
         console.log("Registros encontrados:", registro[0]);

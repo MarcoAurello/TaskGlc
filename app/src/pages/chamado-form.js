@@ -732,18 +732,18 @@ const AtividadeForm = (props) => {
 
 
 
-  // const checarTermo = () => {
+  const checarTermo = () => {
 
-  //   const camposObrigatorios = ['cpf'];
-  //   if (!isValidCPF(cpfTermo)) {
-  //     // mensagens1('CPF  Inválido')
-  //     setOpenLoadingDialog(false)
-  //     return;
-  //   }else{
-  //     checar()
-  //   }
+    const camposObrigatorios = ['cpf'];
+    if (!isValidCPF(cpfTermo)) {
+      // mensagens1('CPF  Inválido')
+      setOpenLoadingDialog(false)
+      return;
+    }else{
+      checar()
+    }
    
-  // };
+  };
 
   // function mensagens1(msg) {
   //   setMensagemAlert(msg)
@@ -751,7 +751,7 @@ const AtividadeForm = (props) => {
   // }
 
 
-  const checarTermo = () => {
+  const checar = () => {
     // alert(cpfTermo)
   
     const token = getCookie('_token_task_manager');
@@ -765,9 +765,13 @@ const AtividadeForm = (props) => {
       }
     })
     .then(response => {
-      const { status } = response;
-     
+      const { status} = response;
+    
+    //  alert(status)
         response.json().then(data => {
+          alert(JSON.stringify(data))
+  
+
           setOpenLoadingDialog(false)
           if (status === 401) {
             setMessage(data.message)
@@ -777,10 +781,15 @@ const AtividadeForm = (props) => {
             // alert(JSON.stringify(arquivoDoChamado))
             // setAtividade(data.data)
             setMessage(data.message)
+            setOpenLoadingDialog(false)
             setOpenMessageDialog(true)
 
           }
-        }).catch(err => setOpenLoadingDialog(true))
+        }).catch(err => {setOpenLoadingDialog(true)
+          alert(err)
+        }
+        
+        )
       })
 
   }
