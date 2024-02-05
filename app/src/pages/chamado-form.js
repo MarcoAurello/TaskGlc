@@ -733,18 +733,18 @@ const AtividadeForm = (props) => {
 
 
 
-  // const checarTermo = () => {
+  const checarTermo = () => {
 
-  //   const camposObrigatorios = ['cpf'];
-  //   if (!isValidCPF(cpfTermo)) {
-  //     // mensagens1('CPF  Inválido')
-  //     setOpenLoadingDialog(false)
-  //     return;
-  //   }else{
-  //     checar()
-  //   }
+    const camposObrigatorios = ['cpf'];
+    if (!isValidCPF(cpfTermo)) {
+      alert('CPF  Inválido')
+      setOpenLoadingDialog(false)
+      return;
+    }else{
+      checar()
+    }
    
-  // };
+  };
 
   // function mensagens1(msg) {
   //   setMensagemAlert(msg)
@@ -752,7 +752,7 @@ const AtividadeForm = (props) => {
   // }
 
 
-  function checarTermo() {
+  function checar() {
     const token = getCookie('_token_task_manager');
     const params = {
         headers: {
@@ -775,6 +775,7 @@ const AtividadeForm = (props) => {
                 } else if (status === 200) {
                     console.log('Sucesso: Termo de Compromisso assinado');
                     alert(data.message)
+                    setTermo(false)
                     // Adicione o código para lidar com o sucesso aqui
                 }
             }).catch(err => {
