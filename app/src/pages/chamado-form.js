@@ -753,21 +753,20 @@ const AtividadeForm = (props) => {
 
   const checarTermo = () => {
     // alert(cpfTermo)
-
-    const token = getCookie('_token_task_manager')
-    const params = {
-      method: 'POST',
+  
+    const token = getCookie('_token_task_manager');
+    const url = `${process.env.REACT_APP_DOMAIN_API}/api/atividade/termo/${cpfTermo}`;
+  
+    fetch(url, {
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify({
-        cpfTermo
-      })
-    }
-    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/termo`, params)
-      .then(response => {
-        const { status } = response
+      }
+    })
+    .then(response => {
+      const { status } = response;
+     
         response.json().then(data => {
           setOpenLoadingDialog(false)
           if (status === 401) {
