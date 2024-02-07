@@ -1147,12 +1147,6 @@ class AtividadeController implements IController {
       res.status(401).json({ message: err.message });
     }
   }
-  
-
-  
-
-
-
 }
 
 export default new AtividadeController()

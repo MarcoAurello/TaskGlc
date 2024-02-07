@@ -111,6 +111,9 @@ const AtividadeForm = (props) => {
   const [openFile, setOpenFile] = useState('')
   const [sub, setSub] = useState('')
   const [cpfTermo, setCpfTermo] = useState('')
+  const [mensagemAlert, setMensagemAlert] = useState('')
+  const [openMensagens, setOpenMensagens] = useState(false)
+
 
 
 
@@ -737,7 +740,7 @@ const AtividadeForm = (props) => {
 
     const camposObrigatorios = ['cpf'];
     if (!isValidCPF(cpfTermo)) {
-      alert('CPF  Inválido')
+      mensagens1('CPF  Inválido')
       setOpenLoadingDialog(false)
       return;
     }else{
@@ -746,10 +749,10 @@ const AtividadeForm = (props) => {
    
   };
 
-  // function mensagens1(msg) {
-  //   setMensagemAlert(msg)
-  //   setOpenMensagens(true)
-  // }
+   function mensagens1(msg) {
+    setMensagemAlert(msg)
+    setOpenMensagens(true)
+  }
 
 
   function checar() {
@@ -774,8 +777,9 @@ const AtividadeForm = (props) => {
                     // Adicione o código para lidar com o erro 401 aqui
                 } else if (status === 200) {
                     console.log('Sucesso: Termo de Compromisso assinado');
-                    alert(data.message)
+                    mensagens1(data.message)
                     setTermo(false)
+                    setOpenMensagens(true)
                     // Adicione o código para lidar com o sucesso aqui
                 }
             }).catch(err => {
@@ -1102,7 +1106,7 @@ const AtividadeForm = (props) => {
               <div style={{ flex: 1, marginBottom: 16 }}>
                <tr>
                 <td style={{color:'red'}}>
-                Seu chamado e para solicitar liberação de sistema para funcionario?
+                Seu chamado e para solicitar liberação de sistema para funcionário?
 
                 </td>
                 <td>
@@ -1621,6 +1625,27 @@ const AtividadeForm = (props) => {
         </DialogContent>
 
       </Dialog>
+
+      <Dialog open={openMensagens}  >
+
+<DialogContent>
+
+  
+{mensagemAlert}
+    
+
+  <div style={{ flex: 1, display: 'flex', flexDirection: 'row' }}>
+    
+    <div style={{ flex: 1 }}></div>
+   
+    <Button onClick={() => window.location.reload()}>Sair</Button>
+
+
+
+  </div>
+</DialogContent>
+
+</Dialog>
 
 
 
