@@ -163,7 +163,7 @@ const Home = (props) => {
     carregarMinhasAtividades();
     carregarSolicitacaoAtividades();
     carregarAtividadesDoSetor();
-    carregarEmails();
+    // carregarEmails();
 
     if (todosEmails && logged) {
       let encontrado = false;
@@ -172,14 +172,11 @@ const Home = (props) => {
           encontrado = true;
         }
       });
-   
 
       if (!encontrado && !fechar) {
         setEmailNaoEncontrado(true);
       }
     }
-
-  
   }, [todosEmails, emailNaoEncontrado]);
 
   useEffect(() => {
@@ -586,7 +583,8 @@ const Home = (props) => {
                     <br></br>
                     Solicitado: {new Date(item.createdAt).toLocaleString()}{" "}
                     <br></br>
-                    Demandante: {item.Usuario ?item.Usuario.Area.Unidade.nome :''}
+                    Demandante:{" "}
+                    {item.Usuario ? item.Usuario.Area.Unidade.nome : ""}
                     <br></br>
                     {item.fkUsuarioExecutor ? (
                       <div style={{ color: "blue" }}>
@@ -638,7 +636,8 @@ const Home = (props) => {
                     <br></br>
                     Solicitado: {new Date(item.createdAt).toLocaleString()}{" "}
                     <br></br>
-                    Demandante: {item.Usuario ?item.Usuario.Area.Unidade.nome :''}
+                    Demandante:{" "}
+                    {item.Usuario ? item.Usuario.Area.Unidade.nome : ""}
                     <br></br>
                     {item.fkUsuarioExecutor ? (
                       <div style={{ color: "blue" }}>
