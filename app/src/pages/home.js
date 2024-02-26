@@ -163,7 +163,7 @@ const Home = (props) => {
     carregarMinhasAtividades();
     carregarSolicitacaoAtividades();
     carregarAtividadesDoSetor();
-    // carregarEmails();
+    // carregarEmails();method
 
     if (todosEmails && logged) {
       let encontrado = false;
