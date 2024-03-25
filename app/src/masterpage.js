@@ -284,7 +284,7 @@ const Masterpage = (props) => {
       (logged.Perfil.nome === PerfilUtils.Gerente ||
         logged.Perfil.nome === PerfilUtils.Coordenador)
     ) {
-      setInterval(carregarUsuariosNaoValidados, 1000);
+      setInterval(carregarUsuariosNaoValidados, 5000);
     }
   }, [logged]);
 
@@ -325,7 +325,7 @@ const Masterpage = (props) => {
       (logged.Perfil.nome === PerfilUtils.Gerente ||
         logged.Perfil.nome === PerfilUtils.Coordenador)
     ) {
-      setInterval(carregarAtividadesNaoAtribuidas, 1000);
+      setInterval(carregarAtividadesNaoAtribuidas, 5000);
     }
   }, [logged]);
 
@@ -354,7 +354,7 @@ const Masterpage = (props) => {
         });
       });
     }
-    setInterval(carregarAtividadesRecebidas, 1000);
+    setInterval(carregarAtividadesRecebidas, 5000);
   }, [logged]);
 
   function carregarMinhasAtividades() {

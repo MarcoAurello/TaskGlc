@@ -1,0 +1,11 @@
+version: "3"
+
+services:
+  frontend:
+    build:
+      dockerfile: ./app/Dockerfile.dev
+    command: npm run frontend 
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/usr/app
