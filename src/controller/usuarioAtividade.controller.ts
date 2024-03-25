@@ -17,8 +17,8 @@ class UsuarioAtividadeController implements IController {
       const registros = await Usuario.findAll({
         include: [Area],
         where: {
-          '$Area.fkUnidade$': area?.fkUnidade
-          // validado: true,
+          '$Area.fkUnidade$': area?.fkUnidade,
+          ativo: true,
         },
         order: [
           ['nome', 'ASC'] // ASC para ordenação crescente (ou 'DESC' para decrescente)
