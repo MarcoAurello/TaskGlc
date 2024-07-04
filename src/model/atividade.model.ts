@@ -9,26 +9,29 @@ import Status from './status.model'
 
 class Atividade extends Model {
   public id!: string
-  public titulo!: string
+  public titulo!: Text
   public protocolo!: string
-  public cor!: string
-  public indicacao: string
-  public informacoes: string 
-  public forma!: string
-  public material: string
-  public medida: string
-  public eletro: string;
-  public categoria !: string
+  public cor!: Text
+  public centroCusto!: string
+  public indicacao: Text
+  public informacoes: Text 
+  public forma!: Text
+  public material: Text
+  public medida: Text
+  public eletro: Text;
+  public categoria !: Text
+  public detalhes !: Text
   public caminho !: string
   public fkClassificacao!: string
   public fkArea!: string
   public fkStatus!: string
   public pessoal!: Boolean
-  public dimensao!: string;
+  public dimensao!: Text;
   public fkUsuarioSolicitante!: string
   public fkUsuarioExecutor!: string
   public tempoEstimado!: string
   public arquivado!: boolean
+  public editar!: boolean
   public ordem!: number
   public createdAt!: Date
   public updatedAt!: Date
@@ -46,46 +49,54 @@ Atividade.init({
     primaryKey: true
   },
   titulo: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT,
     allowNull: false
   },
   forma: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT,
     allowNull: true
   },
   cor: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT,
     allowNull: true
   },
 
   indicacao : {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  centroCusto : {
     type: DataTypes.STRING,
     allowNull: true
   },
 
   informacoes : {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT,
     allowNull: true
   },
 
 
   medida: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT,
     allowNull: true
   },
   
   eletro: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT,
     allowNull: true
   },
 
   material: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT,
     allowNull: true
   },
   protocolo: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT,
     allowNull: false
+  },
+  detalhes: {
+    type: DataTypes.TEXT,
+    allowNull: true
   },
   fkClassificacao: {
     type: DataTypes.UUID,
@@ -105,8 +116,15 @@ Atividade.init({
     defaultValue: false
   },
 
+  editar: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
+  },
+
+
   dimensao: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT,
     allowNull: true
   },
 

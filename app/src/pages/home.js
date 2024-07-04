@@ -9,14 +9,20 @@ import {
   Select,
   SpeedDial,
   TextField,
+  Accordion,
+  Typography,
+  AccordionSummary,
+  AccordionDetails,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import TaskFilter from "../components/task-filter";
 import Switch from "@mui/material/Switch";
 import Checkbox from "@mui/material/Checkbox";
+import Modal from '../components/modal'
 
 import { Box } from "@mui/system";
+const ImageLogo = require('../assets/cad.jpeg')
 
 const getCookie = require("../utils/getCookie");
 
@@ -29,6 +35,8 @@ const Home = (props) => {
   const [openLoadingDialog, setOpenLoadingDialog] = useState(false);
   const [openMessageDialog, setOpenMessageDialog] = useState(false);
   const [checked, setChecked] = React.useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm1, setSearchTerm1] = useState("");
   const [fkArea, setfkArea] = useState("");
   const [subarea, setSubArea] = useState([]);
   const [meuSetor, setMeuSetor] = useState([]);
@@ -41,7 +49,12 @@ const Home = (props) => {
   const [solicitacaoAtividades, setSolicitacaoAtividades] = useState([]);
   const [nomeUsuario, setNomeUsuario] = useState("");
   const [minhas, setMinhas] = useState(true);
+  const [todasSetor, setTodasSetor] = useState(false);
   // const [fkUnidade, setFkUnidade]= useState(props.logged.Area.fkUnidade)
+  const [modalOpen, setModalOpen] = useState(false);
+  const [atividadesExecutor, setAtividadesExecutor] = useState([]);
+  const [executorSelecionado, setExecutorSelecionado] = useState('');
+  // const [openLoadingDialog, setOpenLoadingDialog] = useState(false);
 
   function carregarSolicitacaoAtividades() {
     const token = getCookie("_token_task_manager");
@@ -97,6 +110,7 @@ const Home = (props) => {
       });
     });
   }
+
 
   function carregarEmails() {
     setOpenLoadingDialog(true);
@@ -159,6 +173,10 @@ const Home = (props) => {
     setMinhas(event.target.checked);
   };
 
+  const Change1 = (event) => {
+    setTodasSetor(event.target.checked);
+  };
+
   useEffect(() => {
     carregarMinhasAtividades();
     carregarSolicitacaoAtividades();
@@ -176,8 +194,10 @@ const Home = (props) => {
       if (!encontrado && !fechar) {
         setEmailNaoEncontrado(true);
       }
+
+
     }
-  }, [todosEmails, emailNaoEncontrado]);
+  }, [todosEmails, emailNaoEncontrado, logged]);
 
   useEffect(() => {
     if (pesquisa) {
@@ -231,8 +251,7 @@ const Home = (props) => {
         },
       };
       fetch(
-        `${process.env.REACT_APP_DOMAIN_API}/api/area/?fkUnidade=${
-          logged ? logged.Area.fkUnidade : ""
+        `${process.env.REACT_APP_DOMAIN_API}/api/area/?fkUnidade=${logged ? logged.Area.fkUnidade : ""
         }`,
         params
       ).then((response) => {
@@ -325,7 +344,10 @@ const Home = (props) => {
               (window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/cadastro`)
             }
           >
-            Solicitar cadastro de item
+            {/* <img src={ImageLogo} height={64} />   */}
+
+            Solicitar cadastro de item / serviço
+
           </Button>
           <br></br>
           <p></p>
@@ -357,10 +379,11 @@ const Home = (props) => {
               name="pesquisa"
               value={pesquisa}
               type="number"
-              style={{ backgroundColor: "#FFFACD" }}
+
+              focused
               onChange={(e) => setPesquisa(e.target.value)}
             />
-            <p></p>
+
 
             {/* <Button type="button" className="btn btn-primary" onClick={(e) => { pesquisar() }}>Buscar </Button> */}
           </Box>
@@ -457,7 +480,7 @@ const Home = (props) => {
                           Executor: {item.UsuarioExecutor.nome}&#128587;{" "}
                         </div>
                       )}
-                      {"Titulo: " + item.titulo}
+                      {"Item para cadastrar: " + item.titulo}
                       <br></br>
                       {"Status : " + item.Status.nome}
                       {item.Status.nome == "Concluido" ? (
@@ -504,168 +527,305 @@ const Home = (props) => {
 
       <hr></hr>
 
-      {minhas == true ? (
-        <div style={{ fontSize: "18px" }}>
-          {" "}
-          <center>
-            Minhas Pendências<br></br>
-          </center>
-        </div>
-      ) : (
-        <div style={{ fontSize: "18px" }}>
-          {" "}
-          <center>
-            Pêndencias do Setor<br></br>
-          </center>
-        </div>
-      )}
-      
-      <div></div>
-      <table
-        style={{
-          backgroundColor: "#FFFACD",
-          height: "100%",
-          paddingRight: "10px",
-          borderCollapse: "collapse",
-          boxShadow: "0 0 5px rgba(0, 0, 0, 0.5)",
-          borderRadius: "10px",
-        }}
-      >
-        <Checkbox
-          id="meu"
-          minhas={minhas}
-          onChange={Change}
-          color="primary"
-          inputProps={{ "aria-label": "checkbox example" }}
-          checked={minhas}
-        />
-        <label htmlFor="meu" style={{ paddingRight: "10px" }}>
-          Minhas Pendências
-        </label>
-      </table>
-      <p></p>
 
-      <table
-        className="table table-striped"
-        style={{
-          fontFamily: "arial",
-          fontSize: "12px",
-          marginLeft: 10,
-          marginRight: 20,
-          borderCollapse: "collapse",
-          boxShadow: "0 0 5px rgba(0, 0, 0, 0.3)",
-          borderRadius: "3px",
-        }}
-      >
-        {minhas === false ? (
-          <tbody>
-            {meuSetor
-              .filter(
-                (item) =>
-                  item.Status.nome != "Concluido" &&
-                  item.Status.nome != "Cancelado"
-              )
-              .map((item, index) => (
-                <tr key={index}>
-                  <th scope="row" style={{ wordBreak: "break-all" }}>
-                    Titulo: {item.titulo}
-                    <br></br>
-                    Solicitado: {new Date(item.createdAt).toLocaleString()}{" "}
-                    <br></br>
-                    Demandante:{" "}
-                    {item.Usuario ? item.Usuario.Area.Unidade.nome : ""}
-                    <br></br>
-                    {item.fkUsuarioExecutor ? (
-                      <div style={{ color: "blue" }}>
-                        Executor: {item.UsuarioExecutor.nome} &#128590;
-                      </div>
-                    ) : (
-                      <div style={{ color: "red" }}>
-                        Selecione o executor &#10067;
-                      </div>
-                    )}
-                    {item.Status.nome === "Concluido" ? (
-                      <div style={{ color: "blue" }}>
-                        Status: {item.Status.nome} &#9989;
-                      </div>
-                    ) : (
-                      <div style={{ color: "red" }}>
-                        Status: {item.Status.nome}&#x23F3;
-                      </div>
-                    )}
-                  </th>
-                  <th>
-                    <Button
-                      variant="contained"
-                      size="small"
-                      onClick={() =>
-                        (window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`)
-                      }
-                    >
-                      ver
-                    </Button>
-                  </th>
-                </tr>
-              ))}
-            <p></p>
-          </tbody>
-        ) : (
-          <tbody>
-            {meuSetor
-              .filter(
-                (item) =>
-                  item.fkUsuarioExecutor === logged.id &&
-                  item.Status.nome != "Concluido" &&
-                  item.Status.nome != "Cancelado"
-              )
-              .map((item, index) => (
-                <tr key={index}>
-                  <th scope="row" style={{ wordBreak: "break-all" }}>
-                    Titulo: {item.titulo}
-                    <br></br>
-                    Solicitado: {new Date(item.createdAt).toLocaleString()}{" "}
-                    <br></br>
-                    Demandante:{" "}
-                    {item.Usuario ? item.Usuario.Area.Unidade.nome : ""}
-                    <br></br>
-                    {item.fkUsuarioExecutor ? (
-                      <div style={{ color: "blue" }}>
-                        Executor: {item.UsuarioExecutor.nome} &#128590;
-                      </div>
-                    ) : (
-                      <div style={{ color: "red" }}>
-                        Selecione o executor &#10067;
-                      </div>
-                    )}
-                    {item.Status.nome === "Concluido" ? (
-                      <div style={{ color: "blue" }}>
-                        Status: {item.Status.nome} &#9989;
-                      </div>
-                    ) : (
-                      <div style={{ color: "red" }}>
-                        Status: {item.Status.nome}&#x23F3;
-                      </div>
-                    )}
-                  </th>
-                  <th>
-                    <Button
-                      variant="contained"
-                      size="small"
-                      onClick={() =>
-                        (window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`)
-                      }
-                    >
-                      ver
-                    </Button>
-                  </th>
-                </tr>
-              ))}
-            <p></p>
-          </tbody>
-        )}
-      </table>
 
-      <Dialog open={emailNaoEncontrado}>
+      {logged && logged.Area && logged.Area.Unidade &&
+        logged.Area.Unidade.nome === 'GLC' ?
+
+        <div
+        >
+
+
+          <div style={{
+
+            justifyContent: 'space-between',
+            alignItems: 'flex-start', // Alinha os componentes ao topo
+            padding: '20px',
+            // backgroundColor: '#f4f4f9',
+            flexDirection: 'column',
+          }}>
+
+            <Accordion>
+              <AccordionSummary
+                // expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography style={{ marginLeft: '10px', fontSize: '30px' }}>
+                  <div>
+                    <b>Minhas Pendências</b>: 
+                    
+                    <b style={{fontSize:'20', color:'red'}}>
+                      {meuSetor && logged? meuSetor.filter(item => item.fkUsuarioExecutor === logged.id
+                    ).length :''}
+                      </b>
+                      
+
+                  </div>
+                </Typography>
+              </AccordionSummary>
+
+
+              <AccordionDetails>
+
+
+
+
+
+                <div style={{
+                  flex: 1,
+                  margin: '0 10px',
+                  padding: '20px',
+                  // borderRadius: '8px',
+                  // boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                  // backgroundColor: '#fff',
+                  transition: 'transform 0.2s',
+                  cursor: 'pointer',
+
+
+                }}>
+
+
+                  <table
+                    className="table table-striped "
+                    style={{
+                      fontFamily: "arial",
+                      fontSize: "12px",
+                      marginLeft: 10,
+                      marginRight: 20,
+                      borderCollapse: "collapse",
+                      boxShadow: "0 0 5px rgba(0, 0, 0, 0.3)",
+                      borderRadius: "3px",
+                    }}
+                  >
+
+                    <input
+
+                      type="text"
+                      placeholder="Pesquise o Setor demandante "
+                      value={searchTerm1}
+                      onChange={(e) => setSearchTerm1(e.target.value)}
+                      style={{ marginBottom: "20px", padding: "10px", width: "80%", borderRadius: '5px', marginLeft: '20px', marginTop: '20px' }}
+                    />
+
+                    {minhas === false ? (
+                      <div>
+
+                        <table className="table table-striped table-dark">
+
+                          ''
+                        </table>
+                      </div>
+                    ) : (
+                      <tbody>
+                        {meuSetor
+                          .filter((item) => {
+                            const isStatusValid = item.Status.nome !== "Concluido" &&
+                              item.fkUsuarioExecutor === logged.id &&
+                              item.Status.nome !== "Cancelado";
+                            const isSearchTermMatched =
+                              item.Usuario.Area.Unidade.nome.toLowerCase().includes(searchTerm1.toLowerCase());
+                            return isStatusValid && isSearchTermMatched;
+                          })
+                          .map((item, index) => (
+                            <tr key={index} style={{ fontSize: '16px' }}>
+                              <th scope="row" style={{ wordBreak: "break-all" }}>
+                                <b style={{ color: 'black', marginRight: '8px' }}>Atividade:</b>
+                                {item.titulo}
+                                <br></br>
+                                <b style={{ color: 'black', marginRight: '8px' }}>Data de solicitação:</b>
+                                {new Date(item.createdAt).toLocaleDateString()}
+                                <br></br>
+                                <b style={{ color: 'black', marginRight: '8px' }}>Unidade Demandante:</b>
+                                {item.Usuario ? item.Usuario.Area.Unidade.nome : ""}
+                                <br></br>
+                                {item.fkUsuarioExecutor ? (
+                                  <div style={{ color: "#9ad1f4", display: 'flex', alignItems: 'center' }}>
+                                    <b style={{ color: 'black', marginRight: '8px' }}>Executor:</b>
+                                    <span style={{ color: '#f4a261' }}>{item.UsuarioExecutor.nome}</span> &#128590;
+                                  </div>
+                                ) : (
+                                  <div style={{ color: "red" }}>
+                                    <b style={{ color: 'black' }}>Executor:</b> execultor não selecionado &#10067;
+                                  </div>
+                                )}
+                                {item.Status.nome === "Concluido" ? (
+                                  <div style={{ color: "#9ad1f4", display: 'flex', alignItems: 'center' }}>
+                                    <b style={{ color: 'black', marginRight: '8px' }}>Status:</b>
+                                    <span style={{ color: '#f4a261' }}>{item.Status.nome}</span> &#x23F3;
+                                  </div>
+                                ) : (
+                                  <div style={{ color: "#9ad1f4", display: 'flex', alignItems: 'center' }}>
+                                    <b style={{ color: 'black', marginRight: '8px' }}>Status:</b>
+                                    <span style={{ color: 'red' }}>{item.Status.nome}</span> &#x23F3;
+                                  </div>
+                                )}
+                              </th>
+                              <th>
+                                <Button
+                                  variant="contained"
+                                  size="small"
+                                  onClick={() =>
+                                    (window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`)
+                                  }
+                                >
+                                  ver
+                                </Button>
+                              </th>
+                            </tr>
+                          ))}
+                        <p></p>
+                      </tbody>
+                    )}
+                  </table>
+                </div>
+
+
+
+
+
+
+              </AccordionDetails>
+            </Accordion>
+
+            <Accordion>
+              <AccordionSummary
+                // expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography  style={{ marginLeft: '10px', fontSize: '30px' }}>
+                <div>
+                <b>Pendências do Setor:</b>
+                <b style={{fontSize:'20', color:'red'}}>
+                      {meuSetor && logged? meuSetor.length :''}
+                      </b>
+
+              </div>
+                </Typography>
+              </AccordionSummary>
+
+
+              <AccordionDetails>
+              <div style={{
+              flex: 1,
+              margin: '0 10px',
+              padding: '20px',
+
+              transition: 'transform 0.2s',
+              cursor: 'pointer'
+            }}>
+           
+              <table
+                className="table table-striped table-dark "
+                style={{
+                  fontFamily: "arial",
+                  fontSize: "12px",
+                  marginLeft: 10,
+                  marginRight: 20,
+                  marginRight: 20,
+                  borderCollapse: "collapse",
+                  boxShadow: "0 0 5px rgba(0, 0, 0, 0.3)",
+                  borderRadius: "3px",
+                }}
+              ><p></p>
+                {todasSetor === false ? (
+                  <div>
+                    <input
+                      type="text"
+                      placeholder="Pesquise o Setor demandante ou usuario executor"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      style={{ marginBottom: "20px", padding: "10px", width: "80%", borderRadius: '5px', marginLeft: '20px' }}
+                    />
+                    <table className="table table-striped table-dark">
+                      <tbody>
+                        {meuSetor
+                          .filter((item) => {
+                            const isStatusValid = item.Status?.nome !== "Concluido" && item.Status.nome !== "Cancelado";
+                            const isSearchTermMatched = item.UsuarioExecutor?.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                              item.Usuario?.Area?.Unidade?.nome.toLowerCase().includes(searchTerm.toLowerCase());
+                            return isStatusValid && isSearchTermMatched;
+                          })
+                          .map((item, index) => (
+                            <tr key={index} style={{ fontSize: "16px" }}>
+                              <th scope="row" style={{ wordBreak: "break-all" }}>
+                                Atividade: {item.titulo}
+                                <br />
+                                Data da solicitação: {new Date(item.createdAt).toLocaleDateString()}
+                                <br />
+                                Unidade Demandante: {item.Usuario ? item.Usuario.Area.Unidade.nome : ""}
+                                <br />
+                                {item.fkUsuarioExecutor ? (
+                                  <div style={{ color: "#9ad1f4", display: 'flex', alignItems: 'center' }}>
+                                    <b style={{ color: '#dadada', marginRight: '8px' }}>Executor:</b>
+                                    <span style={{ color: '#f4a261' }}>{item.UsuarioExecutor.nome}</span> &#128590;
+                                  </div>
+                                ) : (
+                                  <div style={{ color: "red" }}>
+                                    <b style={{ color: '#dadada' }}>Executor:</b> execultor não selecionado &#10067;
+                                  </div>
+                                )}
+                                {item.Status.nome === "Concluido" ? (
+                                  <div style={{ color: "blue" }}>
+                                    Status: {item.Status.nome} &#9989;
+                                  </div>
+                                ) : (
+                                  <div style={{ color: "#9ad1f4", display: 'flex', alignItems: 'center' }}>
+                                    <b style={{ color: '#dadada', marginRight: '8px' }}>Status:</b>
+                                    <span style={{ color: '#f4a261' }}>{item.Status.nome}</span> &#x23F3;
+                                  </div>
+                                )}
+                              </th>
+                              <th>
+                                <Button
+                                  variant="contained"
+                                  size="small"
+                                  onClick={() =>
+                                    (window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`)
+                                  }
+                                >
+                                  ver
+                                </Button>
+                              </th>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  ''
+                )}
+              </table>
+            </div>
+
+
+
+              </AccordionDetails>
+              </Accordion>
+
+
+
+
+
+
+           
+
+
+
+          </div>
+
+
+
+
+
+
+        </div>
+
+        :
+        'Solicitação de serviços para GLC'}
+
+      {/* <Dialog open={emailNaoEncontrado}>
         <DialogContent>
           <hr></hr>
           <h4>Questionário de Satisfação do Usuário de TI</h4>
@@ -691,12 +851,10 @@ const Home = (props) => {
               Sair
             </Button>
           </center>
-          {/* <Button variant="contained" onClick={novaInteracao}>{'Enviar'}</Button>
-
-
-    <Button onClick={() => setOpenMsg(false)}>Cancelar</Button> */}
+         
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
+
     </div>
   );
 };

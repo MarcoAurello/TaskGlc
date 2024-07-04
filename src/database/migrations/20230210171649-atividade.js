@@ -16,43 +16,48 @@ module.exports = {
         primaryKey: true
       },
       titulo: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         allowNull: false
       },
       protocolo: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      forma: {
+
+      centroCusto: {
         type: Sequelize.STRING,
+        allowNull: true
+      },
+      forma: {
+        type: Sequelize.TEXT,
         allowNull: true
       },
       medida: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         allowNull: true
       },
       cor: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         allowNull: true
       },
 
       indicacao: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         allowNull: true
       },
 
       informacoes:  {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         allowNull: true
       }, 
 
       material: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         allowNull: true
       },
 
       eletro: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         allowNull: true
       },
 
@@ -74,9 +79,19 @@ module.exports = {
         allowNull: false,
         defaultValue: false
       },
+
+      editar: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+      },
       
       dimensao: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
+        allowNull: true
+      },
+      detalhes: {
+        type: Sequelize.TEXT,
         allowNull: true
       },
 
@@ -89,7 +104,7 @@ module.exports = {
         allowNull: true
       },
       categoria: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         allowNull: true
       },
       caminho: {

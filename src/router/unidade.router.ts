@@ -9,7 +9,7 @@ class UnidadeRouter {
 
   constructor () {
     this.router = Router()
-    this.router.use(routerMiddleware.authenticated)
+    // this.router.use(routerMiddleware.authenticated)
     this.routers()
   }
 
@@ -17,7 +17,7 @@ class UnidadeRouter {
     this.router.get('/search/', controller.search)
     this.router.get('/', controller.all)
     this.router.get('/recebem/', controller.recebem)
-    this.router.post('/', routerMiddleware.role([PerfilUtils.Administrador]), controller.create)
+    this.router.post('/',  controller.create)
     this.router.get('/:id', controller.find)
     this.router.post('/:id/edit', routerMiddleware.role([PerfilUtils.Administrador]), controller.update)
     this.router.post('/:id/delete', routerMiddleware.role([PerfilUtils.Administrador]), controller.delete)

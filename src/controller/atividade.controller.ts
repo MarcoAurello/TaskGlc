@@ -9,6 +9,7 @@ import Usuario from '../model/usuario.model'
 import Classificacao from '../model/classificacao.model'
 import Arquivo from '../model/arquivo.model'
 import conexao from '../model/connection'
+const cron = require('node-cron');
 
 // import UsuarioAtividade from "../model/usuarioAtividade.model";
 import Unidade from '../model/unidade.model'
@@ -17,6 +18,46 @@ import emailUtils from '../utils/email.utils'
 import { QueryTypes } from 'sequelize'
 const multer = require('multer')
 const { Op } = require('sequelize')
+
+
+const buscarAtividadesPendentes = async () => {
+  try {
+    const status = await Status.findOne({ where: { nome: 'pendente' } });
+    if (status) {
+      const atividadesPendentes = await Atividade.findAll({
+        where: { fkStatus: status?.id },
+        include: [
+          { model: Usuario }
+        ]
+      });
+
+      for (const atividade of atividadesPendentes) {
+        let email = atividade.Usuario.email;
+        const txEmail1 = `
+            <b>Cadastro pendente de edição.</b><br>
+
+        Item: <strong>${atividade?.titulo}</strong><br>
+        Faça os ajustes para a GLC proseguir com o processo 
+        <a href="https://www7.pe.senac.br/taskmanagerglc/atividade/${atividade?.id}/edit">CLIQUE PARA VER.</a><p> 
+        `
+
+        await emailUtils.enviar(email, txEmail1)
+
+        
+      }
+
+      console.log('Atividades Pendentes:', atividadesPendentes);
+    }
+  } catch (error) {
+    console.error('Erro ao buscar atividades pendentes:', error);
+  }
+};
+cron.schedule('14 16 * * *', buscarAtividadesPendentes, {
+  scheduled: true,
+  timezone: "America/Sao_Paulo"
+});
+
+
 
 class AtividadeController implements IController {
   async all (req: Request, res: Response, next: NextFunction): Promise<any> {
@@ -32,7 +73,12 @@ class AtividadeController implements IController {
         conteudo,
         categoria,
         caminho,
+        tipoCadastro,
         medida,
+        centroCusto,
+        eletro,
+        indicacao,
+        informacoes,
         dimensao,
         forma,
         material,
@@ -49,11 +95,14 @@ class AtividadeController implements IController {
         })
       }
 
-      if (!fkArea) {
-        return res
-          .status(401)
-          .json({ message: 'O campo área deve ser preenchido corretamente.' })
-      }
+      // if (!fkArea) {
+      //   return res
+      //     .status(401)
+      //     .json({ message: 'O campo área deve ser preenchido corretamente.' })
+      // }
+      const area= await Area.findOne({
+        where: {nome: "GLC-Cadastro de Item"}
+      })
      
 
       if (!titulo) {
@@ -85,14 +134,20 @@ class AtividadeController implements IController {
         cor,
         fkClassificacao: classificacao?.id,
         protocolo: proc,
-        fkArea,
-        
+        fkArea: area?.id,
+        medida,
+        centroCusto,
+        indicacao,
+        detalhes : conteudo,
+        informacoes,
+        eletro,
+        dimensao,
         fkStatus: status?.id,
         fkUsuarioSolicitante: req.usuario.id,
         arquivado: false,
         pessoal: false,
         // fkUsuarioExecutor,
-        categoria,
+        categoria: tipoCadastro,
         caminho
       })
 
@@ -126,16 +181,15 @@ class AtividadeController implements IController {
         where: { fkArea }
       })
 
-      console.log(JSON.stringify("teste"+funcionarioDaArea))
+     
 
       
-      const gti = await Unidade.findOne({
-        where: { nome :'GTI' }
+      const glc = await Unidade.findOne({
+        where: { nome :'GLC' }
       })
-      // console.log('jjjjjjjjjj' + fkUnidade)
-      // console.log('999999999999' +JSON.stringify(gti))
+     
 
-      if(gti?.id === fkUnidade){
+      
         const txEmail1 = `
             <b>Nova Atividade para sua área.</b><br>
 
@@ -143,43 +197,17 @@ class AtividadeController implements IController {
         Titulo: <strong>${titulo}</strong><br>
           Mensagem: <strong>${conteudo}</strong><br>
         <br/>
-        <a href="https://www7.pe.senac.br/taskmanager/atividade/${atividadeSalva?.id}/edit">CLIQUE PARA VER.</a><p>  
+        <a href="https://www7.pe.senac.br/taskmanagerglc/atividade/${atividadeSalva?.id}/edit">CLIQUE PARA VER.</a><p>  
         `
-      //   let destinatario: string = ''
+        let destinatarios = '';
 
-      // funcionarioDaArea.forEach((usuario, index) => {
-      //   destinatario += `${usuario.email};`
-      // })
-
-      // console.log(`${destinatario}`)
-        await emailUtils.enviar('marciohigo@pe.senac.br', txEmail1)
-        await emailUtils.enviar('gracabezerra@pe.senac.br', txEmail1)
-        await emailUtils.enviar('andrejar@pe.senac.br', txEmail1)
-        await emailUtils.enviar('marconunes@pe.senac.br', txEmail1)
-
+        funcionarioDaArea.forEach((usuario, index) => {
+          destinatarios += `${usuario.email};`;
+        });
         
+        emailUtils.enviar(destinatarios, txEmail1);
         
-      }else{
-        const txEmail = `
-        <b>Nova Atividade para sua área</b><br>
-
-    Unidade: <strong>${setorSolicitante}</strong><br>
-    Titulo: <strong>${titulo}</strong><br>
-      Mensagem: <strong>${conteudo}</strong><br>
-    <br/>
-    <a href="https://www7.pe.senac.br/taskmanager/atividade/${atividadeSalva?.id}/edit">CLIQUE PARA VER</a><p>  
-    `
-    let destinatario: string = ''
-
-      funcionarioDaArea.forEach((usuario, index) => {
-        destinatario += `${usuario.email};`
-      })
-
-      console.log(`${destinatario}`)
-      await emailUtils.enviar(destinatario, txEmail)
-
-      }
-
+      
       
 
 
@@ -242,14 +270,40 @@ class AtividadeController implements IController {
     try {
       const { id } = req.params
       // console.log(id)
-      const { fkStatus, arquivado, tempoEstimado } = req.body
-      console.log(req.body.fkStatus)
+      const { fkStatus, arquivado, tempoEstimado,
+        centroCusto,
+        forma,
+        dimensao,
+        material,
+        eletro,
+        medida,
+        editar,
+        indicacao,
+        cor,
+        informacoes
+
+
+
+       } = req.body
+      console.log('lll'+editar)
+
+      
 
       await Atividade.update(
         {
           fkStatus,
           arquivado,
-          tempoEstimado
+          tempoEstimado,
+          centroCusto,
+          forma,
+          editar,
+          dimensao,
+          cor,
+          material,
+          eletro,
+          medida,
+          indicacao,
+          informacoes
         },
         {
           where: {

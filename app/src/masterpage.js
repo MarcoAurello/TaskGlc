@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Switch, BrowserRouter as Router, Route } from "react-router-dom";
 import Content from "./components/content";
+import Modal from './components/modal'
 
 import Home from "./pages/home";
 import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
@@ -33,6 +34,7 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import FormatAlignJustifyIcon from "@mui/icons-material/FormatAlignJustify";
+import BallotIcon from '@mui/icons-material/Ballot';
 
 import CssBaseline from "@mui/material/CssBaseline";
 import Toolbar from "./components/toolbar";
@@ -89,6 +91,9 @@ import AtividadeRecebidaNotificationItem from "./components/atividadeRecebida-no
 import Equipe from "./pages/equipe";
 import ValidarUsuarioForm from "./pages/validar-usuario-form";
 import AtividadeForm from "./pages/chamado-form";
+import GroupsIcon from '@mui/icons-material/Groups';
+
+import AtividadeEditar from "./pages/atividadeEditar";
 import TaskItem from "./components/task-item";
 import TodasAsPendencias from "./pages/todasAsPendencias";
 import SolicitadasSetor from "./pages/solicitadasSetor";
@@ -154,6 +159,78 @@ const Masterpage = (props) => {
   const [atividadesRecebida, setAtividadeRecebida] = useState([]);
   const [minhasAtividades, setMinhasAtividades] = useState([]);
   const [solicitacaoAtividade, setSolicitacaoAtividades] = useState([]);
+  const [meuSetor, setMeuSetor] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [atividadesExecutor, setAtividadesExecutor] = useState([]);
+  const [executorSelecionado, setExecutorSelecionado] = useState('');
+
+  const [atividadesStatus, setAtividadesStatus] = useState([]);
+  const [statusSelecionado, setStatusSelecionado] = useState('');
+
+
+
+
+
+  const handleExecutorClick = (executorNome) => {
+    const atividadesFiltradas = meuSetor.filter(atividade => atividade?.UsuarioExecutor?.nome === executorNome);
+    setAtividadesExecutor(atividadesFiltradas);
+    setExecutorSelecionado(executorNome);
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setAtividadesExecutor([]);
+  };
+
+  const executores = [...new Set(meuSetor.map(atividade => atividade?.UsuarioExecutor?.nome))];
+
+
+
+  const handleExecutorClick1 = (statusNome) => {
+    const atividadesFiltradasStatus = meuSetor.filter(atividade => atividade?.Status?.nome === statusNome);
+    setAtividadesStatus(atividadesFiltradasStatus);
+    setStatusSelecionado(statusNome);
+    setModalOpen(true);
+  };
+
+  
+  // const handleCloseModal1 = () => {
+  //   setModalOpen(false);
+  //   setAtividadesExecutor([]);
+  // };
+
+  const status = [...new Set(meuSetor.map(atividade => atividade?.Status?.nome))];
+
+
+  function carregarAtividadesDoSetor() {
+    setOpenLoadingDialog(true);
+    const token = getCookie("_token_task_manager");
+    const params = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    fetch(
+      `${process.env.REACT_APP_DOMAIN_API}/api/atividade/recebidasSetor/`,
+      params
+    ).then((response) => {
+      const { status } = response;
+      response.json().then((data) => {
+        setOpenLoadingDialog(false);
+        if (status === 401) {
+        } else if (status === 200) {
+          setOpenLoadingDialog(false);
+
+          // alert(JSON.stringify(data.data))
+
+          setMeuSetor(data.data);
+        }
+      });
+    });
+  }
+
 
   useEffect(() => {
     isAuthenticated().then((_) => {
@@ -162,6 +239,8 @@ const Masterpage = (props) => {
       setPrimeiroLogin(_.data.data.primeiroLogin);
       setOpenDialogPrimeiroAcesso(_.data.data.primeiroLogin);
     });
+
+    carregarAtividadesDoSetor()
   }, []);
 
   useEffect(() => {
@@ -413,6 +492,9 @@ const Masterpage = (props) => {
   useEffect(() => {
     carregarMinhasAtividades();
     carregarSolicitacaoAtividades();
+
+
+  
   }, []);
 
   const salvarDadosPrimeiroAcesso = () => {
@@ -445,7 +527,11 @@ const Masterpage = (props) => {
             setMessage(data.message);
             setOpenMessageDialog(true);
           } else if (status === 200) {
+            window.location.href = `${process.env.REACT_APP_DOMAIN}/home`
+
+
             // alert(JSON.stringify(data.data))
+
             setMessage(data.message);
             setOpenMessageDialog(true);
             setOpenDialogPrimeiroAcesso(false);
@@ -744,6 +830,101 @@ const Masterpage = (props) => {
 
             <Accordion>
               <AccordionSummary
+                // expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography style={{ fontSize: 14, color: "#2c73d1" }}>
+                  Recebidas por Funcionário <GroupsIcon />
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+
+
+                <div>
+
+                  
+                  {executores.map((executorNome) => (
+                    <button className="executor-button" key={executorNome} onClick={() => handleExecutorClick(executorNome)}>
+                      {executorNome?
+                      
+                          <b>
+
+                            {executorNome}
+                          </b>
+                      
+                      
+                      :'Selecionar Executor'} ({meuSetor.filter(a => a?.UsuarioExecutor?.nome === executorNome).length})
+                    </button>
+                  ))}
+
+                  {modalOpen && (
+                    <Modal onClose={handleCloseModal}>
+                      <h1 style={{ color: 'black' }}>Atividades de {executorSelecionado}</h1>
+                      <>
+                        {atividadesExecutor.map((atividade) => (
+                         
+                          
+                         
+                          <button
+                            onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${atividade.id}/edit`}
+                            className="executor-button"
+                          >{atividade?.titulo} - {atividade?.Status?.nome}
+
+                          </button>
+
+
+                        ))}<p></p>
+                      </>
+                    </Modal>
+                  )}
+                </div>
+              </AccordionDetails>
+            </Accordion>
+
+            <Accordion>
+              <AccordionSummary
+                // expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography style={{ fontSize: 14, color: "#2c73d1" }}>
+                  Recebidas por Status <BallotIcon/>
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+
+
+                <div>
+                  {status.map((statusNome) => (
+                    <button className="executor-button" key={statusNome} onClick={() => handleExecutorClick1(statusNome)}>
+                      Status: {statusNome} ({meuSetor.filter(a => a.Status?.nome === statusNome).length})
+                    </button>
+                  ))}
+
+                  {modalOpen && (
+                    <Modal onClose={handleCloseModal}>
+                      
+                      <>
+                        {atividadesStatus.map((atividade) => (
+                          <button
+                            onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${atividade.id}/edit`}
+                            className="executor-button"
+                          >{atividade?.titulo} - {atividade?.Status?.nome} - {atividade?.UsuarioExecutor?.nome}
+
+                          </button>
+
+
+                        ))}<p></p>
+                      </>
+                    </Modal>
+                  )}
+                </div>
+              </AccordionDetails>
+            </Accordion>
+
+            <Accordion>
+              <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"
                 id="panel1a-header"
@@ -900,20 +1081,7 @@ const Masterpage = (props) => {
               </AccordionDetails>
             </Accordion>
 
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography
-                style={{ fontSize: 14, color: "#2c73d1" }}
-                onClick={() =>
-                  (window.location.href = `${process.env.REACT_APP_DOMAIN}/video/`)
-                }
-              >
-                Tutorial <OndemandVideoIcon />
-              </Typography>
-            </AccordionSummary>
+           
 
             {/* <ListItem disablePadding>
                   <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/recebidasSetor/`}>
@@ -934,11 +1102,19 @@ const Masterpage = (props) => {
             </ListItem> */}
 
             {logged &&
-            logged.validado &&
-            logged.Perfil.nome === PerfilUtils.Administrador ? (
+               
+              logged?.Area?.Unidade?.nome === 'GLC' &&
+              (
+
+                logged.Perfil.nome === PerfilUtils.Administrador ||
+                logged.Perfil.nome === PerfilUtils.Coordenador ||
+                logged.Perfil.nome === PerfilUtils.Gerente
+
+              )
+              ? (
               <>
                 <Divider />
-                <ListItem disablePadding>
+                {/* <ListItem disablePadding>
                   <ListItemButton>
                     <ListItemIcon>
                       <PhonelinkSetupIcon />
@@ -950,8 +1126,8 @@ const Masterpage = (props) => {
                       }
                     />
                   </ListItemButton>
-                </ListItem>
-                <ListItem disablePadding>
+                </ListItem> */}
+                {/* <ListItem disablePadding>
                   <ListItemButton>
                     <ListItemIcon>
                       <ContactMailIcon />
@@ -963,14 +1139,14 @@ const Masterpage = (props) => {
                       }
                     />
                   </ListItemButton>
-                </ListItem>
+                </ListItem> */}
                 <ListItem disablePadding>
                   <ListItemButton>
                     <ListItemIcon>
                       <HomeWorkIcon />
                     </ListItemIcon>
                     <ListItemText
-                      primary="Unidade"
+                      primary="Cadastrar Unidade"
                       onClick={() =>
                         (window.location.href = `${process.env.REACT_APP_DOMAIN}/unidade`)
                       }
@@ -983,7 +1159,7 @@ const Masterpage = (props) => {
                       <AccountBalanceIcon />
                     </ListItemIcon>
                     <ListItemText
-                      primary="Área"
+                      primary="Cadastrar Área"
                       onClick={() =>
                         (window.location.href = `${process.env.REACT_APP_DOMAIN}/area`)
                       }
@@ -1000,34 +1176,34 @@ const Masterpage = (props) => {
       <CssBaseline />
 
       {logged &&
-      logged.Perfil &&
-      (logged.Perfil.nome === PerfilUtils.Gerente ||
-        logged.Perfil.nome === PerfilUtils.Administrador) ? (
+        logged.Perfil &&
+        (logged.Perfil.nome === PerfilUtils.Gerente ||
+          logged.Perfil.nome === PerfilUtils.Administrador) ? (
         <Toolbar
           menu={menu}
-          title="Atividades- Gerente"
+          title="SISTEMA DE ATIVIDADES-GLC -Gerente"
           actions={actionsGerente}
         />
       ) : (
         ""
       )}
       {logged &&
-      logged.Perfil &&
-      logged.Perfil.nome === PerfilUtils.Coordenador ? (
+        logged.Perfil &&
+        logged.Perfil.nome === PerfilUtils.Coordenador ? (
         <Toolbar
           menu={menu}
-          title="Atividades- Coordenador"
+          title="SISTEMA DE ATIVIDADES-GLC - Coordenador"
           actions={actionsCoordenador}
         />
       ) : (
         ""
       )}
       {logged &&
-      logged.Perfil &&
-      logged.Perfil.nome === PerfilUtils.Funcionário ? (
+        logged.Perfil &&
+        logged.Perfil.nome === PerfilUtils.Funcionário ? (
         <Toolbar
           menu={menu}
-          title="Atividades- Funcionário"
+          title="SISTEMA DE ATIVIDADES-GLC- Fincionário"
           actions={actionsFuncionario}
         />
       ) : (
@@ -1059,6 +1235,12 @@ const Masterpage = (props) => {
             exact
             path="/atividade/:id/edit"
             render={(props) => <AtividadeForm {...props} logged={logged} />}
+          />
+
+          <Route
+            exact
+            path="/atividade/:id/editar"
+            render={(props) => <AtividadeEditar {...props} logged={logged} />}
           />
 
           <Route

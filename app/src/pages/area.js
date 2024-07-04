@@ -89,7 +89,7 @@ const Area = () => {
               <TableRow key={row.id}>
                 <TableCell>{row.id}</TableCell>
                 <TableCell>{row.nome}</TableCell>
-                <TableCell>{row.Unidade.nome}</TableCell>
+                <TableCell>{row?.Unidade?.nome}</TableCell>
                 <TableCell>{
                   <Tooltip title='Editar'>
                     <IconButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/area/${row.id}/edit/`}>

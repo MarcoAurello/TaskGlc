@@ -113,7 +113,7 @@ class AtividadeController  {
    Titulo: <strong>${titulo}</strong><br>
     Mensagem: <strong>${conteudo}</strong><br>
   <br/>
-  <a href="https://www7.pe.senac.br/taskmanager/atividade/${_optionalChain([atividadeSalva, 'optionalAccess', _4 => _4.id])}/edit">CLIQUE PARA VER</a><p>
+  <a href="https://www7.pe.senac.br/taskmanagerGlc/atividade/${_optionalChain([atividadeSalva, 'optionalAccess', _4 => _4.id])}/edit">CLIQUE PARA VER</a><p>
   
   `
       const funcionarioDaArea = await _usuariomodel2.default.findAll({

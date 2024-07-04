@@ -62,7 +62,7 @@ class UsuarioAtividadeController implements IController {
 
       const msg = `
       <b>Chegou atividade para você.<br>
-      <a href="https://www7.pe.senac.br/taskmanager/atividade/${fkAtividade}/edit">CLIQUE PARA VER</a><p>
+      <a href="https://www7.pe.senac.br/taskmanagerGlc/atividade/${fkAtividade}/edit">CLIQUE PARA VER</a><p>
   `
 
       await emailUtils.enviar(emailExecutor?.email, msg)

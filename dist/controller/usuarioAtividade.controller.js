@@ -58,7 +58,7 @@ class UsuarioAtividadeController  {
 
       const msg = `
       <b>Chegou atividade para você.<br>
-      <a href="https://www7.pe.senac.br/taskmanager/atividade/${fkAtividade}/edit">CLIQUE PARA VER</a><p>
+      <a href="https://www7.pe.senac.br/taskmanagerGlc/atividade/${fkAtividade}/edit">CLIQUE PARA VER</a><p>
   `
 
       _emailutils2.default.enviar(_optionalChain([emailExecutor, 'optionalAccess', _2 => _2.email]), msg)

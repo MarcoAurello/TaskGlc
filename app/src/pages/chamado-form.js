@@ -6,10 +6,14 @@ import {
   TableRow, TextField, Tooltip
 } from "@mui/material";
 
+
+
 import TaskItemDoChamado from "../components/task-item-do-chamado";
 import PerfilUtils from "../utils/perfil.utils";
 import MessageIcon from '@mui/icons-material/Message';
 import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
+
+
 
 
 import PersonIcon from '@mui/icons-material/Person';
@@ -21,6 +25,7 @@ import TaskFilter from "../components/task-filter";
 
 const getCookie = require('../utils/getCookie')
 
+
 const PageContainer = styled.div`
   margin: 16px;
   padding: 32px;
@@ -28,6 +33,7 @@ const PageContainer = styled.div`
   border: 1px solid #e0e0e0;
   border-radius: 5px;
   box-shadow: 0px 0px 20px -18px #424242;
+  
 `
 
 const AtividadeForm = (props) => {
@@ -38,10 +44,11 @@ const AtividadeForm = (props) => {
   const [arquivado, setArquivado] = useState(true)
 
   const [open, setOpen] = useState(false);
+  const ImageLogo = require('../assets/coment.png')
   const [openImg, setOpenImg] = useState(false);
   const [openMsg, setOpenMsg] = useState(false);
   const [openStatus, setOpenStatus] = useState(false);
-  const [boleanDimensao, setBoleanDimensao] = useState(true);
+  const [boleanDimensao, setBoleanDimensao] = useState(false);
   const [dimensao, setDimensao] = useState("");
 
   const { id } = props.match.params;
@@ -75,14 +82,16 @@ const AtividadeForm = (props) => {
 
 
   const [titulo, setTitulo] = useState('')
+  const [centroCusto, setCentroCusto] = useState('')
+  const [centroCusto1, getCentroCusto] = useState('')
   const [conteudo, setConteudo] = useState('')
   const [forma, setForma] = useState('')
   const [material, setMaterial] = useState('')
   const [cor, setCor] = useState('')
-  const [indicacao, setIndicacao] = useState ('')
-  const [boleanIndicacao, setBoleanIndicacao] = useState(true)
-  const [informacoes, setInformacoes] = useState ('')
-  const [boleanInformacoes, setBoleanInformacoes] = useState(true)
+  const [indicacao, setIndicacao] = useState('')
+  const [boleanIndicacao, setBoleanIndicacao] = useState(false)
+  const [informacoes, setInformacoes] = useState('')
+  const [boleanInformacoes, setBoleanInformacoes] = useState(false)
   const [fkUnidade, setFkUnidade] = useState('')
   const [fkUnidadeDrop, setFkUnidadeDrop] = useState('')
   const [dep, setDep] = useState('')
@@ -93,7 +102,7 @@ const AtividadeForm = (props) => {
   const [arquivoDoChamado, setArquivoDoChamado] = useState([])
   const [unidadeTrue, setUnidadeTrue] = useState([])
   const [eletro, setEletro] = useState('')
-  const [boleanEletro, setBoleanEletro] = useState(true)
+  const [boleanEletro, setBoleanEletro] = useState(false)
   const [area, setArea] = useState([])
   const [subArea, setSubArea] = useState([])
   const [atividade, setAtividade] = useState(null)
@@ -103,8 +112,12 @@ const AtividadeForm = (props) => {
   const [fkUnidadeExecutor, getFkUnidadeExecutor] = useState('')
   const [meuSetor, setMeuSetor] = useState([]);
   const [meuSetorCount, setMeuSetorCount] = useState([]);
-  const [boleanMedida, setBoleanMedida] = useState(true)
+  const [boleanMedida, setBoleanMedida] = useState(false)
   const [medida, setMedida] = useState('')
+  const [editar, setEditar] = useState(false)
+  const [animate, setAnimate] = useState(false);
+
+  const [cor1, getCor] = useState('')
 
 
   const [usuarioExecutor, setusuarioExecutor] = useState([])
@@ -122,14 +135,23 @@ const AtividadeForm = (props) => {
   const [caminho, setCaminho] = useState()
   const [openDialogFile, setOpenDialogFile] = useState(false)
   const [termo, setTermo] = useState(false)
-  const [boleanForma, setBoleanForma] = useState(true)
+  const [boleanForma, setBoleanForma] = useState(false)
   const [openFile, setOpenFile] = useState('')
   const [sub, setSub] = useState('')
   const [cpfTermo, setCpfTermo] = useState('')
   const [mensagemAlert, setMensagemAlert] = useState('')
   const [openMensagens, setOpenMensagens] = useState(false)
-  const [boleanCor, setBoleanCor] = useState(true)
-  const [boleanMaterial, setBoleanMaterial] = useState(true)
+  const [boleanCor, setBoleanCor] = useState(false)
+  const [boleanMaterial, setBoleanMaterial] = useState(false)
+  const [modalSave, setModalSave] = useState(false)
+  const [medida1, getMedida] = useState('')
+  const [forma1, getForma] = useState('')
+  const [indicacao1, getIndicacao] = useState('')
+  const [informacoes1, getInformacoes] = useState('')
+  const [material1, getMaterial] = useState('')
+  const [eletro1, getEletro] = useState('')
+  const [dimencao1, getDimencao] = useState('')
+  const [categoria1, getCategoria] = useState('')
 
 
 
@@ -139,6 +161,18 @@ const AtividadeForm = (props) => {
   const toggleChecked = () => {
     setChecked((prev) => !prev);
   };
+
+
+
+  useEffect(() => {
+    if (mensagens && mensagens.length > 0) {
+      setAnimate(true);
+      const timer = setTimeout(() => {
+        setAnimate(false);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [mensagens]);
 
 
 
@@ -167,6 +201,19 @@ const AtividadeForm = (props) => {
               setProtocolo(data.data.protocolo)
               setStatus(data.data.Status.nome)
               setStatusId(data.data.Status.id)
+              getForma(data.data.forma)
+              getMedida(data.data.medida)
+              getCor(data.data.cor)
+              getDimencao(data.data.dimensao)
+              getIndicacao(data.data.indicacao)
+              getInformacoes(data.data.informacoes)
+              getMaterial(data.data.material)
+              getEletro(data.data.eletro)
+
+              getCategoria(data.data.categoria)
+              getCentroCusto(data.data.centroCusto)
+
+
               setValueArea(data.data.Area.nome)
               setSetorSolicitante(data.data.Usuario.Area.Unidade.nome)
               setValueUnidade(data.data.Area.Unidade.nome)
@@ -177,6 +224,7 @@ const AtividadeForm = (props) => {
               setFkDemandante(data.data.fkDemandante)
               setCategoriaChamado(data.data.categoria)
               setTitle(data.data.titulo)
+              setEditar(data.data.editar)
               setFkAreaDemandada(data.data.fkArea)
               setIdChamado(data.data.id)
               setFkUsuarioSolicitante(data.data.fkUsuarioSolicitante)
@@ -184,6 +232,9 @@ const AtividadeForm = (props) => {
               getEmailExecutor(data.data.UsuarioExecutor.email)
               getTelefoneExecutor(data.data.UsuarioExecutor.telefone)
               getFkExecutor(data.data.UsuarioExecutor.id)
+
+
+
 
 
 
@@ -454,61 +505,39 @@ const AtividadeForm = (props) => {
 
 
 
-    if (boleanCor) {
-      setCor("Não se aplica")
-    } else {
+
+
+    if (!boleanCor) {
       setCor("")
-
     }
 
-    if (boleanIndicacao) {
-      setIndicacao("Não se aplica") 
-    } else {
-        setIndicacao("")
-  
+    if (!boleanIndicacao) {
+      setIndicacao("")
     }
 
-    if (boleanInformacoes) {
-      setInformacoes("Não se aplica") 
-    } else {
-        setInformacoes("")
-  
+    if (!boleanInformacoes) {
+      setInformacoes("")
     }
 
-    if (boleanMaterial) {
-      setMaterial("Não se aplica")
-    } else  {
+    if (!boleanMaterial) {
       setMaterial("")
-
     }
 
 
-    if (boleanMedida) {
-      setMedida("Não se aplica")
-    } else {
-      setMedida(medida)
-
+    if (!boleanMedida) {
+      setMedida("")
     }
 
-    if (boleanForma) {
-      setForma("Não se aplica")
-    } else {
-      setForma(forma)
-
+    if (!boleanForma) {
+      setForma("")
     }
 
-    if (boleanEletro) {
-      setEletro("Não se aplica")
-    } else {
-      setEletro(eletro)
-
+    if (!boleanEletro) {
+      setEletro("")
     }
 
-    if (boleanDimensao) {
-      setDimensao("Não se aplica")
-    } else {
-      setDimensao(dimensao)
-
+    if (!boleanDimensao) {
+      setDimensao("")
     }
 
 
@@ -518,7 +547,7 @@ const AtividadeForm = (props) => {
 
 
 
-  }, [boleanDimensao,boleanEletro, boleanForma,boleanMedida, boleanMaterial, boleanInformacoes, boleanCor, boleanIndicacao])
+  }, [boleanDimensao, boleanEletro, boleanForma, boleanMedida, boleanMaterial, boleanInformacoes, boleanCor, boleanIndicacao])
 
 
 
@@ -639,9 +668,11 @@ const AtividadeForm = (props) => {
 
   const onSave = () => {
     setOpenLoadingDialog(true)
-    alert(indicacao + informacoes)
 
-  
+
+
+
+
     // setSetorSolicitante(props.logged.Area.Unidade.nome)
 
     const token = getCookie('_token_task_manager')
@@ -661,8 +692,10 @@ const AtividadeForm = (props) => {
         categoria,
         medida,
         titulo,
+        centroCusto,
         conteudo,
         dimensao,
+        tipoCadastro,
         eletro,
         forma,
         material,
@@ -688,6 +721,7 @@ const AtividadeForm = (props) => {
             setOpenLoadingDialog(false)
             setMessage(data.message)
             setOpenMessageDialog(true)
+            setModalSave(false)
             window.location.href = `${process.env.REACT_APP_DOMAIN}/chamadosAbertos/`
 
 
@@ -738,6 +772,7 @@ const AtividadeForm = (props) => {
   // }
 
   const novaInteracao = () => {
+    setOpenLoadingDialog(true)
 
     const token = getCookie('_token_task_manager')
     const params = {
@@ -763,16 +798,19 @@ const AtividadeForm = (props) => {
       .then(response => {
         const { status } = response
         response.json().then(data => {
-          setOpenLoadingDialog(false)
+          setOpenLoadingDialog(true)
           if (status === 401) {
+            setOpenLoadingDialog(false)
             setMessage(data.message)
             setOpenMessageDialog(true)
           } else if (status === 200) {
             // alert(JSON.stringify(data.data))
             // alert(JSON.stringify(arquivoDoChamado))
+            setOpenLoadingDialog(false)
             setAtividade(data.data)
             setMessage(data.message)
-            setOpenMessageDialog(true)
+            
+            
 
             window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${idChamado}/edit`
 
@@ -1062,18 +1100,98 @@ const AtividadeForm = (props) => {
     setBoleanIndicacao(event.target.checked);
   };
 
-  const Change7 =  (event) => {
+  const Change7 = (event) => {
     setBoleanInformacoes(event.target.checked);
   };
+
+  const handleToggle = () => {
+    setOpen(true);
+  };
+
 
   return (
 
     <PageContainer>
 
 
-      {id ? <div style={{ flex: 1, marginBottom: 16, marginLeft: 25 }}>
+      {/* {id ? <div style={{ flex: 1, marginBottom: 16, marginLeft: 25 }}>
         <TextField size="small" fullWidth label="Protocolo" disabled variant="outlined" value={protocolo} />
-      </div> : ''}
+      </div> : ''} */}
+
+      <div style={{
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 16,
+        marginLeft: 5
+      }}>
+        {(logged && logged.fkArea === fkAreaDemandada && logged.Perfil.nome === PerfilUtils.Coordenador) ||
+          (logged && logged.Perfil.nome === PerfilUtils.Gerente && logged.Area.fkUnidade === fkUnidadeExecutor) ?
+          <Button variant="contained" size="small" color="error" onClick={() => setOpen(true)} style={{ marginRight: 10 }}>
+            Selecionar funcionário para atender<PersonIcon />
+          </Button>
+          : ''
+        }
+
+        {(logged && props.logged.id === fkExecutor) || (logged && logged.Perfil.nome === PerfilUtils.Coordenador && props.logged.fkArea === fkAreaDemandada) ?
+          <Button variant="contained" size="small" color="error" onClick={() => setOpenStatus(true)} style={{ marginRight: 10 }}>
+            Alterar Status da Atividade
+          </Button>
+          : ''
+        }
+
+
+        {logged && (logged.id === fkUsuarioSolicitante || logged.id === fkExecutor)
+          ?
+
+          <div>
+          <Button size="large" onClick={() => setOpenMsg(true)}>
+            <b
+              style={{
+                fontSize: '30px',
+                
+                marginLeft: '80px',
+                marginRight: '-10px',
+                animation: animate ? 'pulse 1s infinite' : 'none',
+              }}
+            >
+              {mensagens ? mensagens.length : ''}   
+              <img src={ImageLogo} height={64} />
+            </b>
+          </Button>  
+    
+          <style>
+            {`
+            @keyframes pulse {
+              0% {
+                transform: scale(1);
+              }
+              50% {
+                transform: scale(1.2);
+              }
+              100% {
+                transform: scale(1);
+              }
+            }
+            `}
+          </style>
+        </div>
+
+
+
+
+
+          :
+         ''
+
+        }
+      </div>
+
+
+
+
+
+
 
 
 
@@ -1084,7 +1202,7 @@ const AtividadeForm = (props) => {
 
           protocolo={protocolo}
           unidade={valueUnidade}
-          categoria={categoriaChamado}
+          categoria={categoria1}
           area={valueArea}
           classificacao={classificacao}
           solicitante={usuarioSolicitante}
@@ -1097,17 +1215,34 @@ const AtividadeForm = (props) => {
           emailExecutor={emailExecutor}
           telefoneExecutor={telefoneExecutor}
           setorSolicitante={setorSolicitante}
+          forma={forma1}
+          medida={medida1}
+          cor={cor1}
+          indicacao={indicacao1}
+          informacoes={informacoes1}
+          material={material1}
+          eletro={eletro1}
+          dimensao={dimencao1}
+          centroCusto={centroCusto1}
+          id={id}
+          logged={logged ? logged.nome : ''}
+          loggedEmail={logged ? logged.email : ''}
+          editar={editar}
+          onToggle={handleToggle}
+
+
+
 
 
         />
       </div> : ''}
-      <center>
+      {/* <center>
         {(logged && logged.fkArea === fkAreaDemandada && logged.Perfil.nome === PerfilUtils.Coordenador) ||
           (logged && logged.Perfil.nome === PerfilUtils.Gerente && logged.Area.fkUnidade === fkUnidadeExecutor)
 
           ?
           <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
-            <Button variant="contained" size='small' color="error" onClick={() => setOpen(true)}>Selecionar Funcionario<PersonIcon></PersonIcon></Button>
+            <Button variant="contained" size='small' color="error" onClick={() => setOpen(true)}>Selecionar funcionário para atender<PersonIcon></PersonIcon></Button>
           </div> : ''
 
         }
@@ -1118,7 +1253,7 @@ const AtividadeForm = (props) => {
           </div> : ''
 
         }
-      </center>
+      </center> */}
 
       <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 16, marginRight: 3 }}>
 
@@ -1151,7 +1286,7 @@ const AtividadeForm = (props) => {
           <TextField size="small" fullWidth label="Chamado" disabled variant="outlined" value={title} />
         </div> : ''} */}
         {!id ? <>
-          {logged ? <TaskFilter nome={props.logged.nome + ', solicite cadastro de material'} setSetorSolicitante={props.logged.Area?.Unidade.nome} />
+          {logged ? <TaskFilter nome={props.logged.nome + ', solicite cadastro de produto ou serviço'} setSetorSolicitante={props.logged.Area?.Unidade.nome} />
             :
             ''
           }
@@ -1162,18 +1297,18 @@ const AtividadeForm = (props) => {
               padding: 16,
               border: '1px solid #ccc',
               borderRadius: 8,
-              backgroundColor: '#F9C98C',
+              backgroundColor: '#cfdff4',
               boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
             }}>
               <div style={{ flex: 1, marginBottom: 16, wordBreak: 'break-all' }}
               >
-                Solicitar cadastro de item :
 
 
 
 
 
-                <FormControl
+
+                Solicitar serviço a:<FormControl
                   disabled
                   size="small">
 
@@ -1195,7 +1330,7 @@ const AtividadeForm = (props) => {
                   </Select>
                 </FormControl>
               </div>
-              <div style={{ flex: 1, marginBottom: 16, wordBreak: "break-all" }}>
+              {/* <div style={{ flex: 1, marginBottom: 16, wordBreak: "break-all" }}>
                 <FormControl fullWidth size="small">
                   <InputLabel id="demo-select-small">Área</InputLabel>
                   <Select
@@ -1214,7 +1349,7 @@ const AtividadeForm = (props) => {
                     {area.map((item, index) => <MenuItem key={index} value={item.id} onClick={() => [setFkArea(item.id), setGti(item.nome)]}>{item.nome}</MenuItem>)}
                   </Select>
                 </FormControl>
-              </div>
+              </div> */}
 
               <div>
                 <FormControl fullWidth size="small">
@@ -1243,17 +1378,38 @@ const AtividadeForm = (props) => {
                   <p></p>
                   <div style={{ flex: 1, marginBottom: 16, marginTop: 20 }}>
                     <b>
-                      Informar um título para o produto
-                      </b><br></br>
-                      Que seja de fácil a busca. Exemplos: buffet, software, TV, etc.
+                      Definir um título para o produto
+                    </b><br></br>
+                    <div style={{ color: 'red'}}>
+
+                    </div>
+                    Defina um título simples e de fácil entendimento
                     <TextField size="small" fullWidth label="Nome do produto" variant="outlined" value={titulo} onChange={e => setTitulo(e.target.value)}
                       style={{
                         backgroundColor: '#fff',
                         borderRadius: 4
                       }} />
                   </div>
+
                   <div style={{ flex: 1, marginBottom: 16 }}>
-                    <TextField size="small" fullWidth label="Descrição" multiline rows={2} variant="outlined" value={conteudo} onChange={e => setConteudo(e.target.value)}
+                    <b>
+                      Defina como será usado o produto
+                    </b>
+                    <TextField size="small" fullWidth label="Ex: o material será usado em aulas práticas no laboratório de gastronomia" multiline rows={2} variant="outlined" value={conteudo} onChange={e => setConteudo(e.target.value)}
+                      style={{
+                        backgroundColor: '#fff',
+                        borderRadius: 4
+                      }} />
+                  </div>
+
+                  Dados do item
+
+                  <div style={{ flex: 1, marginBottom: 16, marginTop: 20 }}>
+                    <b>
+                      Definir o Centro de Custo
+                    </b><br></br>
+                    Em caso de duvida entre em contado com a Contabilidade
+                    <TextField size="small" fullWidth label="Ex: 21055 - Eventos" variant="outlined" value={centroCusto} onChange={e => setCentroCusto(e.target.value)}
                       style={{
                         backgroundColor: '#fff',
                         borderRadius: 4
@@ -1266,8 +1422,17 @@ const AtividadeForm = (props) => {
                   <div >
 
                     <b>
-                      Forma
+                      Definir a Forma:
                     </b>
+                    <label style={{
+                      display: 'block',
+                      marginBottom: 8,
+                      fontSize: '1rem',
+                      fontWeight: 500,
+                      color: '#333'
+                    }}>
+                      Informe a forma do item. As formas podem variar amplamente e incluem, mas não se limitam a, retangular, quadrado, oval, espiral, circular, cilíndrico, triangular, hexagonal, pentagonal, esférico, elíptico,
+                      cônico, e piramidal. Especifique a forma que melhor descreve o item </label>
 
 
                     <Checkbox
@@ -1279,22 +1444,13 @@ const AtividadeForm = (props) => {
                       checked={boleanForma}
                     />
                     <label style={{ color: 'blue' }} >
-                      Não se aplica
+                      Quero Definir a forma
                     </label>
 
 
                     {boleanForma ?
-                      '' :
                       <div>
-                        <label style={{
-                          display: 'block',
-                          marginBottom: 8,
-                          fontSize: '1rem',
-                          fontWeight: 500,
-                          color: '#333'
-                        }}>
-                          Informar se o item é: retangular ou quadrado ou oval ou espiral ou circular ou cilíndrico etc.
-                        </label>
+
 
                         <TextField
                           size="small"
@@ -1302,6 +1458,9 @@ const AtividadeForm = (props) => {
                           label="Ex: Retangular com cantos arredondados"
                           variant="outlined"
                           value={forma}
+                          multiline
+                          minRows={2}
+                          maxRows={4}
                           onChange={e => setForma(e.target.value)}
                           style={{
                             backgroundColor: '#fff',
@@ -1320,6 +1479,8 @@ const AtividadeForm = (props) => {
                           }}
                         />
                       </div>
+                      :
+                      ''
 
 
                     }
@@ -1335,8 +1496,18 @@ const AtividadeForm = (props) => {
                   <div >
 
                     <b>
-                      Dimensão
+                      Definir Dimensão:
                     </b>
+                    <label style={{
+                      display: 'block',
+                      marginBottom: 8,
+                      fontSize: '1rem',
+                      fontWeight: 500,
+                      color: '#333'
+                    }}>
+                      Informe as dimensões do item, como largura, comprimento, altura, espessura, diâmetro, polegadas, litros,
+                      metros cúbicos, milímetros, centímetros, volume, capacidade, profundidade, e perímetro.
+                    </label>
 
 
                     <Checkbox
@@ -1348,30 +1519,25 @@ const AtividadeForm = (props) => {
                       checked={boleanDimensao}
                     />
                     <label style={{ color: 'blue' }} >
-                      Não se aplica
+                      Quero definir a dimensão
                     </label>
 
 
 
 
-                    {boleanDimensao ?
+                    {!boleanDimensao ?
                       '' :
                       <div>
-                        <label style={{
-                          display: 'block',
-                          marginBottom: 8,
-                          fontSize: '1rem',
-                          fontWeight: 500,
-                          color: '#333'
-                        }}>
-                          Informe a largura, comprimento, altura, espessura, diâmetro, polegada, litros etc.
-                        </label>
+
                         <TextField
                           size="small"
                           fullWidth
                           label="Ex: 45 cm altura x 45 cm largura x 90 cm profundidade, deve suportar 80kg"
                           variant="outlined"
                           value={dimensao}
+                          multiline
+                          minRows={2}
+                          maxRows={4}
                           onChange={e => setDimensao(e.target.value)}
                           style={{
                             backgroundColor: '#fff',
@@ -1403,8 +1569,22 @@ const AtividadeForm = (props) => {
                   <div >
 
                     <b>
-                      Tipo de material:
+                      Definir Tipo de material:
                     </b>
+                    <label style={{
+                      display: 'block',
+                      marginBottom: 8,
+                      fontSize: '1rem',
+                      fontWeight: 500,
+                      color: '#333',
+
+                    }}>
+                      Informe os materiais do item, exemplos incluem plástico (como polietileno, polipropileno, nylon, ABS),
+                      madeira (pinho, carvalho, mogno), alumínio, aço (galvanizado,
+                      inox 304 ou 404), tecido (seda, algodão, nylon, poliéster),
+                      ferro, cobre, vidro (temperado, laminado), papel (cartão, kraft,
+                      reciclado), cerâmica, borracha, couro, e materiais compostos
+                    </label>
 
                     <Checkbox
 
@@ -1415,27 +1595,20 @@ const AtividadeForm = (props) => {
                       checked={boleanMaterial}
                     />
                     <label style={{ color: 'blue' }} >
-                      Não se aplica
+                      Quero definir o material
                     </label>
-                    {boleanMaterial ?
+                    {!boleanMaterial ?
                       "" : <div>
-                        <label style={{
-                          display: 'block',
-                          marginBottom: 8,
-                          fontSize: '1rem',
-                          fontWeight: 500,
-                          color: '#333',
 
-                        }}>
-                          Plástico (polietileno ou polipropileno ou nylon  etc.), madeira, alumínio, aço (galvanizado ou inox (304 ou 404)), tecido (seda ou algodão ou nylon  etc.), ferro, cobre, vidro, papel etc.
-                          Obs.: poderá ser composto por mais de um material.
-                        </label>
                         <TextField
                           size="small"
                           fullWidth
-                          label="Ex: Estrutura de metal com assento de tecido"
+                          label="Ex: Estrutura de metal tubular com assento e encosto em couro"
                           variant="outlined"
                           value={material}
+                          multiline
+                          minRows={2}
+                          maxRows={4}
                           onChange={e => setMaterial(e.target.value)}
                           style={{
                             backgroundColor: '#fff',
@@ -1464,86 +1637,98 @@ const AtividadeForm = (props) => {
                   <hr></hr>
                   <div >
 
-<b>
-Características Elétricas, Potência E Velocidade
+                    <b>
+                      Definir Características Elétricas, Potência ou Velocidade:
 
-</b>
+                    </b>
+                    <label style={{
+                      display: 'block',
+                      marginBottom: 8,
+                      fontSize: '1rem',
+                      fontWeight: 500,
+                      color: '#333',
 
-<Checkbox
-  boleanEletro={boleanEletro}
-  onChange={Change5}
-  color="primary"
-  inputProps={{ "aria-label": "checkbox example" }}
-  checked={boleanEletro}
-/>
-<label style={{ color: 'blue' }}>
-  Não se aplica
-</label>
-{boleanEletro ?
-  "" : <div>
-    <label style={{
-      display: 'block',
-      marginBottom: 8,
-      fontSize: '1rem',
-      fontWeight: 500,
-      color: '#333',
+                    }}>
+                      Informe as características técnicas do item, como tensão elétrica em volts,
+                      corrente em ampères, potência em watts, temperatura em graus Celsius,
+                      capacidade de refrigeração em BTUs, velocidade de rotação em RPM,
+                      frequência em hertz, energia em joules,
+                      e eficiência energética conforme padrões vigentes.
+                    </label>
 
-    }}>
-      Tensão Elétrica (volts, ampere, watts), graus celsius, BTUs, RPM, etc.
-    </label>
-    <TextField
-      size="small"
-      fullWidth
-      label="Ex: Potência: 650 W
+                    <Checkbox
+                      boleanEletro={boleanEletro}
+                      onChange={Change5}
+                      color="primary"
+                      inputProps={{ "aria-label": "checkbox example" }}
+                      checked={boleanEletro}
+                    />
+                    <label style={{ color: 'blue' }}>
+                      Quero definir Características Elétricas, Potência ou Velocidade
+                    </label>
+                    {!boleanEletro ?
+                      "" : <div>
+
+                        <TextField
+                          size="small"
+                          fullWidth
+                          label="Ex: Potência: 650 W
 Tensão de Entrada: 100-240 V AC
 Eficiência: 80 PLUS Bronze
 "
-      variant="outlined"
-      value={eletro}
-      onChange={e => setEletro(e.target.value)}
-      style={{
-        backgroundColor: '#fff',
-        borderRadius: 4
-      }}
-      InputLabelProps={{ style: { color: '#888' } }}
-      InputProps={{
-        style: {
-          color: '#333'
-        },
-        classes: {
-          notchedOutline: {
-            borderColor: '#ccc'
-          }
-        }
-      }}
-    />
-  </div>
+                          variant="outlined"
+                          value={eletro}
+                          multiline
+                          minRows={2}
+                          maxRows={4}
+                          onChange={e => setEletro(e.target.value)}
+                          style={{
+                            backgroundColor: '#fff',
+                            borderRadius: 4
+                          }}
+                          InputLabelProps={{ style: { color: '#888' } }}
+                          InputProps={{
+                            style: {
+                              color: '#333'
+                            },
+                            classes: {
+                              notchedOutline: {
+                                borderColor: '#ccc'
+                              }
+                            }
+                          }}
+                        />
+                      </div>
 
 
 
-}
-
-
-
-
-
-
-
+                    }
 
 
 
 
-
-
-</div>
+                  </div>
                   <hr></hr>
 
                   <div >
 
                     <b>
-                      Unidade de Medida:
+                      Definir Unidade de Medida:
 
                     </b>
+                    <label style={{
+                      display: 'block',
+                      marginBottom: 8,
+                      fontSize: '1rem',
+                      fontWeight: 500,
+                      color: '#333',
+
+                    }}>
+                      Informe as unidades de medida para quantificar o item.
+                      Exemplos incluem metragem (metros, metros quadrados, metros cúbicos, metros lineares, centímetros, milímetros),
+                      peso (quilogramas, gramas), volume (litros, mililitros),
+                      e outras formas de embalagem ou contagem (rolo, bombona, balde, pacote especificando o número de unidades).
+                    </label>
 
                     <Checkbox
                       boleanMedida={boleanMedida}
@@ -1553,27 +1738,20 @@ Eficiência: 80 PLUS Bronze
                       checked={boleanMedida}
                     />
                     <label style={{ color: 'blue' }}>
-                      Não se aplica
+                      Quero definir Unidade de Medida
                     </label>
-                    {boleanMedida ?
+                    {!boleanMedida ?
                       "" : <div>
-                        <label style={{
-                          display: 'block',
-                          marginBottom: 8,
-                          fontSize: '1rem',
-                          fontWeight: 500,
-                          color: '#333',
 
-                        }}>
-                          Metragem (metro ou metro quadrado ou metro cúbico ou metro linear ou centímetro ou milímetro),
-                          quilograma ou grama ou  litro ou mililitro, rolo, bombona, balde, pacote (com quantas unidades)
-                        </label>
                         <TextField
                           size="small"
                           fullWidth
                           label="Ex: Comprimento: 50 metros (m)"
                           variant="outlined"
                           value={medida}
+                          multiline
+                          minRows={2}
+                          maxRows={4}
                           onChange={e => setMedida(e.target.value)}
                           style={{
                             backgroundColor: '#fff',
@@ -1607,9 +1785,20 @@ Eficiência: 80 PLUS Bronze
                   <hr></hr>
                   <div style={{ flex: 1, marginBottom: 16 }}>
                     <b>
-                      Cor:
+                      Definir a Cor:
 
                     </b>
+                    <label style={{
+                      display: 'block',
+                      marginBottom: 8,
+                      fontSize: '1rem',
+                      fontWeight: 500,
+                      color: '#333',
+
+                    }}>
+                      Informar cor, se for importante
+                    </label>
+
 
                     <Checkbox
                       id="meu"
@@ -1620,9 +1809,10 @@ Eficiência: 80 PLUS Bronze
                       checked={boleanCor}
                     />
                     <label style={{ color: 'blue' }}>
-                      Não se aplica
+                      Quero definir a Cor
                     </label>
-                    {boleanCor ?
+
+                    {!boleanCor ?
                       "" :
                       <TextField size="small" fullWidth label="Cor" variant="outlined" value={cor} onChange={e => setCor(e.target.value)}
                         style={{
@@ -1633,13 +1823,23 @@ Eficiência: 80 PLUS Bronze
 
                   </div>
 
-                   <p></p>
-                   <hr></hr>
+                  <p></p>
+                  <hr></hr>
                   <div style={{ flex: 1, marginBottom: 16 }}>
                     <b>
-                      Indicações:
+                      Definir Indicações de marca ou modelo:
 
                     </b>
+                    <label style={{
+                      display: 'block',
+                      marginBottom: 8,
+                      fontSize: '1rem',
+                      fontWeight: 500,
+                      color: '#333',
+
+                    }}>
+                      Existe alguma marca ou modelo já testada ou validada? informe e justifique
+                    </label>
 
                     <Checkbox
                       boleanIndicacao={boleanIndicacao}
@@ -1647,28 +1847,620 @@ Eficiência: 80 PLUS Bronze
                       color="primary"
                       inputProps={{ "aria-label": "checkbox example" }}
                       checked={boleanIndicacao}
+                    />
+                    <label style={{ color: 'blue' }}>
+                      Quero definir Indicações
+                    </label>
+                    {!boleanIndicacao ?
+                      "" : <div>
+
+                        <TextField
+                          size="small"
+                          fullWidth
+                          label="Indicação"
+                          variant="outlined"
+                          value={indicacao}
+                          multiline
+                          minRows={2}
+                          maxRows={4}
+                          onChange={e => setIndicacao(e.target.value)}
+                          style={{
+                            backgroundColor: '#fff',
+                            borderRadius: 4
+                          }}
+                          InputLabelProps={{ style: { color: '#888' } }}
+                          InputProps={{
+                            style: {
+                              color: '#333'
+                            },
+                            classes: {
+                              notchedOutline: {
+                                borderColor: '#ccc'
+                              }
+                            }
+                          }}
+                        />
+                      </div>
+
+
+
+                    }
+
+
+
+                  </div>
+
+
+
+
+                  <p></p>
+                  <hr></hr>
+                  <div style={{ flex: 1, marginBottom: 16 }}>
+                    <b>
+                      Quero definir Informações:
+
+                    </b>
+                    <label style={{
+                      display: 'block',
+                      marginBottom: 8,
+                      fontSize: '1rem',
+                      fontWeight: 500,
+                      color: '#333',
+
+                    }}>
+                      Cite Informações Complementares
+                    </label>
+
+                    <Checkbox
+                      boleanInformacoes={boleanInformacoes}
+                      onChange={Change7}
+                      color="primary"
+                      inputProps={{ "aria-label": "checkbox example" }}
+                      checked={boleanInformacoes}
+                    />
+                    <label style={{ color: 'blue' }}>
+                      Definir Informações do item
+                    </label>
+                    {!boleanInformacoes ?
+                      "" : <div>
+
+                        <TextField
+                          size="small"
+                          fullWidth
+                          label="Informações"
+                          variant="outlined"
+                          value={informacoes}
+                          multiline
+                          minRows={2}
+                          maxRows={4}
+                          onChange={e => setInformacoes(e.target.value)}
+                          style={{
+                            backgroundColor: '#fff',
+                            borderRadius: 4
+                          }}
+                          InputLabelProps={{ style: { color: '#888' } }}
+                          InputProps={{
+                            style: {
+                              color: '#333'
+                            },
+                            classes: {
+                              notchedOutline: {
+                                borderColor: '#ccc'
+                              }
+                            }
+                          }}
+                        />
+                      </div>
+
+
+
+                    }
+
+                  </div>
+
+
+
+
+
+
+
+                </div>
+                : ""}
+
+              {
+                tipoCadastro === "Cadastro de serviço" ?
+                  <div>
+                    <p></p>
+                    <div style={{ flex: 1, marginBottom: 16, marginTop: 20 }}>
+                      <b>
+                        Definir um título para o Serviço
+                      </b><br></br>
+                      Defina um título simples e de fácil entendimento
+                      <TextField size="small" fullWidth label="Ex: Instalação de Stand com capacidade para 50 pessoas" variant="outlined" value={titulo} onChange={e => setTitulo(e.target.value)}
+                        style={{
+                          backgroundColor: '#fff',
+                          borderRadius: 4
+                        }} />
+                    </div>
+
+                    <div style={{ flex: 1, marginBottom: 16 }}>
+                      <b>
+                        Defina como será usado o serviço
+                      </b>
+                      <TextField size="small" fullWidth label="Ex:Sera usado para divulgar cursos do Senac em diversas feiras na RMR  " multiline rows={2} variant="outlined" value={conteudo} onChange={e => setConteudo(e.target.value)}
+                        style={{
+                          backgroundColor: '#fff',
+                          borderRadius: 4
+                        }} />
+                    </div>
+
+                    <div style={{ flex: 1, marginBottom: 16, marginTop: 20 }}>
+                      <b>
+                        Definir o Centro de Custo
+                      </b><br></br>
+                      Em caso de duvida entre em contado com a Contabilidade
+                      <TextField size="small" fullWidth label="Ex: 21055 - Eventos" variant="outlined" value={centroCusto} onChange={e => setCentroCusto(e.target.value)}
+                        style={{
+                          backgroundColor: '#fff',
+                          borderRadius: 4
+                        }} />
+                    </div>
+
+
+
+                    <hr></hr>
+                    <div >
+
+                      <b>
+                        Definir a Forma:
+                      </b>
+                      <label style={{
+                        display: 'block',
+                        marginBottom: 8,
+                        fontSize: '1rem',
+                        fontWeight: 500,
+                        color: '#333'
+                      }}>
+                        Informe a forma como o serviço será prestado, entrega unica, em etapas, por diária, por empreitada </label>
+
+
+                      <Checkbox
+
+                        boleanForma={boleanForma}
+                        onChange={Change3}
+                        color="primary"
+                        inputProps={{ "aria-label": "checkbox example" }}
+                        checked={boleanForma}
                       />
-                      <label style={{ color: 'blue' }}>
-                        Não se aplica
+                      <label style={{ color: 'blue' }} >
+                        Quero Definir a forma
                       </label>
-                      {boleanIndicacao ?
-                        "" : <div>
-                          <label style={{
-                            display: 'block',
-                            marginBottom: 8,
-                            fontSize: '1rem',
-                            fontWeight: 500,
-                            color: '#333',
-  
-                          }}>
-                            Existe alguma marca ou modelo já validada? informe e justifique
-                          </label>
+
+
+                      {boleanForma ?
+                        <div>
+
+
                           <TextField
                             size="small"
                             fullWidth
-                            label="Indicacao"
+                            label="Ex: Serviço de montagem e desmontagem de acordo com projeto apresentado em 3D"
+                            variant="outlined"
+                            value={forma}
+                            multiline
+                            minRows={2}
+                            maxRows={4}
+                            onChange={e => setForma(e.target.value)}
+                            style={{
+                              backgroundColor: '#fff',
+                              borderRadius: 4
+                            }}
+                            InputLabelProps={{ style: { color: '#888' } }}
+                            InputProps={{
+                              style: {
+                                color: '#333'
+                              },
+                              classes: {
+                                notchedOutline: {
+                                  borderColor: '#ccc'
+                                }
+                              }
+                            }}
+                          />
+                        </div>
+                        :
+                        ''
+
+
+                      }
+
+                      <hr></hr>
+
+
+
+
+
+                    </div>
+                    <p></p>
+                    <div >
+
+                      <b>
+                        Definir Dimensão:
+                      </b>
+                      <label style={{
+                        display: 'block',
+                        marginBottom: 8,
+                        fontSize: '1rem',
+                        fontWeight: 500,
+                        color: '#333'
+                      }}>
+                        Informe as dimensões do serviço, como largura, comprimento, altura, espessura, diâmetro, polegadas, litros,
+                        metros cúbicos, milímetros, centímetros, volume, capacidade, profundidade, e perímetro.
+                      </label>
+
+
+                      <Checkbox
+
+                        boleanDimensao={boleanDimensao}
+                        onChange={Change4}
+                        color="primary"
+                        inputProps={{ "aria-label": "checkbox example" }}
+                        checked={boleanDimensao}
+                      />
+                      <label style={{ color: 'blue' }} >
+                        Quero definir a dimensão
+                      </label>
+
+
+
+
+                      {!boleanDimensao ?
+                        '' :
+                        <div>
+
+                          <TextField
+                            size="small"
+                            fullWidth
+                            label="Ex: Produção de Impresso gráfico 45 cm altura x 45 cm largura x 90"
+                            variant="outlined"
+                            value={dimensao}
+                            multiline
+                            minRows={2}
+                            maxRows={4}
+                            onChange={e => setDimensao(e.target.value)}
+                            style={{
+                              backgroundColor: '#fff',
+                              borderRadius: 4
+                            }}
+                            InputLabelProps={{ style: { color: '#888' } }}
+                            InputProps={{
+                              style: {
+                                color: '#333'
+                              },
+                              classes: {
+                                notchedOutline: {
+                                  borderColor: '#ccc'
+                                }
+                              }
+                            }}
+                          />
+                        </div>
+
+
+                      }
+
+
+
+
+
+                    </div>
+                    <hr></hr>
+                    <div >
+
+                      <b>
+                        Definir Tipo de material:
+                      </b>
+                      <label style={{
+                        display: 'block',
+                        marginBottom: 8,
+                        fontSize: '1rem',
+                        fontWeight: 500,
+                        color: '#333',
+
+                      }}>
+                        Informe os materiais do item, exemplos incluem plástico (como polietileno, polipropileno, nylon, ABS),
+                        madeira (pinho, carvalho, mogno), alumínio, aço (galvanizado,
+                        inox 304 ou 404), tecido (seda, algodão, nylon, poliéster),
+                        ferro, cobre, vidro (temperado, laminado), papel (cartão, kraft,
+                        reciclado), cerâmica, borracha, couro, e materiais compostos
+                      </label>
+
+                      <Checkbox
+
+                        boleanMaterial={boleanMaterial}
+                        onChange={Change1}
+                        color="primary"
+                        inputProps={{ "aria-label": "checkbox example" }}
+                        checked={boleanMaterial}
+                      />
+                      <label style={{ color: 'blue' }} >
+                        Quero definir o material
+                      </label>
+                      {!boleanMaterial ?
+                        "" : <div>
+
+                          <TextField
+                            size="small"
+                            fullWidth
+                            label="Ex: Para o serviço deverá ser usado estrutura em aço"
+                            variant="outlined"
+                            value={material}
+                            multiline
+                            minRows={2}
+                            maxRows={4}
+                            onChange={e => setMaterial(e.target.value)}
+                            style={{
+                              backgroundColor: '#fff',
+                              borderRadius: 4
+                            }}
+                            InputLabelProps={{ style: { color: '#888' } }}
+                            InputProps={{
+                              style: {
+                                color: '#333'
+                              },
+                              classes: {
+                                notchedOutline: {
+                                  borderColor: '#ccc'
+                                }
+                              }
+                            }}
+                          />
+                        </div>
+
+
+
+                      }
+
+                    </div>
+                    <p></p>
+                    <hr></hr>
+                    <div >
+
+                      <b>
+                        Definir Características Elétricas, Potência ou Velocidade:
+
+                      </b>
+                      <label style={{
+                        display: 'block',
+                        marginBottom: 8,
+                        fontSize: '1rem',
+                        fontWeight: 500,
+                        color: '#333',
+
+                      }}>
+                        Informe as características técnicas do item, como tensão elétrica em volts,
+                        corrente em ampères, potência em watts, temperatura em graus Celsius,
+                        capacidade de refrigeração em BTUs, velocidade de rotação em RPM,
+                        frequência em hertz, energia em joules,
+                        e eficiência energética conforme padrões vigentes.
+                      </label>
+
+                      <Checkbox
+                        boleanEletro={boleanEletro}
+                        onChange={Change5}
+                        color="primary"
+                        inputProps={{ "aria-label": "checkbox example" }}
+                        checked={boleanEletro}
+                      />
+                      <label style={{ color: 'blue' }}>
+                        Quero definir Características Elétricas, Potência ou Velocidade
+                      </label>
+                      {!boleanEletro ?
+                        "" : <div>
+
+                          <TextField
+                            size="small"
+                            fullWidth
+                            label="Ex: Potência: 650 W
+Tensão de Entrada: 100-240 V AC
+Eficiência: 80 PLUS Bronze
+"
+                            variant="outlined"
+                            value={eletro}
+                            multiline
+                            minRows={2}
+                            maxRows={4}
+                            onChange={e => setEletro(e.target.value)}
+                            style={{
+                              backgroundColor: '#fff',
+                              borderRadius: 4
+                            }}
+                            InputLabelProps={{ style: { color: '#888' } }}
+                            InputProps={{
+                              style: {
+                                color: '#333'
+                              },
+                              classes: {
+                                notchedOutline: {
+                                  borderColor: '#ccc'
+                                }
+                              }
+                            }}
+                          />
+                        </div>
+
+
+
+                      }
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    </div>
+                    <hr></hr>
+
+                    <div >
+
+                      <b>
+                        Definir Unidade de Medida:
+
+                      </b>
+                      <label style={{
+                        display: 'block',
+                        marginBottom: 8,
+                        fontSize: '1rem',
+                        fontWeight: 500,
+                        color: '#333',
+
+                      }}>
+                        Informe as unidades de medida para quantificar o item.
+                        Exemplos incluem metragem (metros, metros quadrados, metros cúbicos, metros lineares, centímetros, milímetros),
+                        peso (quilogramas, gramas), volume (litros, mililitros),
+                        e outras formas de embalagem ou contagem (rolo, bombona, balde, pacote especificando o número de unidades).
+                      </label>
+
+                      <Checkbox
+                        boleanMedida={boleanMedida}
+                        onChange={Change2}
+                        color="primary"
+                        inputProps={{ "aria-label": "checkbox example" }}
+                        checked={boleanMedida}
+                      />
+                      <label style={{ color: 'blue' }}>
+                        Quero definir Unidade de Medida
+                      </label>
+                      {!boleanMedida ?
+                        "" : <div>
+
+                          <TextField
+                            size="small"
+                            fullWidth
+                            label="Ex: Comprimento: 50 metros (m)"
+                            variant="outlined"
+                            value={medida}
+                            multiline
+                            minRows={2}
+                            maxRows={4}
+                            onChange={e => setMedida(e.target.value)}
+                            style={{
+                              backgroundColor: '#fff',
+                              borderRadius: 4
+                            }}
+                            InputLabelProps={{ style: { color: '#888' } }}
+                            InputProps={{
+                              style: {
+                                color: '#333'
+                              },
+                              classes: {
+                                notchedOutline: {
+                                  borderColor: '#ccc'
+                                }
+                              }
+                            }}
+                          />
+                        </div>
+
+
+
+                      }
+
+
+
+                    </div>
+
+
+
+                    <p></p>
+                    <hr></hr>
+                    <div style={{ flex: 1, marginBottom: 16 }}>
+                      <b>
+                        Definir a Cor:
+
+                      </b>
+                      <label style={{
+                        display: 'block',
+                        marginBottom: 8,
+                        fontSize: '1rem',
+                        fontWeight: 500,
+                        color: '#333',
+
+                      }}>
+                        Informar cor, se for importante
+                      </label>
+
+
+                      <Checkbox
+                        id="meu"
+                        boleanCor={boleanCor}
+                        onChange={Change}
+                        color="primary"
+                        inputProps={{ "aria-label": "checkbox example" }}
+                        checked={boleanCor}
+                      />
+                      <label style={{ color: 'blue' }}>
+                        Quero definir a Cor
+                      </label>
+
+                      {!boleanCor ?
+                        "" :
+                        <TextField size="small" fullWidth label="Cor" variant="outlined" value={cor} onChange={e => setCor(e.target.value)}
+                          style={{
+                            backgroundColor: '#fff',
+                            borderRadius: 4
+                          }} />
+                      }
+
+                    </div>
+
+                    <p></p>
+                    <hr></hr>
+                    <div style={{ flex: 1, marginBottom: 16 }}>
+                      <b>
+                        Definir Indicações de marca ou modelo:
+
+                      </b>
+                      <label style={{
+                        display: 'block',
+                        marginBottom: 8,
+                        fontSize: '1rem',
+                        fontWeight: 500,
+                        color: '#333',
+
+                      }}>
+                        Existe alguma marca ou modelo já testada ou validada? informe e justifique
+                      </label>
+
+                      <Checkbox
+                        boleanIndicacao={boleanIndicacao}
+                        onChange={Change6}
+                        color="primary"
+                        inputProps={{ "aria-label": "checkbox example" }}
+                        checked={boleanIndicacao}
+                      />
+                      <label style={{ color: 'blue' }}>
+                        Quero definir Indicações
+                      </label>
+                      {!boleanIndicacao ?
+                        "" : <div>
+
+                          <TextField
+                            size="small"
+                            fullWidth
+                            label="Indicação"
                             variant="outlined"
                             value={indicacao}
+                            multiline
+                            minRows={2}
+                            maxRows={4}
                             onChange={e => setIndicacao(e.target.value)}
                             style={{
                               backgroundColor: '#fff',
@@ -1687,54 +2479,58 @@ Eficiência: 80 PLUS Bronze
                             }}
                           />
                         </div>
-  
-  
-  
+
+
+
                       }
-  
-  
-
-                  </div>
 
 
-                
-                  
-                  <p></p>
-                  <hr></hr>
-                  <div style={{ flex: 1, marginBottom: 16 }}>
-                    <b>
-                      Informações:
 
-                    </b>
+                    </div>
 
-                    <Checkbox
-                      boleanInformacoes={boleanInformacoes}
-                      onChange={Change7}
-                      color="primary"
-                      inputProps={{ "aria-label": "checkbox example" }}
-                      checked={boleanInformacoes}
+
+
+
+                    <p></p>
+                    <hr></hr>
+                    <div style={{ flex: 1, marginBottom: 16 }}>
+                      <b>
+                        Quero definir Informações:
+
+                      </b>
+                      <label style={{
+                        display: 'block',
+                        marginBottom: 8,
+                        fontSize: '1rem',
+                        fontWeight: 500,
+                        color: '#333',
+
+                      }}>
+                        Cite Informações Complementares
+                      </label>
+
+                      <Checkbox
+                        boleanInformacoes={boleanInformacoes}
+                        onChange={Change7}
+                        color="primary"
+                        inputProps={{ "aria-label": "checkbox example" }}
+                        checked={boleanInformacoes}
                       />
                       <label style={{ color: 'blue' }}>
-                        Não se aplica
+                        Definir Informações do item
                       </label>
-                      {boleanInformacoes ?
+                      {!boleanInformacoes ?
                         "" : <div>
-                          <label style={{
-                            display: 'block',
-                            marginBottom: 8,
-                            fontSize: '1rem',
-                            fontWeight: 500,
-                            color: '#333',
-  
-                          }}>
-                            Cite Informações Complementares
-                          </label>
+
                           <TextField
                             size="small"
                             fullWidth
-                            label="Informacoes"
+                            label="Informações"
                             variant="outlined"
                             value={informacoes}
+                            multiline
+                            minRows={2}
+                            maxRows={4}
                             onChange={e => setInformacoes(e.target.value)}
                             style={{
                               backgroundColor: '#fff',
@@ -1753,23 +2549,23 @@ Eficiência: 80 PLUS Bronze
                             }}
                           />
                         </div>
-  
-  
-  
+
+
+
                       }
 
+                    </div>
+
+
+
+
+
+
+
                   </div>
+                  : ""}
 
 
-
-
-
-
-
-                </div>
-                : ""}
-
-                
 
             </div>
 
@@ -1798,7 +2594,7 @@ Eficiência: 80 PLUS Bronze
               <File size="small" fullWidth label="Descrição" multiline rows={2} variant="outlined" value={conteudo} onChange={e => setConteudo(e.target.value)} />
             </div> */}
             {/* <UploadButton></UploadButton> */}
-            <input type={"file"} accept="image/*, video/*" enctype="multipart/form-data" onChange={(e) => enviarArquivo(e.target.files[0])} />
+            {/* <input type={"file"} accept="image/*, video/*" enctype="multipart/form-data" onChange={(e) => enviarArquivo(e.target.files[0])} /> */}
 
             <p></p>
             {/* <input type="file" accept="video/mp4" onChange={(e) => enviarVideoMp4(e)} /> */}
@@ -1818,7 +2614,7 @@ Eficiência: 80 PLUS Bronze
               <div style={{ flex: 1 }}></div>
               <Button variant="contained"
                 disabled={botaoDesabilitado}
-                onClick={onSave}>{'Criar'}</Button>
+                onClick={() => setModalSave(true)}>{'Solicitar cadastro do item'}</Button>
             </div>
             {/* <TextField
               type="hidden"
@@ -1841,124 +2637,13 @@ Eficiência: 80 PLUS Bronze
         {/* {area.map((item, index) => <b key={index} value={item.id} >{item.nome}</b>)} */}
 
 
-        {id ? <>
-
-          {/* {arquivoDoChamado.length
-            ?
-            <div style={{ borderTop: '1px solid #e0e0e0', 
-            padding: 2, background: '#FFEEE0', borderRadius: 10, marginBottom: 1,
-             border: '2px solid #e0e0e0' }}>
-              <div style={{fontSize:15}}>Anexos</div>
-              {
-
-                <table>
-                  <tr>
-                    <td>Arquivo</td>
-                    <td></td>
-                  </tr>
-                  {arquivoDoChamado.map((item, index) => <tr>
-                    <td >{item.nomeApresentacao}</td>
-                    <td>{<button onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN_API}/api/arquivo/${item.id}`}>Abrir</button>}</td>
-                  </tr>)}
-                </table>
-              
-              }
-            </div>
-
-            :
-            ''
-          } */}
-
-          {arquivoDoChamado.length
-            ?
-            <div style={{
-              borderTop: '1px solid #e0e0e0',
-              padding: 2, background: '#F5FFFA', borderRadius: 10, marginBottom: 1,
-              border: '2px solid #e0e0e0'
-            }}><div style={{ marginLeft: 20 }}><b>Anexos</b></div>
-              <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
-
-
-              </div>
-
-              {
-
-                <ol>
-
-                  {arquivoDoChamado.map((item, index) =>
-                    <li>
-
-                      {<Button size="small" style={{ marginLeft: 5, marginBottom: 5, fontSize: 10 }} onClick={(e) => {
-                        baixar(item.id)
-                      }}><AttachFileIcon></AttachFileIcon>{item.nomeApresentacao} </Button>}
-                    </li>)}
-
-                </ol>
-
-
-              }
-            </div>
-
-            :
-            ''
-
-          }
-
-          {/* 
-{
-                alterarStatus.map((status, key) => <MenuItem name={status.nome} value={status.id} >
-                  {status.nome}</MenuItem>)
-              } */}
 
 
 
 
 
-          {logged && (props.logged.id != fkUsuarioExecutor && props.logged.id != fkDemandante)
-            ?
-
-            <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
-              <h4>Histórico da Atividade</h4>
-              <Button size="small" variant="contained" onClick={() => [setOpenMsg(true)]}><MessageIcon />Comentar ou anexar </Button>
-            </div>
-
-            :
-            <h4>Atividade Concluida
-            </h4>
 
 
-          }
-
-
-
-
-
-          {mensagens.map((item, index) =>
-
-
-            <div style={{
-              borderTop: '1px solid #e0e0e0',
-              padding: 2, background: '#FFFFE0', borderRadius: 10, marginBottom: 1,
-              border: '2px solid #e0e0e0'
-            }}>
-
-              <div style={{ display: 'flex', flexDirection: 'colrowumn' }}>
-                <div style={{ display: 'flex', flexDirection: 'row' }}>
-                  {
-                    item.Usuario ?
-                      <b style={{ fontSize: 10, marginRight: 5 }}>{item.Usuario.nome}</b>
-                      :
-                      ''
-                  }
-                  <div style={{ flex: 1 }}></div>
-                  <b style={{ fontSize: 10 }}>{new Date(item.createdAt).toLocaleString()}</b>
-                </div>
-              </div>
-              <div >
-                <p style={{ wordBreak: "break-all" }}>{item.conteudo}</p>
-              </div>
-            </div>)}
-        </> : ''}
 
       </div>
 
@@ -2013,19 +2698,136 @@ Eficiência: 80 PLUS Bronze
         ''
       }
 
+      <Dialog
+        open={modalSave} onClose={() => setOpenDialogFile(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description">
+
+
+        <Dialog open={modalSave} onClose={() => setOpenDialogFile(false)} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
+
+          <DialogContent>
+            {
+              (cor === "" ||
+                forma === "" ||
+                dimensao === "" ||
+                material === "" ||
+                eletro === "" ||
+                medida === "" ||
+                indicacao === "" ||
+                informacoes === "") ?
+
+                <div>
+                  <DialogTitle id="alert-dialog-title">Campos não preenchidos</DialogTitle>
+                  {cor === "" &&
+                    <div style={{ color: "red" }}>
+                      Cor do item<br />
+                    </div>
+                  }
+
+                  {forma === "" &&
+                    <div style={{ color: "red" }}>
+                      Forma do item<br />
+                    </div>
+                  }
+
+                  {dimensao === "" &&
+                    <div style={{ color: "red" }}>
+                      Dimensão do item<br />
+                    </div>
+                  }
+
+                  {material === "" &&
+                    <div style={{ color: "red" }}>
+                      Material do item<br />
+                    </div>
+                  }
+
+                  {eletro === "" &&
+                    <div style={{ color: "red" }}>
+                      Características elétricas do item<br />
+                    </div>
+                  }
+
+                  {medida === "" &&
+                    <div style={{ color: "red" }}>
+                      Unidade de medida do item<br />
+                    </div>
+                  }
+
+                  {indicacao === "" &&
+                    <div style={{ color: "red" }}>
+                      Indicações de marca ou modelo do item<br />
+                    </div>
+                  }
+
+                  {informacoes === "" &&
+                    <div style={{ color: "red" }}>
+                      Informações do item<br />
+
+                    </div>
+                  }
+
+                  <DialogTitle id="alert-dialog-title">
+                    A falta destas informações pode acarretar uma compra que não supra as necessidades da unidade.
+                    <b style={{color:'red'}}>
+                      Deseja cadastrar mesmo assim?
+                      </b>
+                  </DialogTitle>
+
+                  <div>
+                    <Button variant="contained" onClick={() => onSave()}>Solicitar cadastro do item mesmo assim</Button>
+                    <p></p>
+
+
+
+                    <Button variant="contained" color="error" onClick={() => setModalSave(false)}>Quero completar o cadastro</Button>
+
+                  </div>
+                </div>
+
+
+                : <div>
+                  <Button variant="contained" onClick={() => onSave()}>Solicitar cadastro do item </Button>
+                  <p></p>
+
+
+
+                  <Button variant="contained" color="error" onClick={() => setModalSave(false)}>Voltar</Button>
+
+                </div>
+            }
+          </DialogContent>
+        </Dialog>
+
+
+
+
+
+        <p></p>
+
+
+
+
+
+
+
+
+      </Dialog>
+
 
 
       <hr></hr>
 
       <Dialog open={open} >
-        <DialogTitle style={{ color: '#1E90FF' }} >Encaminhar Atividade</DialogTitle>
+        <DialogTitle style={{ color: '#1E90FF' }} >Encaminhar Tarefa</DialogTitle>
         <DialogContent>
           <DialogContentText>
 
 
           </DialogContentText>
 
-          <InputLabel id="demo-select-small"><b>Titulo Atividade:</b></InputLabel>
+          <InputLabel id="demo-select-small"><b>Titulo :</b></InputLabel>
           {title}
           <br></br>
           <InputLabel id="demo-select-small"><b>Unidade</b></InputLabel>
@@ -2041,7 +2843,7 @@ Eficiência: 80 PLUS Bronze
 
 
             <select style={{ fontSize: 14 }} onChange={e => setNewClassificacao(e.target.value)}>
-              <option >CLASSIFIQUE A ATIVIDADE</option>)
+              <option >CLASSIFIQUE A ATIVIDADE</option>
 
               {
                 classificarChamado.map((classificacao, key) => <option name={classificacao.nome} value={classificacao.id} >
@@ -2211,47 +3013,60 @@ Eficiência: 80 PLUS Bronze
 
 
 
-      <Dialog open={openMsg}  >
-
-        <DialogContent>
-
-          {openStatus === false ?
-            <h2>Deixe uma mensagem</h2>
-            : <h4>Informe o motivo da alteração do Status</h4>}
-
-          <div style={{ flex: 1, marginBottom: 2 }}>
-            <TextField fullWidth sx={{ m: 1 }} size='200px' label='Digite sua mensagem...' multiline rows={8} variant="outlined" value={conteudo} onChange={e => setConteudo(e.target.value)} />
+<Dialog open={openMsg}>
+  <DialogContent
+  style={{ width: '600px', padding: '16px' }}
+  >
+    {mensagens.map((item, index) => (
+      <div key={index} style={{
+        borderTop: '1px solid #e0e0e0',
+        padding: 10,
+        background: '#FFFFE0',
+        borderRadius: 10,
+        
+        border: '2px solid #e0e0e0',
+      }}>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+            <b style={{ fontSize: 12 }}>{item.Usuario ? item.Usuario.nome : ''}</b>
+            <b style={{ fontSize: 12 }}>{new Date(item.createdAt).toLocaleString()}</b>
           </div>
-          <hr></hr>
-          <h4>Anexar arquivo</h4>
+        </div>
+        <div>
+          <p style={{ wordBreak: "break-all" }}>{item.conteudo}</p>
+        </div>
+      </div>
+    ))}
 
-          <input type={"file"} style={{
-            border: '2px solid #ccc',
-            padding: '10px',
-            fontSize: '16px',
-            color: '#fff',
-            borderRadius: '5px',
-            backgroundColor: '#176DD3'
-          }} onChange={(e) => enviarArquivo(e.target.files[0])} /><br></br>
+    <hr />
 
-          {/* <input type="file" accept="video/mp4" onChange={(e) => enviarVideoMp4(e)} /> */}
+    {openStatus === false ? <h2>Enviar mensagem</h2> : <h4>Informe o motivo da alteração do Status</h4>}
 
-          {listaDeArquivosEnviados.map((item, key) => <b style={{ color: 'blue', fontSize: 11 }}>{item.nomeApresentacao + ' Adicionado'}</b>)}
-          <hr></hr>
+    <div style={{ marginBottom: 16 }}>
+      <TextField
+        fullWidth
+        label='Digite sua mensagem...'
+        multiline
+        rows={8}
+        variant="outlined"
+        value={conteudo}
+        onChange={e => setConteudo(e.target.value)}
+        sx={{ margin: 1 }}
+      />
+    </div>
 
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'row' }}>
-            {/* <Button variant="outlined" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/area/`}>Voltar</Button> */}
-            <div style={{ flex: 1 }}></div>
-            <Button variant="contained" onClick={novaInteracao}>{'Enviar'}</Button>
+    <hr />
 
-
-            <Button onClick={() => setOpenMsg(false)}>Cancelar</Button>
-
-
-          </div>
-        </DialogContent>
-
-      </Dialog>
+    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
+      <Button variant="contained" color="primary" onClick={novaInteracao} >
+        Enviar
+      </Button>
+      <Button variant="outlined" onClick={() => setOpenMsg(false)}>
+        Cancelar
+      </Button>
+    </div>
+  </DialogContent>
+</Dialog>
 
 
       <Dialog open={termo}  >
