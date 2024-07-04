@@ -987,7 +987,7 @@ const AtividadeForm = (props) => {
 
         }
 
-        {(logged && props.logged.id === fkExecutor) || logged && logged.Perfil.nome === PerfilUtils.Coordenador ?
+        {(logged && props.logged.id === fkExecutor)  || logged && logged.Perfil.nome === PerfilUtils.Coordenador && props.logged.fkArea === fkAreaDemandada ?
           <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
             <Button variant="contained" size='small' color="error" onClick={() => setOpenStatus(true)}>Alterar Status da Atividade</Button>
           </div> : ''
