@@ -325,14 +325,14 @@ const Home = (props) => {
               (window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/cadastro`)
             }
           >
-            Solicitar Atividade
+            Solicitar cadastro de item
           </Button>
           <br></br>
           <p></p>
         </div>
       </center>
       <center>
-        <div style={{ fontSize: 20, color: "#5499FA" }}>
+        {/* <div style={{ fontSize: 20, color: "#5499FA" }}>
           Recebidas por área
           <Switch
             label="Selecionar por Area"
@@ -340,7 +340,7 @@ const Home = (props) => {
             onChange={handleChange}
             inputProps={{ "aria-label": "controlled" }}
           />
-        </div>{" "}
+        </div>{" "} */}
         <hr></hr>
         {!checked ? (
           <Box
@@ -519,18 +519,7 @@ const Home = (props) => {
           </center>
         </div>
       )}
-      {meuSetor.length === 0 ? (
-        <div style={{ color: "red" }}>
-          <center>
-            Seu setor não usa o Task Manager para receber e gerenciar tarefas?
-            <br></br>
-            Controle por Funcionário, por Status, por criticidade, tudo no
-            celular.<br></br>Habilite essa função com a GTI
-          </center>{" "}
-        </div>
-      ) : (
-        ""
-      )}
+      
       <div></div>
       <table
         style={{

@@ -15,6 +15,7 @@ module.exports = {
      * }], {});
     */
     const unidadeGercom = await queryInterface.sequelize.query('select * from unidade where nome = \'Gercom\'')
+    const unidadeGlc = await queryInterface.sequelize.query('select * from unidade where nome = \'GLC\'')
     const unidadeDep = await queryInterface.sequelize.query('select * from unidade where nome = \'DEP\'')
     const unidades = await queryInterface.sequelize.query('select * from unidade where nome = \'GTI\'')
     const unidadeGPC = await queryInterface.sequelize.query('select * from unidade where nome = \'GPC\'')
@@ -36,6 +37,13 @@ module.exports = {
 
 
     await queryInterface.bulkInsert('area', [
+      {
+        id: uuid(),
+        nome: 'GLC-Cadastro de Item',
+        fkUnidade: unidadeGlc[0][0].id,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
       {
         id: uuid(),
         nome: 'Educacional',
@@ -127,7 +135,7 @@ module.exports = {
         fkUnidade: unidadeUIS[0][0].id,
         createdAt: new Date(),
         updatedAt: new Date()
-      }
+      },
       {
         id: uuid(),
         nome: 'Sistemas - Desenvolvimento',

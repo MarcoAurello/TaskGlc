@@ -32,10 +32,15 @@ class AtividadeController implements IController {
         conteudo,
         categoria,
         caminho,
+        medida,
+        dimensao,
+        forma,
+        material,
+        cor,
         listaDeArquivosEnviados,
         setorSolicitante
       } = req.body
-      // console.log(req.body);
+      console.log("a" +req.body);
       // console.log(setorSolicitante);
 
       if (!fkUnidade) {
@@ -75,9 +80,13 @@ class AtividadeController implements IController {
       const proc = protocolo()
       const atividade = await Atividade.create({
         titulo,
+        forma,
+        material,
+        cor,
         fkClassificacao: classificacao?.id,
         protocolo: proc,
         fkArea,
+        
         fkStatus: status?.id,
         fkUsuarioSolicitante: req.usuario.id,
         arquivado: false,

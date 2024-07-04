@@ -4,20 +4,20 @@ require("dotenv").config({
   path: _optionalChain([process, 'access', _ => _.env, 'access', _2 => _2.DEVMODE, 'optionalAccess', _3 => _3.trim, 'call', _4 => _4()]) === "test" ? ".env.test" : ".env",
 });
 
-// const sequelize = new Sequelize(process.env.DATABASE, process.env.USER, process.env.PWD, {
-//   host: process.env.SERVER,
-//   dialect: process.env.DIALECT,
-//   logging: false
-// })
+const sequelize = new Sequelize(process.env.DATABASE, process.env.USER, process.env.PWD, {
+  host: process.env.SERVER,
+  dialect: process.env.DIALECT,
+  logging: false
+})
 
-const sequelize = new Sequelize("TaskManager", "taskmanager", "#@dmSENAC#", {
-  host: "10.9.8.74",
-  dialect: "mssql",
-  logging: false,
-  dialectOptions: {
-    timezone: "America/Sao_Paulo",
-  },
-});
+// const sequelize = new Sequelize("TaskManagerGlc", "sa", "local", {
+//   host: "10.9.8.74",
+//   dialect: "mssql",
+//   logging: false,
+//   dialectOptions: {
+//     timezone: "America/Sao_Paulo",
+//   },
+// });
 
 // const sequelize = new Sequelize('Tasktest', 'sa', 'local', {
 //   host: '10.9.8.20',

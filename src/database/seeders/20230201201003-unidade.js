@@ -18,14 +18,14 @@ module.exports = {
       {
         id: uuid(),
         nome: 'GTI',
-        receber: true,
+        receber: false,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         id: uuid(),
         nome: 'GPC',
-        receber: true,
+        receber: false,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -39,7 +39,7 @@ module.exports = {
       {
         id: uuid(),
         nome: 'Gercom',
-        receber: true,
+        receber: false,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -53,7 +53,7 @@ module.exports = {
       {
         id: uuid(),
         nome: 'DEP',
-        receber: true,
+        receber: false,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -108,14 +108,14 @@ module.exports = {
       {
         id: uuid(),
         nome: 'GLC',
-        receber: false,
+        receber: true,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         id: uuid(),
         nome: 'GSI',
-        receber: true,
+        receber: false,
         createdAt: new Date(),
         updatedAt: new Date()
       },

@@ -23,6 +23,40 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
+      forma: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
+      medida: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
+      cor: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
+
+      indicacao: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
+
+      informacoes:  {
+        type: Sequelize.STRING,
+        allowNull: true
+      }, 
+
+      material: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
+
+      eletro: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
+
+
       fkClassificacao: {
         type: Sequelize.UUID,
         allowNull: true
@@ -40,6 +74,12 @@ module.exports = {
         allowNull: false,
         defaultValue: false
       },
+      
+      dimensao: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
+
       fkUsuarioSolicitante: {
         type: Sequelize.UUID,
         allowNull: false

@@ -11,12 +11,20 @@ class Atividade extends Model {
   public id!: string
   public titulo!: string
   public protocolo!: string
+  public cor!: string
+  public indicacao: string
+  public informacoes: string 
+  public forma!: string
+  public material: string
+  public medida: string
+  public eletro: string;
   public categoria !: string
   public caminho !: string
   public fkClassificacao!: string
   public fkArea!: string
   public fkStatus!: string
   public pessoal!: Boolean
+  public dimensao!: string;
   public fkUsuarioSolicitante!: string
   public fkUsuarioExecutor!: string
   public tempoEstimado!: string
@@ -41,6 +49,40 @@ Atividade.init({
     type: DataTypes.STRING,
     allowNull: false
   },
+  forma: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  cor: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+
+  indicacao : {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+
+  informacoes : {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+
+
+  medida: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  
+  eletro: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+
+  material: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
   protocolo: {
     type: DataTypes.STRING,
     allowNull: false
@@ -62,6 +104,12 @@ Atividade.init({
     allowNull: false,
     defaultValue: false
   },
+
+  dimensao: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+
   fkUsuarioSolicitante: {
     type: DataTypes.UUID,
     allowNull: false

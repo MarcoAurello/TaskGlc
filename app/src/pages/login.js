@@ -13,7 +13,7 @@ import Dialog from '@mui/material/Dialog'
 import isAutenticated from "../utils/isAuthenticated";
 import { CircularProgress, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material'
 
-const ImageBackground = require('../assets/bg-image.jpeg')
+const ImageBackground = require('../assets/bg-image.jpg')
 const ImageLogo = require('../assets/senac_logo.png')
 
 
@@ -124,19 +124,12 @@ const Login = () => {
             }}>
             <img src={ImageLogo} height={64} />
             <Typography component="h1" variant="h5" style={{ marginTop: 16 }}>
-              {process.env.REACT_APP_NAME}
+              Cadastro de item GLC
             </Typography>
            
            
             <Box component="form" noValidate sx={{ mt: 1 }}>
-            <Button
-                fullWidth
-                variant="contained" style={{backgroundColor:'#FF9900'}}
-                sx={{ mt: 3, mb: 2 }}
-                onClick={(e) => {
-                  baixar() }}
-             
-              >Leia o manual aqui antes de usar o Sistema</Button>
+           
               <TextField
                 margin="normal"
                 required

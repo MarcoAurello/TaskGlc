@@ -41,6 +41,8 @@ const AtividadeForm = (props) => {
   const [openImg, setOpenImg] = useState(false);
   const [openMsg, setOpenMsg] = useState(false);
   const [openStatus, setOpenStatus] = useState(false);
+  const [boleanDimensao, setBoleanDimensao] = useState(true);
+  const [dimensao, setDimensao] = useState("");
 
   const { id } = props.match.params;
   const [openLoadingDialog, setOpenLoadingDialog] = useState(false)
@@ -69,19 +71,29 @@ const AtividadeForm = (props) => {
   const [createdAt, setCreatedAt] = useState('')
   const [title, setTitle] = useState('')
   const [botaoDesabilitado, setBotaoDesabilitado] = useState(false);
-  const[gti,setGti]=useState('')
+  const [gti, setGti] = useState('')
 
 
   const [titulo, setTitulo] = useState('')
   const [conteudo, setConteudo] = useState('')
+  const [forma, setForma] = useState('')
+  const [material, setMaterial] = useState('')
+  const [cor, setCor] = useState('')
+  const [indicacao, setIndicacao] = useState ('')
+  const [boleanIndicacao, setBoleanIndicacao] = useState(true)
+  const [informacoes, setInformacoes] = useState ('')
+  const [boleanInformacoes, setBoleanInformacoes] = useState(true)
   const [fkUnidade, setFkUnidade] = useState('')
   const [fkUnidadeDrop, setFkUnidadeDrop] = useState('')
   const [dep, setDep] = useState('')
   const [fkArea, setFkArea] = useState('')
+  const [tipoCadastro, setTipoCadastro] = useState('')
   const [fkCategoria, setFkCategoria] = useState('')
   const [unidade, setUnidade] = useState([])
   const [arquivoDoChamado, setArquivoDoChamado] = useState([])
   const [unidadeTrue, setUnidadeTrue] = useState([])
+  const [eletro, setEletro] = useState('')
+  const [boleanEletro, setBoleanEletro] = useState(true)
   const [area, setArea] = useState([])
   const [subArea, setSubArea] = useState([])
   const [atividade, setAtividade] = useState(null)
@@ -91,6 +103,8 @@ const AtividadeForm = (props) => {
   const [fkUnidadeExecutor, getFkUnidadeExecutor] = useState('')
   const [meuSetor, setMeuSetor] = useState([]);
   const [meuSetorCount, setMeuSetorCount] = useState([]);
+  const [boleanMedida, setBoleanMedida] = useState(true)
+  const [medida, setMedida] = useState('')
 
 
   const [usuarioExecutor, setusuarioExecutor] = useState([])
@@ -108,11 +122,14 @@ const AtividadeForm = (props) => {
   const [caminho, setCaminho] = useState()
   const [openDialogFile, setOpenDialogFile] = useState(false)
   const [termo, setTermo] = useState(false)
+  const [boleanForma, setBoleanForma] = useState(true)
   const [openFile, setOpenFile] = useState('')
   const [sub, setSub] = useState('')
   const [cpfTermo, setCpfTermo] = useState('')
   const [mensagemAlert, setMensagemAlert] = useState('')
   const [openMensagens, setOpenMensagens] = useState(false)
+  const [boleanCor, setBoleanCor] = useState(true)
+  const [boleanMaterial, setBoleanMaterial] = useState(true)
 
 
 
@@ -433,14 +450,75 @@ const AtividadeForm = (props) => {
 
   }, [fkUnidade, area])
 
-  // useEffect(() => {
+  useEffect(() => {
 
 
-  //   if (termo) {
-  //     alert(termo)
 
-  //   }
-  // }, [termo])
+    if (boleanCor) {
+      setCor("Não se aplica")
+    } else {
+      setCor("")
+
+    }
+
+    if (boleanIndicacao) {
+      setIndicacao("Não se aplica") 
+    } else {
+        setIndicacao("")
+  
+    }
+
+    if (boleanInformacoes) {
+      setInformacoes("Não se aplica") 
+    } else {
+        setInformacoes("")
+  
+    }
+
+    if (boleanMaterial) {
+      setMaterial("Não se aplica")
+    } else  {
+      setMaterial("")
+
+    }
+
+
+    if (boleanMedida) {
+      setMedida("Não se aplica")
+    } else {
+      setMedida(medida)
+
+    }
+
+    if (boleanForma) {
+      setForma("Não se aplica")
+    } else {
+      setForma(forma)
+
+    }
+
+    if (boleanEletro) {
+      setEletro("Não se aplica")
+    } else {
+      setEletro(eletro)
+
+    }
+
+    if (boleanDimensao) {
+      setDimensao("Não se aplica")
+    } else {
+      setDimensao(dimensao)
+
+    }
+
+
+
+
+
+
+
+
+  }, [boleanDimensao,boleanEletro, boleanForma,boleanMedida, boleanMaterial, boleanInformacoes, boleanCor, boleanIndicacao])
 
 
 
@@ -463,7 +541,7 @@ const AtividadeForm = (props) => {
             } else if (status === 200) {
               setArea(data.data)
               setOpenLoadingDialog(false)
-            
+
 
             }
           }).catch(err => setOpenLoadingDialog(true))
@@ -561,7 +639,9 @@ const AtividadeForm = (props) => {
 
   const onSave = () => {
     setOpenLoadingDialog(true)
-    setBotaoDesabilitado(true);
+    alert(indicacao + informacoes)
+
+  
     // setSetorSolicitante(props.logged.Area.Unidade.nome)
 
     const token = getCookie('_token_task_manager')
@@ -579,8 +659,16 @@ const AtividadeForm = (props) => {
         fkUnidade,
         fkArea,
         categoria,
+        medida,
         titulo,
         conteudo,
+        dimensao,
+        eletro,
+        forma,
+        material,
+        cor,
+        indicacao,
+        informacoes,
         arquivado: false
       })
 
@@ -743,13 +831,13 @@ const AtividadeForm = (props) => {
       mensagens1('CPF  Inválido')
       setOpenLoadingDialog(false)
       return;
-    }else{
+    } else {
       checar()
     }
-   
+
   };
 
-   function mensagens1(msg) {
+  function mensagens1(msg) {
     setMensagemAlert(msg)
     setOpenMensagens(true)
   }
@@ -758,40 +846,40 @@ const AtividadeForm = (props) => {
   function checar() {
     const token = getCookie('_token_task_manager');
     const params = {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
     };
 
     fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/termo/${cpfTermo}`, params)
-        .then(response => {
-            const { status } = response;
-            console.log('Status da resposta:', status);
+      .then(response => {
+        const { status } = response;
+        console.log('Status da resposta:', status);
 
-            response.json().then(data => {
-                console.log('Dados da resposta:', data);
+        response.json().then(data => {
+          console.log('Dados da resposta:', data);
 
-                setOpenLoadingDialog(false);
-                if (status === 401) {
-                    console.error('Erro 401: Não Autorizado');
-                    // Adicione o código para lidar com o erro 401 aqui
-                } else if (status === 200) {
-                    console.log('Sucesso: Termo de Compromisso assinado');
-                    mensagens1(data.message)
-                    setTermo(false)
-                    setOpenMensagens(true)
-                    // Adicione o código para lidar com o sucesso aqui
-                }
-            }).catch(err => {
-                console.error('Erro ao processar resposta JSON:', err);
-                setOpenLoadingDialog(true);
-            });
+          setOpenLoadingDialog(false);
+          if (status === 401) {
+            console.error('Erro 401: Não Autorizado');
+            // Adicione o código para lidar com o erro 401 aqui
+          } else if (status === 200) {
+            console.log('Sucesso: Termo de Compromisso assinado');
+            mensagens1(data.message)
+            setTermo(false)
+            setOpenMensagens(true)
+            // Adicione o código para lidar com o sucesso aqui
+          }
         }).catch(err => {
-            console.error('Erro na solicitação:', err);
-            console.log(err)
-            setOpenLoadingDialog(true);
+          console.error('Erro ao processar resposta JSON:', err);
+          setOpenLoadingDialog(true);
         });
-}
+      }).catch(err => {
+        console.error('Erro na solicitação:', err);
+        console.log(err)
+        setOpenLoadingDialog(true);
+      });
+  }
 
   const criarExecucao = () => {
 
@@ -936,10 +1024,47 @@ const AtividadeForm = (props) => {
     });
   };
 
+  useEffect(() => {
+    // Verifique se há um item com nome "GLC" e defina o valor selecionado
+    const glcItem = unidade.find(item => item.nome === 'GLC' && item.receber === true);
+    if (glcItem) {
+      setFkUnidade(glcItem.id);
+    }
+  }, [unidade]);
 
 
 
 
+  const Change = (event) => {
+    setBoleanCor(event.target.checked);
+  };
+  const Change1 = (event) => {
+    setBoleanMaterial(event.target.checked);
+  };
+
+  const Change2 = (event) => {
+    setBoleanMedida(event.target.checked);
+  };
+
+  const Change3 = (event) => {
+    setBoleanForma(event.target.checked);
+  };
+
+  const Change4 = (event) => {
+    setBoleanDimensao(event.target.checked);
+  };
+
+  const Change5 = (event) => {
+    setBoleanEletro(event.target.checked);
+  };
+
+  const Change6 = (event) => {
+    setBoleanIndicacao(event.target.checked);
+  };
+
+  const Change7 =  (event) => {
+    setBoleanInformacoes(event.target.checked);
+  };
 
   return (
 
@@ -987,7 +1112,7 @@ const AtividadeForm = (props) => {
 
         }
 
-        {(logged && props.logged.id === fkExecutor)  || logged && logged.Perfil.nome === PerfilUtils.Coordenador && props.logged.fkArea === fkAreaDemandada ?
+        {(logged && props.logged.id === fkExecutor) || logged && logged.Perfil.nome === PerfilUtils.Coordenador && props.logged.fkArea === fkAreaDemandada ?
           <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
             <Button variant="contained" size='small' color="error" onClick={() => setOpenStatus(true)}>Alterar Status da Atividade</Button>
           </div> : ''
@@ -1026,113 +1151,644 @@ const AtividadeForm = (props) => {
           <TextField size="small" fullWidth label="Chamado" disabled variant="outlined" value={title} />
         </div> : ''} */}
         {!id ? <>
-          {logged ? <TaskFilter nome={props.logged.nome + ', solicite uma atividade'} setSetorSolicitante={props.logged.Area?.Unidade.nome} />
+          {logged ? <TaskFilter nome={props.logged.nome + ', solicite cadastro de material'} setSetorSolicitante={props.logged.Area?.Unidade.nome} />
             :
             ''
           }
           <FormGroup>
-
-            <div style={{ flex: 1, marginBottom: 16, wordBreak: 'break-all' }}
-            >
-              Solicitar Atividade para :<br></br>
-
-
-
-
-
-              <FormControl fullWidth size="small">
-
-                <InputLabel id="demo-select-small">Unidade</InputLabel>
-                <Select
-                  fullWidth
-                  labelId="demo-select-small"
-                  id="demo-select-small"
-                  label="Unidade"
-                  value={fkUnidade}>
-                  <MenuItem value="" onClick={() => setFkUnidadeDrop("")}>
-                    {/* <em>Nenhum</em> */}
-                  </MenuItem>
-                  {unidade.map((item, index) => {
-                    if (item.receber === true) {
-                      return <MenuItem key={index} value={item.id} onClick={(e) => [setFkUnidade(item.id), setDep(item.nome)]}>{item.nome}</MenuItem>
-                    }
-                  })}
-                </Select>
-              </FormControl>
-            </div>
-
-            <div style={{ flex: 1, marginBottom: 16, wordBreak: "break-all" }}>
-              <FormControl fullWidth size="small">
-                <InputLabel id="demo-select-small">Área</InputLabel>
-                <Select
-                  fullWidth
-                  labelId="demo-select-small"
-                  id="demo-select-small"
-                  label="Area"
-                  value={fkArea}>
-                  <MenuItem value="" onClick={() => setFkUnidade("")}>
-                    <em>Nenhum</em>
-                  </MenuItem>
-                  {area.map((item, index) => <MenuItem key={index} value={item.id} onClick={() => [setFkArea(item.id), setGti(item.nome)]}>{item.nome}</MenuItem>)}
-                </Select>
-              </FormControl>
-            </div>
-            {dep === 'DEP'
-              ?
-              <div style={{ flex: 1, marginBottom: 16 }}>
-                <FormControl size="small" fullWidth>
-                  <InputLabel id="demo-select-small">Categoria</InputLabel>
-                  <Select
-                    fullWidth
-
-                    labelId="demo-select-small"
-                    id="demo-select-small"
-                    label="categoria"
-                    value={categoria}>
-                    <MenuItem value="" onClick={() => setArea("")}>
-                      <em>Nenhum</em>
-                    </MenuItem>
-                    {subArea.map((item, index) => <MenuItem key={index} value={item.nome} onClick={() => setCategoria(item.nome)}>{item.nome}</MenuItem>)}
+            <div style={{
+              flex: 1,
+              marginBottom: 16,
+              padding: 16,
+              border: '1px solid #ccc',
+              borderRadius: 8,
+              backgroundColor: '#F9C98C',
+              boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+            }}>
+              <div style={{ flex: 1, marginBottom: 16, wordBreak: 'break-all' }}
+              >
+                Solicitar cadastro de item :
 
 
+
+
+
+                <FormControl
+                  disabled
+                  size="small">
+
+                  <InputLabel id="demo-select-small"></InputLabel>
+                  <Select value={fkUnidade} onChange={(e) => setFkUnidade(e.target.value)} style={{
+                    backgroundColor: '#fff',
+                    borderRadius: 4
+                  }}>
+                    {unidade.map((item, index) => {
+                      if (item.receber === true) {
+                        return (
+                          <MenuItem key={index} value={item.id} onClick={() => setFkUnidade(item.id)}>
+                            {item.nome}
+                          </MenuItem>
+                        );
+                      }
+                      return null;
+                    })}
                   </Select>
                 </FormControl>
               </div>
-              : ''}
-
-
-            {gti === 'Sistemas - Desenvolvimento'
-              ?
-              <div style={{ flex: 1, marginBottom: 16 }}>
-               <tr>
-                <td style={{color:'red'}}>
-                Seu chamado e para solicitar liberação de sistema para funcionário?
-
-                </td>
-                <td>
-                <FormControl>
-                  <RadioGroup
-                   
-                    onChange={(event) => setTermo(event.target.value === 'sim')}
-                  >
-                    <FormControlLabel value="sim" control={<Radio />} label="sim" />
-                    {/* <FormControlLabel value="não" control={<Radio />} label="não" /> */}
-                  </RadioGroup>
+              <div style={{ flex: 1, marginBottom: 16, wordBreak: "break-all" }}>
+                <FormControl fullWidth size="small">
+                  <InputLabel id="demo-select-small">Área</InputLabel>
+                  <Select
+                    fullWidth
+                    labelId="demo-select-small"
+                    id="demo-select-small"
+                    label="Area"
+                    value={fkArea}
+                    style={{
+                      backgroundColor: '#fff',
+                      borderRadius: 4
+                    }}>
+                    <MenuItem value="" onClick={() => setFkUnidade("")}>
+                      <em>Nenhum</em>
+                    </MenuItem>
+                    {area.map((item, index) => <MenuItem key={index} value={item.id} onClick={() => [setFkArea(item.id), setGti(item.nome)]}>{item.nome}</MenuItem>)}
+                  </Select>
                 </FormControl>
-
-                </td>
-               </tr>
-               
-              
               </div>
-              : ''}
 
-            <div style={{ flex: 1, marginBottom: 16 }}>
-              <TextField size="small" fullWidth label="Título" variant="outlined" value={titulo} onChange={e => setTitulo(e.target.value)} />
+              <div>
+                <FormControl fullWidth size="small">
+                  <InputLabel id="demo-select-small">Tipo de cadastro</InputLabel>
+                  <Select
+                    fullWidth
+                    labelId="demo-select-small"
+                    id="demo-select-small"
+                    label="Tipo de cadastro"
+                    value={tipoCadastro}
+                    style={{
+                      backgroundColor: '#fff',
+                      borderRadius: 4
+                    }}>
+
+                    <MenuItem value={"Cadastro de serviço"} onClick={() => [setTipoCadastro("Cadastro de serviço")]}>Cadastro de serviço</MenuItem>
+                    <MenuItem value={"Cadastro Produto Consumo"} onClick={() => [setTipoCadastro("Cadastro Produto Consumo")]}>Cadastro Produto Consumo</MenuItem>
+                    <MenuItem value={"Cadastro de Produto Patrimônio"} onClick={() => [setTipoCadastro("Cadastro de Produto Patrimônio")]}>Cadastro de Produto Patrimônio</MenuItem>
+                  </Select>
+                </FormControl>
+              </div>
+              <p></p>
+              {tipoCadastro === "Cadastro Produto Consumo" ||
+                tipoCadastro === "Cadastro de Produto Patrimônio" ?
+                <div>
+                  <p></p>
+                  <div style={{ flex: 1, marginBottom: 16, marginTop: 20 }}>
+                    <b>
+                      Informar um título para o produto
+                      </b><br></br>
+                      Que seja de fácil a busca. Exemplos: buffet, software, TV, etc.
+                    <TextField size="small" fullWidth label="Nome do produto" variant="outlined" value={titulo} onChange={e => setTitulo(e.target.value)}
+                      style={{
+                        backgroundColor: '#fff',
+                        borderRadius: 4
+                      }} />
+                  </div>
+                  <div style={{ flex: 1, marginBottom: 16 }}>
+                    <TextField size="small" fullWidth label="Descrição" multiline rows={2} variant="outlined" value={conteudo} onChange={e => setConteudo(e.target.value)}
+                      style={{
+                        backgroundColor: '#fff',
+                        borderRadius: 4
+                      }} />
+                  </div>
+
+
+
+                  <hr></hr>
+                  <div >
+
+                    <b>
+                      Forma
+                    </b>
+
+
+                    <Checkbox
+
+                      boleanForma={boleanForma}
+                      onChange={Change3}
+                      color="primary"
+                      inputProps={{ "aria-label": "checkbox example" }}
+                      checked={boleanForma}
+                    />
+                    <label style={{ color: 'blue' }} >
+                      Não se aplica
+                    </label>
+
+
+                    {boleanForma ?
+                      '' :
+                      <div>
+                        <label style={{
+                          display: 'block',
+                          marginBottom: 8,
+                          fontSize: '1rem',
+                          fontWeight: 500,
+                          color: '#333'
+                        }}>
+                          Informar se o item é: retangular ou quadrado ou oval ou espiral ou circular ou cilíndrico etc.
+                        </label>
+
+                        <TextField
+                          size="small"
+                          fullWidth
+                          label="Ex: Retangular com cantos arredondados"
+                          variant="outlined"
+                          value={forma}
+                          onChange={e => setForma(e.target.value)}
+                          style={{
+                            backgroundColor: '#fff',
+                            borderRadius: 4
+                          }}
+                          InputLabelProps={{ style: { color: '#888' } }}
+                          InputProps={{
+                            style: {
+                              color: '#333'
+                            },
+                            classes: {
+                              notchedOutline: {
+                                borderColor: '#ccc'
+                              }
+                            }
+                          }}
+                        />
+                      </div>
+
+
+                    }
+
+                    <hr></hr>
+
+
+
+
+
+                  </div>
+                  <p></p>
+                  <div >
+
+                    <b>
+                      Dimensão
+                    </b>
+
+
+                    <Checkbox
+
+                      boleanDimensao={boleanDimensao}
+                      onChange={Change4}
+                      color="primary"
+                      inputProps={{ "aria-label": "checkbox example" }}
+                      checked={boleanDimensao}
+                    />
+                    <label style={{ color: 'blue' }} >
+                      Não se aplica
+                    </label>
+
+
+
+
+                    {boleanDimensao ?
+                      '' :
+                      <div>
+                        <label style={{
+                          display: 'block',
+                          marginBottom: 8,
+                          fontSize: '1rem',
+                          fontWeight: 500,
+                          color: '#333'
+                        }}>
+                          Informe a largura, comprimento, altura, espessura, diâmetro, polegada, litros etc.
+                        </label>
+                        <TextField
+                          size="small"
+                          fullWidth
+                          label="Ex: 45 cm altura x 45 cm largura x 90 cm profundidade, deve suportar 80kg"
+                          variant="outlined"
+                          value={dimensao}
+                          onChange={e => setDimensao(e.target.value)}
+                          style={{
+                            backgroundColor: '#fff',
+                            borderRadius: 4
+                          }}
+                          InputLabelProps={{ style: { color: '#888' } }}
+                          InputProps={{
+                            style: {
+                              color: '#333'
+                            },
+                            classes: {
+                              notchedOutline: {
+                                borderColor: '#ccc'
+                              }
+                            }
+                          }}
+                        />
+                      </div>
+
+
+                    }
+
+
+
+
+
+                  </div>
+                  <hr></hr>
+                  <div >
+
+                    <b>
+                      Tipo de material:
+                    </b>
+
+                    <Checkbox
+
+                      boleanMaterial={boleanMaterial}
+                      onChange={Change1}
+                      color="primary"
+                      inputProps={{ "aria-label": "checkbox example" }}
+                      checked={boleanMaterial}
+                    />
+                    <label style={{ color: 'blue' }} >
+                      Não se aplica
+                    </label>
+                    {boleanMaterial ?
+                      "" : <div>
+                        <label style={{
+                          display: 'block',
+                          marginBottom: 8,
+                          fontSize: '1rem',
+                          fontWeight: 500,
+                          color: '#333',
+
+                        }}>
+                          Plástico (polietileno ou polipropileno ou nylon  etc.), madeira, alumínio, aço (galvanizado ou inox (304 ou 404)), tecido (seda ou algodão ou nylon  etc.), ferro, cobre, vidro, papel etc.
+                          Obs.: poderá ser composto por mais de um material.
+                        </label>
+                        <TextField
+                          size="small"
+                          fullWidth
+                          label="Ex: Estrutura de metal com assento de tecido"
+                          variant="outlined"
+                          value={material}
+                          onChange={e => setMaterial(e.target.value)}
+                          style={{
+                            backgroundColor: '#fff',
+                            borderRadius: 4
+                          }}
+                          InputLabelProps={{ style: { color: '#888' } }}
+                          InputProps={{
+                            style: {
+                              color: '#333'
+                            },
+                            classes: {
+                              notchedOutline: {
+                                borderColor: '#ccc'
+                              }
+                            }
+                          }}
+                        />
+                      </div>
+
+
+
+                    }
+
+                  </div>
+                  <p></p>
+                  <hr></hr>
+                  <div >
+
+<b>
+Características Elétricas, Potência E Velocidade
+
+</b>
+
+<Checkbox
+  boleanEletro={boleanEletro}
+  onChange={Change5}
+  color="primary"
+  inputProps={{ "aria-label": "checkbox example" }}
+  checked={boleanEletro}
+/>
+<label style={{ color: 'blue' }}>
+  Não se aplica
+</label>
+{boleanEletro ?
+  "" : <div>
+    <label style={{
+      display: 'block',
+      marginBottom: 8,
+      fontSize: '1rem',
+      fontWeight: 500,
+      color: '#333',
+
+    }}>
+      Tensão Elétrica (volts, ampere, watts), graus celsius, BTUs, RPM, etc.
+    </label>
+    <TextField
+      size="small"
+      fullWidth
+      label="Ex: Potência: 650 W
+Tensão de Entrada: 100-240 V AC
+Eficiência: 80 PLUS Bronze
+"
+      variant="outlined"
+      value={eletro}
+      onChange={e => setEletro(e.target.value)}
+      style={{
+        backgroundColor: '#fff',
+        borderRadius: 4
+      }}
+      InputLabelProps={{ style: { color: '#888' } }}
+      InputProps={{
+        style: {
+          color: '#333'
+        },
+        classes: {
+          notchedOutline: {
+            borderColor: '#ccc'
+          }
+        }
+      }}
+    />
+  </div>
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+                  <hr></hr>
+
+                  <div >
+
+                    <b>
+                      Unidade de Medida:
+
+                    </b>
+
+                    <Checkbox
+                      boleanMedida={boleanMedida}
+                      onChange={Change2}
+                      color="primary"
+                      inputProps={{ "aria-label": "checkbox example" }}
+                      checked={boleanMedida}
+                    />
+                    <label style={{ color: 'blue' }}>
+                      Não se aplica
+                    </label>
+                    {boleanMedida ?
+                      "" : <div>
+                        <label style={{
+                          display: 'block',
+                          marginBottom: 8,
+                          fontSize: '1rem',
+                          fontWeight: 500,
+                          color: '#333',
+
+                        }}>
+                          Metragem (metro ou metro quadrado ou metro cúbico ou metro linear ou centímetro ou milímetro),
+                          quilograma ou grama ou  litro ou mililitro, rolo, bombona, balde, pacote (com quantas unidades)
+                        </label>
+                        <TextField
+                          size="small"
+                          fullWidth
+                          label="Ex: Comprimento: 50 metros (m)"
+                          variant="outlined"
+                          value={medida}
+                          onChange={e => setMedida(e.target.value)}
+                          style={{
+                            backgroundColor: '#fff',
+                            borderRadius: 4
+                          }}
+                          InputLabelProps={{ style: { color: '#888' } }}
+                          InputProps={{
+                            style: {
+                              color: '#333'
+                            },
+                            classes: {
+                              notchedOutline: {
+                                borderColor: '#ccc'
+                              }
+                            }
+                          }}
+                        />
+                      </div>
+
+
+
+                    }
+
+
+
+                  </div>
+
+
+
+                  <p></p>
+                  <hr></hr>
+                  <div style={{ flex: 1, marginBottom: 16 }}>
+                    <b>
+                      Cor:
+
+                    </b>
+
+                    <Checkbox
+                      id="meu"
+                      boleanCor={boleanCor}
+                      onChange={Change}
+                      color="primary"
+                      inputProps={{ "aria-label": "checkbox example" }}
+                      checked={boleanCor}
+                    />
+                    <label style={{ color: 'blue' }}>
+                      Não se aplica
+                    </label>
+                    {boleanCor ?
+                      "" :
+                      <TextField size="small" fullWidth label="Cor" variant="outlined" value={cor} onChange={e => setCor(e.target.value)}
+                        style={{
+                          backgroundColor: '#fff',
+                          borderRadius: 4
+                        }} />
+                    }
+
+                  </div>
+
+                   <p></p>
+                   <hr></hr>
+                  <div style={{ flex: 1, marginBottom: 16 }}>
+                    <b>
+                      Indicações:
+
+                    </b>
+
+                    <Checkbox
+                      boleanIndicacao={boleanIndicacao}
+                      onChange={Change6}
+                      color="primary"
+                      inputProps={{ "aria-label": "checkbox example" }}
+                      checked={boleanIndicacao}
+                      />
+                      <label style={{ color: 'blue' }}>
+                        Não se aplica
+                      </label>
+                      {boleanIndicacao ?
+                        "" : <div>
+                          <label style={{
+                            display: 'block',
+                            marginBottom: 8,
+                            fontSize: '1rem',
+                            fontWeight: 500,
+                            color: '#333',
+  
+                          }}>
+                            Existe alguma marca ou modelo já validada? informe e justifique
+                          </label>
+                          <TextField
+                            size="small"
+                            fullWidth
+                            label="Indicacao"
+                            variant="outlined"
+                            value={indicacao}
+                            onChange={e => setIndicacao(e.target.value)}
+                            style={{
+                              backgroundColor: '#fff',
+                              borderRadius: 4
+                            }}
+                            InputLabelProps={{ style: { color: '#888' } }}
+                            InputProps={{
+                              style: {
+                                color: '#333'
+                              },
+                              classes: {
+                                notchedOutline: {
+                                  borderColor: '#ccc'
+                                }
+                              }
+                            }}
+                          />
+                        </div>
+  
+  
+  
+                      }
+  
+  
+
+                  </div>
+
+
+                
+                  
+                  <p></p>
+                  <hr></hr>
+                  <div style={{ flex: 1, marginBottom: 16 }}>
+                    <b>
+                      Informações:
+
+                    </b>
+
+                    <Checkbox
+                      boleanInformacoes={boleanInformacoes}
+                      onChange={Change7}
+                      color="primary"
+                      inputProps={{ "aria-label": "checkbox example" }}
+                      checked={boleanInformacoes}
+                      />
+                      <label style={{ color: 'blue' }}>
+                        Não se aplica
+                      </label>
+                      {boleanInformacoes ?
+                        "" : <div>
+                          <label style={{
+                            display: 'block',
+                            marginBottom: 8,
+                            fontSize: '1rem',
+                            fontWeight: 500,
+                            color: '#333',
+  
+                          }}>
+                            Cite Informações Complementares
+                          </label>
+                          <TextField
+                            size="small"
+                            fullWidth
+                            label="Informacoes"
+                            variant="outlined"
+                            value={informacoes}
+                            onChange={e => setInformacoes(e.target.value)}
+                            style={{
+                              backgroundColor: '#fff',
+                              borderRadius: 4
+                            }}
+                            InputLabelProps={{ style: { color: '#888' } }}
+                            InputProps={{
+                              style: {
+                                color: '#333'
+                              },
+                              classes: {
+                                notchedOutline: {
+                                  borderColor: '#ccc'
+                                }
+                              }
+                            }}
+                          />
+                        </div>
+  
+  
+  
+                      }
+
+                  </div>
+
+
+
+
+
+
+
+                </div>
+                : ""}
+
+                
+
             </div>
-            <div style={{ flex: 1, marginBottom: 16 }}>
-              <TextField size="small" fullWidth label="Descrição" multiline rows={2} variant="outlined" value={conteudo} onChange={e => setConteudo(e.target.value)} />
-            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             {/* <div style={{ flex: 1, marginBottom: 16 }}>
               <TextField size="small" fullWidth label="Descrição" multiline rows={2} variant="outlined" value={conteudo} onChange={e => setConteudo(e.target.value)} />
               <Button color="success" variant="contained" onClick={() => setOpenImg(true)}>{'Anexar'}<AttachFileSharpIcon></AttachFileSharpIcon></Button>
@@ -1325,7 +1981,7 @@ const AtividadeForm = (props) => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-        <Button onClick={() => [setOpenMessageDialog(false), setTermo(false)]}>
+          <Button onClick={() => [setOpenMessageDialog(false), setTermo(false)]}>
             fechar
           </Button>
         </DialogActions>
@@ -1597,7 +2253,7 @@ const AtividadeForm = (props) => {
 
       </Dialog>
 
-      
+
       <Dialog open={termo}  >
 
         <DialogContent>
@@ -1610,7 +2266,7 @@ const AtividadeForm = (props) => {
             <TextField fullWidth sx={{ m: 1 }} size='200px' label='Digite o CPF' variant="outlined" value={cpfTermo} onChange={e => setCpfTermo(e.target.value)} />
           </div>
           <hr></hr>
-            
+
 
           <div style={{ flex: 1, display: 'flex', flexDirection: 'row' }}>
             {/* <Button variant="outlined" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/area/`}>Voltar</Button> */}
@@ -1628,24 +2284,24 @@ const AtividadeForm = (props) => {
 
       <Dialog open={openMensagens}  >
 
-<DialogContent>
-
-  
-{mensagemAlert}
-    
-
-  <div style={{ flex: 1, display: 'flex', flexDirection: 'row' }}>
-    
-    <div style={{ flex: 1 }}></div>
-   
-    <Button onClick={() => window.location.reload()}>Sair</Button>
+        <DialogContent>
 
 
+          {mensagemAlert}
 
-  </div>
-</DialogContent>
 
-</Dialog>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'row' }}>
+
+            <div style={{ flex: 1 }}></div>
+
+            <Button onClick={() => window.location.reload()}>Sair</Button>
+
+
+
+          </div>
+        </DialogContent>
+
+      </Dialog>
 
 
 
