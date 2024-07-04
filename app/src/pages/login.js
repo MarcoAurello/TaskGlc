@@ -165,7 +165,7 @@ const Login = () => {
               </Button>
              
               <div style={{ marginTop: 16, display: 'flex', flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                <div style={{ color: 'rgb(117, 117, 117)', fontSize: 11 }}>GTI@2023</div>
+                <div style={{ color: 'rgb(117, 117, 117)', fontSize: 11 }}>GTI@2024</div>
               </div>
             </Box>
           </Box>

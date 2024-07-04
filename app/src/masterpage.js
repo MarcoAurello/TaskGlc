@@ -854,7 +854,7 @@ const Masterpage = (props) => {
                           </b>
                       
                       
-                      :'Selecionar Executor'} ({meuSetor.filter(a => a?.UsuarioExecutor?.nome === executorNome).length})
+                      :'Não possui Executor'} ({meuSetor.filter(a => a?.UsuarioExecutor?.nome === executorNome).length})
                     </button>
                   ))}
 

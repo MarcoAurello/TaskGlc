@@ -631,7 +631,9 @@ const Home = (props) => {
                             <tr key={index} style={{ fontSize: '16px' }}>
                               <th scope="row" style={{ wordBreak: "break-all" }}>
                                 <b style={{ color: 'black', marginRight: '8px' }}>Atividade:</b>
-                                {item.titulo}
+                              
+                                  {item.titulo}
+                                  
                                 <br></br>
                                 <b style={{ color: 'black', marginRight: '8px' }}>Data de solicitação:</b>
                                 {new Date(item.createdAt).toLocaleDateString()}
@@ -646,7 +648,7 @@ const Home = (props) => {
                                   </div>
                                 ) : (
                                   <div style={{ color: "red" }}>
-                                    <b style={{ color: 'black' }}>Executor:</b> execultor não selecionado &#10067;
+                                    <b style={{ color: 'black' }}>Executor:</b> Execultor não selecionado &#10067;
                                   </div>
                                 )}
                                 {item.Status.nome === "Concluido" ? (
@@ -750,7 +752,11 @@ const Home = (props) => {
                           .map((item, index) => (
                             <tr key={index} style={{ fontSize: "16px" }}>
                               <th scope="row" style={{ wordBreak: "break-all" }}>
+
+                              <b style={{color:'yellow'}}>
+
                                 Atividade: {item.titulo}
+                                </b>
                                 <br />
                                 Data da solicitação: {new Date(item.createdAt).toLocaleDateString()}
                                 <br />
@@ -763,7 +769,7 @@ const Home = (props) => {
                                   </div>
                                 ) : (
                                   <div style={{ color: "red" }}>
-                                    <b style={{ color: '#dadada' }}>Executor:</b> execultor não selecionado &#10067;
+                                    <b style={{ color: '#dadada' }}>Executor:</b> Execultor não selecionado &#10067;
                                   </div>
                                 )}
                                 {item.Status.nome === "Concluido" ? (
