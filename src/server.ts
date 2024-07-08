@@ -16,6 +16,9 @@ import routerUsuarioDemandado from './router/usurarioDemandado.router'
 import routerSubArea from './router/subarea.router'
 import routerArquivo from './router/arquivo.router'
 import routerEmail from './router/email.router'
+import routerTimeLineStatus from './router/timeLineStatus.router'
+
+
 
 import routerQuestionario from './router/questionario.router'
 
@@ -54,6 +57,7 @@ class Server {
     this.application.use('/api/unidade/', routerUnidade)
     this.application.use('/api/area/', routerArea)
     this.application.use('/api/perfil/', routerPerfil)
+    this.application.use('/api/timeLineStatus/', routerTimeLineStatus)
     this.application.use('/api/configuracao/', routerConfiguracaoGlobal)
  
     this.application.use('/api/status/', routerStatus)

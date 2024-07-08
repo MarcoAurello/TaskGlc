@@ -856,7 +856,7 @@ const Masterpage = (props) => {
                       
                       :'Não possui Executor'} ({meuSetor.filter(a => a?.UsuarioExecutor?.nome === executorNome).length})
                     </button>
-                  ))}
+                  ))}<hr></hr>
 
                   {modalOpen && (
                     <Modal onClose={handleCloseModal}>
@@ -865,16 +865,19 @@ const Masterpage = (props) => {
                         {atividadesExecutor.map((atividade) => (
                          
                           
-                         
+                         <div>
                           <button
                             onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${atividade.id}/edit`}
                             className="executor-button"
                           >{atividade?.titulo} - {atividade?.Status?.nome}
 
-                          </button>
+                          </button><hr></hr>
+
+                         </div>
+                          
 
 
-                        ))}<p></p>
+                        ))}
                       </>
                     </Modal>
                   )}
@@ -907,15 +910,21 @@ const Masterpage = (props) => {
                       
                       <>
                         {atividadesStatus.map((atividade) => (
-                          <button
+
+                          <div>
+                             <button
                             onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${atividade.id}/edit`}
                             className="executor-button"
                           >{atividade?.titulo} - {atividade?.Status?.nome} - {atividade?.UsuarioExecutor?.nome}
 
-                          </button>
+                          </button><hr></hr>
 
 
-                        ))}<p></p>
+                          </div>
+                         
+
+
+                        ))}<hr></hr>
                       </>
                     </Modal>
                   )}

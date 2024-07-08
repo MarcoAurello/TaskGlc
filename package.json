@@ -61,7 +61,7 @@
     "preresetdb": "set DEVMODE=dev && yarn sequelize db:migrate:undo:all",
     "resetdb": "set DEVMODE=dev && yarn sequelize db:migrate",
     "postresetdb": "set DEVMODE=dev && yarn sequelize db:seed:all",
-    "dev": "concurrently \" nodemon ./src/app.ts\" \"cd ./app && yarn run start\"",
+    "dev": "concurrently \" nodemon ./src/app.ts\" \"cd ./app && yarn run start --openssl-legacy-provider\"",
     "production": "sucrase-node ./src/app.ts",
     "build": "cd ./app && yarn run build",
     "createDb": "set DEVMODE=dev && yarn sequelize db:create"

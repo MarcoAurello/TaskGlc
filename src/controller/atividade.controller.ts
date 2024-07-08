@@ -16,6 +16,7 @@ import Unidade from '../model/unidade.model'
 import PerfilUtils from '../utils/perfil.utils'
 import emailUtils from '../utils/email.utils'
 import { QueryTypes } from 'sequelize'
+import TimeLineStatus from '../model/timeLineStatus.model'
 const multer = require('multer')
 const { Op } = require('sequelize')
 
@@ -75,6 +76,15 @@ class AtividadeController implements IController {
         caminho,
         tipoCadastro,
         medida,
+
+        cnpj,
+        razaoSocial,
+        emailEmpresa,
+        telefoneEmpresa,
+        gPagamento,
+        filial,
+        gCotacao,
+
         centroCusto,
         eletro,
         indicacao,
@@ -127,39 +137,80 @@ class AtividadeController implements IController {
       })
 
       const proc = protocolo()
-      const atividade = await Atividade.create({
-        titulo,
-        forma,
-        material,
-        cor,
-        fkClassificacao: classificacao?.id,
-        protocolo: proc,
-        fkArea: area?.id,
-        medida,
-        centroCusto,
-        indicacao,
-        detalhes : conteudo,
-        informacoes,
-        eletro,
-        dimensao,
-        fkStatus: status?.id,
-        fkUsuarioSolicitante: req.usuario.id,
-        arquivado: false,
-        pessoal: false,
-        // fkUsuarioExecutor,
-        categoria: tipoCadastro,
-        caminho
-      })
+
+      if(cnpj && razaoSocial){
+
+        const atividade = await Atividade.create({
+          titulo,
+          fkClassificacao: classificacao?.id,
+          protocolo: proc,
+          fkArea: area?.id,
+          cnpj,
+          razao:razaoSocial,
+          email:emailEmpresa,
+          gPagamento,
+          filial,
+          gCotacao,
+          fone:telefoneEmpresa,
+
+          
+          detalhes : conteudo,
+         
+          fkStatus: status?.id,
+          fkUsuarioSolicitante: req.usuario.id,
+          arquivado: false,
+          pessoal: false,
+          // fkUsuarioExecutor,
+          categoria: tipoCadastro,
+          caminho
+        })
+
+        await Mensagem.create({
+          conteudo,
+          fkAtividade: atividade.id,
+          fkUsuario: req.usuario.id
+        })
+  
+
+
+      }else{
+
+        const atividade = await Atividade.create({
+          titulo,
+          forma,
+          material,
+          cor,
+          fkClassificacao: classificacao?.id,
+          protocolo: proc,
+          fkArea: area?.id,
+          medida,
+          centroCusto,
+          indicacao,
+          detalhes : conteudo,
+          informacoes,
+          eletro,
+          dimensao,
+          fkStatus: status?.id,
+          fkUsuarioSolicitante: req.usuario.id,
+          arquivado: false,
+          pessoal: false,
+          // fkUsuarioExecutor,
+          categoria: tipoCadastro,
+          caminho
+        })
+
+        await Mensagem.create({
+          conteudo,
+          fkAtividade: atividade.id,
+          fkUsuario: req.usuario.id
+        })
+  
+      }
 
       // const emailCoordenadores = await queryInterface.sequelize.query('select email from usuario where fkArea = \'Aberto\'')
       // const status = await queryInterface.sequelize.query('select id from status where nome = \'Aberto\'')
 
-      await Mensagem.create({
-        conteudo,
-        fkAtividade: atividade.id,
-        fkUsuario: req.usuario.id
-      })
-
+      
       const atividadeSalva = await Atividade.findOne({
         where: { titulo,
         protocolo: proc 
@@ -180,6 +231,19 @@ class AtividadeController implements IController {
       const funcionarioDaArea = await Usuario.findAll({
         where: { fkArea }
       })
+
+  
+        
+        await TimeLineStatus.create(
+          {
+            fkStatus: status?.id,
+            fkAtividade:  atividadeSalva?.id,
+            fkUsuario : req.usuario.id
+          }
+        )
+
+    
+
 
      
 
@@ -213,7 +277,7 @@ class AtividadeController implements IController {
 
       res
         .status(200)
-        .json({ data: atividade, message: 'Cadastro realizado com sucesso.' })
+        .json({  message: 'Cadastro realizado com sucesso.' })
     } catch (err) {
       console.log(err)
       if (typeof err.errors !== 'undefined') {
@@ -280,7 +344,9 @@ class AtividadeController implements IController {
         editar,
         indicacao,
         cor,
-        informacoes
+        informacoes,
+        idAtividade,
+        logged
 
 
 
@@ -303,7 +369,7 @@ class AtividadeController implements IController {
           eletro,
           medida,
           indicacao,
-          informacoes
+          informacoes,
         },
         {
           where: {
@@ -312,6 +378,19 @@ class AtividadeController implements IController {
           individualHooks: false
         }
       )
+
+      if(logged  && idAtividade){
+        
+        await TimeLineStatus.create(
+          {
+            fkStatus,
+            fkAtividade: idAtividade,
+            fkUsuario : logged
+          }
+        )
+
+      }
+
 
       // if (newStatus) {
       //   const status1 = status?.nome

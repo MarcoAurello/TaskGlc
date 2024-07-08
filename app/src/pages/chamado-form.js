@@ -6,7 +6,7 @@ import {
   TableRow, TextField, Tooltip
 } from "@mui/material";
 
-
+import TaskItemDoChamadoFornecedor from "../components/task-item-do-chamadoFornecedor";
 
 import TaskItemDoChamado from "../components/task-item-do-chamado";
 import PerfilUtils from "../utils/perfil.utils";
@@ -83,6 +83,9 @@ const AtividadeForm = (props) => {
 
   const [titulo, setTitulo] = useState('')
   const [centroCusto, setCentroCusto] = useState('')
+  const [timelineStatus, setTimelineStatus] = useState([])
+
+
   const [centroCusto1, getCentroCusto] = useState('')
   const [conteudo, setConteudo] = useState('')
   const [forma, setForma] = useState('')
@@ -116,6 +119,7 @@ const AtividadeForm = (props) => {
   const [medida, setMedida] = useState('')
   const [editar, setEditar] = useState(false)
   const [animate, setAnimate] = useState(false);
+  const [cnpj, setCnpj] = useState('');
 
   const [cor1, getCor] = useState('')
 
@@ -152,6 +156,20 @@ const AtividadeForm = (props) => {
   const [eletro1, getEletro] = useState('')
   const [dimencao1, getDimencao] = useState('')
   const [categoria1, getCategoria] = useState('')
+  const [razaoSocial, setRazaoSocial] = useState('')
+  const [telefoneEmpresa, setTelefoneEmpresa] = useState('')
+  const [emailEmpresa, setEmailEmpresa] = useState('')
+  const [gPagamento, setGPagamento] = useState('')
+  const [filial, setFilial] = useState('')
+  const [gCotacao, setGCotacao] = useState('')
+
+  const [cnpj1, getCnpj] = useState('')
+  const [razao1, getRazao] = useState('')
+  const [email1, getEmail] = useState('')
+  const [fone1, getFone] = useState('')
+  const [GPagamento1, getGPagamento] = useState('')
+  const [filial1, getFilial] = useState('')
+  const [gCotacao1, getGCotacao] = useState('')
 
 
 
@@ -172,6 +190,9 @@ const AtividadeForm = (props) => {
       }, 5000);
       return () => clearTimeout(timer);
     }
+
+
+
   }, [mensagens]);
 
 
@@ -200,6 +221,7 @@ const AtividadeForm = (props) => {
               setClassificacao(data.data.Classificacao.nome)
               setProtocolo(data.data.protocolo)
               setStatus(data.data.Status.nome)
+              getGPagamento(data.data.gPagamento)
               setStatusId(data.data.Status.id)
               getForma(data.data.forma)
               getMedida(data.data.medida)
@@ -209,6 +231,13 @@ const AtividadeForm = (props) => {
               getInformacoes(data.data.informacoes)
               getMaterial(data.data.material)
               getEletro(data.data.eletro)
+              getCnpj(data.data.cnpj)
+              getRazao(data.data.razao)
+              getEmail(data.data.email)
+              getFone(data.data.fone)
+
+              getFilial(data.data.filial)
+              getGCotacao(data.data.gCotacao)
 
               getCategoria(data.data.categoria)
               getCentroCusto(data.data.centroCusto)
@@ -249,6 +278,10 @@ const AtividadeForm = (props) => {
 
 
 
+
+
+
+
     function carregarMensagem() {
       const token = getCookie('_token_task_manager')
       const params = {
@@ -273,6 +306,8 @@ const AtividadeForm = (props) => {
           }).catch(err => setOpenLoadingDialog(false))
         })
     }
+
+
 
     function carregarUnidade() {
       // setOpenLoadingDialog(true)
@@ -501,7 +536,14 @@ const AtividadeForm = (props) => {
 
   }, [fkUnidade, area])
 
+
+
   useEffect(() => {
+
+    // if(gCotacao1){
+    //   alert(gCotacao1)
+    // }
+
 
 
 
@@ -636,6 +678,8 @@ const AtividadeForm = (props) => {
       body: JSON.stringify({
         fkStatus: newStatus,
         tempoEstimado,
+        idAtividade: id,
+        logged: props.logged.id
         // email: emailUsuarioSolicitante,
         // titulo: title,
 
@@ -665,12 +709,83 @@ const AtividadeForm = (props) => {
       })
   }
 
+  const onSaveFornecvedor = () => {
+   
+
+    if(cnpj && razaoSocial && emailEmpresa && telefoneEmpresa &&
+      gPagamento && filial && gCotacao){
+        setOpenLoadingDialog(true)
+
+        const token = getCookie('_token_task_manager')
+        const params = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+    
+          body: JSON.stringify({
+            setorSolicitante: props.logged.Area.Unidade.nome,
+            listaDeArquivosEnviados,
+            caminho,
+            fkUnidade,
+            fkArea,
+    
+            cnpj,
+            razaoSocial,
+            emailEmpresa,
+            telefoneEmpresa,
+            gPagamento,
+            filial,
+            gCotacao,
+    
+            titulo: 'Cadastro de Fornecedor',
+    
+            conteudo: 'Cadastro de Fornecedor',
+    
+            tipoCadastro,
+    
+            arquivado: false
+          })
+    
+        }
+    
+    
+        fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/`, params)
+          .then(response => {
+            const { status } = response
+            response.json().then(data => {
+              setOpenLoadingDialog(false)
+              if (status === 401) {
+                setMessage(data.message)
+                setOpenMessageDialog(true)
+              } else if (status === 200) {
+                setAtividade(data.data)
+                setOpenLoadingDialog(false)
+                setMessage(data.message)
+                setOpenMessageDialog(true)
+                setModalSave(false)
+                window.location.href = `${process.env.REACT_APP_DOMAIN}/chamadosAbertos/`
+    
+    
+                // setArea(data.data)
+              }
+            }).catch(err => setOpenLoadingDialog(true))
+          })
+
+      }else{
+        alert('Preencha todos os dados')
+      }
+
+
+    // setSetorSolicitante(props.logged.Area.Unidade.nome)
+
+  
+  }
+
 
   const onSave = () => {
     setOpenLoadingDialog(true)
-
-
-
 
 
     // setSetorSolicitante(props.logged.Area.Unidade.nome)
@@ -809,8 +924,8 @@ const AtividadeForm = (props) => {
             setOpenLoadingDialog(false)
             setAtividade(data.data)
             setMessage(data.message)
-            
-            
+
+
 
             window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${idChamado}/edit`
 
@@ -1145,23 +1260,23 @@ const AtividadeForm = (props) => {
           ?
 
           <div>
-          <Button size="large" onClick={() => setOpenMsg(true)}>
-            <b
-              style={{
-                fontSize: '30px',
-                
-                marginLeft: '80px',
-                marginRight: '-10px',
-                animation: animate ? 'pulse 1s infinite' : 'none',
-              }}
-            >
-              {mensagens ? mensagens.length : ''}   
-              <img src={ImageLogo} height={64} />
-            </b>
-          </Button>  
-    
-          <style>
-            {`
+            <Button size="large" onClick={() => setOpenMsg(true)}>
+              <b
+                style={{
+                  fontSize: '30px',
+
+                  marginLeft: '80px',
+                  marginRight: '-10px',
+                  animation: animate ? 'pulse 1s infinite' : 'none',
+                }}
+              >
+                {mensagens ? mensagens.length : ''}
+                <img src={ImageLogo} height={64} />
+              </b>
+            </Button>
+
+            <style>
+              {`
             @keyframes pulse {
               0% {
                 transform: scale(1);
@@ -1174,15 +1289,15 @@ const AtividadeForm = (props) => {
               }
             }
             `}
-          </style>
-        </div>
+            </style>
+          </div>
 
 
 
 
 
           :
-         ''
+          ''
 
         }
       </div>
@@ -1197,45 +1312,105 @@ const AtividadeForm = (props) => {
 
 
 
-      {id ? <div >
-        <TaskItemDoChamado
-
-          protocolo={protocolo}
-          unidade={valueUnidade}
-          categoria={categoria1}
-          area={valueArea}
-          classificacao={classificacao}
-          solicitante={usuarioSolicitante}
-          status={status}
-          titulo={title}
-          emailUsuarioSolicitante={emailUsuarioSolicitante}
-          telefoneSolicitante={telefoneSolicitante}
-          setorSol={valueUnidade}
-          nomeExecutor={nomeExecutor}
-          emailExecutor={emailExecutor}
-          telefoneExecutor={telefoneExecutor}
-          setorSolicitante={setorSolicitante}
-          forma={forma1}
-          medida={medida1}
-          cor={cor1}
-          indicacao={indicacao1}
-          informacoes={informacoes1}
-          material={material1}
-          eletro={eletro1}
-          dimensao={dimencao1}
-          centroCusto={centroCusto1}
-          id={id}
-          logged={logged ? logged.nome : ''}
-          loggedEmail={logged ? logged.email : ''}
-          editar={editar}
-          onToggle={handleToggle}
+      {id && (categoria1 === 'Cadastro de serviço' ||
+        categoria1 === 'Cadastro Produto Consumo' ||
+        categoria1 === 'Cadastro de Produto Patrimônio'
+      )
+        ? <div >
 
 
 
+          <TaskItemDoChamado
+
+            protocolo={protocolo}
+            unidade={valueUnidade}
+            categoria={categoria1}
+            area={valueArea}
+            classificacao={classificacao}
+            solicitante={usuarioSolicitante}
+            status={status}
+            titulo={title}
+            emailUsuarioSolicitante={emailUsuarioSolicitante}
+            telefoneSolicitante={telefoneSolicitante}
+            setorSol={valueUnidade}
+            nomeExecutor={nomeExecutor}
+            emailExecutor={emailExecutor}
+            telefoneExecutor={telefoneExecutor}
+            setorSolicitante={setorSolicitante}
+            forma={forma1}
+            medida={medida1}
+            cor={cor1}
+            indicacao={indicacao1}
+            informacoes={informacoes1}
+            material={material1}
+            eletro={eletro1}
+            dimensao={dimencao1}
+            centroCusto={centroCusto1}
+            id={id}
+            logged={logged ? logged.nome : ''}
+            loggedEmail={logged ? logged.email : ''}
+            editar={editar}
+            onToggle={handleToggle}
 
 
-        />
-      </div> : ''}
+
+
+
+          />
+        </div> : ''}
+
+
+      {id && categoria1 === 'Cadastro de Fornecedor'
+        ? <div >
+
+
+
+          <TaskItemDoChamadoFornecedor
+
+            protocolo={protocolo}
+            unidade={valueUnidade}
+            categoria={categoria1}
+            area={valueArea}
+            classificacao={classificacao}
+            solicitante={usuarioSolicitante}
+            status={status}
+            titulo={title}
+            emailUsuarioSolicitante={emailUsuarioSolicitante}
+            telefoneSolicitante={telefoneSolicitante}
+            setorSol={valueUnidade}
+            nomeExecutor={nomeExecutor}
+            emailExecutor={emailExecutor}
+            telefoneExecutor={telefoneExecutor}
+            setorSolicitante={setorSolicitante}
+            forma={forma1}
+            medida={medida1}
+            cor={cor1}
+            indicacao={indicacao1}
+            informacoes={informacoes1}
+            material={material1}
+            eletro={eletro1}
+            dimensao={dimencao1}
+            centroCusto={centroCusto1}
+            id={id}
+            logged={logged ? logged.nome : ''}
+            loggedEmail={logged ? logged.email : ''}
+            editar={editar}
+            onToggle={handleToggle}
+            cnpj={cnpj1}
+
+            razao={razao1}
+            email={email1}
+            fone={fone1}
+            GPagamento={GPagamento1}
+            filial={filial1}
+            gCotacao={gCotacao1}
+
+
+
+
+
+          />
+        </div> : ''}
       {/* <center>
         {(logged && logged.fkArea === fkAreaDemandada && logged.Perfil.nome === PerfilUtils.Coordenador) ||
           (logged && logged.Perfil.nome === PerfilUtils.Gerente && logged.Area.fkUnidade === fkUnidadeExecutor)
@@ -1365,13 +1540,299 @@ const AtividadeForm = (props) => {
                       borderRadius: 4
                     }}>
 
-                    <MenuItem value={"Cadastro de serviço"} onClick={() => [setTipoCadastro("Cadastro de serviço")]}>Cadastro de serviço</MenuItem>
+                    <MenuItem value={"Cadastro de serviço"} onClick={() => [setTipoCadastro("Cadastro de serviço")]}>Cadastro de Serviço</MenuItem>
                     <MenuItem value={"Cadastro Produto Consumo"} onClick={() => [setTipoCadastro("Cadastro Produto Consumo")]}>Cadastro Produto Consumo</MenuItem>
                     <MenuItem value={"Cadastro de Produto Patrimônio"} onClick={() => [setTipoCadastro("Cadastro de Produto Patrimônio")]}>Cadastro de Produto Patrimônio</MenuItem>
+                    <MenuItem value={"Cadastro de Fornecedor"} onClick={() => [setTipoCadastro("Cadastro de Fornecedor")]}>Cadastro de Fornecedor</MenuItem>
                   </Select>
                 </FormControl>
               </div>
               <p></p>
+
+              {tipoCadastro === "Cadastro de Fornecedor" ?
+                <div>
+
+                  <hr></hr>
+                  <div style={{ flex: 1, marginBottom: 16 }}>
+
+
+
+
+                    <label style={{ color: 'blue' }}>
+                      CNPJ -  Apenas numeros ex : 23251256555
+                    </label>
+                    <div>
+
+                      <TextField
+                        size="small"
+                        fullWidth
+                        label="cnpj"
+                        variant="outlined"
+                        value={cnpj}
+
+                        onChange={e => setCnpj(e.target.value)}
+                        style={{
+                          backgroundColor: '#fff',
+                          borderRadius: 4
+                        }}
+                        InputLabelProps={{ style: { color: '#888' } }}
+                        InputProps={{
+                          style: {
+                            color: '#333'
+                          },
+                          classes: {
+                            notchedOutline: {
+                              borderColor: '#ccc'
+                            }
+                          }
+                        }}
+                      />
+                    </div>
+
+                  </div>
+
+                  <div style={{ flex: 1, marginBottom: 16 }}>
+
+
+
+
+                    <label style={{ color: 'blue' }}>
+                      Razão Social
+                    </label>
+                    <div>
+
+                      <TextField
+                        size="small"
+                        fullWidth
+                        label="Razão Social"
+                        variant="outlined"
+                        value={razaoSocial}
+
+                        onChange={e => setRazaoSocial(e.target.value)}
+                        style={{
+                          backgroundColor: '#fff',
+                          borderRadius: 4
+                        }}
+                        InputLabelProps={{ style: { color: '#888' } }}
+                        InputProps={{
+                          style: {
+                            color: '#333'
+                          },
+                          classes: {
+                            notchedOutline: {
+                              borderColor: '#ccc'
+                            }
+                          }
+                        }}
+                      />
+                    </div>
+
+                  </div>
+
+                  <div style={{ flex: 1, marginBottom: 16 }}>
+
+
+
+
+                    <label style={{ color: 'blue' }}>
+                      Email
+                    </label>
+                    <div>
+
+                      <TextField
+                        size="small"
+                        fullWidth
+                        label="Email"
+                        variant="outlined"
+                        value={emailEmpresa}
+
+                        onChange={e => setEmailEmpresa(e.target.value)}
+                        style={{
+                          backgroundColor: '#fff',
+                          borderRadius: 4
+                        }}
+                        InputLabelProps={{ style: { color: '#888' } }}
+                        InputProps={{
+                          style: {
+                            color: '#333'
+                          },
+                          classes: {
+                            notchedOutline: {
+                              borderColor: '#ccc'
+                            }
+                          }
+                        }}
+                      />
+                    </div>
+
+                  </div>
+
+                  <div style={{ flex: 1, marginBottom: 16 }}>
+
+
+
+
+                    <label style={{ color: 'blue' }}>
+                      Telefone
+                    </label>
+                    <div>
+
+                      <TextField
+                        size="small"
+                        fullWidth
+                        label="Telefone"
+                        variant="outlined"
+                        value={telefoneEmpresa}
+
+                        onChange={e => setTelefoneEmpresa(e.target.value)}
+                        style={{
+                          backgroundColor: '#fff',
+                          borderRadius: 4
+                        }}
+                        InputLabelProps={{ style: { color: '#888' } }}
+                        InputProps={{
+                          style: {
+                            color: '#333'
+                          },
+                          classes: {
+                            notchedOutline: {
+                              borderColor: '#ccc'
+                            }
+                          }
+                        }}
+                      />
+                    </div>
+
+                  </div>
+
+                  <div style={{ flex: 1, marginBottom: 16 }}>
+
+
+
+
+                    <label style={{ color: 'blue' }}>
+                      Grupo de Pagamento
+                    </label>
+                    <div>
+
+                      <TextField
+                        size="small"
+                        fullWidth
+                        label="Grupo de Pagamento"
+                        variant="outlined"
+                        value={gPagamento}
+
+                        onChange={e => setGPagamento(e.target.value)}
+                        style={{
+                          backgroundColor: '#fff',
+                          borderRadius: 4
+                        }}
+                        InputLabelProps={{ style: { color: '#888' } }}
+                        InputProps={{
+                          style: {
+                            color: '#333'
+                          },
+                          classes: {
+                            notchedOutline: {
+                              borderColor: '#ccc'
+                            }
+                          }
+                        }}
+                      />
+                    </div>
+
+                  </div>
+
+                  <div style={{ flex: 1, marginBottom: 16 }}>
+
+
+
+
+                    <label style={{ color: 'blue' }}>
+                      Filial
+                    </label>
+                    <div>
+
+                      <TextField
+                        size="small"
+                        fullWidth
+                        label="Filial"
+                        variant="outlined"
+                        value={filial}
+
+                        onChange={e => setFilial(e.target.value)}
+                        style={{
+                          backgroundColor: '#fff',
+                          borderRadius: 4
+                        }}
+                        InputLabelProps={{ style: { color: '#888' } }}
+                        InputProps={{
+                          style: {
+                            color: '#333'
+                          },
+                          classes: {
+                            notchedOutline: {
+                              borderColor: '#ccc'
+                            }
+                          }
+                        }}
+                      />
+                    </div>
+
+                  </div>
+
+                  <div style={{ flex: 1, marginBottom: 16 }}>
+
+
+
+
+                    <label style={{ color: 'blue' }}>
+                      Grupo de Cotação
+                    </label>
+                    <div>
+
+                      <TextField
+                        size="small"
+                        fullWidth
+                        label="Grupo de Cotação"
+                        variant="outlined"
+                        value={gCotacao}
+
+                        onChange={e => setGCotacao(e.target.value)}
+                        style={{
+                          backgroundColor: '#fff',
+                          borderRadius: 4
+                        }}
+                        InputLabelProps={{ style: { color: '#888' } }}
+                        InputProps={{
+                          style: {
+                            color: '#333'
+                          },
+                          classes: {
+                            notchedOutline: {
+                              borderColor: '#ccc'
+                            }
+                          }
+                        }}
+                      />
+                    </div>
+
+                  </div>
+
+
+
+
+
+
+
+
+
+
+                </div>
+                : ""}
+
+
+
               {tipoCadastro === "Cadastro Produto Consumo" ||
                 tipoCadastro === "Cadastro de Produto Patrimônio" ?
                 <div>
@@ -1380,7 +1841,7 @@ const AtividadeForm = (props) => {
                     <b>
                       Definir um título para o produto
                     </b><br></br>
-                    <div style={{ color: 'red'}}>
+                    <div style={{ color: 'red' }}>
 
                     </div>
                     Defina um título simples e de fácil entendimento
@@ -1402,11 +1863,12 @@ const AtividadeForm = (props) => {
                       }} />
                   </div>
 
-                  Dados do item
+                  Dados do item:
+
 
                   <div style={{ flex: 1, marginBottom: 16, marginTop: 20 }}>
                     <b>
-                      Definir o Centro de Custo
+                      Definir o Grupo de Pagamento
                     </b><br></br>
                     Em caso de duvida entre em contado com a Contabilidade
                     <TextField size="small" fullWidth label="Ex: 21055 - Eventos" variant="outlined" value={centroCusto} onChange={e => setCentroCusto(e.target.value)}
@@ -1996,7 +2458,7 @@ Eficiência: 80 PLUS Bronze
 
                     <div style={{ flex: 1, marginBottom: 16, marginTop: 20 }}>
                       <b>
-                        Definir o Centro de Custo
+                        Definir o Grupo de Pagamento
                       </b><br></br>
                       Em caso de duvida entre em contado com a Contabilidade
                       <TextField size="small" fullWidth label="Ex: 21055 - Eventos" variant="outlined" value={centroCusto} onChange={e => setCentroCusto(e.target.value)}
@@ -2612,9 +3074,29 @@ Eficiência: 80 PLUS Bronze
             <div style={{ flex: 1, display: 'flex', flexDirection: 'row', alignSelf: "self-start" }}>
               {/* <Button variant="outlined" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/area/`}>Voltar</Button> */}
               <div style={{ flex: 1 }}></div>
-              <Button variant="contained"
-                disabled={botaoDesabilitado}
-                onClick={() => setModalSave(true)}>{'Solicitar cadastro do item'}</Button>
+
+              {tipoCadastro === 'Cadastro de Fornecedor' 
+                ?
+                <Button variant="contained"
+                  disabled={botaoDesabilitado}
+                  onClick={() => { tipoCadastro === 'Cadastro de Fornecedor' ? onSaveFornecvedor(true) : setModalSave(true) }}>{'Solicitar cadastro do fornecedor'}</Button>
+
+
+                :
+                ''
+
+              }
+
+              {tipoCadastro === 'Cadastro de Fornecedor'
+                ?
+                  ''
+                :
+                <Button variant="contained"
+                  disabled={botaoDesabilitado}
+                  onClick={() => { setModalSave(true) }}>{'Solicitar cadastro do item'}</Button>
+
+
+              }
             </div>
             {/* <TextField
               type="hidden"
@@ -2770,9 +3252,9 @@ Eficiência: 80 PLUS Bronze
 
                   <DialogTitle id="alert-dialog-title">
                     A falta destas informações pode acarretar uma compra que não supra as necessidades da unidade.
-                    <b style={{color:'red'}}>
+                    <b style={{ color: 'red' }}>
                       Deseja cadastrar mesmo assim?
-                      </b>
+                    </b>
                   </DialogTitle>
 
                   <div>
@@ -3013,60 +3495,60 @@ Eficiência: 80 PLUS Bronze
 
 
 
-<Dialog open={openMsg}>
-  <DialogContent
-  style={{ width: '600px', padding: '16px' }}
-  >
-    {mensagens.map((item, index) => (
-      <div key={index} style={{
-        borderTop: '1px solid #e0e0e0',
-        padding: 10,
-        background: '#FFFFE0',
-        borderRadius: 10,
-        
-        border: '2px solid #e0e0e0',
-      }}>
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-            <b style={{ fontSize: 12 }}>{item.Usuario ? item.Usuario.nome : ''}</b>
-            <b style={{ fontSize: 12 }}>{new Date(item.createdAt).toLocaleString()}</b>
+      <Dialog open={openMsg}>
+        <DialogContent
+          style={{ width: '600px', padding: '16px' }}
+        >
+          {mensagens.map((item, index) => (
+            <div key={index} style={{
+              borderTop: '1px solid #e0e0e0',
+              padding: 10,
+              background: '#FFFFE0',
+              borderRadius: 10,
+
+              border: '2px solid #e0e0e0',
+            }}>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <b style={{ fontSize: 12 }}>{item.Usuario ? item.Usuario.nome : ''}</b>
+                  <b style={{ fontSize: 12 }}>{new Date(item.createdAt).toLocaleString()}</b>
+                </div>
+              </div>
+              <div>
+                <p style={{ wordBreak: "break-all" }}>{item.conteudo}</p>
+              </div>
+            </div>
+          ))}
+
+          <hr />
+
+          {openStatus === false ? <h2>Enviar mensagem</h2> : <h4>Informe o motivo da alteração do Status</h4>}
+
+          <div style={{ marginBottom: 16 }}>
+            <TextField
+              fullWidth
+              label='Digite sua mensagem...'
+              multiline
+              rows={8}
+              variant="outlined"
+              value={conteudo}
+              onChange={e => setConteudo(e.target.value)}
+              sx={{ margin: 1 }}
+            />
           </div>
-        </div>
-        <div>
-          <p style={{ wordBreak: "break-all" }}>{item.conteudo}</p>
-        </div>
-      </div>
-    ))}
 
-    <hr />
+          <hr />
 
-    {openStatus === false ? <h2>Enviar mensagem</h2> : <h4>Informe o motivo da alteração do Status</h4>}
-
-    <div style={{ marginBottom: 16 }}>
-      <TextField
-        fullWidth
-        label='Digite sua mensagem...'
-        multiline
-        rows={8}
-        variant="outlined"
-        value={conteudo}
-        onChange={e => setConteudo(e.target.value)}
-        sx={{ margin: 1 }}
-      />
-    </div>
-
-    <hr />
-
-    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
-      <Button variant="contained" color="primary" onClick={novaInteracao} >
-        Enviar
-      </Button>
-      <Button variant="outlined" onClick={() => setOpenMsg(false)}>
-        Cancelar
-      </Button>
-    </div>
-  </DialogContent>
-</Dialog>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
+            <Button variant="contained" color="primary" onClick={novaInteracao} >
+              Enviar
+            </Button>
+            <Button variant="outlined" onClick={() => setOpenMsg(false)}>
+              Cancelar
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
 
       <Dialog open={termo}  >

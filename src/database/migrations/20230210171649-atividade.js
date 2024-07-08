@@ -41,6 +41,36 @@ module.exports = {
         allowNull: true
       },
 
+      cnpj: {
+        type: Sequelize.TEXT,
+        allowNull: true
+      },
+      razao: {
+        type: Sequelize.TEXT,
+        allowNull: true
+      },
+      email: {
+        type: Sequelize.TEXT,
+        allowNull: true
+      },
+      fone: {
+        type: Sequelize.TEXT,
+        allowNull: true
+      },
+      gPagamento: {
+        type: Sequelize.TEXT,
+        allowNull: true
+      },
+      filial: {
+        type: Sequelize.TEXT,
+        allowNull: true
+      },
+      gCotacao: {
+        type: Sequelize.TEXT,
+        allowNull: true
+      },
+    
+
       indicacao: {
         type: Sequelize.TEXT,
         allowNull: true

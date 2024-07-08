@@ -8,12 +8,13 @@ const fec = require('../assets/fec.png')
 
 const getCookie = require('../utils/getCookie')
 
-const TaskItemDoChamado = (props) => {
+const TaskItemDoChamadoFornecedor = (props) => {
     const { nome, logged } = props;
 
     const { protocolo, unidade, area, classificacao, solicitante,
         status, titulo, emailUsuarioSolicitante, telefoneSolicitante, setorSol,
         nomeExecutor, emailExecutor, telefoneExecutor, categoria,
+        razao,email,fone,GPagamento,filial,gCotacao,
         setorSolicitante, forma, medida, cor, loggedEmail,
         indicacao, informacoes, material, eletro, dimensao, editar, centroCusto, id } = props
 
@@ -166,50 +167,9 @@ const TaskItemDoChamado = (props) => {
 
 
 
-                {props.logged === props.solicitante &&
-                    <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
-                        <Button
-                            variant="contained"
-                            size="small"
-                            color="error"
-                            disabled={!props.editar}
-                            onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${id}/editar`}
-                        >
-                            O executor abriu a edição para ajuestes
-                        </Button>
-                    </div>
-                }
+              
 
 
-                {
-                    emailExecutor === loggedEmail
-                        && props.editar === false
-
-                        ?
-                        <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
-                            <Button size='small' color="error"
-                                onClick={() => onSaveStatus()}
-                            >Liberar edição para o usuário
-                                <img src={ab} height={34} />
-                            </Button>
-                        </div> : ''
-
-                }
-
-                {
-                    emailExecutor === loggedEmail
-                        && props.editar === true
-
-                        ?
-                        <div style={{ flex: 1, marginBottom: 16, marginLeft: 5 }}>
-                            <Button size='small' color="error"
-                                onClick={() => onSaveStatus()}
-                            >Bloquear edição para o usuário
-                                <img src={fec} height={34} />
-                            </Button>
-                        </div> : ''
-
-                }
 
                 <table style={{
                     width: '100%',
@@ -531,18 +491,8 @@ const TaskItemDoChamado = (props) => {
 
 
 
-                        <b>Centro de Custo:</b><br></br>
-                        {props.centroCusto ?
-                            <div style={{ color: '#2E7D32', wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}>
-
-                                {props.centroCusto}
-                            </div>
-                            :
-
-                            <div style={{ marginLeft: '3px', color: '#D32F2F' }}>
-
-                                Centro de custo não cadastrado
-                            </div>}
+                        <b>CNPJ:</b><br></br>
+                        {props.cnpj}
 
                     </div>
 
@@ -560,17 +510,7 @@ const TaskItemDoChamado = (props) => {
                         margin: '10px 0'
                     }}>
 
-                        <b>Informações Gerais:</b> {props.informacoes ?
-                            <div style={{ color: '#2E7D32', wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}>
-
-                                {props.informacoes}
-                            </div>
-                            :
-
-                            <div style={{ marginLeft: '3px', color: '#D32F2F' }}>
-
-                                Informações não cadastrada
-                            </div>}
+                        <b>Razão Social:</b> {props.razao}
 
                     </div>
 
@@ -593,18 +533,8 @@ const TaskItemDoChamado = (props) => {
                             margin: '10px 0'
                         }}>
 
-                        <b>Forma:</b><br></br>
-                        {props.forma ?
-                            <div style={{ color: '#2E7D32', wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}>
-
-                                {props.forma}
-                            </div>
-                            :
-
-                            <div style={{ marginLeft: '3px', color: '#D32F2F' }}>
-
-                                Forma não cadastrada
-                            </div>}
+                        <b>Email:</b><br></br>
+                        {props.email}
 
                     </div>
 
@@ -623,17 +553,7 @@ const TaskItemDoChamado = (props) => {
                             margin: '10px 0'
                         }}>
 
-                        <b>Medida:</b> {props.medida ?
-                            <div style={{ color: '#2E7D32', wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}>
-
-                                {props.medida}
-                            </div>
-                            :
-
-                            <div style={{ marginLeft: '3px', color: '#D32F2F' }}>
-
-                                Medida não cadastrada
-                            </div>}
+                        <b>Fone:</b> {props.fone}
 
                     </div>
 
@@ -651,17 +571,7 @@ const TaskItemDoChamado = (props) => {
                         margin: '10px 0'
                     }}>
 
-                        <b>Cor:</b> {props.cor ?
-                            <div style={{ color: '#2E7D32', wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}>
-
-                                {props.cor}
-                            </div>
-                            :
-
-                            <div style={{ marginLeft: '3px', color: '#D32F2F' }}>
-
-                                Cor não cadastrada
-                            </div>}
+                        <b>Grupo de Pagamento:</b> {props.GPagamento}
 
                     </div>
 
@@ -687,45 +597,12 @@ const TaskItemDoChamado = (props) => {
                             margin: '10px 0'
                         }}>
 
-                        <b>Material:</b> {props.material ?
-                            <div style={{ color: '#2E7D32', wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}>
-
-                                {props.material}
-                            </div>
-                            :
-
-                            <div style={{ marginLeft: '3px', color: '#D32F2F' }}>
-
-                                Material não cadastrada
-                            </div>}
+                        <b>Filial:</b> {props.filial}
 
                     </div>
 
 
-                    <div style={{
-                        flex: 1,
-                        fontSize: '12px',
-                        color: '#424242',
-                        display: 'flex',
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        padding: '10px',
-                        borderRadius: '8px',
-                        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-                        backgroundColor: '#f5f5f5',
-                        margin: '10px 0'
-                    }}>
-                        <b style={{ marginRight: '8px' }}>Configurações de potência:</b>
-                        {props.eletro ? (
-                            <div style={{ color: '#2E7D32', wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}>
-                                {props.eletro}
-                            </div>
-                        ) : (
-                            <div style={{ marginLeft: '3px', color: '#D32F2F' }}>
-                                Configurações de potência não cadastrada
-                            </div>
-                        )}
-                    </div>
+                   
 
 
                     <div style={{
@@ -742,47 +619,11 @@ const TaskItemDoChamado = (props) => {
                         margin: '10px 0'
                     }}>
 
-                        <b>Dimenções:</b> {props.dimensao ?
-                            <div style={{ color: '#2E7D32', wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}>
-
-                                {props.dimensao}
-                            </div>
-                            :
-
-                            <div style={{ marginLeft: '3px', color: '#D32F2F' }}>
-
-                                Dimenções não cadastrada
-                            </div>}
+                        <b>Grupo de Cotação:</b> {props.gCotacao}
 
                     </div>
 
-                    <div style={{
-                        flex: 1,
-                        fontSize: '12px',
-                        color: '#424242',
-                        display: 'flex',
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        padding: '10px',
-                        borderRadius: '8px',
-                        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-                        backgroundColor: '#f5f5f5',
-                        margin: '10px 0'
-                    }}>
-
-                        <b>Indicação:</b> {props.indicacao ?
-                            <div style={{ color: '#2E7D32', wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}>
-
-                                {props.indicacao}
-                            </div>
-                            :
-
-                            <div style={{ marginLeft: '3px', color: '#D32F2F' }}>
-
-                                Indicação não cadastrada
-                            </div>}
-
-                    </div>
+                   
 
 
                     <br></br>
@@ -807,4 +648,4 @@ const TaskItemDoChamado = (props) => {
     )
 }
 
-export default TaskItemDoChamado
+export default TaskItemDoChamadoFornecedor

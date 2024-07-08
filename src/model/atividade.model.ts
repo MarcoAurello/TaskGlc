@@ -12,6 +12,15 @@ class Atividade extends Model {
   public titulo!: Text
   public protocolo!: string
   public cor!: Text
+
+  public cnpj!: Text
+  public razao!: Text
+  public email!: Text
+  public fone!: Text
+  public gPagamento!: Text
+  public filial!: Text
+  public gCotacao!: Text
+
   public centroCusto!: string
   public indicacao: Text
   public informacoes: Text 
@@ -60,6 +69,40 @@ Atividade.init({
     type: DataTypes.TEXT,
     allowNull: true
   },
+
+  cnpj: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  razao: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  fone: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  email: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  gPagamento: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  filial: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  gCotacao: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+
+
+
+
+
 
   indicacao : {
     type: DataTypes.TEXT,
