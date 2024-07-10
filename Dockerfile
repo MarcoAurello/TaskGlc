@@ -1,4 +1,4 @@
-FROM node:16-alpine
+FROM node:20.12.2-alpine
 
 WORKDIR /usr/app
 
@@ -6,9 +6,10 @@ COPY package*.json ./
 
 COPY . .
 
-RUN cd /usr/app/app && npm install
 RUN npm install
+
+RUN npm run build:backend
 
 EXPOSE 3354
 
-CMD ["npm", "run", "dev"]
+CMD ["node", "./dist/app.js"]

@@ -22,12 +22,15 @@ class AtividadeRouter {
     this.router.get('/searchSolicitadas/', _atividadecontroller2.default.searchSolicitadas)
     this.router.get('/', _atividadecontroller2.default.all)
     this.router.get('/recebidasSetor', _atividadecontroller2.default.recebidasSetor)
+    this.router.get('/recebidasSetorCount', _atividadecontroller2.default.recebidasSetorCount)
     this.router.get('/solicitadasSetor', _atividadecontroller2.default.solicitadasSetor)
     this.router.get('/chamadosAbertos', _atividadecontroller2.default.chamadosAbertos)
     this.router.get('/minhasAtividades', _atividadecontroller2.default.minhasAtividades)
     this.router.get('/todasAsPendencias', _atividadecontroller2.default.todasAsPendencias)
     this.router.get('/minhasAtividadesArquivadas/', _atividadecontroller2.default.minhasAtividadesArquivadas)
     this.router.post('/', _atividadecontroller2.default.create)
+    this.router.get('/termo/:cpfTermo', _atividadecontroller2.default.termo);
+
     this.router.get('/:id', _atividadecontroller2.default.find)
     this.router.post('/:id/edit', _atividadecontroller2.default.update)
     this.router.post('/:id/delete', _atividadecontroller2.default.delete)

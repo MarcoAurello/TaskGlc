@@ -8,6 +8,8 @@ var _emailutils = require('../utils/email.utils'); var _emailutils2 = _interopRe
 var _arquivomodel = require('../model/arquivo.model'); var _arquivomodel2 = _interopRequireDefault(_arquivomodel);
 var _areamodel = require('../model/area.model'); var _areamodel2 = _interopRequireDefault(_areamodel);
 
+const { Op } = require('sequelize')
+
 class MensagemController  {
   async all (req, res, next) {
     try {
@@ -96,7 +98,13 @@ class MensagemController  {
 
       const Manutencao = await _areamodel2.default.findOne({
         where: {
-          nome: 'Manutenção- Elétrica / Hidráulica / Refrigeração/ Mecânica'
+          [Op.or]: [
+            { nome: 'Manutenção - Elétrica'  },
+            { nome:  'Manutenção - Refrigeração'  },
+            { nome: 'Manutenção - Mecânica'  },
+            { nome:  'Manutenção - Hidráulica'  },
+           
+          ]
         }
       })
 
@@ -108,9 +116,8 @@ class MensagemController  {
         <b>Atividade: ${_optionalChain([titulo, 'optionalAccess', _8 => _8.titulo])}</b> tem nova interação<br>
         <a href="https://www7.pe.senac.br/taskmanagerGlc/atividade/${_optionalChain([titulo, 'optionalAccess', _9 => _9.id])}/edit">CLIQUE PARA VER</a><p>
     `
-        _emailutils2.default.enviar('lucascruz@pe.senac.br', txEmail)
-        _emailutils2.default.enviar('karenMiranda@pe.senac.br', txEmail)
-        _emailutils2.default.enviar('gabrielvilela@pe.senac.br', txEmail)
+        // lucascruz@pe.senac.br;karenMiranda@pe.senac.br;gabrielvilela@pe.senac.br
+        await _emailutils2.default.enviar('marconunes@pe.senac.br', txEmail)
       }
 
       const txEmail = `
@@ -118,10 +125,10 @@ class MensagemController  {
       <a href="https://www7.pe.senac.br/taskmanagerGlc/atividade/${_optionalChain([titulo, 'optionalAccess', _11 => _11.id])}/edit">CLIQUE PARA VER</a><p>
   `
 
-      _emailutils2.default.enviar(email, txEmail)
+      await _emailutils2.default.enviar(email, txEmail)
 
       if (emailExecutor) {
-        _emailutils2.default.enviar(emailExecutor, txEmail)
+        await _emailutils2.default.enviar(emailExecutor, txEmail)
       }
 
       const atividade = await _atividademodel2.default.findOne({ where: { id: fkAtividade } })

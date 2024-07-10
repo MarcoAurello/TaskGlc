@@ -17,9 +17,13 @@ class UsuarioAtividadeController  {
       const registros = await _usuariomodel2.default.findAll({
         include: [_areamodel2.default],
         where: {
-          '$Area.fkUnidade$': _optionalChain([area, 'optionalAccess', _ => _.fkUnidade])
-          // validado: true,
-        }
+          '$Area.fkUnidade$': _optionalChain([area, 'optionalAccess', _ => _.fkUnidade]),
+          ativo: true,
+        },
+        order: [
+          ['nome', 'ASC'] // ASC para ordenação crescente (ou 'DESC' para decrescente)
+        ]
+
       })
 
       res.status(200).json({ data: registros })
@@ -61,7 +65,7 @@ class UsuarioAtividadeController  {
       <a href="https://www7.pe.senac.br/taskmanagerGlc/atividade/${fkAtividade}/edit">CLIQUE PARA VER</a><p>
   `
 
-      _emailutils2.default.enviar(_optionalChain([emailExecutor, 'optionalAccess', _2 => _2.email]), msg)
+      await _emailutils2.default.enviar(_optionalChain([emailExecutor, 'optionalAccess', _2 => _2.email]), msg)
 
       res
         .status(200)

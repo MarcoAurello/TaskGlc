@@ -16,6 +16,9 @@ var _usurarioDemandadorouter = require('./router/usurarioDemandado.router'); var
 var _subarearouter = require('./router/subarea.router'); var _subarearouter2 = _interopRequireDefault(_subarearouter);
 var _arquivorouter = require('./router/arquivo.router'); var _arquivorouter2 = _interopRequireDefault(_arquivorouter);
 var _emailrouter = require('./router/email.router'); var _emailrouter2 = _interopRequireDefault(_emailrouter);
+var _timeLineStatusrouter = require('./router/timeLineStatus.router'); var _timeLineStatusrouter2 = _interopRequireDefault(_timeLineStatusrouter);
+
+
 
 var _questionariorouter = require('./router/questionario.router'); var _questionariorouter2 = _interopRequireDefault(_questionariorouter);
 
@@ -54,6 +57,7 @@ class Server {
     this.application.use('/api/unidade/', _unidaderouter2.default)
     this.application.use('/api/area/', _arearouter2.default)
     this.application.use('/api/perfil/', _perfilrouter2.default)
+    this.application.use('/api/timeLineStatus/', _timeLineStatusrouter2.default)
     this.application.use('/api/configuracao/', _configuracaoGlobalrouter2.default)
  
     this.application.use('/api/status/', _statusrouter2.default)

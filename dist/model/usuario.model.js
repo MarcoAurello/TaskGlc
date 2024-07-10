@@ -1,5 +1,5 @@
 "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _sequelize = require('sequelize');
-var _bcrypt = require('bcrypt'); var _bcrypt2 = _interopRequireDefault(_bcrypt);
+var _bcryptjs = require('bcryptjs'); var _bcryptjs2 = _interopRequireDefault(_bcryptjs);
 var _uuidv4 = require('uuidv4');
 var _connection = require('./connection'); var _connection2 = _interopRequireDefault(_connection);
 var _jsonwebtoken = require('jsonwebtoken'); var _jsonwebtoken2 = _interopRequireDefault(_jsonwebtoken);
@@ -143,13 +143,12 @@ Usuario.init({
   hooks: {
     async beforeCreate (instance) {
       instance.id = _uuidv4.uuid.call(void 0, )
-      instance.passwordHash = await _bcrypt2.default.hash(instance.password, 8)
+      instance.passwordHash = await _bcryptjs2.default.hash(instance.password, 8)
     }
   }
 })
 
 Usuario.belongsTo(_areamodel2.default, { foreignKey: 'fkArea' })
 Usuario.belongsTo(_perfilmodel2.default, { foreignKey: 'fkPerfil' })
-
 
 exports. default = Usuario

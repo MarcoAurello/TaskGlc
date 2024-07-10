@@ -19,6 +19,7 @@ class QuestionarioRouter {
     this.router.get('/:id', _questionariocontroller2.default.find)
     this.router.post('/:id/edit', _questionariocontroller2.default.update)
     this.router.post('/:id/delete', _questionariocontroller2.default.delete)
+    
   }
 }
 

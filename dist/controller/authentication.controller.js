@@ -3,7 +3,7 @@
 var _activedirectory = require('activedirectory'); var _activedirectory2 = _interopRequireDefault(_activedirectory);
 var _usuariomodel = require('../model/usuario.model'); var _usuariomodel2 = _interopRequireDefault(_usuariomodel);
 var _configuracaoGeralmodel = require('../model/configuracaoGeral.model'); var _configuracaoGeralmodel2 = _interopRequireDefault(_configuracaoGeralmodel);
-var _bcrypt = require('bcrypt'); var _bcrypt2 = _interopRequireDefault(_bcrypt);
+var _bcryptjs = require('bcryptjs'); var _bcryptjs2 = _interopRequireDefault(_bcryptjs);
 
 class AuthenticationController {
   async login (req, res, next) {
@@ -55,7 +55,7 @@ class AuthenticationController {
           return res.status(401).json({ message: 'Não foi possível localizar o usuário.' })
         }
 
-        if (!await _bcrypt2.default.compare(password, registro.passwordHash)) {
+        if (!await _bcryptjs2.default.compare(password, registro.passwordHash)) {
           return res.status(401).json({ message: 'Senha inválida.' })
         }
 
@@ -75,6 +75,7 @@ class AuthenticationController {
 
   async logged (req, res, next) {
     try {
+      console.log(req.usuario)
       res.status(200).json({ data: req.usuario })
     } catch (err) {
       console.log(err)

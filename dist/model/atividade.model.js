@@ -12,6 +12,26 @@ class Atividade extends _sequelize.Model {
   
   
   
+
+  
+  
+  
+  
+  
+  
+  
+
+  
+  
+   
+  
+  
+  
+  
+  
+  
+  
+  
   
   
   
@@ -38,12 +58,88 @@ Atividade.init({
     primaryKey: true
   },
   titulo: {
-    type: _sequelize.DataTypes.STRING,
+    type: _sequelize.DataTypes.TEXT,
     allowNull: false
   },
-  protocolo: {
+  forma: {
+    type: _sequelize.DataTypes.TEXT,
+    allowNull: true
+  },
+  cor: {
+    type: _sequelize.DataTypes.TEXT,
+    allowNull: true
+  },
+
+  cnpj: {
+    type: _sequelize.DataTypes.TEXT,
+    allowNull: true
+  },
+  razao: {
+    type: _sequelize.DataTypes.TEXT,
+    allowNull: true
+  },
+  fone: {
+    type: _sequelize.DataTypes.TEXT,
+    allowNull: true
+  },
+  email: {
+    type: _sequelize.DataTypes.TEXT,
+    allowNull: true
+  },
+  gPagamento: {
+    type: _sequelize.DataTypes.TEXT,
+    allowNull: true
+  },
+  filial: {
+    type: _sequelize.DataTypes.TEXT,
+    allowNull: true
+  },
+  gCotacao: {
+    type: _sequelize.DataTypes.TEXT,
+    allowNull: true
+  },
+
+
+
+
+
+
+  indicacao : {
+    type: _sequelize.DataTypes.TEXT,
+    allowNull: true
+  },
+  centroCusto : {
     type: _sequelize.DataTypes.STRING,
+    allowNull: true
+  },
+
+  informacoes : {
+    type: _sequelize.DataTypes.TEXT,
+    allowNull: true
+  },
+
+
+  medida: {
+    type: _sequelize.DataTypes.TEXT,
+    allowNull: true
+  },
+  
+  eletro: {
+    type: _sequelize.DataTypes.TEXT,
+    allowNull: true
+  },
+
+  material: {
+    type: _sequelize.DataTypes.TEXT,
+    allowNull: true
+  },
+  protocolo: {
+    type: _sequelize.DataTypes.TEXT,
     allowNull: false
+  },
+  detalhes: {
+    type: _sequelize.DataTypes.TEXT,
+    allowNull: true
   },
   fkClassificacao: {
     type: _sequelize.DataTypes.UUID,
@@ -62,6 +158,19 @@ Atividade.init({
     allowNull: false,
     defaultValue: false
   },
+
+  editar: {
+    type: _sequelize.DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
+  },
+
+
+  dimensao: {
+    type: _sequelize.DataTypes.TEXT,
+    allowNull: true
+  },
+
   fkUsuarioSolicitante: {
     type: _sequelize.DataTypes.UUID,
     allowNull: false

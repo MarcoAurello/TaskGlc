@@ -17,6 +17,7 @@ class SubAreaRouter {
     this.router.get("/:id", _subareacontroller2.default.find);
     this.router.post("/:id/edit", _subareacontroller2.default.update);
     this.router.post("/:id/delete", _subareacontroller2.default.delete);
+    
   }
 }
 

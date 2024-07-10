@@ -64,13 +64,6 @@ class QuestionarioController  {
             //     }
             // );
         
-
-
-
-
-
-
-
             res
                 .status(200)
                 .json({  message: "Seu feedback foi cadastrado, Obrigado." });
@@ -99,6 +92,8 @@ class QuestionarioController  {
     async search(req, res, next) {
         throw new Error('Method not implemented.')
     }
+
+    
 }
 
 exports. default = new QuestionarioController()

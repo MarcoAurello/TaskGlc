@@ -9,7 +9,7 @@ class UnidadeRouter {
 
   constructor () {
     this.router = _express.Router.call(void 0, )
-    this.router.use(_routermiddleware2.default.authenticated)
+    // this.router.use(routerMiddleware.authenticated)
     this.routers()
   }
 
@@ -17,7 +17,7 @@ class UnidadeRouter {
     this.router.get('/search/', _unidadecontroller2.default.search)
     this.router.get('/', _unidadecontroller2.default.all)
     this.router.get('/recebem/', _unidadecontroller2.default.recebem)
-    this.router.post('/', _routermiddleware2.default.role([_perfilutils2.default.Administrador]), _unidadecontroller2.default.create)
+    this.router.post('/',  _unidadecontroller2.default.create)
     this.router.get('/:id', _unidadecontroller2.default.find)
     this.router.post('/:id/edit', _routermiddleware2.default.role([_perfilutils2.default.Administrador]), _unidadecontroller2.default.update)
     this.router.post('/:id/delete', _routermiddleware2.default.role([_perfilutils2.default.Administrador]), _unidadecontroller2.default.delete)

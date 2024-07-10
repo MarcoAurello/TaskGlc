@@ -64,6 +64,9 @@
     "dev": "concurrently \" nodemon ./src/app.ts\" \"cd ./app && yarn run start --openssl-legacy-provider\"",
     "production": "sucrase-node ./src/app.ts",
     "build": "cd ./app && yarn run build",
-    "createDb": "set DEVMODE=dev && yarn sequelize db:create"
+    "createDb": "set DEVMODE=dev && yarn sequelize db:create",
+    "build:backend": "npx sucrase ./src -d ./dist --transforms typescript,imports",
+    "build:frontend": "cd ./app && yarn run build",
+    "start": "node ./dist/app.js"
   }
 }
