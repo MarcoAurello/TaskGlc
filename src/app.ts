@@ -20,7 +20,7 @@ process.on('uncaughtException', (err, origin) => {
   )
 })
 
-const PORT = 3354
+const PORT = 3355
 const HOST = '0.0.0.0'
 
 app.listen(PORT, HOST, () => {
