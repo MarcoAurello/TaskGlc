@@ -114,7 +114,7 @@ class MensagemController implements IController {
       ) {
         const txEmail = `
         <b>Atividade: ${titulo?.titulo}</b> tem nova interação<br>
-        <a href="https://www7.pe.senac.br/taskmanagerGlc/atividade/${titulo?.id}/edit">CLIQUE PARA VER</a><p>
+        <a href="https://app1.pe.senac.br/taskmanagerglc/atividade/${titulo?.id}/edit">CLIQUE PARA VER</a><p>
     `
         // lucascruz@pe.senac.br;karenMiranda@pe.senac.br;gabrielvilela@pe.senac.br
         await emailUtils.enviar('marconunes@pe.senac.br', txEmail)
@@ -122,7 +122,7 @@ class MensagemController implements IController {
 
       const txEmail = `
       <b>Atividade: ${titulo?.titulo}</b> tem nova interação<br>
-      <a href="https://www7.pe.senac.br/taskmanagerGlc/atividade/${titulo?.id}/edit">CLIQUE PARA VER</a><p>
+      <a href="https://app1.pe.senac.br/taskmanagerglc/atividade/${titulo?.id}/edit">CLIQUE PARA VER</a><p>
   `
 
       await emailUtils.enviar(email, txEmail)

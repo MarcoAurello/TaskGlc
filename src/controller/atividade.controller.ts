@@ -39,7 +39,7 @@ const buscarAtividadesPendentes = async () => {
 
         Item: <strong>${atividade?.titulo}</strong><br>
         Faça os ajustes para a GLC proseguir com o processo 
-        <a href="https://www7.pe.senac.br/taskmanagerglc/atividade/${atividade?.id}/edit">CLIQUE PARA VER.</a><p> 
+        <a href="https://app1.pe.senac.br/taskmanagerglc/atividade/${atividade?.id}/edit">CLIQUE PARA VER.</a><p> 
         `
 
         await emailUtils.enviar(email, txEmail1)
@@ -261,7 +261,7 @@ class AtividadeController implements IController {
         Titulo: <strong>${titulo}</strong><br>
           Mensagem: <strong>${conteudo}</strong><br>
         <br/>
-        <a href="https://www7.pe.senac.br/taskmanagerglc/atividade/${atividadeSalva?.id}/edit">CLIQUE PARA VER.</a><p>  
+        <a href="https://app1.pe.senac.br/taskmanagerglc/atividade/${atividadeSalva?.id}/edit">CLIQUE PARA VER.</a><p>  
         `
         let destinatarios = '';
 

@@ -114,7 +114,7 @@ class MensagemController  {
       ) {
         const txEmail = `
         <b>Atividade: ${_optionalChain([titulo, 'optionalAccess', _8 => _8.titulo])}</b> tem nova interação<br>
-        <a href="https://www7.pe.senac.br/taskmanagerGlc/atividade/${_optionalChain([titulo, 'optionalAccess', _9 => _9.id])}/edit">CLIQUE PARA VER</a><p>
+        <a href="https://app1.pe.senac.br/taskmanagerglc/atividade/${_optionalChain([titulo, 'optionalAccess', _9 => _9.id])}/edit">CLIQUE PARA VER</a><p>
     `
         // lucascruz@pe.senac.br;karenMiranda@pe.senac.br;gabrielvilela@pe.senac.br
         await _emailutils2.default.enviar('marconunes@pe.senac.br', txEmail)
@@ -122,7 +122,7 @@ class MensagemController  {
 
       const txEmail = `
       <b>Atividade: ${_optionalChain([titulo, 'optionalAccess', _10 => _10.titulo])}</b> tem nova interação<br>
-      <a href="https://www7.pe.senac.br/taskmanagerGlc/atividade/${_optionalChain([titulo, 'optionalAccess', _11 => _11.id])}/edit">CLIQUE PARA VER</a><p>
+      <a href="https://app1.pe.senac.br/taskmanagerglc/atividade/${_optionalChain([titulo, 'optionalAccess', _11 => _11.id])}/edit">CLIQUE PARA VER</a><p>
   `
 
       await _emailutils2.default.enviar(email, txEmail)
