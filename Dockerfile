@@ -10,6 +10,6 @@ RUN npm install
 
 RUN npm run build:backend
 
-EXPOSE 3354
+EXPOSE 3355
 
 CMD ["node", "./dist/app.js"]
