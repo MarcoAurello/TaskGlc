@@ -9,6 +9,7 @@ class Arquivo extends Model {
   public nomeApresentacao!: string
   public caminho!: string
   public fkAtividade!: string
+  public hash!: string
   public createdAt!: Date
   public updatedAt!: Date
 }
@@ -30,6 +31,10 @@ Arquivo.init({
   caminho: {
     type: DataTypes.STRING,
     allowNull: false,
+  },
+  hash: {
+    type: DataTypes.STRING,
+    allowNull: true,
   },
   fkAtividade: {
     type: DataTypes.UUID,

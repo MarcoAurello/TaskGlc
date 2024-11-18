@@ -1,4 +1,4 @@
-"use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; } function _optionalChain(ops) { let lastAccessLHS = undefined; let value = ops[0]; let i = 1; while (i < ops.length) { const op = ops[i]; const fn = ops[i + 1]; i += 2; if ((op === 'optionalAccess' || op === 'optionalCall') && value == null) { return undefined; } if (op === 'access' || op === 'optionalAccess') { lastAccessLHS = value; value = fn(value); } else if (op === 'call' || op === 'optionalCall') { value = fn((...args) => value.call(lastAccessLHS, ...args)); lastAccessLHS = undefined; } } return value; }
+"use strict"; Object.defineProperty(exports, "__esModule", { value: true }); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; } function _optionalChain(ops) { let lastAccessLHS = undefined; let value = ops[0]; let i = 1; while (i < ops.length) { const op = ops[i]; const fn = ops[i + 1]; i += 2; if ((op === 'optionalAccess' || op === 'optionalCall') && value == null) { return undefined; } if (op === 'access' || op === 'optionalAccess') { lastAccessLHS = value; value = fn(value); } else if (op === 'call' || op === 'optionalCall') { value = fn((...args) => value.call(lastAccessLHS, ...args)); lastAccessLHS = undefined; } } return value; }
 
 var _atividademodel = require('../model/atividade.model'); var _atividademodel2 = _interopRequireDefault(_atividademodel);
 var _mensagemmodel = require('../model/mensagem.model'); var _mensagemmodel2 = _interopRequireDefault(_mensagemmodel);
@@ -44,7 +44,7 @@ const buscarAtividadesPendentes = async () => {
 
         await _emailutils2.default.enviar(email, txEmail1)
 
-        
+
       }
 
       console.log('Atividades Pendentes:', atividadesPendentes);
@@ -60,12 +60,12 @@ cron.schedule('14 16 * * *', buscarAtividadesPendentes, {
 
 
 
-class AtividadeController  {
-  async all (req, res, next) {
+class AtividadeController {
+  async all(req, res, next) {
     throw new Error('Method not implemented.')
   }
 
-  async create (req, res, next) {
+  async create(req, res, next) {
     try {
       const {
         fkUnidade,
@@ -76,7 +76,9 @@ class AtividadeController  {
         caminho,
         tipoCadastro,
         medida,
-
+        nomeProjeto,
+        qtdItems,
+        dataInicio,
         cnpj,
         razaoSocial,
         emailEmpresa,
@@ -96,7 +98,7 @@ class AtividadeController  {
         listaDeArquivosEnviados,
         setorSolicitante
       } = req.body
-      console.log("a" +req.body);
+      console.log("a" + req.body);
       // console.log(setorSolicitante);
 
       if (!fkUnidade) {
@@ -110,23 +112,23 @@ class AtividadeController  {
       //     .status(401)
       //     .json({ message: 'O campo área deve ser preenchido corretamente.' })
       // }
-      const area= await _areamodel2.default.findOne({
-        where: {nome: "GLC-Cadastro de Item"}
+      const area = await _areamodel2.default.findOne({
+        where: { nome: "GLC-Cadastro de Item" }
       })
-     
+
 
       if (!titulo) {
         return res.status(401).json({
           message: 'O campo título deve ser preenchido corretamente.'
         })
       }
-     
+
       if (!conteudo) {
         return res.status(401).json({
           message: 'O campo conteudo deve ser preenchido corretamente.'
         })
       }
-     
+
 
       const classificacao = await _classificacaomodel2.default.findOne({
         where: { nome: 'Não Definido' }
@@ -136,9 +138,9 @@ class AtividadeController  {
         where: { nome: 'Aberto' }
       })
 
-      const proc = _protocoloutils2.default.call(void 0, )
+      const proc = _protocoloutils2.default.call(void 0,)
 
-      if(cnpj && razaoSocial){
+      if (cnpj && razaoSocial) {
 
         const atividade = await _atividademodel2.default.create({
           titulo,
@@ -146,16 +148,16 @@ class AtividadeController  {
           protocolo: proc,
           fkArea: _optionalChain([area, 'optionalAccess', _5 => _5.id]),
           cnpj,
-          razao:razaoSocial,
-          email:emailEmpresa,
+          razao: razaoSocial,
+          email: emailEmpresa,
           gPagamento,
           filial,
           gCotacao,
-          fone:telefoneEmpresa,
+          fone: telefoneEmpresa,
 
-          
-          detalhes : conteudo,
-         
+
+          detalhes: conteudo,
+
           fkStatus: _optionalChain([status, 'optionalAccess', _6 => _6.id]),
           fkUsuarioSolicitante: req.usuario.id,
           arquivado: false,
@@ -170,10 +172,10 @@ class AtividadeController  {
           fkAtividade: atividade.id,
           fkUsuario: req.usuario.id
         })
-  
 
 
-      }else{
+
+      } else {
 
         const atividade = await _atividademodel2.default.create({
           titulo,
@@ -186,7 +188,7 @@ class AtividadeController  {
           medida,
           centroCusto,
           indicacao,
-          detalhes : conteudo,
+          detalhes: conteudo,
           informacoes,
           eletro,
           dimensao,
@@ -204,17 +206,18 @@ class AtividadeController  {
           fkAtividade: atividade.id,
           fkUsuario: req.usuario.id
         })
-  
+
       }
 
       // const emailCoordenadores = await queryInterface.sequelize.query('select email from usuario where fkArea = \'Aberto\'')
       // const status = await queryInterface.sequelize.query('select id from status where nome = \'Aberto\'')
 
-      
+
       const atividadeSalva = await _atividademodel2.default.findOne({
-        where: { titulo,
-        protocolo: proc 
-      }
+        where: {
+          titulo,
+          protocolo: proc
+        }
       })
 
       listaDeArquivosEnviados.map((item) => {
@@ -232,29 +235,29 @@ class AtividadeController  {
         where: { fkArea }
       })
 
-  
-        
-        await _timeLineStatusmodel2.default.create(
-          {
-            fkStatus: _optionalChain([status, 'optionalAccess', _11 => _11.id]),
-            fkAtividade:  _optionalChain([atividadeSalva, 'optionalAccess', _12 => _12.id]),
-            fkUsuario : req.usuario.id
-          }
-        )
-
-    
 
 
-     
+      await _timeLineStatusmodel2.default.create(
+        {
+          fkStatus: _optionalChain([status, 'optionalAccess', _11 => _11.id]),
+          fkAtividade: _optionalChain([atividadeSalva, 'optionalAccess', _12 => _12.id]),
+          fkUsuario: req.usuario.id
+        }
+      )
 
-      
+
+
+
+
+
+
       const glc = await _unidademodel2.default.findOne({
-        where: { nome :'GLC' }
+        where: { nome: 'GLC' }
       })
-     
 
-      
-        const txEmail1 = `
+
+
+      const txEmail1 = `
             <b>Nova Atividade para sua área.</b><br>
 
         Unidade: <strong>${setorSolicitante}</strong><br>
@@ -263,21 +266,21 @@ class AtividadeController  {
         <br/>
         <a href="https://app1.pe.senac.br/taskmanagerglc/atividade/${_optionalChain([atividadeSalva, 'optionalAccess', _13 => _13.id])}/edit">CLIQUE PARA VER.</a><p>  
         `
-        let destinatarios = '';
+      let destinatarios = '';
 
-        funcionarioDaArea.forEach((usuario, index) => {
-          destinatarios += `${usuario.email};`;
-        });
-        
-        _emailutils2.default.enviar(destinatarios, txEmail1);
-        
-      
-      
+      funcionarioDaArea.forEach((usuario, index) => {
+        destinatarios += `${usuario.email};`;
+      });
+
+      _emailutils2.default.enviar(destinatarios, txEmail1);
+
+
+
 
 
       res
         .status(200)
-        .json({  message: 'Cadastro realizado com sucesso.' })
+        .json({ message: 'Cadastro realizado com sucesso.' })
     } catch (err) {
       console.log(err)
       if (typeof err.errors !== 'undefined') {
@@ -290,7 +293,168 @@ class AtividadeController  {
     }
   }
 
-  async find (req, res, next) {
+  async createProjeto(req, res, next) {
+    try {
+      const {
+        fkUnidade,
+        fkArea,
+        titulo,
+        conteudo,
+        categoria,
+        caminho,
+        tipoCadastro,
+        medida,
+        nomeProjeto,
+        qtdItems,
+        dataInicio,
+        cnpj,
+        razaoSocial,
+        emailEmpresa,
+        telefoneEmpresa,
+        gPagamento,
+        filial,
+        gCotacao,
+
+        centroCusto,
+        eletro,
+        indicacao,
+        informacoes,
+        dimensao,
+        forma,
+        material,
+        cor,
+        listaDeArquivosEnviados,
+        setorSolicitante
+      } = req.body
+      console.log("a" + req.body);
+      // console.log(setorSolicitante);
+
+      if (!fkUnidade) {
+        return res.status(401).json({
+          message: 'O campo unidade deve ser preenchido corretamente.'
+        })
+      }
+
+      // if (!fkArea) {
+      //   return res
+      //     .status(401)
+      //     .json({ message: 'O campo área deve ser preenchido corretamente.' })
+      // }
+      const area = await _areamodel2.default.findOne({
+        where: { nome: "GLC-Cadastro de Item" }
+      })
+
+
+      if (!titulo) {
+        return res.status(401).json({
+          message: 'O campo título deve ser preenchido corretamente.'
+        })
+      }
+
+      if (!conteudo) {
+        return res.status(401).json({
+          message: 'O campo conteudo deve ser preenchido corretamente.'
+        })
+      }
+
+
+      const classificacao = await _classificacaomodel2.default.findOne({
+        where: { nome: 'Não Definido' }
+      })
+
+      const status = await _statusmodel2.default.findOne({
+        where: { nome: 'Aberto' }
+      })
+
+      const proc = _protocoloutils2.default.call(void 0,)
+
+
+
+      await _mensagemmodel2.default.create({
+        conteudo,
+        fkAtividade: atividade.id,
+        fkUsuario: req.usuario.id
+        
+      })
+
+
+
+      // const emailCoordenadores = await queryInterface.sequelize.query('select email from usuario where fkArea = \'Aberto\'')
+      // const status = await queryInterface.sequelize.query('select id from status where nome = \'Aberto\'')
+
+
+      const atividadeSalva = await _atividademodel2.default.findOne({
+        where: {
+          titulo,
+          protocolo: proc
+        }
+      })
+
+
+
+      const funcionarioDaArea = await _usuariomodel2.default.findAll({
+        where: { fkArea }
+      })
+
+
+
+      await _timeLineStatusmodel2.default.create(
+        {
+          fkStatus: _optionalChain([status, 'optionalAccess', _11 => _11.id]),
+          fkAtividade: _optionalChain([atividadeSalva, 'optionalAccess', _12 => _12.id]),
+          fkUsuario: req.usuario.id
+        }
+      )
+
+
+
+
+
+
+
+      const glc = await _unidademodel2.default.findOne({
+        where: { nome: 'GLC' }
+      })
+
+
+
+      const txEmail1 = `
+            <b>Nova Atividade para sua área.</b><br>
+
+        Unidade: <strong>${setorSolicitante}</strong><br>
+        Titulo: <strong>${titulo}</strong><br>
+          Mensagem: <strong>${conteudo}</strong><br>
+        <br/>
+        <a href="https://app1.pe.senac.br/taskmanagerglc/atividade/${_optionalChain([atividadeSalva, 'optionalAccess', _13 => _13.id])}/edit">CLIQUE PARA VER.</a><p>  
+        `
+      let destinatarios = '';
+
+      funcionarioDaArea.forEach((usuario, index) => {
+        destinatarios += `${usuario.email};`;
+      });
+
+      // _emailutils2.default.enviar(destinatarios, txEmail1);
+
+
+
+
+
+      res
+        .status(200)
+        .json({ message: 'Cadastro realizado com sucesso.' })
+    } catch (err) {
+      console.log(err)
+      if (typeof err.errors !== 'undefined') {
+        res.status(401).json({ message: err.errors[0].message })
+      } else if (typeof err.message !== 'undefined') {
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
+      }
+    }
+  }
+
+  async find(req, res, next) {
     try {
       const { id } = req.params
 
@@ -317,6 +481,8 @@ class AtividadeController  {
         where: { id }
       })
 
+      console.log('jjjjjjj'+registro)
+
       res.status(200).json({ data: registro })
     } catch (err) {
       console.log(err)
@@ -330,7 +496,7 @@ class AtividadeController  {
     }
   }
 
-  async update (req, res, next) {
+  async update(req, res, next) {
     try {
       const { id } = req.params
       // console.log(id)
@@ -350,10 +516,10 @@ class AtividadeController  {
 
 
 
-       } = req.body
-      console.log('lll'+editar)
+      } = req.body
+      console.log('lll' + editar)
 
-      
+
 
       await _atividademodel2.default.update(
         {
@@ -379,13 +545,13 @@ class AtividadeController  {
         }
       )
 
-      if(logged  && idAtividade){
-        
+      if (logged && idAtividade) {
+
         await _timeLineStatusmodel2.default.create(
           {
             fkStatus,
             fkAtividade: idAtividade,
-            fkUsuario : logged
+            fkUsuario: logged
           }
         )
 
@@ -415,7 +581,7 @@ class AtividadeController  {
     }
   }
 
-  async todasAsPendencias (
+  async todasAsPendencias(
     req,
     res,
     next
@@ -476,7 +642,7 @@ class AtividadeController  {
     }
   }
 
-  async minhasAtividades (
+  async minhasAtividades(
     req,
     res,
     next
@@ -719,7 +885,7 @@ class AtividadeController  {
     }
   }
 
-  async minhasAtividadesArquivadas (
+  async minhasAtividadesArquivadas(
     req,
     res,
     next
@@ -772,7 +938,7 @@ class AtividadeController  {
     }
   }
 
-  async recebidasSetor (
+  async recebidasSetor(
     req,
     res,
     next
@@ -820,7 +986,7 @@ class AtividadeController  {
     }
   }
 
-  async recebidasSetorCount (
+  async recebidasSetorCount(
     req,
     res,
     next
@@ -868,7 +1034,7 @@ class AtividadeController  {
     }
   }
 
-  async solicitadasSetor (
+  async solicitadasSetor(
     req,
     res,
     next
@@ -913,7 +1079,7 @@ class AtividadeController  {
     }
   }
 
-  async delete (req, res, next) {
+  async delete(req, res, next) {
     throw new Error('Method not implemented.')
   }
 
@@ -942,7 +1108,7 @@ class AtividadeController  {
   //   }
   // }
 
-  async search (req, res, next) {
+  async search(req, res, next) {
     try {
       const { pesquisa } = req.query
 
@@ -1006,7 +1172,7 @@ class AtividadeController  {
     }
   }
 
-  async searchRecebidos (
+  async searchRecebidos(
     req,
     res,
     next
@@ -1060,7 +1226,7 @@ class AtividadeController  {
     }
   }
 
-  async searchSolicitadas (
+  async searchSolicitadas(
     req,
     res,
     next
@@ -1111,7 +1277,7 @@ class AtividadeController  {
     }
   }
 
-  async naoatribuida (
+  async naoatribuida(
     req,
     res,
     next
@@ -1162,7 +1328,7 @@ class AtividadeController  {
     }
   }
 
-  async atividadesRecebidas (
+  async atividadesRecebidas(
     req,
     res,
     next
@@ -1208,7 +1374,7 @@ class AtividadeController  {
     }
   }
 
-  async chamadosAbertos (
+  async chamadosAbertos(
     req,
     res,
     next
@@ -1254,7 +1420,7 @@ class AtividadeController  {
   async termo(req, res, next) {
     try {
       const { cpfTermo } = req.params; // Agora você está acessando os parâmetros da URL
-  
+
       console.log(cpfTermo);
 
       const sql = `
@@ -1263,20 +1429,20 @@ class AtividadeController  {
       INNER JOIN TermoAceite.dbo.Timeline TL ON C.ID = TL.idColaborador
       WHERE TL.idStatusTimeline = '3' AND CPF = '${cpfTermo}'
     `;
-    
+
 
       const registro = await _connection2.default.query(sql, { type: _sequelize.QueryTypes.SELECT });
-     
-  
+
+
       // const registro = await Atividade.sequelize?.query(`
       //   SELECT cpf
       //   FROM TermoAceite.dbo.Colaborador C
       //   INNER JOIN TermoAceite.dbo.Timeline TL ON C.ID = TL.idColaborador
       //   WHERE TL.idStatusTimeline = '3' AND CPF = '${cpfTermo}'
       // `);
-  
+
       console.log(JSON.stringify(registro));
-  
+
       if (registro.length > 0) {
         console.log("Registros encontrados:", registro[0]);
         res.status(200).json({ message: 'Termo de Compromisso assinado, prossiga com o chamado' });
@@ -1291,4 +1457,4 @@ class AtividadeController  {
   }
 }
 
-exports. default = new AtividadeController()
+exports.default = new AtividadeController()

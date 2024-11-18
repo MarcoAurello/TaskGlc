@@ -8,6 +8,7 @@ import Area from '../model/area.model'
 import Usuario from '../model/usuario.model'
 import Classificacao from '../model/classificacao.model'
 import Arquivo from '../model/arquivo.model'
+const { uuid } = require('uuidv4')
 import conexao from '../model/connection'
 const cron = require('node-cron');
 
@@ -44,7 +45,7 @@ const buscarAtividadesPendentes = async () => {
 
         await emailUtils.enviar(email, txEmail1)
 
-        
+
       }
 
       console.log('Atividades Pendentes:', atividadesPendentes);
@@ -61,11 +62,11 @@ cron.schedule('14 16 * * *', buscarAtividadesPendentes, {
 
 
 class AtividadeController implements IController {
-  async all (req: Request, res: Response, next: NextFunction): Promise<any> {
+  async all(req: Request, res: Response, next: NextFunction): Promise<any> {
     throw new Error('Method not implemented.')
   }
 
-  async create (req: any, res: Response, next: NextFunction): Promise<any> {
+  async create(req: any, res: Response, next: NextFunction): Promise<any> {
     try {
       const {
         fkUnidade,
@@ -96,7 +97,7 @@ class AtividadeController implements IController {
         listaDeArquivosEnviados,
         setorSolicitante
       } = req.body
-      console.log("a" +req.body);
+      console.log("a" + req.body);
       // console.log(setorSolicitante);
 
       if (!fkUnidade) {
@@ -110,23 +111,23 @@ class AtividadeController implements IController {
       //     .status(401)
       //     .json({ message: 'O campo área deve ser preenchido corretamente.' })
       // }
-      const area= await Area.findOne({
-        where: {nome: "GLC-Cadastro de Item"}
+      const area = await Area.findOne({
+        where: { nome: "GLC-Cadastro de Item" }
       })
-     
+
 
       if (!titulo) {
         return res.status(401).json({
           message: 'O campo título deve ser preenchido corretamente.'
         })
       }
-     
+
       if (!conteudo) {
         return res.status(401).json({
           message: 'O campo conteudo deve ser preenchido corretamente.'
         })
       }
-     
+
 
       const classificacao = await Classificacao.findOne({
         where: { nome: 'Não Definido' }
@@ -138,24 +139,22 @@ class AtividadeController implements IController {
 
       const proc = protocolo()
 
-      if(cnpj && razaoSocial){
+      if (cnpj && razaoSocial) {
 
         const atividade = await Atividade.create({
+          id: uuid(),
           titulo,
           fkClassificacao: classificacao?.id,
           protocolo: proc,
           fkArea: area?.id,
           cnpj,
-          razao:razaoSocial,
-          email:emailEmpresa,
+          razao: razaoSocial,
+          email: emailEmpresa,
           gPagamento,
           filial,
           gCotacao,
-          fone:telefoneEmpresa,
-
-          
-          detalhes : conteudo,
-         
+          fone: telefoneEmpresa,
+          detalhes: conteudo,
           fkStatus: status?.id,
           fkUsuarioSolicitante: req.usuario.id,
           arquivado: false,
@@ -170,10 +169,10 @@ class AtividadeController implements IController {
           fkAtividade: atividade.id,
           fkUsuario: req.usuario.id
         })
-  
 
 
-      }else{
+
+      } else {
 
         const atividade = await Atividade.create({
           titulo,
@@ -186,7 +185,7 @@ class AtividadeController implements IController {
           medida,
           centroCusto,
           indicacao,
-          detalhes : conteudo,
+          detalhes: conteudo,
           informacoes,
           eletro,
           dimensao,
@@ -204,17 +203,18 @@ class AtividadeController implements IController {
           fkAtividade: atividade.id,
           fkUsuario: req.usuario.id
         })
-  
+
       }
 
       // const emailCoordenadores = await queryInterface.sequelize.query('select email from usuario where fkArea = \'Aberto\'')
       // const status = await queryInterface.sequelize.query('select id from status where nome = \'Aberto\'')
 
-      
+
       const atividadeSalva = await Atividade.findOne({
-        where: { titulo,
-        protocolo: proc 
-      }
+        where: {
+          titulo,
+          protocolo: proc
+        }
       })
 
       listaDeArquivosEnviados.map((item) => {
@@ -232,29 +232,29 @@ class AtividadeController implements IController {
         where: { fkArea }
       })
 
-  
-        
-        await TimeLineStatus.create(
-          {
-            fkStatus: status?.id,
-            fkAtividade:  atividadeSalva?.id,
-            fkUsuario : req.usuario.id
-          }
-        )
-
-    
 
 
-     
+      await TimeLineStatus.create(
+        {
+          fkStatus: status?.id,
+          fkAtividade: atividadeSalva?.id,
+          fkUsuario: req.usuario.id
+        }
+      )
 
-      
+
+
+
+
+
+
       const glc = await Unidade.findOne({
-        where: { nome :'GLC' }
+        where: { nome: 'GLC' }
       })
-     
 
-      
-        const txEmail1 = `
+
+
+      const txEmail1 = `
             <b>Nova Atividade para sua área.</b><br>
 
         Unidade: <strong>${setorSolicitante}</strong><br>
@@ -263,21 +263,21 @@ class AtividadeController implements IController {
         <br/>
         <a href="https://app1.pe.senac.br/taskmanagerglc/atividade/${atividadeSalva?.id}/edit">CLIQUE PARA VER.</a><p>  
         `
-        let destinatarios = '';
+      let destinatarios = '';
 
-        funcionarioDaArea.forEach((usuario, index) => {
-          destinatarios += `${usuario.email};`;
-        });
-        
-        emailUtils.enviar(destinatarios, txEmail1);
-        
-      
-      
+      funcionarioDaArea.forEach((usuario, index) => {
+        destinatarios += `${usuario.email};`;
+      });
+
+      emailUtils.enviar(destinatarios, txEmail1);
+
+
+
 
 
       res
         .status(200)
-        .json({  message: 'Cadastro realizado com sucesso.' })
+        .json({ message: 'Cadastro realizado com sucesso.' })
     } catch (err) {
       console.log(err)
       if (typeof err.errors !== 'undefined') {
@@ -290,7 +290,595 @@ class AtividadeController implements IController {
     }
   }
 
-  async find (req: Request, res: Response, next: NextFunction): Promise<any> {
+  async createProjeto(req: any, res: Response, next: NextFunction): Promise<any> {
+    try {
+
+      const {
+        hash,
+        fkUnidade,
+        fkArea,
+        titulo,
+        conteudo,
+        categoria,
+        caminho,
+        tipoCadastro,
+
+        nomeProjeto,
+        qtdItems,
+        dataInicio,
+        listaDeArquivosEnviados,
+        setorSolicitante
+      } = req.body
+      console.log("axxxxxfffffffx" + req.body);
+
+
+      // console.log('pop');
+
+      if (!fkUnidade) {
+        return res.status(401).json({
+          message: 'O campo unidade deve ser preenchido corretamente.'
+        })
+      }
+
+
+      const area = await Area.findOne({
+        where: { nome: "GLC-Cadastro de Item" }
+      })
+
+
+      // if (!titulo) {
+      //   return res.status(401).json({
+      //     message: 'O campo título deve ser preenchido corretamente.'
+      //   })
+      // }
+
+      if (!nomeProjeto) {
+        return res.status(401).json({
+          message: 'O campo conteudo deve ser preenchido corretamente.'
+        })
+      }
+
+
+      const classificacao = await Classificacao.findOne({
+        where: { nome: 'Não Definido' }
+      })
+
+      const status = await Status.findOne({
+        where: { nome: 'Aberto' }
+      })
+
+      const proc = protocolo()
+
+      if (nomeProjeto) {
+
+        const atividade = await Atividade.create({
+          id: uuid(),
+          titulo: 'Cadastro de Projeto até 10 items',
+          fkClassificacao: classificacao?.id,
+          protocolo: proc,
+          fkArea: area?.id,
+          prazoInicioAtividades: dataInicio,
+
+
+          detalhes: nomeProjeto,
+          qtdItems,
+
+          fkStatus: status?.id,
+          fkUsuarioSolicitante: req.usuario.id,
+          arquivado: false,
+          pessoal: false,
+          // fkUsuarioExecutor,
+          categoria: tipoCadastro,
+          caminho,
+          nomeProjeto,
+          qtdPlanilha: qtdItems,
+        })
+
+        await Mensagem.create({
+          conteudo: nomeProjeto,
+          fkAtividade: atividade.id,
+          fkUsuario: req.usuario.id
+        })
+
+        const atividadeSalva = await Atividade.findOne({
+          where: { 
+          protocolo: proc 
+        }
+        })
+
+        if (hash) {
+          await Arquivo.update(
+            {
+              fkAtividade: atividadeSalva?.id
+            },
+            {
+              where: { hash }
+            }
+          )
+        }
+
+
+
+      }
+
+      const atividadeSalva = await Atividade.findOne({
+        where: {
+          titulo,
+          protocolo: proc
+        }
+      })
+
+      // listaDeArquivosEnviados.map((item) => {
+      //   Arquivo.update(
+      //     {
+      //       fkAtividade: atividadeSalva?.id
+      //     },
+      //     {
+      //       where: { id: item.id }
+      //     }
+      //   )
+      // })
+
+      const funcionarioDaArea = await Usuario.findAll({
+        where: { fkArea }
+      })
+
+
+
+      // await TimeLineStatus.create(
+      //   {
+      //     fkStatus: status?.id,
+      //     fkAtividade: atividadeSalva?.id,
+      //     fkUsuario: req.usuario.id
+      //   }
+      // )
+
+
+
+
+
+
+
+      // const glc = await Unidade.findOne({
+      //   where: { nome :'GLC' }
+      // })
+
+
+
+      // const txEmail1 = `
+      //     <b>Nova Atividade para sua área.</b><br>
+
+      // Unidade: <strong>${setorSolicitante}</strong><br>
+      // Titulo: <strong>${titulo}</strong><br>
+      //   Mensagem: <strong>${conteudo}</strong><br>
+      // <br/>
+      // <a href="https://app1.pe.senac.br/taskmanagerglc/atividade/${atividadeSalva?.id}/edit">CLIQUE PARA VER.</a><p>  
+      // `
+      // let destinatarios = '';
+
+      // funcionarioDaArea.forEach((usuario, index) => {
+      //   destinatarios += `${usuario.email};`;
+      // });
+
+      //  emailUtils.enviar(destinatarios, txEmail1);
+
+
+
+
+
+      res
+        .status(200)
+        .json({ message: 'Cadastro realizado com sucesso.' })
+    } catch (err) {
+      console.log(err)
+      if (typeof err.errors !== 'undefined') {
+        res.status(401).json({ message: err.errors[0].message })
+      } else if (typeof err.message !== 'undefined') {
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
+      }
+    }
+  }
+
+  
+
+
+
+  async createMr(req: any, res: Response, next: NextFunction): Promise<any> {
+    try {
+
+      const {
+        hash,
+        fkUnidade,
+        fkArea,
+        parametrizacao,
+        titulo,
+        conteudo,
+        categoria,
+        caminho,
+        tipoCadastro,
+        anoMr,
+        segmentoMr,
+
+        nomeProjeto,
+        qtdItems,
+        dataInicio,
+        listaDeArquivosEnviados,
+        setorSolicitante
+      } = req.body
+      console.log("axxxxxfffffffx" + req.body);
+
+
+      // console.log('pop');
+
+      if (!fkUnidade) {
+        return res.status(401).json({
+          message: 'O campo unidade deve ser preenchido corretamente.'
+        })
+      }
+
+
+      const area = await Area.findOne({
+        where: { nome: "GLC-Cadastro de Item" }
+      })
+
+
+      // if (!titulo) {
+      //   return res.status(401).json({
+      //     message: 'O campo título deve ser preenchido corretamente.'
+      //   })
+      // }
+
+      // if (!anoMr) {
+      //   return res.status(401).json({
+      //     message: 'O campo Ano MR deve ser preenchido corretamente.'
+      //   })
+      // }
+
+
+      const classificacao = await Classificacao.findOne({
+        where: { nome: 'Não Definido' }
+      })
+
+      const status = await Status.findOne({
+        where: { nome: 'Aberto' }
+      })
+
+      const proc = protocolo()
+
+      console.log('anoMr', anoMr)
+      if (anoMr) {
+
+        const atividade = await Atividade.create({
+          id: uuid(),
+          titulo: 'Cadastro de MR a partir de 30 items',
+          fkClassificacao: classificacao?.id,
+          protocolo: proc,
+          fkArea: area?.id,
+          prazoInicioAtividades: dataInicio,
+          conteudo:'Cadastro de MR a partir de 30 items',
+        
+          anoMr: anoMr,
+          segmentoMr: segmentoMr,
+          
+
+          fkStatus: status?.id,
+          fkUsuarioSolicitante: req.usuario.id,
+          arquivado: false,
+          pessoal: false,
+          // fkUsuarioExecutor,
+          categoria: tipoCadastro,
+          caminho,
+        
+        })
+
+        await Mensagem.create({
+          conteudo: segmentoMr,
+          fkAtividade: atividade.id,
+          fkUsuario: req.usuario.id
+        })
+
+        const atividadeSalva = await Atividade.findOne({
+          where: { 
+          protocolo: proc 
+        }
+        })
+
+        if (hash) {
+          await Arquivo.update(
+            {
+              fkAtividade: atividadeSalva?.id
+            },
+            {
+              where: { hash }
+            }
+          )
+        }
+
+
+
+      }
+
+     
+
+      const atividadeSalva = await Atividade.findOne({
+        where: {
+        
+          protocolo: proc
+        }
+      })
+
+      // listaDeArquivosEnviados.map((item) => {
+      //   Arquivo.update(
+      //     {
+      //       fkAtividade: atividadeSalva?.id
+      //     },
+      //     {
+      //       where: { id: item.id }
+      //     }
+      //   )
+      // })
+
+      if(atividadeSalva){
+
+        await TimeLineStatus.create(
+          {
+            fkStatus: status?.id,
+            fkAtividade: atividadeSalva?.id,
+            fkUsuario: req.usuario.id
+          }
+        )
+      }
+
+    
+
+
+
+
+
+
+
+
+
+      // const glc = await Unidade.findOne({
+      //   where: { nome :'GLC' }
+      // })
+
+
+
+      // const txEmail1 = `
+      //     <b>Nova Atividade para sua área.</b><br>
+
+      // Unidade: <strong>${setorSolicitante}</strong><br>
+      // Titulo: <strong>${titulo}</strong><br>
+      //   Mensagem: <strong>${conteudo}</strong><br>
+      // <br/>
+      // <a href="https://app1.pe.senac.br/taskmanagerglc/atividade/${atividadeSalva?.id}/edit">CLIQUE PARA VER.</a><p>  
+      // `
+      // let destinatarios = '';
+
+      // funcionarioDaArea.forEach((usuario, index) => {
+      //   destinatarios += `${usuario.email};`;
+      // });
+
+      //  emailUtils.enviar(destinatarios, txEmail1);
+
+
+
+
+
+      res
+        .status(200)
+        .json({ message: 'Cadastro realizado com sucesso.' })
+    } catch (err) {
+      console.log(err)
+      if (typeof err.errors !== 'undefined') {
+        res.status(401).json({ message: err.errors[0].message })
+      } else if (typeof err.message !== 'undefined') {
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
+      }
+    }
+  }
+
+  async createAjuste(req: any, res: Response, next: NextFunction): Promise<any> {
+    try {
+
+      const {
+        hash,
+        fkUnidade,
+        fkArea,
+        parametrizacao,
+        titulo,
+        conteudo,
+        categoria,
+        caminho,
+        tipoCadastro,
+        anoMr,
+        segmentoMr,
+
+        nomeProjeto,
+        qtdItems,
+        dataInicio,
+        listaDeArquivosEnviados,
+        setorSolicitante
+      } = req.body
+      console.log("axxxxxfffffffx" + req.body);
+
+
+      // console.log('pop');
+
+      if (!fkUnidade) {
+        return res.status(401).json({
+          message: 'O campo unidade deve ser preenchido corretamente.'
+        })
+      }
+
+
+      const area = await Area.findOne({
+        where: { nome: "GLC-Cadastro de Item" }
+      })
+
+
+      // if (!titulo) {
+      //   return res.status(401).json({
+      //     message: 'O campo título deve ser preenchido corretamente.'
+      //   })
+      // }
+
+      // if (!anoMr) {
+      //   return res.status(401).json({
+      //     message: 'O campo Ano MR deve ser preenchido corretamente.'
+      //   })
+      // }
+
+
+      const classificacao = await Classificacao.findOne({
+        where: { nome: 'Não Definido' }
+      })
+
+      const status = await Status.findOne({
+        where: { nome: 'Aberto' }
+      })
+
+      const proc = protocolo()
+
+    
+
+      if(parametrizacao){
+
+        const atividade = await Atividade.create({
+          titulo: 'Ajuste de parametrização de cadastro',
+          fkClassificacao: classificacao?.id,
+          protocolo: proc,
+          fkArea: area?.id,
+         
+          conteudo:parametrizacao,
+          parametrizacaoCadastro:parametrizacao,
+          
+        
+          
+
+          fkStatus: status?.id,
+          fkUsuarioSolicitante: req.usuario.id,
+          arquivado: false,
+          pessoal: false,
+          // fkUsuarioExecutor,
+          categoria: tipoCadastro,
+          caminho,
+        
+        })
+
+        await Mensagem.create({
+          conteudo: parametrizacao,
+          fkAtividade: atividade.id,
+          fkUsuario: req.usuario.id
+        })
+
+        const atividadeSalva = await Atividade.findOne({
+          where: { 
+          protocolo: proc 
+        }
+        })
+
+        if (hash) {
+          await Arquivo.update(
+            {
+              fkAtividade: atividadeSalva?.id
+            },
+            {
+              where: { hash }
+            }
+          )
+        }
+
+      }
+
+      const atividadeSalva = await Atividade.findOne({
+        where: {
+        
+          protocolo: proc
+        }
+      })
+
+      // listaDeArquivosEnviados.map((item) => {
+      //   Arquivo.update(
+      //     {
+      //       fkAtividade: atividadeSalva?.id
+      //     },
+      //     {
+      //       where: { id: item.id }
+      //     }
+      //   )
+      // })
+
+      if(atividadeSalva){
+
+        await TimeLineStatus.create(
+          {
+            fkStatus: status?.id,
+            fkAtividade: atividadeSalva?.id,
+            fkUsuario: req.usuario.id
+          }
+        )
+      }
+
+    
+
+
+
+
+
+
+
+
+
+      // const glc = await Unidade.findOne({
+      //   where: { nome :'GLC' }
+      // })
+
+
+
+      // const txEmail1 = `
+      //     <b>Nova Atividade para sua área.</b><br>
+
+      // Unidade: <strong>${setorSolicitante}</strong><br>
+      // Titulo: <strong>${titulo}</strong><br>
+      //   Mensagem: <strong>${conteudo}</strong><br>
+      // <br/>
+      // <a href="https://app1.pe.senac.br/taskmanagerglc/atividade/${atividadeSalva?.id}/edit">CLIQUE PARA VER.</a><p>  
+      // `
+      // let destinatarios = '';
+
+      // funcionarioDaArea.forEach((usuario, index) => {
+      //   destinatarios += `${usuario.email};`;
+      // });
+
+      //  emailUtils.enviar(destinatarios, txEmail1);
+
+
+
+
+
+      res
+        .status(200)
+        .json({ message: 'Cadastro realizado com sucesso.' })
+    } catch (err) {
+      console.log(err)
+      if (typeof err.errors !== 'undefined') {
+        res.status(401).json({ message: err.errors[0].message })
+      } else if (typeof err.message !== 'undefined') {
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
+      }
+    }
+  }
+
+
+  async find(req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
       const { id } = req.params
 
@@ -317,6 +905,8 @@ class AtividadeController implements IController {
         where: { id }
       })
 
+      console.log('ppppppp', registro)
+
       res.status(200).json({ data: registro })
     } catch (err) {
       console.log(err)
@@ -330,7 +920,7 @@ class AtividadeController implements IController {
     }
   }
 
-  async update (req: Request, res: Response, next: NextFunction): Promise<any> {
+  async update(req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
       const { id } = req.params
       // console.log(id)
@@ -350,10 +940,10 @@ class AtividadeController implements IController {
 
 
 
-       } = req.body
-      console.log('lll'+editar)
+      } = req.body
+      console.log('lll' + editar)
 
-      
+
 
       await Atividade.update(
         {
@@ -379,13 +969,13 @@ class AtividadeController implements IController {
         }
       )
 
-      if(logged  && idAtividade){
-        
+      if (logged && idAtividade) {
+
         await TimeLineStatus.create(
           {
             fkStatus,
             fkAtividade: idAtividade,
-            fkUsuario : logged
+            fkUsuario: logged
           }
         )
 
@@ -415,7 +1005,7 @@ class AtividadeController implements IController {
     }
   }
 
-  async todasAsPendencias (
+  async todasAsPendencias(
     req: any,
     res: Response,
     next: NextFunction
@@ -476,7 +1066,7 @@ class AtividadeController implements IController {
     }
   }
 
-  async minhasAtividades (
+  async minhasAtividades(
     req: any,
     res: Response,
     next: NextFunction
@@ -719,7 +1309,7 @@ class AtividadeController implements IController {
     }
   }
 
-  async minhasAtividadesArquivadas (
+  async minhasAtividadesArquivadas(
     req: any,
     res: Response,
     next: NextFunction
@@ -772,7 +1362,7 @@ class AtividadeController implements IController {
     }
   }
 
-  async recebidasSetor (
+  async recebidasSetor(
     req: any,
     res: Response,
     next: NextFunction
@@ -820,7 +1410,7 @@ class AtividadeController implements IController {
     }
   }
 
-  async recebidasSetorCount (
+  async recebidasSetorCount(
     req: any,
     res: Response,
     next: NextFunction
@@ -868,7 +1458,7 @@ class AtividadeController implements IController {
     }
   }
 
-  async solicitadasSetor (
+  async solicitadasSetor(
     req: any,
     res: Response,
     next: NextFunction
@@ -913,7 +1503,7 @@ class AtividadeController implements IController {
     }
   }
 
-  async delete (req: Request, res: Response, next: NextFunction): Promise<any> {
+  async delete(req: Request, res: Response, next: NextFunction): Promise<any> {
     throw new Error('Method not implemented.')
   }
 
@@ -942,7 +1532,7 @@ class AtividadeController implements IController {
   //   }
   // }
 
-  async search (req: any, res: Response, next: NextFunction): Promise<any> {
+  async search(req: any, res: Response, next: NextFunction): Promise<any> {
     try {
       const { pesquisa } = req.query
 
@@ -1006,7 +1596,7 @@ class AtividadeController implements IController {
     }
   }
 
-  async searchRecebidos (
+  async searchRecebidos(
     req: any,
     res: Response,
     next: NextFunction
@@ -1060,7 +1650,7 @@ class AtividadeController implements IController {
     }
   }
 
-  async searchSolicitadas (
+  async searchSolicitadas(
     req: any,
     res: Response,
     next: NextFunction
@@ -1111,7 +1701,7 @@ class AtividadeController implements IController {
     }
   }
 
-  async naoatribuida (
+  async naoatribuida(
     req: any,
     res: Response,
     next: NextFunction
@@ -1162,7 +1752,7 @@ class AtividadeController implements IController {
     }
   }
 
-  async atividadesRecebidas (
+  async atividadesRecebidas(
     req: any,
     res: Response,
     next: NextFunction
@@ -1208,7 +1798,7 @@ class AtividadeController implements IController {
     }
   }
 
-  async chamadosAbertos (
+  async chamadosAbertos(
     req: any,
     res: Response,
     next: NextFunction
@@ -1254,7 +1844,7 @@ class AtividadeController implements IController {
   async termo(req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
       const { cpfTermo } = req.params; // Agora você está acessando os parâmetros da URL
-  
+
       console.log(cpfTermo);
 
       const sql = `
@@ -1263,20 +1853,20 @@ class AtividadeController implements IController {
       INNER JOIN TermoAceite.dbo.Timeline TL ON C.ID = TL.idColaborador
       WHERE TL.idStatusTimeline = '3' AND CPF = '${cpfTermo}'
     `;
-    
+
 
       const registro = await conexao.query(sql, { type: QueryTypes.SELECT });
-     
-  
+
+
       // const registro = await Atividade.sequelize?.query(`
       //   SELECT cpf
       //   FROM TermoAceite.dbo.Colaborador C
       //   INNER JOIN TermoAceite.dbo.Timeline TL ON C.ID = TL.idColaborador
       //   WHERE TL.idStatusTimeline = '3' AND CPF = '${cpfTermo}'
       // `);
-  
+
       console.log(JSON.stringify(registro));
-  
+
       if (registro.length > 0) {
         console.log("Registros encontrados:", registro[0]);
         res.status(200).json({ message: 'Termo de Compromisso assinado, prossiga com o chamado' });

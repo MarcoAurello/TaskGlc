@@ -23,6 +23,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      hash: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
       caminho: {
         type: Sequelize.STRING,
         allowNull: false,

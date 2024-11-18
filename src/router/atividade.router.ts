@@ -28,6 +28,9 @@ class AtividadeRouter {
     this.router.get('/minhasAtividades', controller.minhasAtividades)
     this.router.get('/todasAsPendencias', controller.todasAsPendencias)
     this.router.get('/minhasAtividadesArquivadas/', controller.minhasAtividadesArquivadas)
+    this.router.post('/createProjeto', controller.createProjeto)
+    this.router.post('/createMr', controller.createMr)
+    this.router.post('/createAjuste', controller.createAjuste)
     this.router.post('/', controller.create)
     this.router.get('/termo/:cpfTermo', controller.termo);
 

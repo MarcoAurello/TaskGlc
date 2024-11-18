@@ -1,17 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled from 'styled-components'
 import {
   Alert, Avatar, Box, Button, Checkbox, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel,
-  FormGroup, FormLabel, Hidden, IconButton, InputLabel, MenuItem, Radio, RadioGroup, Select, Switch, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination,
+  FormGroup, FormLabel, Hidden,Grid, IconButton, InputLabel, MenuItem, Radio, RadioGroup, Select, Switch, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination,
   TableRow, TextField, Tooltip
 } from "@mui/material";
 
 import TaskItemDoChamadoFornecedor from "../components/task-item-do-chamadoFornecedor";
 
 import TaskItemDoChamado from "../components/task-item-do-chamado";
+import TaskItemDoChamadoProjeto from "../components/task-item-do-chamadoProjeto";
 import PerfilUtils from "../utils/perfil.utils";
 import MessageIcon from '@mui/icons-material/Message';
 import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
+
+
+
+
 
 
 
@@ -21,6 +26,7 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 import UploadButton from "../components/UploadButton";
 import { color } from "@mui/system";
 import TaskFilter from "../components/task-filter";
+import FileViewer from '../components/fileViewer';
 
 
 const getCookie = require('../utils/getCookie')
@@ -45,6 +51,7 @@ const AtividadeForm = (props) => {
 
   const [open, setOpen] = useState(false);
   const ImageLogo = require('../assets/coment.png')
+  const ImagePlan = require('../assets/plan.png')
   const [openImg, setOpenImg] = useState(false);
   const [openMsg, setOpenMsg] = useState(false);
   const [openStatus, setOpenStatus] = useState(false);
@@ -55,6 +62,7 @@ const AtividadeForm = (props) => {
   const [openLoadingDialog, setOpenLoadingDialog] = useState(false)
   const [openMessageDialog, setOpenMessageDialog] = useState(false)
   const [message, setMessage] = useState('')
+  const [selectedButton, setSelectedButton] = useState("");
 
   const [classificacao, setClassificacao] = useState('')
   const [newClassificacao, setNewClassificacao] = useState('')
@@ -77,16 +85,22 @@ const AtividadeForm = (props) => {
   const [tempoEstimado, setTempoEstimado] = useState('')
   const [createdAt, setCreatedAt] = useState('')
   const [title, setTitle] = useState('')
+  const [gAnoMr, getAnoMr] = useState('')
+  const [gSegmentoMr, getSegmentoMr] = useState('')
   const [botaoDesabilitado, setBotaoDesabilitado] = useState(false);
   const [gti, setGti] = useState('')
+  const fileInputRef = useRef(null);
 
 
   const [titulo, setTitulo] = useState('')
   const [centroCusto, setCentroCusto] = useState('')
   const [timelineStatus, setTimelineStatus] = useState([])
+  const anexo = require('../assets/anexo.jpg')
+  const anexo2 = require('../assets/ane.png')
 
 
   const [centroCusto1, getCentroCusto] = useState('')
+  const [openMsg2, setOpenMsg2] = useState(false);
   const [conteudo, setConteudo] = useState('')
   const [forma, setForma] = useState('')
   const [material, setMaterial] = useState('')
@@ -120,10 +134,14 @@ const AtividadeForm = (props) => {
   const [editar, setEditar] = useState(false)
   const [animate, setAnimate] = useState(false);
   const [cnpj, setCnpj] = useState('');
+  const [gparametrizacao, getParametrizacao] = useState('');
+  const [nomeDoProjeto, getNomeProjeto] = useState('');
+
+
 
   const [cor1, getCor] = useState('')
 
-
+  const [nomeProjeto, setNomeProjeto] = useState('')
   const [usuarioExecutor, setusuarioExecutor] = useState([])
   const [fkUsuarioExecutor, setFKUsuarioExecutor] = useState('')
   const [fkAreaDemandada, setFkAreaDemandada] = useState('')
@@ -141,6 +159,7 @@ const AtividadeForm = (props) => {
   const [termo, setTermo] = useState(false)
   const [boleanForma, setBoleanForma] = useState(false)
   const [openFile, setOpenFile] = useState('')
+  const [parametrizacao, setParametrizacao] = useState('')
   const [sub, setSub] = useState('')
   const [cpfTermo, setCpfTermo] = useState('')
   const [mensagemAlert, setMensagemAlert] = useState('')
@@ -148,7 +167,13 @@ const AtividadeForm = (props) => {
   const [boleanCor, setBoleanCor] = useState(false)
   const [boleanMaterial, setBoleanMaterial] = useState(false)
   const [modalSave, setModalSave] = useState(false)
+  const [modalSaveProjeto, setModalSaveProjeto] = useState(false)
+  const [modalSaveMR, setModalSaveMR] = useState(false)
+  const [allAtividade, setAllAtividade] = useState([])
+
+
   const [medida1, getMedida] = useState('')
+  const [errorMessage, setErrorMessage] = useState('');
   const [forma1, getForma] = useState('')
   const [indicacao1, getIndicacao] = useState('')
   const [informacoes1, getInformacoes] = useState('')
@@ -161,7 +186,18 @@ const AtividadeForm = (props) => {
   const [emailEmpresa, setEmailEmpresa] = useState('')
   const [gPagamento, setGPagamento] = useState('')
   const [filial, setFilial] = useState('')
+  const [qtdItems, setQtdItems] = useState('')
+  const [dataInicio, setDataInicio] = useState(null)
   const [gCotacao, setGCotacao] = useState('')
+  const [qtdProjeto, getQtdProjeto] = useState('')
+  const [anoMR, setAnoMR] = useState('')
+  const [prazoInicioAtividades, getPrazoInicioAtividades] = useState('')
+  const [uploadResult, setUploadResult] = useState(null);
+  const [segmentoMR, setSegmentoMR] = useState('')
+
+
+
+
 
   const [cnpj1, getCnpj] = useState('')
   const [razao1, getRazao] = useState('')
@@ -170,6 +206,7 @@ const AtividadeForm = (props) => {
   const [GPagamento1, getGPagamento] = useState('')
   const [filial1, getFilial] = useState('')
   const [gCotacao1, getGCotacao] = useState('')
+  const [hash, setHash] = useState('')
 
 
 
@@ -193,7 +230,69 @@ const AtividadeForm = (props) => {
 
 
 
-  }, [mensagens]);
+  }, [mensagens,]);
+  const handleDataChange = (event) => {
+    const selectedDate = event.target.value;
+    const currentDate = new Date();
+    const [year, month, day] = selectedDate.split('-');
+    const newDate = new Date(year, month - 1, day, currentDate.getHours(), currentDate.getMinutes(), currentDate.getSeconds());
+    setDataInicio(newDate.toISOString());
+
+  }
+
+
+  useEffect(() => {
+
+
+    if (uploadResult) {
+      setHash(uploadResult.data.hash)
+      salvarArquivo()
+
+    }
+
+
+
+  }, [uploadResult])
+
+
+  const salvarArquivo = () => {
+    // alert(newStatus)
+
+
+    const token = getCookie('_token_task_manager')
+    const params = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+
+        nomeArquivo: uploadResult.data.nome,
+        hash: uploadResult.data.hash
+
+      })
+
+    }
+
+    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/arquivo/api`, params)
+      .then(response => {
+        const { status } = response
+        response.json().then(data => {
+          setOpenLoadingDialog(false)
+          if (status === 401) {
+            // alert(2)
+            // setOpenMessageDialog(true)
+          } else if (status === 200) {
+            alert(data.message)
+
+          }
+        }).catch(err => setOpenLoadingDialog(true))
+      })
+  }
+
+
+
 
 
 
@@ -218,6 +317,7 @@ const AtividadeForm = (props) => {
               setMessage(data.message)
               setOpenMessageDialog(true)
             } else if (status === 200) {
+              // alert(JSON.stringify(data.data.prazoInicioAtividades))
               setClassificacao(data.data.Classificacao.nome)
               setProtocolo(data.data.protocolo)
               setStatus(data.data.Status.nome)
@@ -235,6 +335,10 @@ const AtividadeForm = (props) => {
               getRazao(data.data.razao)
               getEmail(data.data.email)
               getFone(data.data.fone)
+              getNomeProjeto(data.data.nomeProjeto)
+              getQtdProjeto(data.data.qtdPlanilha)
+              getPrazoInicioAtividades(data.data.prazoInicioAtividades)
+              getParametrizacao(data.data.parametrizacaoCadastro)
 
               getFilial(data.data.filial)
               getGCotacao(data.data.gCotacao)
@@ -253,11 +357,14 @@ const AtividadeForm = (props) => {
               setFkDemandante(data.data.fkDemandante)
               setCategoriaChamado(data.data.categoria)
               setTitle(data.data.titulo)
+              getAnoMr(data.data.anoMr)
+              getSegmentoMr(data.data.segmentoMr)
               setEditar(data.data.editar)
               setFkAreaDemandada(data.data.fkArea)
               setIdChamado(data.data.id)
               setFkUsuarioSolicitante(data.data.fkUsuarioSolicitante)
               getNomeExecutor(data.data.UsuarioExecutor.nome)
+            
               getEmailExecutor(data.data.UsuarioExecutor.email)
               getTelefoneExecutor(data.data.UsuarioExecutor.telefone)
               getFkExecutor(data.data.UsuarioExecutor.id)
@@ -710,78 +817,338 @@ const AtividadeForm = (props) => {
   }
 
   const onSaveFornecvedor = () => {
-   
 
-    if(cnpj && razaoSocial && emailEmpresa && telefoneEmpresa &&
-      gPagamento && filial && gCotacao){
-        setOpenLoadingDialog(true)
 
-        const token = getCookie('_token_task_manager')
-        const params = {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-    
-          body: JSON.stringify({
-            setorSolicitante: props.logged.Area.Unidade.nome,
-            listaDeArquivosEnviados,
-            caminho,
-            fkUnidade,
-            fkArea,
-    
-            cnpj,
-            razaoSocial,
-            emailEmpresa,
-            telefoneEmpresa,
-            gPagamento,
-            filial,
-            gCotacao,
-    
-            titulo: 'Cadastro de Fornecedor',
-    
-            conteudo: 'Cadastro de Fornecedor',
-    
-            tipoCadastro,
-    
-            arquivado: false
-          })
-    
-        }
-    
-    
-        fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/`, params)
-          .then(response => {
-            const { status } = response
-            response.json().then(data => {
-              setOpenLoadingDialog(false)
-              if (status === 401) {
-                setMessage(data.message)
-                setOpenMessageDialog(true)
-              } else if (status === 200) {
-                setAtividade(data.data)
-                setOpenLoadingDialog(false)
-                setMessage(data.message)
-                setOpenMessageDialog(true)
-                setModalSave(false)
-                window.location.href = `${process.env.REACT_APP_DOMAIN}/chamadosAbertos/`
-    
-    
-                // setArea(data.data)
-              }
-            }).catch(err => setOpenLoadingDialog(true))
-          })
+    if (cnpj && razaoSocial && emailEmpresa && telefoneEmpresa &&
+      gPagamento && filial && gCotacao) {
+      setOpenLoadingDialog(true)
 
-      }else{
-        alert('Preencha todos os dados')
+      const token = getCookie('_token_task_manager')
+      const params = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+
+        body: JSON.stringify({
+          setorSolicitante: props.logged.Area.Unidade.nome,
+          listaDeArquivosEnviados,
+          caminho,
+          fkUnidade,
+          fkArea,
+
+          cnpj,
+          razaoSocial,
+          emailEmpresa,
+          telefoneEmpresa,
+          gPagamento,
+          filial,
+          gCotacao,
+
+          titulo: 'Cadastro de Fornecedor',
+
+          conteudo: 'Cadastro de Fornecedor',
+
+          tipoCadastro,
+
+          arquivado: false
+        })
+
       }
+
+
+      fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/`, params)
+        .then(response => {
+          const { status } = response
+          response.json().then(data => {
+            setOpenLoadingDialog(false)
+            if (status === 401) {
+              setMessage(data.message)
+              setOpenMessageDialog(true)
+            } else if (status === 200) {
+              setAtividade(data.data)
+              setOpenLoadingDialog(false)
+              setMessage(data.message)
+              setOpenMessageDialog(true)
+              setModalSave(false)
+              window.location.href = `${process.env.REACT_APP_DOMAIN}/chamadosAbertos/`
+
+
+              // setArea(data.data)
+            }
+          }).catch(err => setOpenLoadingDialog(true))
+        })
+
+    } else {
+      alert('Preencha todos os dados')
+    }
 
 
     // setSetorSolicitante(props.logged.Area.Unidade.nome)
 
-  
+
   }
+
+  const handleButtonClick = (valor) => {
+    setTipoCadastro(valor);
+    setSelectedButton(valor); // Define o botão selecionado
+  };
+
+
+  const buttonData = [
+    { label: "Cadastro de Serviço", value: "Cadastro de serviço" },
+    { label: "Cadastro Produto Consumo", value: "Cadastro Produto Consumo" },
+    { label: "Cadastro de Produto Patrimônio", value: "Cadastro de Produto Patrimônio" },
+    { label: "Cadastro de Fornecedor", value: "Cadastro de Fornecedor" },
+    { label: "Cadastro de Projeto até 10 items", value: "Cadastro de Projeto até 10 items" },
+    { label: "Cadastro de MR a partir de 30 items", value: "Cadastro de MR a partir de 30 items" },
+    { label: "Ajuste de parametrização de cadastro", value: "Ajuste de parametrização de cadastro" }
+  ];
+
+  const handleUpload = () => {
+    const file = fileInputRef.current.files[0];
+
+    if (!file) {
+      setErrorMessage('Por favor, selecione um arquivo.');
+      return;
+    }
+
+    const myHeaders = new Headers();
+    myHeaders.append("keyapi", "99bd4c69-322d-424d-8b9c-4622fdd997ab");
+
+    const formData = new FormData();
+    formData.append("arquivo", file, file.name);
+
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: formData,
+      redirect: "follow"
+    };
+
+    fetch("https://www7.pe.senac.br/storage/api/arquivo", requestOptions)
+      .then(response => {
+        console.log('Status da resposta:', response.status);
+        console.log('Cabeçalhos da resposta:', Array.from(response.headers.entries()));
+
+        // Verificar se a resposta foi bem-sucedida
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        return response.text(); // Lê a resposta como texto
+      })
+      .then(result => {
+        console.log('Resposta recebida:', result); // Mostra a resposta bruta
+
+        try {
+          const parsedResult = JSON.parse(result);
+          console.log('Resposta parseada:', parsedResult); // Mostra a resposta parseada
+          setUploadResult(parsedResult);
+          setErrorMessage('');
+
+        } catch (e) {
+          console.error('Erro ao parsear a resposta:', e);
+          setErrorMessage('Ocorreu um erro ao salvar o arquivo.');
+        }
+      })
+      .catch(error => {
+        console.error('Erro ao fazer o fetch:', error);
+        setUploadResult(null);
+        setErrorMessage('Ocorreu um erro ao salvar o arquivo.');
+      })
+  };
+
+
+  const onSaveProjeto = () => {
+
+    setOpenLoadingDialog(true)
+
+
+    // setSetorSolicitante(props.logged.Area.Unidade.nome)
+
+    const token = getCookie('_token_task_manager')
+    const params = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+
+      body: JSON.stringify({
+        hash,
+        setorSolicitante: props.logged.Area.Unidade.nome,
+        listaDeArquivosEnviados,
+        caminho,
+        fkUnidade,
+        fkArea,
+        categoria,
+
+        titulo,
+        nomeProjeto,
+        qtdItems,
+        dataInicio,
+
+        conteudo: nomeProjeto,
+        tipoCadastro,
+        informacoes,
+        arquivado: false
+      })
+
+    }
+
+
+    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/createProjeto`, params)
+      .then(response => {
+        const { status } = response
+        response.json().then(data => {
+          setOpenLoadingDialog(false)
+          if (status === 401) {
+            setMessage(data.message)
+            setOpenMessageDialog(true)
+          } else if (status === 200) {
+            setAtividade(data.data)
+            setOpenLoadingDialog(false)
+            setMessage(data.message)
+            setOpenMessageDialog(true)
+            setModalSave(false)
+            window.location.href = `${process.env.REACT_APP_DOMAIN}/chamadosAbertos/`
+
+
+            // setArea(data.data)
+          }
+        }).catch(err => setOpenLoadingDialog(true))
+      })
+  }
+
+  const onSaveMr = () => {
+    // alert(parametrizacao)
+
+    setOpenLoadingDialog(true)
+
+
+    // setSetorSolicitante(props.logged.Area.Unidade.nome)
+
+    const token = getCookie('_token_task_manager')
+    const params = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+
+      body: JSON.stringify({
+        hash,
+        setorSolicitante: props.logged.Area.Unidade.nome,
+        listaDeArquivosEnviados,
+        caminho,
+        fkUnidade,
+        fkArea,
+        categoria,
+        parametrizacao,
+
+        titulo,
+        anoMr: anoMR,
+
+        segmentoMr: segmentoMR,
+
+        conteudo: segmentoMR,
+        tipoCadastro,
+        informacoes,
+        arquivado: false
+      })
+
+    }
+
+
+    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/createMr`, params)
+      .then(response => {
+        const { status } = response
+        response.json().then(data => {
+          setOpenLoadingDialog(false)
+          if (status === 401) {
+            setMessage(data.message)
+            setOpenMessageDialog(true)
+          } else if (status === 200) {
+            setAtividade(data.data)
+            setOpenLoadingDialog(false)
+            setMessage(data.message)
+            setOpenMessageDialog(true)
+            setModalSave(false)
+            window.location.href = `${process.env.REACT_APP_DOMAIN}/chamadosAbertos/`
+
+
+            // setArea(data.data)
+          }
+        }).catch(err => setOpenLoadingDialog(true))
+      })
+  }
+
+  const onSaveAjuste = () => {
+    // alert(parametrizacao)
+
+    setOpenLoadingDialog(true)
+
+
+    // setSetorSolicitante(props.logged.Area.Unidade.nome)
+
+    const token = getCookie('_token_task_manager')
+    const params = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+
+      body: JSON.stringify({
+        hash,
+        setorSolicitante: props.logged.Area.Unidade.nome,
+        listaDeArquivosEnviados,
+        caminho,
+        fkUnidade,
+        fkArea,
+        categoria,
+        parametrizacao,
+
+        titulo,
+        anoMr: anoMR,
+
+        segmentoMr: segmentoMR,
+
+        conteudo: segmentoMR,
+        tipoCadastro,
+        informacoes,
+        arquivado: false
+      })
+
+    }
+
+
+    fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/createAjuste`, params)
+      .then(response => {
+        const { status } = response
+        response.json().then(data => {
+          setOpenLoadingDialog(false)
+          if (status === 401) {
+            setMessage(data.message)
+            setOpenMessageDialog(true)
+          } else if (status === 200) {
+            setAtividade(data.data)
+            setOpenLoadingDialog(false)
+            setMessage(data.message)
+            setOpenMessageDialog(true)
+            setModalSave(false)
+            window.location.href = `${process.env.REACT_APP_DOMAIN}/chamadosAbertos/`
+
+
+            // setArea(data.data)
+          }
+        }).catch(err => setOpenLoadingDialog(true))
+      })
+  }
+
+
 
 
   const onSave = () => {
@@ -807,6 +1174,9 @@ const AtividadeForm = (props) => {
         categoria,
         medida,
         titulo,
+        nomeProjeto,
+        qtdItems,
+        dataInicio,
         centroCusto,
         conteudo,
         dimensao,
@@ -1307,8 +1677,104 @@ const AtividadeForm = (props) => {
 
 
 
+      {id && (categoria1 === 'Cadastro de Projeto até 10 items' ||
+        categoria1 === 'Cadastro de MR a partir de 30 items' ||
+        categoria1 === 'Ajuste de parametrização de cadastro'
+      )
+
+        ? <div >
 
 
+
+          <TaskItemDoChamadoProjeto
+
+            protocolo={protocolo}
+            unidade={valueUnidade}
+            categoria={categoria1}
+            anoMr={gAnoMr}
+            segmentoMr={gSegmentoMr}
+            area={valueArea}
+            nomeP={nomeDoProjeto ? nomeDoProjeto : ''}
+            classificacao={classificacao}
+            solicitante={usuarioSolicitante}
+            status={status}
+            gparametrizacao={gparametrizacao}
+            titulo={title}
+            emailUsuarioSolicitante={emailUsuarioSolicitante}
+            telefoneSolicitante={telefoneSolicitante}
+            setorSol={valueUnidade}
+            nomeExecutor={nomeExecutor}
+            emailExecutor={emailExecutor}
+            telefoneExecutor={telefoneExecutor}
+            setorSolicitante={setorSolicitante}
+            forma={forma1}
+            medida={medida1}
+            prazoInicioAtividades={prazoInicioAtividades}
+            qtdPlanilha={qtdProjeto}
+            cor={cor1}
+            indicacao={indicacao1}
+            informacoes={informacoes1}
+            material={material1}
+            eletro={eletro1}
+            dimensao={dimencao1}
+            centroCusto={centroCusto1}
+            id={id}
+            logged={logged ? logged.nome : ''}
+            loggedEmail={logged ? logged.email : ''}
+            editar={editar}
+            onToggle={handleToggle}
+
+
+
+
+
+          />
+
+
+          {arquivoDoChamado.length > 0 && (
+            <div
+              style={{
+                borderTop: '1px solid #e0e0e0',
+                padding: 10,
+
+                borderRadius: 10,
+                marginBottom: 10,
+                border: '2px solid #e0e0e0',
+              }}
+            >
+
+              <div
+
+              >
+                {arquivoDoChamado
+                  .filter(item => !item.hash) // Filtra para mostrar apenas itens sem 'hash' e com 'uploads' no caminho
+                  .map((item, index) => (
+                    <Button
+                      key={index}
+                      size="small"
+                      style={{
+                        display: 'inline-flex',
+                        margin: '5px',
+                        fontSize: '12px',
+
+                        border: '1px solid #e0e0e0',
+                        borderRadius: '5px',
+                        textTransform: 'none',
+                      }}
+                      onClick={() => baixar(item.id)}
+                    >
+                      <AttachFileIcon style={{ marginRight: 2 }} />
+
+                      {item.nomeApresentacao}
+                    </Button>
+                  ))}
+
+              </div>
+              <FileViewer arquivoDoChamado={arquivoDoChamado ? arquivoDoChamado : ''} />
+            </div>
+          )}
+        </div>
+        : ''}
 
 
 
@@ -1321,7 +1787,6 @@ const AtividadeForm = (props) => {
 
 
           <TaskItemDoChamado
-
             protocolo={protocolo}
             unidade={valueUnidade}
             categoria={categoria1}
@@ -1461,10 +1926,75 @@ const AtividadeForm = (props) => {
           <TextField size="small" fullWidth label="Chamado" disabled variant="outlined" value={title} />
         </div> : ''} */}
         {!id ? <>
-          {logged ? <TaskFilter nome={props.logged.nome + ', solicite cadastro de produto ou serviço'} setSetorSolicitante={props.logged.Area?.Unidade.nome} />
-            :
-            ''
-          }
+          {logged ? (
+            <div
+              style={{
+                backgroundColor: '#f7f7f7',
+                border: '1px solid #ccc',
+                borderRadius: '8px',
+                padding: '20px',
+                fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+                color: '#333',
+                boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.1)',
+                lineHeight: '1.6',
+              }}
+            >
+              <div
+                style={{
+                  fontSize: '18px',
+                  fontWeight: '600',
+                  color: '#333',
+                }}
+              >
+               Ola {props.logged.nome},{' '}<br></br>
+                <span style={{ fontWeight: 'bold', fontStyle: 'italic' }}>
+                  solicite cadastro de:
+                </span>{' '}
+                <span style={{ fontWeight: '500' }}>produto</span>,{' '}
+                <span style={{ fontWeight: '500' }}>serviço</span>,{' '}
+                <span style={{ fontWeight: '500' }}>bem patrimonial</span>,{' '}
+                <span style={{ fontWeight: '500' }}>MR</span>,{' '}
+                <span style={{ fontWeight: '500' }}>ajustes de cadastro</span> e{' '}
+                <span style={{ fontWeight: '500' }}>fornecedores</span>.
+              </div>
+              <div>
+      <div>
+      <Grid container spacing={2}>
+        <Grid item xs={12} style={{ marginBottom: '16px' }}>
+          <h3>Tipo de Cadastro Selecionado: {tipoCadastro}</h3>
+        </Grid>
+
+        {buttonData.map((button) => (
+          <Grid item xs={4} key={button.value}>
+            <Button
+              variant="contained"
+              fullWidth
+              onClick={() => handleButtonClick(button.value)}
+              style={{
+                backgroundColor: selectedButton === button.value ? '#FFD700' : '#1976D2', // Amarelo se selecionado, azul se não
+                color: selectedButton === button.value ? '#333' : '#fff' // Texto mais escuro se selecionado, branco se não
+              }}
+            >
+              {button.label}
+            </Button>
+          </Grid>
+        ))}
+      </Grid>
+    </div>
+    </div>
+              {/* <div
+      style={{
+        fontSize: '15px',
+        fontStyle: 'italic',
+        color: '#555',
+        marginTop: '8px',
+      }}
+    >
+      Setor solicitante: {props.logged.Area?.Unidade.nome}
+    </div> */}
+            </div>
+          ) : ''}
+
           <FormGroup>
             <div style={{
               flex: 1,
@@ -1526,7 +2056,7 @@ const AtividadeForm = (props) => {
                 </FormControl>
               </div> */}
 
-              <div>
+              {/* <div>
                 <FormControl fullWidth size="small">
                   <InputLabel id="demo-select-small">Tipo de cadastro</InputLabel>
                   <Select
@@ -1544,10 +2074,417 @@ const AtividadeForm = (props) => {
                     <MenuItem value={"Cadastro Produto Consumo"} onClick={() => [setTipoCadastro("Cadastro Produto Consumo")]}>Cadastro Produto Consumo</MenuItem>
                     <MenuItem value={"Cadastro de Produto Patrimônio"} onClick={() => [setTipoCadastro("Cadastro de Produto Patrimônio")]}>Cadastro de Produto Patrimônio</MenuItem>
                     <MenuItem value={"Cadastro de Fornecedor"} onClick={() => [setTipoCadastro("Cadastro de Fornecedor")]}>Cadastro de Fornecedor</MenuItem>
+                    <MenuItem value={"Cadastro de Projeto até 10 items"} onClick={() => [setTipoCadastro("Cadastro de Projeto até 10 items")]}>Cadastro de Projeto até 10 items</MenuItem>
+                    <MenuItem value={"Cadastro de MR a partir de 30 items"} onClick={() => [setTipoCadastro("Cadastro de MR a partir de 30 items")]}>Cadastro de MR a partir de 30 items</MenuItem>
+                    <MenuItem value={"Ajuste de parametrização de cadastro"} onClick={() => [setTipoCadastro("Ajuste de parametrização de cadastro")]}>Ajuste de parametrização de cadastro</MenuItem>
+
                   </Select>
                 </FormControl>
-              </div>
+              </div> */}
               <p></p>
+
+              {tipoCadastro === "Ajuste de parametrização de cadastro" ?
+                <div>
+
+                  <div>
+
+                    <TextField
+                      size="small"
+                      fullWidth
+                      label="Descreva o ajuste"
+                      variant="outlined"
+                      value={parametrizacao}
+                      onChange={e => setParametrizacao(e.target.value)}
+                      multiline
+                      rows={4}  // Define o número de linhas do campo de texto
+                      style={{
+                        backgroundColor: '#fff',
+                        borderRadius: 4
+                      }}
+                      InputLabelProps={{ style: { color: '#888' } }}
+                      InputProps={{
+                        style: {
+                          color: '#333'
+                        },
+                        classes: {
+                          notchedOutline: {
+                            borderColor: '#ccc'
+                          }
+                        }
+                      }}
+                    />
+
+                  </div><p></p>
+
+                  <div>
+
+                    {/* <TextField
+                      size="small"
+
+                      label="Segmento MR"
+                      variant="outlined"
+                      value={segmentoMR}
+
+                      onChange={e => setSegmentoMR(e.target.value)}
+                      style={{
+                        backgroundColor: '#fff',
+                        borderRadius: 4
+                      }}
+                      InputLabelProps={{ style: { color: '#888' } }}
+                      InputProps={{
+                        style: {
+                          color: '#333'
+                        },
+                        classes: {
+                          notchedOutline: {
+                            borderColor: '#ccc'
+                          }
+                        }
+                      }}
+                    /> */}
+                    <div style={{ borderRadius: '8px', overflow: 'hidden', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+                      <a>
+                        <img
+                          src={anexo2}
+                          height={70}
+                          onClick={() => setOpenMsg2(true)}
+                          style={{ cursor: 'pointer', border: '2px solid #ddd', borderRadius: '8px', transition: 'transform 0.3s ease' }}
+                          onMouseEnter={e => e.target.style.transform = 'scale(1.05)'}
+                          onMouseLeave={e => e.target.style.transform = 'scale(1)'}
+                        />
+                      </a>
+                    </div>
+                  </div>
+                  <p></p>
+
+                  <div>
+
+
+
+
+
+
+                    {uploadResult && (
+                      <div style={{ marginTop: '20px', padding: '10px', border: '1px solid green' }}>
+                        {uploadResult.message === "Cadastro realizado com sucesso." ? (
+                          <div>
+                            {/* <p><strong>Sucesso:</strong> {uploadResult.message}</p> */}
+                            <p><strong>Nome do Arquivo:</strong> {uploadResult.data.nome}</p>
+                            <p><strong>Tamanho:</strong> {uploadResult.data.tamanho}</p>
+                            {/* <p><strong>Hash:</strong> {uploadResult.data.hash}</p> */}
+
+                          </div>
+                        ) : (
+                          <p><strong>Erro:</strong> {uploadResult.message}</p>
+                        )}
+                      </div>
+                    )}
+
+
+                  </div>
+
+                  <p></p>
+                  {tipoCadastro === 'Ajuste de parametrização de cadastro'
+                    ?
+                    <Button variant="contained"
+                      disabled={botaoDesabilitado}
+                      onClick={() => { setModalSaveMR(true) }}>{'Solicitar ajuste'}</Button>
+
+                    :
+
+                    ''
+                  }
+
+                </div>
+                :
+
+                ''
+              }
+
+
+
+              {tipoCadastro === "Cadastro de MR a partir de 30 items" ?
+                <div>
+
+                  <div>
+
+                    <TextField
+                      size="small"
+
+                      label="Ano MR"
+                      variant="outlined"
+                      value={anoMR}
+
+                      onChange={e => setAnoMR(e.target.value)}
+                      style={{
+                        backgroundColor: '#fff',
+                        borderRadius: 4
+                      }}
+                      InputLabelProps={{ style: { color: '#888' } }}
+                      InputProps={{
+                        style: {
+                          color: '#333'
+                        },
+                        classes: {
+                          notchedOutline: {
+                            borderColor: '#ccc'
+                          }
+                        }
+                      }}
+                    />
+                  </div><p></p>
+
+                  <div>
+
+                    <TextField
+                      size="small"
+
+                      label="Segmento MR"
+                      variant="outlined"
+                      value={segmentoMR}
+
+                      onChange={e => setSegmentoMR(e.target.value)}
+                      style={{
+                        backgroundColor: '#fff',
+                        borderRadius: 4
+                      }}
+                      InputLabelProps={{ style: { color: '#888' } }}
+                      InputProps={{
+                        style: {
+                          color: '#333'
+                        },
+                        classes: {
+                          notchedOutline: {
+                            borderColor: '#ccc'
+                          }
+                        }
+                      }}
+                    /><p></p>
+                    <div style={{ borderRadius: '8px', overflow: 'hidden', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+                      <a>
+                        <img
+                          src={anexo}
+                          height={70}
+                          onClick={() => setOpenMsg2(true)}
+                          style={{ cursor: 'pointer', border: '2px solid #ddd', borderRadius: '8px', transition: 'transform 0.3s ease' }}
+                          onMouseEnter={e => e.target.style.transform = 'scale(1.05)'}
+                          onMouseLeave={e => e.target.style.transform = 'scale(1)'}
+                        />
+                      </a>
+                    </div>
+                  </div>
+                  <p></p>
+
+                  <div>
+
+
+
+
+
+
+                    {uploadResult && (
+                      <div style={{ marginTop: '20px', padding: '10px', border: '1px solid green' }}>
+                        {uploadResult.message === "Cadastro realizado com sucesso." ? (
+                          <div>
+                            {/* <p><strong>Sucesso:</strong> {uploadResult.message}</p> */}
+                            <p><strong>Nome do Arquivo:</strong> {uploadResult.data.nome}</p>
+                            <p><strong>Tamanho:</strong> {uploadResult.data.tamanho}</p>
+                            {/* <p><strong>Hash:</strong> {uploadResult.data.hash}</p> */}
+
+                          </div>
+                        ) : (
+                          <p><strong>Erro:</strong> {uploadResult.message}</p>
+                        )}
+                      </div>
+                    )}
+
+
+                  </div>
+
+                  <p></p>
+                  {tipoCadastro === 'Cadastro de MR a partir de 30 items'
+                    ?
+                    <Button variant="contained"
+                      disabled={botaoDesabilitado}
+                      onClick={() => { setModalSaveMR(true) }}>{'Solicitar cadastro  MR a partir de 30 items'}</Button>
+
+                    :
+
+                    ''
+                  }
+
+                </div>
+                :
+
+                ''
+              }
+
+
+
+
+
+
+              {tipoCadastro === "Cadastro de Projeto até 10 items" ?
+                <div>
+
+                  <div>
+
+                    <TextField
+                      size="small"
+                      fullWidth
+                      label=" Nome do Projeto"
+                      variant="outlined"
+                      value={nomeProjeto}
+
+                      onChange={e => setNomeProjeto(e.target.value)}
+                      style={{
+                        backgroundColor: '#fff',
+                        borderRadius: 4
+                      }}
+                      InputLabelProps={{ style: { color: '#888' } }}
+                      InputProps={{
+                        style: {
+                          color: '#333'
+                        },
+                        classes: {
+                          notchedOutline: {
+                            borderColor: '#ccc'
+                          }
+                        }
+                      }}
+                    />
+                  </div><p></p>
+
+                  <div>
+
+                    <TextField
+                      size="small"
+
+                      label="Quantidade de Items"
+                      variant="outlined"
+                      value={qtdItems}
+
+                      onChange={e => setQtdItems(e.target.value)}
+                      style={{
+                        backgroundColor: '#fff',
+                        borderRadius: 4
+                      }}
+                      InputLabelProps={{ style: { color: '#888' } }}
+                      InputProps={{
+                        style: {
+                          color: '#333'
+                        },
+                        classes: {
+                          notchedOutline: {
+                            borderColor: '#ccc'
+                          }
+                        }
+                      }}
+                    />
+                    <p></p>
+
+                    <form >
+                      <TextField
+                        id="date"
+                        label="Data Inicio Atividades"
+                        type="date"
+                        size="small"
+                        defaultValue={new Date()}
+                        onChange={handleDataChange}
+
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        style={{
+                          backgroundColor: '#fff',
+                          borderRadius: 4
+                        }}
+                      />
+                    </form><p></p>
+
+                    <div style={{ borderRadius: '8px', overflow: 'hidden', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+                      <a>
+                        <img
+                          src={anexo}
+                          height={70}
+                          onClick={() => setOpenMsg2(true)}
+                          style={{ cursor: 'pointer', border: '2px solid #ddd', borderRadius: '8px', transition: 'transform 0.3s ease' }}
+                          onMouseEnter={e => e.target.style.transform = 'scale(1.05)'}
+                          onMouseLeave={e => e.target.style.transform = 'scale(1)'}
+                        />
+                      </a>
+                    </div>
+                  </div>
+                  <p></p>
+
+                  <div>
+
+                    {/* <TextField
+                      size="small"
+                      fullWidth
+                      label="Previsão inicio das atividades"
+                      variant="outlined"
+                      value={dataInicio}
+
+                      onChange={e => setDataInicio(e.target.value)}
+                      style={{
+                        backgroundColor: '#fff',
+                        borderRadius: 4
+                      }}
+                      InputLabelProps={{ style: { color: '#888' } }}
+                      InputProps={{
+                        style: {
+                          color: '#333'
+                        },
+                        classes: {
+                          notchedOutline: {
+                            borderColor: '#ccc'
+                          }
+                        }
+                      }}
+                    /> */}
+
+
+
+
+
+                    {uploadResult && (
+                      <div style={{ marginTop: '20px', padding: '10px', border: '1px solid green' }}>
+                        {uploadResult.message === "Cadastro realizado com sucesso." ? (
+                          <div>
+                            {/* <p><strong>Sucesso:</strong> {uploadResult.message}</p> */}
+                            <p><strong>Nome do Arquivo:</strong> {uploadResult.data.nome}</p>
+                            <p><strong>Tamanho:</strong> {uploadResult.data.tamanho}</p>
+                            {/* <p><strong>Hash:</strong> {uploadResult.data.hash}</p> */}
+
+                          </div>
+                        ) : (
+                          <p><strong>Erro:</strong> {uploadResult.message}</p>
+                        )}
+                      </div>
+                    )}
+
+
+                  </div>
+
+                  <p></p>
+                  {tipoCadastro === 'Cadastro de Projeto até 10 items'
+                    ?
+                    <Button variant="contained"
+                      disabled={botaoDesabilitado}
+                      onClick={() => { setModalSaveProjeto(true) }}>{'Solicitar cadastro de projeto '}</Button>
+
+                    :
+
+                    ''
+                  }
+
+                </div>
+                : ''}
+
+
+
+
 
               {tipoCadastro === "Cadastro de Fornecedor" ?
                 <div>
@@ -1854,7 +2791,7 @@ const AtividadeForm = (props) => {
 
                   <div style={{ flex: 1, marginBottom: 16 }}>
                     <b>
-                      Defina como será usado o produto
+                      Defina onde será usado o produto
                     </b>
                     <TextField size="small" fullWidth label="Ex: o material será usado em aulas práticas no laboratório de gastronomia" multiline rows={2} variant="outlined" value={conteudo} onChange={e => setConteudo(e.target.value)}
                       style={{
@@ -1863,15 +2800,17 @@ const AtividadeForm = (props) => {
                       }} />
                   </div>
 
-                  Dados do item:
+
+
+
 
 
                   <div style={{ flex: 1, marginBottom: 16, marginTop: 20 }}>
                     <b>
                       Definir o Grupo de Pagamento
                     </b><br></br>
-                    Em caso de duvida entre em contado com a Contabilidade
-                    <TextField size="small" fullWidth label="Ex: 21055 - Eventos" variant="outlined" value={centroCusto} onChange={e => setCentroCusto(e.target.value)}
+
+                    <TextField size="small" fullWidth label="Ex: 331110105 - Material para curso" variant="outlined" value={centroCusto} onChange={e => setCentroCusto(e.target.value)}
                       style={{
                         backgroundColor: '#fff',
                         borderRadius: 4
@@ -2461,7 +3400,7 @@ Eficiência: 80 PLUS Bronze
                         Definir o Grupo de Pagamento
                       </b><br></br>
                       Em caso de duvida entre em contado com a Contabilidade
-                      <TextField size="small" fullWidth label="Ex: 21055 - Eventos" variant="outlined" value={centroCusto} onChange={e => setCentroCusto(e.target.value)}
+                      <TextField size="small" fullWidth label="Ex: 332310119M - Locação de Bem móvel - PJ" variant="outlined" value={centroCusto} onChange={e => setCentroCusto(e.target.value)}
                         style={{
                           backgroundColor: '#fff',
                           borderRadius: 4
@@ -2843,7 +3782,7 @@ Eficiência: 80 PLUS Bronze
 
                     <p></p>
                     <hr></hr>
-                    <div style={{ flex: 1, marginBottom: 16 }}>
+                    {/* <div style={{ flex: 1, marginBottom: 16 }}>
                       <b>
                         Definir a Cor:
 
@@ -2881,7 +3820,7 @@ Eficiência: 80 PLUS Bronze
                           }} />
                       }
 
-                    </div>
+                    </div> */}
 
                     <p></p>
                     <hr></hr>
@@ -3075,11 +4014,11 @@ Eficiência: 80 PLUS Bronze
               {/* <Button variant="outlined" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/area/`}>Voltar</Button> */}
               <div style={{ flex: 1 }}></div>
 
-              {tipoCadastro === 'Cadastro de Fornecedor' 
+              {tipoCadastro === 'Cadastro de Fornecedor'
                 ?
                 <Button variant="contained"
                   disabled={botaoDesabilitado}
-                  onClick={() => { tipoCadastro === 'Cadastro de Fornecedor' ? onSaveFornecvedor(true) : setModalSave(true) }}>{'Solicitar cadastro do fornecedor'}</Button>
+                  onClick={() => { tipoCadastro === 'Cadastro de Fornecedor' ? onSaveFornecvedor(true) : setModalSave(true) }}>{'Solicitar cadastro'}</Button>
 
 
                 :
@@ -3087,16 +4026,22 @@ Eficiência: 80 PLUS Bronze
 
               }
 
-              {tipoCadastro === 'Cadastro de Fornecedor'
+              {tipoCadastro === 'Cadastro de Fornecedor' ||
+                tipoCadastro === 'Cadastro de Projeto até 10 items' ||
+                tipoCadastro === 'Cadastro de MR a partir de 30 items' ||
+                tipoCadastro === 'Ajuste de parametrização de cadastro'
                 ?
-                  ''
+                ''
                 :
                 <Button variant="contained"
                   disabled={botaoDesabilitado}
-                  onClick={() => { setModalSave(true) }}>{'Solicitar cadastro do item'}</Button>
+                  onClick={() => { setModalSave(true) }}>{'Solicitar cadastro'}</Button>
 
 
               }
+
+
+
             </div>
             {/* <TextField
               type="hidden"
@@ -3190,7 +4135,7 @@ Eficiência: 80 PLUS Bronze
 
           <DialogContent>
             {
-              (cor === "" ||
+              (
                 forma === "" ||
                 dimensao === "" ||
                 material === "" ||
@@ -3201,11 +4146,7 @@ Eficiência: 80 PLUS Bronze
 
                 <div>
                   <DialogTitle id="alert-dialog-title">Campos não preenchidos</DialogTitle>
-                  {cor === "" &&
-                    <div style={{ color: "red" }}>
-                      Cor do item<br />
-                    </div>
-                  }
+
 
                   {forma === "" &&
                     <div style={{ color: "red" }}>
@@ -3286,6 +4227,12 @@ Eficiência: 80 PLUS Bronze
 
 
 
+
+
+
+
+
+
         <p></p>
 
 
@@ -3296,6 +4243,94 @@ Eficiência: 80 PLUS Bronze
 
 
       </Dialog>
+
+      <Dialog open={modalSaveProjeto} onClose={() => setOpenDialogFile(false)} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
+
+        <DialogContent>
+          {
+            (
+              qtdItems === "" ||
+              dataInicio === '' ||
+              nomeProjeto === '') ?
+
+              <div>
+                <DialogTitle id="alert-dialog-title">Campos não preenchidos</DialogTitle>
+                {qtdItems === "" &&
+                  <div style={{ color: "red" }}>
+                    Quantidade de items<br />
+                  </div>
+                }
+
+                {dataInicio === "" &&
+                  <div style={{ color: "red" }}>
+                    Data de inicio<br />
+                  </div>
+                }
+
+                {nomeProjeto === "" &&
+                  <div style={{ color: "red" }}>
+                    Nome do Projeto<br />
+                  </div>
+                }
+
+
+
+
+                <div>
+                  <Button variant="contained" onClick={() => onSaveProjeto()}>Solicitar cadastro mesmo assim</Button>
+                  <p></p>
+
+
+
+                  <Button variant="contained" color="error" onClick={() => setModalSaveProjeto(false)}>Quero completar o cadastro</Button>
+
+                </div>
+              </div>
+
+
+              : <div>
+                <Button variant="contained" onClick={() => onSaveProjeto()}>Solicitar cadastro do Projeto </Button>
+                <p></p>
+
+
+
+                <Button variant="contained" color="error" onClick={() => setModalSaveProjeto(false)}>Voltar</Button>
+
+              </div>
+          }
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={modalSaveMR} onClose={() => setOpenDialogFile(false)} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
+
+        <DialogContent>
+          {
+            <div>
+              {tipoCadastro === 'Cadastro de MR a partir de 30 items' ?
+
+                <Button variant="contained" onClick={() => onSaveMr()}>Enviar </Button>
+                : ''}
+
+              {tipoCadastro === 'Ajuste de parametrização de cadastro' ?
+
+                <Button variant="contained" onClick={() => onSaveAjuste()}>Enviar</Button>
+
+                : ''}
+
+
+
+
+              <p></p>
+
+
+
+              <Button variant="contained" color="error" onClick={() => setModalSaveMR(false)}>Voltar</Button>
+
+            </div>
+          }
+        </DialogContent>
+      </Dialog>
+
 
 
 
@@ -3490,6 +4525,68 @@ Eficiência: 80 PLUS Bronze
             </div>
             : ''}
         </DialogActions>
+      </Dialog>
+
+      <Dialog open={openMsg2}>
+        <DialogContent>
+          <hr style={{ margin: '20px 0', borderColor: '#ddd' }} />
+
+          <div style={{ color: 'red' }}>
+
+          </div>
+          <p></p>
+          <div>
+            <h2>Selecione o arquivo e clique em enviar</h2>
+            <input
+              type="file"
+              ref={fileInputRef}
+              style={{
+                padding: '10px',
+                borderRadius: '5px',
+                border: '1px solid #ccc',
+                marginBottom: '20px',
+                width: '100%',
+                fontSize: '16px'
+              }}
+            />
+            <button
+              onClick={handleUpload}
+              style={{
+                backgroundColor: '#108cdd',
+                color: 'white',
+                padding: '10px 20px',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer',
+                fontSize: '16px',
+                transition: 'red'
+              }}
+              onMouseEnter={e => e.target.style.backgroundColor = 'red'}
+              onMouseLeave={e => e.target.style.backgroundColor = '#108cdd'}
+            >
+              Enviar
+            </button>
+
+            {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Button
+              onClick={() => setOpenMsg2(false)}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: '#555',
+                cursor: 'pointer',
+                fontWeight: 'bold',
+                textDecoration: 'underline'
+              }}
+            >
+              Voltar para o chamado
+            </Button>
+          </div>
+        </DialogContent>
       </Dialog>
 
 

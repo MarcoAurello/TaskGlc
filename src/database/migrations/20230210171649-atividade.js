@@ -160,6 +160,30 @@ module.exports = {
       updatedAt: {
         type: Sequelize.DATE,
         allowNull: false
+      },
+      nomeProjeto: {
+        type: Sequelize.TEXT,
+        allowNull: true
+      },
+      qtdPlanilha: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
+      prazoInicioAtividades: {
+        type: Sequelize.DATE,
+        allowNull: true
+      },
+      anoMr: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
+      segmentoMr: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
+      parametrizacaoCadastro: {
+        type: Sequelize.TEXT,
+        allowNull: true
       }
     })
   },
