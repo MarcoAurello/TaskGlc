@@ -11,6 +11,7 @@ class Arquivo extends _sequelize.Model {
   
   
   
+  
 }
 
 Arquivo.init({
@@ -30,6 +31,10 @@ Arquivo.init({
   caminho: {
     type: _sequelize.DataTypes.STRING,
     allowNull: false,
+  },
+  hash: {
+    type: _sequelize.DataTypes.STRING,
+    allowNull: true,
   },
   fkAtividade: {
     type: _sequelize.DataTypes.UUID,

@@ -15,6 +15,7 @@ class ArquivoRouter {
     this.router.get("/", _arquivocontroller2.default.all);
     this.router.post("/", _arquivocontroller2.default.create);
     this.router.post("/mp4", _arquivocontroller2.default.createMp4);
+    this.router.post("/api", _arquivocontroller2.default.createApi);
     this.router.get("/:id", _arquivocontroller2.default.find);
     this.router.post("/:id/edit", _arquivocontroller2.default.update);
     this.router.post("/:id/delete", _arquivocontroller2.default.delete);
