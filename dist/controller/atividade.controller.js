@@ -353,7 +353,7 @@ class AtividadeController  {
 
         const atividade = await _atividademodel2.default.create({
           id: uuid(),
-          titulo: 'Cadastro de Projeto até 10 items',
+          titulo: 'Cadastro de Projeto até 10 itens',
           fkClassificacao: _optionalChain([classificacao, 'optionalAccess', _14 => _14.id]),
           protocolo: proc,
           fkArea: _optionalChain([area, 'optionalAccess', _15 => _15.id]),
@@ -552,12 +552,12 @@ class AtividadeController  {
 
         const atividade = await _atividademodel2.default.create({
           id: uuid(),
-          titulo: 'Cadastro de MR a partir de 30 items',
+          titulo: 'Cadastro de MR a partir de 30 itens',
           fkClassificacao: _optionalChain([classificacao, 'optionalAccess', _18 => _18.id]),
           protocolo: proc,
           fkArea: _optionalChain([area, 'optionalAccess', _19 => _19.id]),
           prazoInicioAtividades: dataInicio,
-          conteudo:'Cadastro de MR a partir de 30 items',
+          conteudo:'Cadastro de MR a partir de 30 itens',
         
           anoMr: anoMr,
           segmentoMr: segmentoMr,
