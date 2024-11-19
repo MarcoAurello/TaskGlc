@@ -1,4 +1,4 @@
-"use strict"; Object.defineProperty(exports, "__esModule", { value: true }); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; } function _optionalChain(ops) { let lastAccessLHS = undefined; let value = ops[0]; let i = 1; while (i < ops.length) { const op = ops[i]; const fn = ops[i + 1]; i += 2; if ((op === 'optionalAccess' || op === 'optionalCall') && value == null) { return undefined; } if (op === 'access' || op === 'optionalAccess') { lastAccessLHS = value; value = fn(value); } else if (op === 'call' || op === 'optionalCall') { value = fn((...args) => value.call(lastAccessLHS, ...args)); lastAccessLHS = undefined; } } return value; }
+"use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; } function _optionalChain(ops) { let lastAccessLHS = undefined; let value = ops[0]; let i = 1; while (i < ops.length) { const op = ops[i]; const fn = ops[i + 1]; i += 2; if ((op === 'optionalAccess' || op === 'optionalCall') && value == null) { return undefined; } if (op === 'access' || op === 'optionalAccess') { lastAccessLHS = value; value = fn(value); } else if (op === 'call' || op === 'optionalCall') { value = fn((...args) => value.call(lastAccessLHS, ...args)); lastAccessLHS = undefined; } } return value; }
 
 var _atividademodel = require('../model/atividade.model'); var _atividademodel2 = _interopRequireDefault(_atividademodel);
 var _mensagemmodel = require('../model/mensagem.model'); var _mensagemmodel2 = _interopRequireDefault(_mensagemmodel);
@@ -8,6 +8,7 @@ var _areamodel = require('../model/area.model'); var _areamodel2 = _interopRequi
 var _usuariomodel = require('../model/usuario.model'); var _usuariomodel2 = _interopRequireDefault(_usuariomodel);
 var _classificacaomodel = require('../model/classificacao.model'); var _classificacaomodel2 = _interopRequireDefault(_classificacaomodel);
 var _arquivomodel = require('../model/arquivo.model'); var _arquivomodel2 = _interopRequireDefault(_arquivomodel);
+const { uuid } = require('uuidv4')
 var _connection = require('../model/connection'); var _connection2 = _interopRequireDefault(_connection);
 const cron = require('node-cron');
 
@@ -60,7 +61,7 @@ cron.schedule('14 16 * * *', buscarAtividadesPendentes, {
 
 
 
-class AtividadeController {
+class AtividadeController  {
   async all(req, res, next) {
     throw new Error('Method not implemented.')
   }
@@ -76,9 +77,7 @@ class AtividadeController {
         caminho,
         tipoCadastro,
         medida,
-        nomeProjeto,
-        qtdItems,
-        dataInicio,
+
         cnpj,
         razaoSocial,
         emailEmpresa,
@@ -138,11 +137,12 @@ class AtividadeController {
         where: { nome: 'Aberto' }
       })
 
-      const proc = _protocoloutils2.default.call(void 0,)
+      const proc = _protocoloutils2.default.call(void 0, )
 
       if (cnpj && razaoSocial) {
 
         const atividade = await _atividademodel2.default.create({
+          id: uuid(),
           titulo,
           fkClassificacao: _optionalChain([classificacao, 'optionalAccess', _4 => _4.id]),
           protocolo: proc,
@@ -154,10 +154,7 @@ class AtividadeController {
           filial,
           gCotacao,
           fone: telefoneEmpresa,
-
-
           detalhes: conteudo,
-
           fkStatus: _optionalChain([status, 'optionalAccess', _6 => _6.id]),
           fkUsuarioSolicitante: req.usuario.id,
           arquivado: false,
@@ -295,7 +292,9 @@ class AtividadeController {
 
   async createProjeto(req, res, next) {
     try {
+
       const {
+        hash,
         fkUnidade,
         fkArea,
         titulo,
@@ -303,31 +302,17 @@ class AtividadeController {
         categoria,
         caminho,
         tipoCadastro,
-        medida,
+
         nomeProjeto,
         qtdItems,
         dataInicio,
-        cnpj,
-        razaoSocial,
-        emailEmpresa,
-        telefoneEmpresa,
-        gPagamento,
-        filial,
-        gCotacao,
-
-        centroCusto,
-        eletro,
-        indicacao,
-        informacoes,
-        dimensao,
-        forma,
-        material,
-        cor,
         listaDeArquivosEnviados,
         setorSolicitante
       } = req.body
-      console.log("a" + req.body);
-      // console.log(setorSolicitante);
+      console.log("axxxxxfffffffx" + req.body);
+
+
+      // console.log('pop');
 
       if (!fkUnidade) {
         return res.status(401).json({
@@ -335,23 +320,19 @@ class AtividadeController {
         })
       }
 
-      // if (!fkArea) {
-      //   return res
-      //     .status(401)
-      //     .json({ message: 'O campo área deve ser preenchido corretamente.' })
-      // }
+
       const area = await _areamodel2.default.findOne({
         where: { nome: "GLC-Cadastro de Item" }
       })
 
 
-      if (!titulo) {
-        return res.status(401).json({
-          message: 'O campo título deve ser preenchido corretamente.'
-        })
-      }
+      // if (!titulo) {
+      //   return res.status(401).json({
+      //     message: 'O campo título deve ser preenchido corretamente.'
+      //   })
+      // }
 
-      if (!conteudo) {
+      if (!nomeProjeto) {
         return res.status(401).json({
           message: 'O campo conteudo deve ser preenchido corretamente.'
         })
@@ -366,22 +347,59 @@ class AtividadeController {
         where: { nome: 'Aberto' }
       })
 
-      const proc = _protocoloutils2.default.call(void 0,)
+      const proc = _protocoloutils2.default.call(void 0, )
+
+      if (nomeProjeto) {
+
+        const atividade = await _atividademodel2.default.create({
+          id: uuid(),
+          titulo: 'Cadastro de Projeto até 10 items',
+          fkClassificacao: _optionalChain([classificacao, 'optionalAccess', _14 => _14.id]),
+          protocolo: proc,
+          fkArea: _optionalChain([area, 'optionalAccess', _15 => _15.id]),
+          prazoInicioAtividades: dataInicio,
+
+
+          detalhes: nomeProjeto,
+          qtdItems,
+
+          fkStatus: _optionalChain([status, 'optionalAccess', _16 => _16.id]),
+          fkUsuarioSolicitante: req.usuario.id,
+          arquivado: false,
+          pessoal: false,
+          // fkUsuarioExecutor,
+          categoria: tipoCadastro,
+          caminho,
+          nomeProjeto,
+          qtdPlanilha: qtdItems,
+        })
+
+        await _mensagemmodel2.default.create({
+          conteudo: nomeProjeto,
+          fkAtividade: atividade.id,
+          fkUsuario: req.usuario.id
+        })
+
+        const atividadeSalva = await _atividademodel2.default.findOne({
+          where: { 
+          protocolo: proc 
+        }
+        })
+
+        if (hash) {
+          await _arquivomodel2.default.update(
+            {
+              fkAtividade: _optionalChain([atividadeSalva, 'optionalAccess', _17 => _17.id])
+            },
+            {
+              where: { hash }
+            }
+          )
+        }
 
 
 
-      await _mensagemmodel2.default.create({
-        conteudo,
-        fkAtividade: atividade.id,
-        fkUsuario: req.usuario.id
-        
-      })
-
-
-
-      // const emailCoordenadores = await queryInterface.sequelize.query('select email from usuario where fkArea = \'Aberto\'')
-      // const status = await queryInterface.sequelize.query('select id from status where nome = \'Aberto\'')
-
+      }
 
       const atividadeSalva = await _atividademodel2.default.findOne({
         where: {
@@ -390,7 +408,16 @@ class AtividadeController {
         }
       })
 
-
+      // listaDeArquivosEnviados.map((item) => {
+      //   Arquivo.update(
+      //     {
+      //       fkAtividade: atividadeSalva?.id
+      //     },
+      //     {
+      //       where: { id: item.id }
+      //     }
+      //   )
+      // })
 
       const funcionarioDaArea = await _usuariomodel2.default.findAll({
         where: { fkArea }
@@ -398,13 +425,13 @@ class AtividadeController {
 
 
 
-      await _timeLineStatusmodel2.default.create(
-        {
-          fkStatus: _optionalChain([status, 'optionalAccess', _11 => _11.id]),
-          fkAtividade: _optionalChain([atividadeSalva, 'optionalAccess', _12 => _12.id]),
-          fkUsuario: req.usuario.id
-        }
-      )
+      // await TimeLineStatus.create(
+      //   {
+      //     fkStatus: status?.id,
+      //     fkAtividade: atividadeSalva?.id,
+      //     fkUsuario: req.usuario.id
+      //   }
+      // )
 
 
 
@@ -412,28 +439,28 @@ class AtividadeController {
 
 
 
-      const glc = await _unidademodel2.default.findOne({
-        where: { nome: 'GLC' }
-      })
+      // const glc = await Unidade.findOne({
+      //   where: { nome :'GLC' }
+      // })
 
 
 
-      const txEmail1 = `
-            <b>Nova Atividade para sua área.</b><br>
+      // const txEmail1 = `
+      //     <b>Nova Atividade para sua área.</b><br>
 
-        Unidade: <strong>${setorSolicitante}</strong><br>
-        Titulo: <strong>${titulo}</strong><br>
-          Mensagem: <strong>${conteudo}</strong><br>
-        <br/>
-        <a href="https://app1.pe.senac.br/taskmanagerglc/atividade/${_optionalChain([atividadeSalva, 'optionalAccess', _13 => _13.id])}/edit">CLIQUE PARA VER.</a><p>  
-        `
-      let destinatarios = '';
+      // Unidade: <strong>${setorSolicitante}</strong><br>
+      // Titulo: <strong>${titulo}</strong><br>
+      //   Mensagem: <strong>${conteudo}</strong><br>
+      // <br/>
+      // <a href="https://app1.pe.senac.br/taskmanagerglc/atividade/${atividadeSalva?.id}/edit">CLIQUE PARA VER.</a><p>  
+      // `
+      // let destinatarios = '';
 
-      funcionarioDaArea.forEach((usuario, index) => {
-        destinatarios += `${usuario.email};`;
-      });
+      // funcionarioDaArea.forEach((usuario, index) => {
+      //   destinatarios += `${usuario.email};`;
+      // });
 
-      // _emailutils2.default.enviar(destinatarios, txEmail1);
+      //  emailUtils.enviar(destinatarios, txEmail1);
 
 
 
@@ -453,6 +480,403 @@ class AtividadeController {
       }
     }
   }
+
+  
+
+
+
+  async createMr(req, res, next) {
+    try {
+
+      const {
+        hash,
+        fkUnidade,
+        fkArea,
+        parametrizacao,
+        titulo,
+        conteudo,
+        categoria,
+        caminho,
+        tipoCadastro,
+        anoMr,
+        segmentoMr,
+
+        nomeProjeto,
+        qtdItems,
+        dataInicio,
+        listaDeArquivosEnviados,
+        setorSolicitante
+      } = req.body
+      console.log("axxxxxfffffffx" + req.body);
+
+
+      // console.log('pop');
+
+      if (!fkUnidade) {
+        return res.status(401).json({
+          message: 'O campo unidade deve ser preenchido corretamente.'
+        })
+      }
+
+
+      const area = await _areamodel2.default.findOne({
+        where: { nome: "GLC-Cadastro de Item" }
+      })
+
+
+      // if (!titulo) {
+      //   return res.status(401).json({
+      //     message: 'O campo título deve ser preenchido corretamente.'
+      //   })
+      // }
+
+      // if (!anoMr) {
+      //   return res.status(401).json({
+      //     message: 'O campo Ano MR deve ser preenchido corretamente.'
+      //   })
+      // }
+
+
+      const classificacao = await _classificacaomodel2.default.findOne({
+        where: { nome: 'Não Definido' }
+      })
+
+      const status = await _statusmodel2.default.findOne({
+        where: { nome: 'Aberto' }
+      })
+
+      const proc = _protocoloutils2.default.call(void 0, )
+
+      console.log('anoMr', anoMr)
+      if (anoMr) {
+
+        const atividade = await _atividademodel2.default.create({
+          id: uuid(),
+          titulo: 'Cadastro de MR a partir de 30 items',
+          fkClassificacao: _optionalChain([classificacao, 'optionalAccess', _18 => _18.id]),
+          protocolo: proc,
+          fkArea: _optionalChain([area, 'optionalAccess', _19 => _19.id]),
+          prazoInicioAtividades: dataInicio,
+          conteudo:'Cadastro de MR a partir de 30 items',
+        
+          anoMr: anoMr,
+          segmentoMr: segmentoMr,
+          
+
+          fkStatus: _optionalChain([status, 'optionalAccess', _20 => _20.id]),
+          fkUsuarioSolicitante: req.usuario.id,
+          arquivado: false,
+          pessoal: false,
+          // fkUsuarioExecutor,
+          categoria: tipoCadastro,
+          caminho,
+        
+        })
+
+        await _mensagemmodel2.default.create({
+          conteudo: segmentoMr,
+          fkAtividade: atividade.id,
+          fkUsuario: req.usuario.id
+        })
+
+        const atividadeSalva = await _atividademodel2.default.findOne({
+          where: { 
+          protocolo: proc 
+        }
+        })
+
+        if (hash) {
+          await _arquivomodel2.default.update(
+            {
+              fkAtividade: _optionalChain([atividadeSalva, 'optionalAccess', _21 => _21.id])
+            },
+            {
+              where: { hash }
+            }
+          )
+        }
+
+
+
+      }
+
+     
+
+      const atividadeSalva = await _atividademodel2.default.findOne({
+        where: {
+        
+          protocolo: proc
+        }
+      })
+
+      // listaDeArquivosEnviados.map((item) => {
+      //   Arquivo.update(
+      //     {
+      //       fkAtividade: atividadeSalva?.id
+      //     },
+      //     {
+      //       where: { id: item.id }
+      //     }
+      //   )
+      // })
+
+      if(atividadeSalva){
+
+        await _timeLineStatusmodel2.default.create(
+          {
+            fkStatus: _optionalChain([status, 'optionalAccess', _22 => _22.id]),
+            fkAtividade: _optionalChain([atividadeSalva, 'optionalAccess', _23 => _23.id]),
+            fkUsuario: req.usuario.id
+          }
+        )
+      }
+
+    
+
+
+
+
+
+
+
+
+
+      // const glc = await Unidade.findOne({
+      //   where: { nome :'GLC' }
+      // })
+
+
+
+      // const txEmail1 = `
+      //     <b>Nova Atividade para sua área.</b><br>
+
+      // Unidade: <strong>${setorSolicitante}</strong><br>
+      // Titulo: <strong>${titulo}</strong><br>
+      //   Mensagem: <strong>${conteudo}</strong><br>
+      // <br/>
+      // <a href="https://app1.pe.senac.br/taskmanagerglc/atividade/${atividadeSalva?.id}/edit">CLIQUE PARA VER.</a><p>  
+      // `
+      // let destinatarios = '';
+
+      // funcionarioDaArea.forEach((usuario, index) => {
+      //   destinatarios += `${usuario.email};`;
+      // });
+
+      //  emailUtils.enviar(destinatarios, txEmail1);
+
+
+
+
+
+      res
+        .status(200)
+        .json({ message: 'Cadastro realizado com sucesso.' })
+    } catch (err) {
+      console.log(err)
+      if (typeof err.errors !== 'undefined') {
+        res.status(401).json({ message: err.errors[0].message })
+      } else if (typeof err.message !== 'undefined') {
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
+      }
+    }
+  }
+
+  async createAjuste(req, res, next) {
+    try {
+
+      const {
+        hash,
+        fkUnidade,
+        fkArea,
+        parametrizacao,
+        titulo,
+        conteudo,
+        categoria,
+        caminho,
+        tipoCadastro,
+        anoMr,
+        segmentoMr,
+
+        nomeProjeto,
+        qtdItems,
+        dataInicio,
+        listaDeArquivosEnviados,
+        setorSolicitante
+      } = req.body
+      console.log("axxxxxfffffffx" + req.body);
+
+
+      // console.log('pop');
+
+      if (!fkUnidade) {
+        return res.status(401).json({
+          message: 'O campo unidade deve ser preenchido corretamente.'
+        })
+      }
+
+
+      const area = await _areamodel2.default.findOne({
+        where: { nome: "GLC-Cadastro de Item" }
+      })
+
+
+      // if (!titulo) {
+      //   return res.status(401).json({
+      //     message: 'O campo título deve ser preenchido corretamente.'
+      //   })
+      // }
+
+      // if (!anoMr) {
+      //   return res.status(401).json({
+      //     message: 'O campo Ano MR deve ser preenchido corretamente.'
+      //   })
+      // }
+
+
+      const classificacao = await _classificacaomodel2.default.findOne({
+        where: { nome: 'Não Definido' }
+      })
+
+      const status = await _statusmodel2.default.findOne({
+        where: { nome: 'Aberto' }
+      })
+
+      const proc = _protocoloutils2.default.call(void 0, )
+
+    
+
+      if(parametrizacao){
+
+        const atividade = await _atividademodel2.default.create({
+          titulo: 'Ajuste de parametrização de cadastro',
+          fkClassificacao: _optionalChain([classificacao, 'optionalAccess', _24 => _24.id]),
+          protocolo: proc,
+          fkArea: _optionalChain([area, 'optionalAccess', _25 => _25.id]),
+         
+          conteudo:parametrizacao,
+          parametrizacaoCadastro:parametrizacao,
+          
+        
+          
+
+          fkStatus: _optionalChain([status, 'optionalAccess', _26 => _26.id]),
+          fkUsuarioSolicitante: req.usuario.id,
+          arquivado: false,
+          pessoal: false,
+          // fkUsuarioExecutor,
+          categoria: tipoCadastro,
+          caminho,
+        
+        })
+
+        await _mensagemmodel2.default.create({
+          conteudo: parametrizacao,
+          fkAtividade: atividade.id,
+          fkUsuario: req.usuario.id
+        })
+
+        const atividadeSalva = await _atividademodel2.default.findOne({
+          where: { 
+          protocolo: proc 
+        }
+        })
+
+        if (hash) {
+          await _arquivomodel2.default.update(
+            {
+              fkAtividade: _optionalChain([atividadeSalva, 'optionalAccess', _27 => _27.id])
+            },
+            {
+              where: { hash }
+            }
+          )
+        }
+
+      }
+
+      const atividadeSalva = await _atividademodel2.default.findOne({
+        where: {
+        
+          protocolo: proc
+        }
+      })
+
+      // listaDeArquivosEnviados.map((item) => {
+      //   Arquivo.update(
+      //     {
+      //       fkAtividade: atividadeSalva?.id
+      //     },
+      //     {
+      //       where: { id: item.id }
+      //     }
+      //   )
+      // })
+
+      if(atividadeSalva){
+
+        await _timeLineStatusmodel2.default.create(
+          {
+            fkStatus: _optionalChain([status, 'optionalAccess', _28 => _28.id]),
+            fkAtividade: _optionalChain([atividadeSalva, 'optionalAccess', _29 => _29.id]),
+            fkUsuario: req.usuario.id
+          }
+        )
+      }
+
+    
+
+
+
+
+
+
+
+
+
+      // const glc = await Unidade.findOne({
+      //   where: { nome :'GLC' }
+      // })
+
+
+
+      // const txEmail1 = `
+      //     <b>Nova Atividade para sua área.</b><br>
+
+      // Unidade: <strong>${setorSolicitante}</strong><br>
+      // Titulo: <strong>${titulo}</strong><br>
+      //   Mensagem: <strong>${conteudo}</strong><br>
+      // <br/>
+      // <a href="https://app1.pe.senac.br/taskmanagerglc/atividade/${atividadeSalva?.id}/edit">CLIQUE PARA VER.</a><p>  
+      // `
+      // let destinatarios = '';
+
+      // funcionarioDaArea.forEach((usuario, index) => {
+      //   destinatarios += `${usuario.email};`;
+      // });
+
+      //  emailUtils.enviar(destinatarios, txEmail1);
+
+
+
+
+
+      res
+        .status(200)
+        .json({ message: 'Cadastro realizado com sucesso.' })
+    } catch (err) {
+      console.log(err)
+      if (typeof err.errors !== 'undefined') {
+        res.status(401).json({ message: err.errors[0].message })
+      } else if (typeof err.message !== 'undefined') {
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
+      }
+    }
+  }
+
 
   async find(req, res, next) {
     try {
@@ -481,7 +905,7 @@ class AtividadeController {
         where: { id }
       })
 
-      console.log('jjjjjjj'+registro)
+      console.log('ppppppp', registro)
 
       res.status(200).json({ data: registro })
     } catch (err) {
@@ -621,10 +1045,10 @@ class AtividadeController {
           arquivado: false,
           fkStatus: {
             [Op.or]: [
-              _optionalChain([statusPendente, 'optionalAccess', _14 => _14.id]),
-              _optionalChain([statusConcluido, 'optionalAccess', _15 => _15.id]),
-              _optionalChain([statusCancelado, 'optionalAccess', _16 => _16.id]),
-              _optionalChain([statusParado, 'optionalAccess', _17 => _17.id])
+              _optionalChain([statusPendente, 'optionalAccess', _30 => _30.id]),
+              _optionalChain([statusConcluido, 'optionalAccess', _31 => _31.id]),
+              _optionalChain([statusCancelado, 'optionalAccess', _32 => _32.id]),
+              _optionalChain([statusParado, 'optionalAccess', _33 => _33.id])
             ]
           }
         }
@@ -715,16 +1139,16 @@ class AtividadeController {
           }
         ],
         where: {
-          fkClassificacao: _optionalChain([claImediata, 'optionalAccess', _18 => _18.id]),
+          fkClassificacao: _optionalChain([claImediata, 'optionalAccess', _34 => _34.id]),
           fkUsuarioExecutor: req.usuario.id,
           arquivado: false,
           fkStatus: {
             [Op.or]: [
-              _optionalChain([statusAberto, 'optionalAccess', _19 => _19.id]),
-              _optionalChain([statusIniciado, 'optionalAccess', _20 => _20.id]),
-              _optionalChain([statusPlanejado, 'optionalAccess', _21 => _21.id]),
-              _optionalChain([statusPendente, 'optionalAccess', _22 => _22.id]),
-              _optionalChain([statusParado, 'optionalAccess', _23 => _23.id])
+              _optionalChain([statusAberto, 'optionalAccess', _35 => _35.id]),
+              _optionalChain([statusIniciado, 'optionalAccess', _36 => _36.id]),
+              _optionalChain([statusPlanejado, 'optionalAccess', _37 => _37.id]),
+              _optionalChain([statusPendente, 'optionalAccess', _38 => _38.id]),
+              _optionalChain([statusParado, 'optionalAccess', _39 => _39.id])
             ]
           }
         }
@@ -749,16 +1173,16 @@ class AtividadeController {
           }
         ],
         where: {
-          fkClassificacao: _optionalChain([claUrgente, 'optionalAccess', _24 => _24.id]),
+          fkClassificacao: _optionalChain([claUrgente, 'optionalAccess', _40 => _40.id]),
           fkUsuarioExecutor: req.usuario.id,
           arquivado: false,
           fkStatus: {
             [Op.or]: [
-              _optionalChain([statusAberto, 'optionalAccess', _25 => _25.id]),
-              _optionalChain([statusIniciado, 'optionalAccess', _26 => _26.id]),
-              _optionalChain([statusPlanejado, 'optionalAccess', _27 => _27.id]),
-              _optionalChain([statusPendente, 'optionalAccess', _28 => _28.id]),
-              _optionalChain([statusParado, 'optionalAccess', _29 => _29.id])
+              _optionalChain([statusAberto, 'optionalAccess', _41 => _41.id]),
+              _optionalChain([statusIniciado, 'optionalAccess', _42 => _42.id]),
+              _optionalChain([statusPlanejado, 'optionalAccess', _43 => _43.id]),
+              _optionalChain([statusPendente, 'optionalAccess', _44 => _44.id]),
+              _optionalChain([statusParado, 'optionalAccess', _45 => _45.id])
             ]
           }
         }
@@ -783,16 +1207,16 @@ class AtividadeController {
           }
         ],
         where: {
-          fkClassificacao: _optionalChain([claImportente, 'optionalAccess', _30 => _30.id]),
+          fkClassificacao: _optionalChain([claImportente, 'optionalAccess', _46 => _46.id]),
           fkUsuarioExecutor: req.usuario.id,
           arquivado: false,
           fkStatus: {
             [Op.or]: [
-              _optionalChain([statusAberto, 'optionalAccess', _31 => _31.id]),
-              _optionalChain([statusIniciado, 'optionalAccess', _32 => _32.id]),
-              _optionalChain([statusPlanejado, 'optionalAccess', _33 => _33.id]),
-              _optionalChain([statusPendente, 'optionalAccess', _34 => _34.id]),
-              _optionalChain([statusParado, 'optionalAccess', _35 => _35.id])
+              _optionalChain([statusAberto, 'optionalAccess', _47 => _47.id]),
+              _optionalChain([statusIniciado, 'optionalAccess', _48 => _48.id]),
+              _optionalChain([statusPlanejado, 'optionalAccess', _49 => _49.id]),
+              _optionalChain([statusPendente, 'optionalAccess', _50 => _50.id]),
+              _optionalChain([statusParado, 'optionalAccess', _51 => _51.id])
             ]
           }
         }
@@ -817,16 +1241,16 @@ class AtividadeController {
           }
         ],
         where: {
-          fkClassificacao: _optionalChain([claCircunstancial, 'optionalAccess', _36 => _36.id]),
+          fkClassificacao: _optionalChain([claCircunstancial, 'optionalAccess', _52 => _52.id]),
           fkUsuarioExecutor: req.usuario.id,
           arquivado: false,
           fkStatus: {
             [Op.or]: [
-              _optionalChain([statusAberto, 'optionalAccess', _37 => _37.id]),
-              _optionalChain([statusIniciado, 'optionalAccess', _38 => _38.id]),
-              _optionalChain([statusPlanejado, 'optionalAccess', _39 => _39.id]),
-              _optionalChain([statusPendente, 'optionalAccess', _40 => _40.id]),
-              _optionalChain([statusParado, 'optionalAccess', _41 => _41.id])
+              _optionalChain([statusAberto, 'optionalAccess', _53 => _53.id]),
+              _optionalChain([statusIniciado, 'optionalAccess', _54 => _54.id]),
+              _optionalChain([statusPlanejado, 'optionalAccess', _55 => _55.id]),
+              _optionalChain([statusPendente, 'optionalAccess', _56 => _56.id]),
+              _optionalChain([statusParado, 'optionalAccess', _57 => _57.id])
             ]
           }
         }
@@ -851,16 +1275,16 @@ class AtividadeController {
           }
         ],
         where: {
-          fkClassificacao: _optionalChain([claNaoDef, 'optionalAccess', _42 => _42.id]),
+          fkClassificacao: _optionalChain([claNaoDef, 'optionalAccess', _58 => _58.id]),
           fkUsuarioExecutor: req.usuario.id,
           arquivado: false,
           fkStatus: {
             [Op.or]: [
-              _optionalChain([statusAberto, 'optionalAccess', _43 => _43.id]),
-              _optionalChain([statusIniciado, 'optionalAccess', _44 => _44.id]),
-              _optionalChain([statusPlanejado, 'optionalAccess', _45 => _45.id]),
-              _optionalChain([statusPendente, 'optionalAccess', _46 => _46.id]),
-              _optionalChain([statusParado, 'optionalAccess', _47 => _47.id])
+              _optionalChain([statusAberto, 'optionalAccess', _59 => _59.id]),
+              _optionalChain([statusIniciado, 'optionalAccess', _60 => _60.id]),
+              _optionalChain([statusPlanejado, 'optionalAccess', _61 => _61.id]),
+              _optionalChain([statusPendente, 'optionalAccess', _62 => _62.id]),
+              _optionalChain([statusParado, 'optionalAccess', _63 => _63.id])
             ]
           }
         }
@@ -920,8 +1344,8 @@ class AtividadeController {
           fkUsuarioExecutor: req.usuario.id,
           [Op.or]: [
             { arquivado: true },
-            { fkStatus: _optionalChain([statusConcluido, 'optionalAccess', _48 => _48.id]) },
-            { fkStatus: _optionalChain([statusCancelado, 'optionalAccess', _49 => _49.id]) }
+            { fkStatus: _optionalChain([statusConcluido, 'optionalAccess', _64 => _64.id]) },
+            { fkStatus: _optionalChain([statusCancelado, 'optionalAccess', _65 => _65.id]) }
           ]
         }
       })
@@ -966,7 +1390,7 @@ class AtividadeController {
         ],
         order: [['createdAt', 'DESC']],
         where: {
-          '$Area.fkUnidade$': _optionalChain([area, 'optionalAccess', _50 => _50.fkUnidade]),
+          '$Area.fkUnidade$': _optionalChain([area, 'optionalAccess', _66 => _66.fkUnidade]),
           [Op.or]: [
             { '$Status.nome$': 'Iniciado' },
             { '$Status.nome$': 'Aberto' },
@@ -1014,7 +1438,7 @@ class AtividadeController {
         ],
         order: [['createdAt', 'DESC']],
         where: {
-          '$Area.fkUnidade$': _optionalChain([area, 'optionalAccess', _51 => _51.fkUnidade]),
+          '$Area.fkUnidade$': _optionalChain([area, 'optionalAccess', _67 => _67.fkUnidade]),
           [Op.or]: [
             { '$Status.nome$': 'Iniciado' },
             { '$Status.nome$': 'Aberto' },
@@ -1062,7 +1486,7 @@ class AtividadeController {
         ],
         order: [['createdAt', 'DESC']],
         where: {
-          '$Usuario.fkArea$': _optionalChain([area, 'optionalAccess', _52 => _52.id])
+          '$Usuario.fkArea$': _optionalChain([area, 'optionalAccess', _68 => _68.id])
 
         }
       })
@@ -1203,7 +1627,7 @@ class AtividadeController {
         order: [['createdAt', 'DESC']],
         where: {
           // fkArea: req.usuario.fkArea ,
-          '$Area.fkUnidade$': _optionalChain([area, 'optionalAccess', _53 => _53.fkUnidade]),
+          '$Area.fkUnidade$': _optionalChain([area, 'optionalAccess', _69 => _69.fkUnidade]),
 
           [Op.or]: [
             { fkUsuarioExecutor: pesquisa },
@@ -1260,7 +1684,7 @@ class AtividadeController {
           // "$Area.fkUnidade$": area?.fkUnidade,
           fkStatus: pesquisa,
 
-          [Op.or]: [{ '$Usuario.fkArea$': _optionalChain([area, 'optionalAccess', _54 => _54.id]) }]
+          [Op.or]: [{ '$Usuario.fkArea$': _optionalChain([area, 'optionalAccess', _70 => _70.id]) }]
         }
       })
 
@@ -1289,11 +1713,11 @@ class AtividadeController {
       let whereCustum = {
         pessoal: false,
         fkUsuarioExecutor: null,
-        '$Area.fkUnidade$': _optionalChain([area, 'optionalAccess', _55 => _55.fkUnidade])
+        '$Area.fkUnidade$': _optionalChain([area, 'optionalAccess', _71 => _71.fkUnidade])
       }
 
       if (req.usuario.Perfil.nome == _perfilutils2.default.Coordenador) {
-        whereCustum = { ...whereCustum, '$Area.id$': _optionalChain([area, 'optionalAccess', _56 => _56.id]) }
+        whereCustum = { ...whereCustum, '$Area.id$': _optionalChain([area, 'optionalAccess', _72 => _72.id]) }
       }
 
       const registros = await _atividademodel2.default.findAll({
@@ -1357,7 +1781,7 @@ class AtividadeController {
         order: [['createdAt', 'DESC']],
         where: {
           fkUsuarioExecutor: req.usuario.id,
-          fkStatus: _optionalChain([status, 'optionalAccess', _57 => _57.id])
+          fkStatus: _optionalChain([status, 'optionalAccess', _73 => _73.id])
         }
       })
 
@@ -1457,4 +1881,4 @@ class AtividadeController {
   }
 }
 
-exports.default = new AtividadeController()
+exports. default = new AtividadeController()

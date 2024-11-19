@@ -111,6 +111,37 @@ class ArquivoController  {
     }
   }
 
+  async createApi(req, res, next) {
+    try {
+      const { fkAtividade, nomeArquivo, hash } = req.body
+      console.log(JSON.stringify(req.body))
+
+      const registro = await _arquivomodel2.default.create({
+        nome: nomeArquivo,
+        nomeApresentacao: nomeArquivo,
+        caminho:nomeArquivo,
+        fkAtividade,
+        hash
+      })
+
+
+     
+      res.status(200).json({ data: registro , message: 'Documento Anexado com sucesso, clique em voltar para o chamado.' })
+     
+    } catch (err) {
+      console.log(err)
+      if (typeof err.errors !== 'undefined') {
+        res.status(401).json({ message: err.errors[0].message })
+      } else if (typeof err.message !== 'undefined') {
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
+      }
+    }
+  }
+
+
+
   //   async createMp4(req: any, res: Response, next: NextFunction): Promise<any> {
   //     try {
   //         // Verifica se há arquivos enviados

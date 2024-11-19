@@ -20,7 +20,7 @@ _process2.default.on('uncaughtException', (err, origin) => {
   )
 })
 
-const PORT = 3354
+const PORT = 3355
 const HOST = '0.0.0.0'
 
 _server2.default.listen(PORT, HOST, () => {

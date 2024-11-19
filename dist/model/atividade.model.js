@@ -6,7 +6,6 @@ var _areamodel = require('./area.model'); var _areamodel2 = _interopRequireDefau
 var _usuariomodel = require('./usuario.model'); var _usuariomodel2 = _interopRequireDefault(_usuariomodel);
 var _statusmodel = require('./status.model'); var _statusmodel2 = _interopRequireDefault(_statusmodel);
 
-
 class Atividade extends _sequelize.Model {
   
   
@@ -23,7 +22,6 @@ class Atividade extends _sequelize.Model {
 
   
   
-   
   
   
   
@@ -38,6 +36,15 @@ class Atividade extends _sequelize.Model {
   
   
   
+  
+  
+  
+  
+  
+  
+  
+
+  // Novos campos
   
   
   
@@ -55,7 +62,8 @@ Atividade.init({
   id: {
     type: _sequelize.DataTypes.UUID,
     allowNull: false,
-    primaryKey: true
+    primaryKey: true,
+    defaultValue: _uuidv4.uuid.call(void 0, )
   },
   titulo: {
     type: _sequelize.DataTypes.TEXT,
@@ -69,7 +77,6 @@ Atividade.init({
     type: _sequelize.DataTypes.TEXT,
     allowNull: true
   },
-
   cnpj: {
     type: _sequelize.DataTypes.TEXT,
     allowNull: true
@@ -98,43 +105,32 @@ Atividade.init({
     type: _sequelize.DataTypes.TEXT,
     allowNull: true
   },
-
-
-
-
-
-
-  indicacao : {
+  indicacao: {
     type: _sequelize.DataTypes.TEXT,
     allowNull: true
   },
-  centroCusto : {
+  centroCusto: {
     type: _sequelize.DataTypes.STRING,
     allowNull: true
   },
-
-  informacoes : {
+  informacoes: {
     type: _sequelize.DataTypes.TEXT,
     allowNull: true
   },
-
-
   medida: {
     type: _sequelize.DataTypes.TEXT,
     allowNull: true
   },
-  
   eletro: {
     type: _sequelize.DataTypes.TEXT,
     allowNull: true
   },
-
   material: {
     type: _sequelize.DataTypes.TEXT,
     allowNull: true
   },
   protocolo: {
-    type: _sequelize.DataTypes.TEXT,
+    type: _sequelize.DataTypes.STRING,
     allowNull: false
   },
   detalhes: {
@@ -158,19 +154,15 @@ Atividade.init({
     allowNull: false,
     defaultValue: false
   },
-
   editar: {
     type: _sequelize.DataTypes.BOOLEAN,
     allowNull: false,
     defaultValue: false
   },
-
-
   dimensao: {
     type: _sequelize.DataTypes.TEXT,
     allowNull: true
   },
-
   fkUsuarioSolicitante: {
     type: _sequelize.DataTypes.UUID,
     allowNull: false
@@ -206,22 +198,48 @@ Atividade.init({
   updatedAt: {
     type: _sequelize.DataTypes.DATE,
     allowNull: false
+  },
+  // Novos campos
+  nomeProjeto: {
+    type: _sequelize.DataTypes.TEXT,
+    allowNull: true
+  },
+  qtdPlanilha: {
+    type: _sequelize.DataTypes.STRING,
+    allowNull: true
+  },
+  prazoInicioAtividades: {
+    type: _sequelize.DataTypes.DATE,
+    allowNull: true
+  },
+  anoMr: {
+    type: _sequelize.DataTypes.STRING,
+    allowNull: true
+  },
+  segmentoMr: {
+    type: _sequelize.DataTypes.STRING,
+    allowNull: true
+  },
+  parametrizacaoCadastro: {
+    type: _sequelize.DataTypes.TEXT,
+    allowNull: true
   }
 }, {
   sequelize: _connection2.default,
   tableName: 'atividade',
   hooks: {
-    async beforeValidate (instance) {
-      instance.id = _uuidv4.uuid.call(void 0, )
+    beforeValidate(instance) {
+      if (!instance.id) {
+        instance.id = _uuidv4.uuid.call(void 0, );
+      }
     }
   }
-})
+});
 
-Atividade.belongsTo(_classificacaomodel2.default, { foreignKey: 'fkClassificacao' })
+Atividade.belongsTo(_classificacaomodel2.default, { foreignKey: 'fkClassificacao' });
+Atividade.belongsTo(_usuariomodel2.default, { foreignKey: 'fkUsuarioSolicitante' });
+Atividade.belongsTo(_usuariomodel2.default, { foreignKey: 'fkUsuarioExecutor', as: 'UsuarioExecutor' });
+Atividade.belongsTo(_statusmodel2.default, { foreignKey: 'fkStatus' });
+Atividade.belongsTo(_areamodel2.default, { foreignKey: 'fkArea' });
 
-Atividade.belongsTo(_usuariomodel2.default, { foreignKey: 'fkUsuarioSolicitante' })
-Atividade.belongsTo(_usuariomodel2.default, { foreignKey: 'fkUsuarioExecutor', as: 'UsuarioExecutor' })
-Atividade.belongsTo(_statusmodel2.default, { foreignKey: 'fkStatus' })
-Atividade.belongsTo(_areamodel2.default, { foreignKey: 'fkArea' })
-
-exports. default = Atividade
+exports. default = Atividade;
