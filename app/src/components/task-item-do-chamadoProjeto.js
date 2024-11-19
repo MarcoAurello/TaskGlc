@@ -527,7 +527,7 @@ const TaskItemDoChamadoProjeto = (props) => {
 
 
                     {
-                        categoria === "Cadastro de Projeto até 10 items" ?
+                        categoria === "Cadastro de Projeto até 10 itens" ?
 
                             <div>
                                 <div style={{
@@ -606,7 +606,7 @@ const TaskItemDoChamadoProjeto = (props) => {
                     }
 
                     {
-                       categoria === "Cadastro de MR a partir de 30 items" ?
+                       categoria === "Cadastro de MR a partir de 30 itens" ?
 
                             <div>
                                 <div style={{

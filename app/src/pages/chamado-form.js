@@ -901,8 +901,8 @@ const AtividadeForm = (props) => {
     { label: "Cadastro Produto Consumo", value: "Cadastro Produto Consumo" },
     { label: "Cadastro de Produto Patrimônio", value: "Cadastro de Produto Patrimônio" },
     { label: "Cadastro de Fornecedor", value: "Cadastro de Fornecedor" },
-    { label: "Cadastro de Projeto até 10 items", value: "Cadastro de Projeto até 10 items" },
-    { label: "Cadastro de MR a partir de 30 items", value: "Cadastro de MR a partir de 30 items" },
+    { label: "Cadastro de Projeto até 10 itens", value: "Cadastro de Projeto até 10 itens" },
+    { label: "Cadastro de MR a partir de 30 itens", value: "Cadastro de MR a partir de 30 itens" },
     { label: "Ajuste de parametrização de cadastro", value: "Ajuste de parametrização de cadastro" }
   ];
 
@@ -1677,8 +1677,8 @@ const AtividadeForm = (props) => {
 
 
 
-      {id && (categoria1 === 'Cadastro de Projeto até 10 items' ||
-        categoria1 === 'Cadastro de MR a partir de 30 items' ||
+      {id && (categoria1 === 'Cadastro de Projeto até 10 itens' ||
+        categoria1 === 'Cadastro de MR a partir de 30 itens' ||
         categoria1 === 'Ajuste de parametrização de cadastro'
       )
 
@@ -2091,7 +2091,7 @@ const AtividadeForm = (props) => {
                     <TextField
                       size="small"
                       fullWidth
-                      label="Descreva o ajuste"
+                      label="DESCREVA QUAL ALTERAÇÃO OU PARAMETRIZAÇÃO QUE DESEJA FAZER NO CADASTRO"
                       variant="outlined"
                       value={parametrizacao}
                       onChange={e => setParametrizacao(e.target.value)}
@@ -2142,6 +2142,10 @@ const AtividadeForm = (props) => {
                         }
                       }}
                     /> */}
+                   <b
+                   style={{color:'red'}}>
+                     CASO NÃO CONSIGA DESCREVER, ENVIE UM PRINT DA TELA DE ERRO
+                    </b>
                     <div style={{ borderRadius: '8px', overflow: 'hidden', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
                       <a>
                         <img
@@ -2203,7 +2207,7 @@ const AtividadeForm = (props) => {
 
 
 
-              {tipoCadastro === "Cadastro de MR a partir de 30 items" ?
+              {tipoCadastro === "Cadastro de MR a partir de 30 itens" ?
                 <div>
 
                   <div>
@@ -2302,11 +2306,11 @@ const AtividadeForm = (props) => {
                   </div>
 
                   <p></p>
-                  {tipoCadastro === 'Cadastro de MR a partir de 30 items'
+                  {tipoCadastro === 'Cadastro de MR a partir de 30 itens'
                     ?
                     <Button variant="contained"
                       disabled={botaoDesabilitado}
-                      onClick={() => { setModalSaveMR(true) }}>{'Solicitar cadastro  MR a partir de 30 items'}</Button>
+                      onClick={() => { setModalSaveMR(true) }}>{'Solicitar cadastro  MR a partir de 30 itens'}</Button>
 
                     :
 
@@ -2324,7 +2328,7 @@ const AtividadeForm = (props) => {
 
 
 
-              {tipoCadastro === "Cadastro de Projeto até 10 items" ?
+              {tipoCadastro === "Cadastro de Projeto até 10 itens" ?
                 <div>
 
                   <div>
@@ -2360,7 +2364,7 @@ const AtividadeForm = (props) => {
                     <TextField
                       size="small"
 
-                      label="Quantidade de Items"
+                      label="Quantidade de Itens"
                       variant="outlined"
                       value={qtdItems}
 
@@ -2468,7 +2472,7 @@ const AtividadeForm = (props) => {
                   </div>
 
                   <p></p>
-                  {tipoCadastro === 'Cadastro de Projeto até 10 items'
+                  {tipoCadastro === 'Cadastro de Projeto até 10 itens'
                     ?
                     <Button variant="contained"
                       disabled={botaoDesabilitado}
@@ -2495,9 +2499,7 @@ const AtividadeForm = (props) => {
 
 
 
-                    <label style={{ color: 'blue' }}>
-                      CNPJ -  Apenas numeros ex : 23251256555
-                    </label>
+                    
                     <div>
 
                       <TextField
@@ -2533,9 +2535,7 @@ const AtividadeForm = (props) => {
 
 
 
-                    <label style={{ color: 'blue' }}>
-                      Razão Social
-                    </label>
+                    
                     <div>
 
                       <TextField
@@ -2571,9 +2571,7 @@ const AtividadeForm = (props) => {
 
 
 
-                    <label style={{ color: 'blue' }}>
-                      Email
-                    </label>
+                   
                     <div>
 
                       <TextField
@@ -2609,9 +2607,7 @@ const AtividadeForm = (props) => {
 
 
 
-                    <label style={{ color: 'blue' }}>
-                      Telefone
-                    </label>
+                   
                     <div>
 
                       <TextField
@@ -2647,9 +2643,7 @@ const AtividadeForm = (props) => {
 
 
 
-                    <label style={{ color: 'blue' }}>
-                      Grupo de Pagamento
-                    </label>
+                    
                     <div>
 
                       <TextField
@@ -2685,9 +2679,7 @@ const AtividadeForm = (props) => {
 
 
 
-                    <label style={{ color: 'blue' }}>
-                      Filial
-                    </label>
+                   
                     <div>
 
                       <TextField
@@ -2723,9 +2715,7 @@ const AtividadeForm = (props) => {
 
 
 
-                    <label style={{ color: 'blue' }}>
-                      Grupo de Cotação
-                    </label>
+                  
                     <div>
 
                       <TextField
@@ -3399,7 +3389,7 @@ Eficiência: 80 PLUS Bronze
                       <b>
                         Definir o Grupo de Pagamento
                       </b><br></br>
-                      Em caso de duvida entre em contado com a Contabilidade
+                      Em caso de duvida entre em contato com a Contabilidade
                       <TextField size="small" fullWidth label="Ex: 332310119M - Locação de Bem móvel - PJ" variant="outlined" value={centroCusto} onChange={e => setCentroCusto(e.target.value)}
                         style={{
                           backgroundColor: '#fff',
@@ -4027,8 +4017,8 @@ Eficiência: 80 PLUS Bronze
               }
 
               {tipoCadastro === 'Cadastro de Fornecedor' ||
-                tipoCadastro === 'Cadastro de Projeto até 10 items' ||
-                tipoCadastro === 'Cadastro de MR a partir de 30 items' ||
+                tipoCadastro === 'Cadastro de Projeto até 10 itens' ||
+                tipoCadastro === 'Cadastro de MR a partir de 30 itens' ||
                 tipoCadastro === 'Ajuste de parametrização de cadastro'
                 ?
                 ''
@@ -4257,7 +4247,7 @@ Eficiência: 80 PLUS Bronze
                 <DialogTitle id="alert-dialog-title">Campos não preenchidos</DialogTitle>
                 {qtdItems === "" &&
                   <div style={{ color: "red" }}>
-                    Quantidade de items<br />
+                    Quantidade de itens<br />
                   </div>
                 }
 
@@ -4306,7 +4296,7 @@ Eficiência: 80 PLUS Bronze
         <DialogContent>
           {
             <div>
-              {tipoCadastro === 'Cadastro de MR a partir de 30 items' ?
+              {tipoCadastro === 'Cadastro de MR a partir de 30 itens' ?
 
                 <Button variant="contained" onClick={() => onSaveMr()}>Enviar </Button>
                 : ''}

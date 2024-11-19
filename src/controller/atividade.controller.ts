@@ -353,7 +353,7 @@ class AtividadeController implements IController {
 
         const atividade = await Atividade.create({
           id: uuid(),
-          titulo: 'Cadastro de Projeto até 10 items',
+          titulo: 'Cadastro de Projeto até 10 itens',
           fkClassificacao: classificacao?.id,
           protocolo: proc,
           fkArea: area?.id,
@@ -552,12 +552,12 @@ class AtividadeController implements IController {
 
         const atividade = await Atividade.create({
           id: uuid(),
-          titulo: 'Cadastro de MR a partir de 30 items',
+          titulo: 'Cadastro de MR a partir de 30 itens',
           fkClassificacao: classificacao?.id,
           protocolo: proc,
           fkArea: area?.id,
           prazoInicioAtividades: dataInicio,
-          conteudo:'Cadastro de MR a partir de 30 items',
+          conteudo:'Cadastro de MR a partir de 30 itens',
         
           anoMr: anoMr,
           segmentoMr: segmentoMr,
