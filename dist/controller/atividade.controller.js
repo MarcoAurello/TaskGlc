@@ -175,6 +175,7 @@ class AtividadeController  {
       } else {
 
         const atividade = await _atividademodel2.default.create({
+          id: uuid(),
           titulo,
           forma,
           material,
@@ -750,6 +751,7 @@ class AtividadeController  {
       if(parametrizacao){
 
         const atividade = await _atividademodel2.default.create({
+          id: uuid(),
           titulo: 'Ajuste de parametrização de cadastro',
           fkClassificacao: _optionalChain([classificacao, 'optionalAccess', _24 => _24.id]),
           protocolo: proc,

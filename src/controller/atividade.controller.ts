@@ -175,6 +175,7 @@ class AtividadeController implements IController {
       } else {
 
         const atividade = await Atividade.create({
+          id: uuid(),
           titulo,
           forma,
           material,
@@ -750,6 +751,7 @@ class AtividadeController implements IController {
       if(parametrizacao){
 
         const atividade = await Atividade.create({
+          id: uuid(),
           titulo: 'Ajuste de parametrização de cadastro',
           fkClassificacao: classificacao?.id,
           protocolo: proc,
