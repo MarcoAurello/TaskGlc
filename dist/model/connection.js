@@ -10,7 +10,7 @@ require("dotenv").config({
 //   logging: false
 // })
 
-const sequelize = new Sequelize("TaskManagerGlc", "sa", "local", {
+const sequelize = new Sequelize("TaskManagerGlcDEV", "sa", "local", {
   host: "10.9.8.74",
   dialect: "mssql",
   logging: false,

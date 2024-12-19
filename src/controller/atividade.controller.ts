@@ -175,6 +175,7 @@ class AtividadeController implements IController {
       } else {
 
         const atividade = await Atividade.create({
+          id: uuid(),
           titulo,
           forma,
           material,
@@ -750,6 +751,7 @@ class AtividadeController implements IController {
       if(parametrizacao){
 
         const atividade = await Atividade.create({
+          id: uuid(),
           titulo: 'Ajuste ou parametrização de cadastro',
           fkClassificacao: classificacao?.id,
           protocolo: proc,
@@ -772,6 +774,7 @@ class AtividadeController implements IController {
         })
 
         await Mensagem.create({
+          id: uuid(),
           conteudo: parametrizacao,
           fkAtividade: atividade.id,
           fkUsuario: req.usuario.id
@@ -818,6 +821,7 @@ class AtividadeController implements IController {
 
         await TimeLineStatus.create(
           {
+            id: uuid(),
             fkStatus: status?.id,
             fkAtividade: atividadeSalva?.id,
             fkUsuario: req.usuario.id
