@@ -751,7 +751,9 @@ class AtividadeController implements IController {
       if(parametrizacao){
 
         const atividade = await Atividade.create({
+
           id: uuid(),
+          
           titulo: 'Ajuste ou parametrização de cadastro',
           fkClassificacao: classificacao?.id,
           protocolo: proc,

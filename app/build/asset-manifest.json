@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/taskmanagerglc/static/css/main.58b088eb.css",
-    "main.js": "/taskmanagerglc/static/js/main.acb85e7d.js",
+    "main.js": "/taskmanagerglc/static/js/main.e5f5ebfc.js",
     "static/media/bg-image.jpg": "/taskmanagerglc/static/media/bg-image.0e0ad057005b58bf5364.jpg",
     "static/media/plan.png": "/taskmanagerglc/static/media/plan.cd0207ccbd520f87cbff.png",
     "static/media/coment.png": "/taskmanagerglc/static/media/coment.4259d0ef58ca348c94d8.png",
@@ -9,10 +9,10 @@
     "static/media/ane.png": "/taskmanagerglc/static/media/ane.db4d95ea4351ffdaadbd.png",
     "index.html": "/taskmanagerglc/index.html",
     "main.58b088eb.css.map": "/taskmanagerglc/static/css/main.58b088eb.css.map",
-    "main.acb85e7d.js.map": "/taskmanagerglc/static/js/main.acb85e7d.js.map"
+    "main.e5f5ebfc.js.map": "/taskmanagerglc/static/js/main.e5f5ebfc.js.map"
   },
   "entrypoints": [
     "static/css/main.58b088eb.css",
-    "static/js/main.acb85e7d.js"
+    "static/js/main.e5f5ebfc.js"
   ]
 }
