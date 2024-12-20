@@ -903,7 +903,7 @@ const AtividadeForm = (props) => {
     { label: "Cadastro de Fornecedor", value: "Cadastro de Fornecedor" },
     { label: "Cadastro de Projeto até 10 itens", value: "Cadastro de Projeto até 10 itens" },
     { label: "Cadastro de MR a partir de 30 itens", value: "Cadastro de MR a partir de 30 itens" },
-    { label: "Ajuste ou parametrização de cadastro", value: "Ajuste ou parametrização de cadastro" }
+    { label: "Ajuste de parametrização de cadastro", value: "Ajuste de parametrização de cadastro" }
   ];
 
   const handleUpload = () => {
@@ -1679,7 +1679,7 @@ const AtividadeForm = (props) => {
 
       {id && (categoria1 === 'Cadastro de Projeto até 10 itens' ||
         categoria1 === 'Cadastro de MR a partir de 30 itens' ||
-        categoria1 === 'Ajuste ou parametrização de cadastro'
+        categoria1 === 'Ajuste de parametrização de cadastro'
       )
 
         ? <div >
@@ -2083,7 +2083,7 @@ const AtividadeForm = (props) => {
               </div> */}
               <p></p>
 
-              {tipoCadastro === "Ajuste ou parametrização de cadastro" ?
+              {tipoCadastro === "Ajuste de parametrização de cadastro" ?
                 <div>
 
                   <div>
@@ -2188,7 +2188,7 @@ const AtividadeForm = (props) => {
                   </div>
 
                   <p></p>
-                  {tipoCadastro === 'Ajuste ou parametrização de cadastro'
+                  {tipoCadastro === 'Ajuste de parametrização de cadastro'
                     ?
                     <Button variant="contained"
                       disabled={botaoDesabilitado}
@@ -4022,7 +4022,7 @@ Eficiência: 80 PLUS Bronze
               {tipoCadastro === 'Cadastro de Fornecedor' ||
                 tipoCadastro === 'Cadastro de Projeto até 10 itens' ||
                 tipoCadastro === 'Cadastro de MR a partir de 30 itens' ||
-                tipoCadastro === 'Ajuste ou parametrização de cadastro'
+                tipoCadastro === 'Ajuste de parametrização de cadastro'
                 ?
                 ''
                 :
@@ -4304,7 +4304,7 @@ Eficiência: 80 PLUS Bronze
                 <Button variant="contained" onClick={() => onSaveMr()}>Enviar </Button>
                 : ''}
 
-              {tipoCadastro === 'Ajuste ou parametrização de cadastro' ?
+              {tipoCadastro === 'Ajuste de parametrização de cadastro' ?
 
                 <Button variant="contained" onClick={() => onSaveAjuste()}>Enviar</Button>
 

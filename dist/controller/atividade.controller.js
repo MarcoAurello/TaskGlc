@@ -755,7 +755,7 @@ class AtividadeController  {
           id: uuid(),
 =======
 >>>>>>> 703db4414ef55820591ff54be6df1367eea63954
-          titulo: 'Ajuste ou parametrização de cadastro',
+          titulo: 'Ajuste de parametrização de cadastro',
           fkClassificacao: _optionalChain([classificacao, 'optionalAccess', _24 => _24.id]),
           protocolo: proc,
           fkArea: _optionalChain([area, 'optionalAccess', _25 => _25.id]),

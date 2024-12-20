@@ -663,7 +663,7 @@ const TaskItemDoChamadoProjeto = (props) => {
                     }
 
                     {
-                       categoria === "Ajuste ou parametrização de cadastro" ?
+                       categoria === "Ajuste de parametrização de cadastro" ?
 
                             <div>
                                 <div style={{

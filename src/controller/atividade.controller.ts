@@ -754,7 +754,7 @@ class AtividadeController implements IController {
 
           id: uuid(),
           
-          titulo: 'Ajuste ou parametrização de cadastro',
+          titulo: 'Ajuste de parametrização de cadastro',
           fkClassificacao: classificacao?.id,
           protocolo: proc,
           fkArea: area?.id,
