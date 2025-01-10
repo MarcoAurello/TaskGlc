@@ -1,18 +1,27 @@
 {
   "files": {
-    "main.css": "/taskmanagerglc/static/css/main.58b088eb.css",
-    "main.js": "/taskmanagerglc/static/js/main.afc69008.js",
-    "static/media/bg-image.jpg": "/taskmanagerglc/static/media/bg-image.0e0ad057005b58bf5364.jpg",
-    "static/media/plan.png": "/taskmanagerglc/static/media/plan.cd0207ccbd520f87cbff.png",
-    "static/media/coment.png": "/taskmanagerglc/static/media/coment.4259d0ef58ca348c94d8.png",
-    "static/media/anexo.jpg": "/taskmanagerglc/static/media/anexo.df511409ae8d5775d3d3.jpg",
-    "static/media/ane.png": "/taskmanagerglc/static/media/ane.db4d95ea4351ffdaadbd.png",
+    "main.css": "/taskmanagerglc/static/css/main.7bfdbf3e.chunk.css",
+    "main.js": "/taskmanagerglc/static/js/main.665c870a.chunk.js",
+    "main.js.map": "/taskmanagerglc/static/js/main.665c870a.chunk.js.map",
+    "runtime-main.js": "/taskmanagerglc/static/js/runtime-main.7001a50a.js",
+    "runtime-main.js.map": "/taskmanagerglc/static/js/runtime-main.7001a50a.js.map",
+    "static/js/2.89edf802.chunk.js": "/taskmanagerglc/static/js/2.89edf802.chunk.js",
+    "static/js/2.89edf802.chunk.js.map": "/taskmanagerglc/static/js/2.89edf802.chunk.js.map",
     "index.html": "/taskmanagerglc/index.html",
-    "main.58b088eb.css.map": "/taskmanagerglc/static/css/main.58b088eb.css.map",
-    "main.afc69008.js.map": "/taskmanagerglc/static/js/main.afc69008.js.map"
+    "precache-manifest.31166268de36b65e04c5707d4fefa051.js": "/taskmanagerglc/precache-manifest.31166268de36b65e04c5707d4fefa051.js",
+    "service-worker.js": "/taskmanagerglc/service-worker.js",
+    "static/css/main.7bfdbf3e.chunk.css.map": "/taskmanagerglc/static/css/main.7bfdbf3e.chunk.css.map",
+    "static/js/2.89edf802.chunk.js.LICENSE.txt": "/taskmanagerglc/static/js/2.89edf802.chunk.js.LICENSE.txt",
+    "static/media/ane.png": "/taskmanagerglc/static/media/ane.92e5e1af.png",
+    "static/media/anexo.jpg": "/taskmanagerglc/static/media/anexo.e507e3af.jpg",
+    "static/media/bg-image.jpg": "/taskmanagerglc/static/media/bg-image.0ce5de5e.jpg",
+    "static/media/coment.png": "/taskmanagerglc/static/media/coment.e9adf1b3.png",
+    "static/media/plan.png": "/taskmanagerglc/static/media/plan.97c3486a.png"
   },
   "entrypoints": [
-    "static/css/main.58b088eb.css",
-    "static/js/main.afc69008.js"
+    "static/js/runtime-main.7001a50a.js",
+    "static/js/2.89edf802.chunk.js",
+    "static/css/main.7bfdbf3e.chunk.css",
+    "static/js/main.665c870a.chunk.js"
   ]
 }
