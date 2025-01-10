@@ -165,7 +165,7 @@ const AtividadeEditar = (props) => {
             {logged && logged.id === fksolicitante ?
              <div>
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <TextField size="small" fullWidth label="Centro De Custo" variant="outlined" value={centroCusto} onChange={e => getCentroCusto(e.target.value)}
+                <TextField size="small" fullWidth label="Grupo de Pagamento" variant="outlined" value={centroCusto} onChange={e => getCentroCusto(e.target.value)}
                     style={{
                         backgroundColor: '#fff',
                         borderRadius: 4

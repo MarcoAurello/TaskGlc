@@ -241,18 +241,7 @@ const AtividadeForm = (props) => {
   }
 
 
-  useEffect(() => {
-
-
-    if (uploadResult) {
-      setHash(uploadResult.data.hash)
-      salvarArquivo()
-
-    }
-
-
-
-  }, [uploadResult])
+  
 
 
   const salvarArquivo = () => {
@@ -269,7 +258,10 @@ const AtividadeForm = (props) => {
       body: JSON.stringify({
 
         nomeArquivo: uploadResult.data.nome,
-        hash: uploadResult.data.hash
+        hash: uploadResult.data.hash,
+        id
+        
+        
 
       })
 
@@ -285,6 +277,7 @@ const AtividadeForm = (props) => {
             // setOpenMessageDialog(true)
           } else if (status === 200) {
             alert(data.message)
+            window.location.reload()
 
           }
         }).catch(err => setOpenLoadingDialog(true))
@@ -1548,12 +1541,18 @@ const AtividadeForm = (props) => {
   };
 
   useEffect(() => {
+    if (uploadResult) {
+      setHash(uploadResult.data.hash)
+      salvarArquivo()
+
+    }
+
     // Verifique se há um item com nome "GLC" e defina o valor selecionado
     const glcItem = unidade.find(item => item.nome === 'GLC' && item.receber === true);
     if (glcItem) {
       setFkUnidade(glcItem.id);
     }
-  }, [unidade]);
+  }, [unidade,uploadResult]);
 
 
 
@@ -1671,7 +1670,30 @@ const AtividadeForm = (props) => {
 
         }
       </div>
+      {status === 'Concluido' ?
+            <div>
+              {mensagens.map((item, index) => (
+                <div key={index} style={{
+                  borderTop: '1px solid #e0e0e0',
+                  padding: 10,
+                  background: '#FFFFE0',
+                  borderRadius: 10,
 
+                  border: '2px solid #e0e0e0',
+                }}>
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <b style={{ fontSize: 12 }}>{item.Usuario ? item.Usuario.nome : ''}</b>
+                      <b style={{ fontSize: 12 }}>{new Date(item.createdAt).toLocaleString()}</b>
+                    </div>
+                  </div>
+                  <div>
+                    <p style={{ wordBreak: "break-all" }}>{item.conteudo}</p>
+                  </div>
+                </div>
+              ))}
+
+            </div> : ''}
 
 
 
@@ -1723,12 +1745,33 @@ const AtividadeForm = (props) => {
             loggedEmail={logged ? logged.email : ''}
             editar={editar}
             onToggle={handleToggle}
+           />
+          {categoria1 && categoria1 ==='Cadastro de Projeto até 10 itens'?
+      
+          
+            <div style={{ borderRadius: '8px', overflow: 'hidden', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+                      <a>
+                        <img
+                          src={anexo}
+                          height={70}
+                          onClick={() => setOpenMsg2(true)}
+                          style={{ cursor: 'pointer', border: '2px solid #ddd', borderRadius: '8px', transition: 'transform 0.3s ease' }}
+                          onMouseEnter={e => e.target.style.transform = 'scale(1.05)'}
+                          onMouseLeave={e => e.target.style.transform = 'scale(1)'}
+                        />
+                      </a>
+               </div>
+
+
+             
 
 
 
+              
+          
+          :''}
 
-
-          />
+          
 
 
           {arquivoDoChamado.length > 0 && (

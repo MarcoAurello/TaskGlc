@@ -113,16 +113,18 @@ class ArquivoController implements IController {
 
   async createApi(req: any, res: Response, next: NextFunction): Promise<any> {
     try {
-      const { fkAtividade, nomeArquivo, hash } = req.body
-      console.log(JSON.stringify(req.body))
+      const { id, nomeArquivo, hash } = req.body
+      console.log('mama africa' +JSON.stringify(req.body))
 
       const registro = await Arquivo.create({
         nome: nomeArquivo,
         nomeApresentacao: nomeArquivo,
         caminho:nomeArquivo,
-        fkAtividade,
+        fkAtividade:id,
         hash
       })
+
+     
 
 
      

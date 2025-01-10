@@ -531,7 +531,7 @@ const TaskItemDoChamado = (props) => {
 
 
 
-                        <b>Centro de Custo:</b><br></br>
+                        <b>Grupo de Pagamento:</b><br></br>
                         {props.centroCusto ?
                             <div style={{ color: '#2E7D32', wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}>
 
