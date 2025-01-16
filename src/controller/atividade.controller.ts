@@ -1402,7 +1402,7 @@ class AtividadeController implements IController {
             { '$Status.nome$': 'Aberto' },
             { '$Status.nome$': 'Parado' },
             { '$Status.nome$': 'Planejado para Iniciar' },
-            { '$Status.nome$': 'Pendente' }
+            { '$Status.nome$': 'Pendênte' }
             // { '$Status.nome$': 'Concluido' },
 
           ]

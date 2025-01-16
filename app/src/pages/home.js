@@ -553,7 +553,7 @@ const Home = (props) => {
               >
                 <Typography style={{ marginLeft: '10px', fontSize: '30px' }}>
                   <div>
-                    <b>Minhas Pendências</b>: 
+                    <b>Minhas Pendencias</b>: 
                     
                     <b style={{fontSize:'20', color:'red'}}>
                       {meuSetor && logged? meuSetor.filter(item => item.fkUsuarioExecutor === logged.id
