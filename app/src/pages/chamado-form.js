@@ -277,7 +277,7 @@ const AtividadeForm = (props) => {
             // setOpenMessageDialog(true)
           } else if (status === 200) {
             alert(data.message)
-            window.location.reload()
+            // window.location.reload()
 
           }
         }).catch(err => setOpenLoadingDialog(true))
