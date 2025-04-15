@@ -1,0 +1,253 @@
+import React, { useEffect, useState } from "react";
+import styled from 'styled-components'
+import {
+    Alert, Avatar, Box, Button, Checkbox, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel,
+    FormGroup, FormLabel, Hidden, Grid, IconButton, InputLabel, MenuItem, Radio, RadioGroup, Select, Switch, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination,
+    TableRow, TextField, Tooltip
+} from "@mui/material";
+import Paper from '@mui/material/Paper';
+import TablePaginationActions from "@mui/material/TablePagination/TablePaginationActions";
+import EditIcon from '@mui/icons-material/Edit';
+import AddIcon from '@mui/icons-material/Add';
+import moment from 'moment';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+const getCookie = require('../utils/getCookie')
+
+const PageContainer = styled.div`
+  margin: 16px;
+  padding: 32px;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  box-shadow: 0px 0px 20px -18px #424242;
+`
+
+const PesquisarNotas = (props) => {
+    const { logged } = props
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(100);
+    const [openLoadingDialog, setOpenLoadingDialog] = useState(false);
+    const [modalCadContrato, setModalCadContrato] = useState(false);
+    const [newSetor, setNewSetor] = useState('');
+    const [nomeEmpresa, setNomeEmpresa] = useState('');
+    const [registros, setRegistros] = useState([]);
+    const [valorContrato, setValorContrato] = useState('')
+    const [inicioVigencia, setInicioVigencia] = useState('')
+    const [finalVigencia, setFinalVigencia] = useState('')
+    const [setor, setSetor] = useState([]);
+    const [message, setMessage] = useState('');
+    const [descricaoEmpresa, setDescricaoEmpresa] = useState('');
+    const [parcelasEmpresa, setParcelasEmpresa] = useState('');
+    const [openMessageDialog, setOpenMessageDialog] = useState(false)
+    const [keyword, setKeyword] = useState('')
+
+
+    useEffect(() => {
+
+
+
+
+        carregarRegistros()
+    }, [])
+
+    function carregarRegistros() {
+        console.log('📦 Iniciando carregamento de registros...')
+        // setOpenLoadingDialog(true)
+
+        const token = getCookie('_token_task_manager')
+        console.log('🔐 Token recuperado:', token)
+
+        const params = {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }
+
+        const url = `${process.env.REACT_APP_DOMAIN_API}/api/atividade/`
+        console.log('🌐 URL da requisição:', url)
+
+        fetch(url, params)
+            .then(response => {
+                const { status } = response
+                console.log('📥 Status da resposta:', status)
+
+                response.json()
+                    .then(data => {
+                        console.log('📊 Dados recebidos:', data)
+                        setOpenLoadingDialog(false)
+
+                        if (status === 401) {
+                            console.warn('🔐 Token inválido ou expirado:', data.message)
+                            setMessage(data.message)
+                            //   setOpenMessageDialog(true)
+                        } else if (status === 200) {
+                            console.log('✅ Registros carregados com sucesso:', data.data.length)
+                            setRegistros(data.data)
+                        } else {
+                            console.warn('⚠️ Resposta inesperada:', status, data)
+                        }
+                    })
+                    .catch(err => {
+                        console.error('❌ Erro ao converter resposta JSON:', err)
+                        // setOpenLoadingDialog(true)
+                    })
+            })
+            .catch(error => {
+                console.error('❌ Erro na requisição fetch:', error)
+                setOpenLoadingDialog(false)
+                setMessage('Erro ao buscar registros.')
+                // setOpenMessageDialog(true)
+            })
+    }
+
+
+
+
+
+    const [searchText, setSearchText] = useState('');
+
+
+    const handleChangePage = (event, newPage) => setPage(newPage);
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
+
+    const filteredRows = registros.filter((row) =>
+        row.titulo.toLowerCase().includes(searchText.toLowerCase()) ||
+        row.Contrato?.nomeEmpresa.toLowerCase().includes(searchText.toLowerCase()) ||
+        row?.Usuario?.Area?.Unidade?.nome.toLowerCase().includes(searchText.toLowerCase())
+    );
+
+
+
+    return (
+        <PageContainer>
+            <Button
+                size="small"
+                variant="contained"
+                startIcon={<ArrowBackIcon />}
+                onClick={() =>
+                    (window.location.href = `${process.env.REACT_APP_DOMAIN}/pagamentoDeNotas`)
+                }
+                style={{
+                    marginBottom: 16,
+                    borderRadius: 6,
+
+                    textTransform: 'none',
+                    fontSize: 13,
+                }}
+            >
+                Voltar
+            </Button>
+
+            <TextField
+                label="Pesquise pelo numero da nota, empresa ou setor"
+                variant="outlined"
+                size="small"
+                fullWidth
+                sx={{ mb: 2 }}
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+            />
+            <h3>Todas as Notas Fiscais Cadastradas</h3>
+
+            <TableContainer sx={{ borderRadius: 2, boxShadow: 3 }}>
+                <Table sx={{ minWidth: 650 }} aria-label="tabela de contratos">
+                    <TableHead sx={{ backgroundColor: '#1e1e2f' }}>
+                        <TableRow>
+                            <TableCell sx={{ color: '#ffffff', fontWeight: 'bold' }}>Numero NF</TableCell>
+                            <TableCell sx={{ color: '#ffffff', fontWeight: 'bold' }}>Contrato</TableCell>
+                            <TableCell sx={{ color: '#ffffff', fontWeight: 'bold' }}>Setor</TableCell>
+                            <TableCell sx={{ color: '#ffffff', fontWeight: 'bold' }}></TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
+                            <TableRow
+                                key={row.id}
+                                hover
+                                sx={{
+                                    transition: 'background-color 0.2s',
+                                    '&:hover': { backgroundColor: '#f5f5f5' }
+                                }}
+                            >
+                                <TableCell>{row.titulo}</TableCell>
+                                <TableCell>{row.Contrato?.nomeEmpresa}</TableCell>
+                                <TableCell>{row?.Usuario?.Area?.Unidade?.nome}</TableCell>
+                                <TableCell>
+                                    {logged && (logged.usuarioAtesto === true || logged.usuarioSolicitante === true)
+                                        &&
+                                        logged.Area.Unidade.nome === row?.Usuario?.Area?.Unidade?.nome
+                                        ?
+                                        <Tooltip title="Editar">
+
+
+
+
+                                            <IconButton
+                                                onClick={() =>
+                                                    (window.location.href = `${process.env.REACT_APP_DOMAIN}/nfCadastro/${row.id}/edit/`)
+                                                }
+                                            >
+                                                <EditIcon color="primary" />
+                                            </IconButton>
+                                        </Tooltip>
+
+                                        : ''}
+
+                                    {logged && (logged.usuarioPagamento === true || logged.usuarioCarteiraFiscal === true)
+                                        
+                                        ?
+                                        <Tooltip title="Editar">
+
+
+
+
+                                            <IconButton
+                                                onClick={() =>
+                                                    (window.location.href = `${process.env.REACT_APP_DOMAIN}/nfCadastro/${row.id}/edit/`)
+                                                }
+                                            >
+                                                <EditIcon color="primary" />
+                                            </IconButton>
+                                        </Tooltip>
+
+                                        : ''}
+
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                    <TableFooter>
+                        <TableRow>
+                            <TablePagination
+                                rowsPerPageOptions={[5, 10, 25, { label: 'Todos', value: -1 }]}
+                                colSpan={6}
+                                count={filteredRows.length}
+                                rowsPerPage={rowsPerPage}
+                                page={page}
+                                labelRowsPerPage='Linhas por Página'
+                                SelectProps={{ inputProps: { 'aria-label': 'Linhas por Página' }, native: true }}
+                                onPageChange={handleChangePage}
+                                onRowsPerPageChange={handleChangeRowsPerPage}
+                            />
+                        </TableRow>
+                    </TableFooter>
+                </Table>
+            </TableContainer>
+
+            <Dialog open={openLoadingDialog}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: 120, height: 120 }}>
+                    <CircularProgress />
+                </div>
+            </Dialog>
+
+
+
+
+        </PageContainer>
+    );
+};
+
+export default PesquisarNotas;

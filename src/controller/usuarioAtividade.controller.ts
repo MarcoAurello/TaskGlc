@@ -44,21 +44,38 @@ class UsuarioAtividadeController implements IController {
       const { fkClassificacao, fkAtividade, fkUsuario, ativo } = req.body
       const emailExecutor = await Usuario.findOne({ where: { id: fkUsuario } })
 
+      
+      
       const registro = await UsuarioAtividade.create({
         fkUsuario,
         fkAtividade,
         ativo
       })
 
-      await Atividade.update(
-        {
-          fkClassificacao,
-          fkUsuarioExecutor: fkUsuario
-        },
-        {
-          where: { id: fkAtividade }
-        }
-      )
+      if (fkClassificacao){
+
+        await Atividade.update(
+          {
+            fkClassificacao,
+            fkUsuarioExecutor: fkUsuario
+          },
+          {
+            where: { id: fkAtividade }
+          }
+        )
+      }else{
+        await Atividade.update(
+          {
+      
+            fkUsuarioExecutor: fkUsuario
+          },
+          {
+            where: { id: fkAtividade }
+          }
+        )
+
+      }
+
 
       const msg = `
       <b>Chegou atividade para você.<br>

@@ -117,7 +117,7 @@ const MinhasAtividades = (props) => {
       usuarioDemandanteTelefone={item.Usuario.telefone}
       usuarioDemandanteEmail={item.Usuario.email}
       tela={'minhas'}
-      fkUsuarioSoloicitante={item.fkUsuarioSolicitante}
+      fkUsuarioSoloicitante={item.fkUsuario}
       fklogado={props.logged.id}
       categoria={item.categoria}
       Arquivado={item.arquivado}

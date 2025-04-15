@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import styled from 'styled-components'
 import {
   Alert, Avatar, Box, Button, Checkbox, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel,
-  FormGroup, FormLabel, Hidden,Grid, IconButton, InputLabel, MenuItem, Radio, RadioGroup, Select, Switch, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination,
+  FormGroup, FormLabel, Hidden, Grid, IconButton, InputLabel, MenuItem, Radio, RadioGroup, Select, Switch, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination,
   TableRow, TextField, Tooltip
 } from "@mui/material";
 
@@ -13,8 +13,6 @@ import TaskItemDoChamadoProjeto from "../components/task-item-do-chamadoProjeto"
 import PerfilUtils from "../utils/perfil.utils";
 import MessageIcon from '@mui/icons-material/Message';
 import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
-
-
 
 
 
@@ -75,8 +73,8 @@ const AtividadeForm = (props) => {
   const [status, setStatus] = useState('')
   const [valueArea, setValueArea] = useState('')
   const [valueUnidade, setValueUnidade] = useState('')
-  const [usuarioSolicitante, setUsuarioSolicitante] = useState('')
-  const [emailUsuarioSolicitante, setEmailUsuarioSolicitante] = useState('')
+  const [Usuario, setUsuario] = useState('')
+  const [emailUsuario, setEmailUsuario] = useState('')
   const [telefoneSolicitante, setTelefoneSolicitante] = useState('')
   const [setorSolicitante, setSetorSolicitante] = useState('')
   const [categoriaChamado, setCategoriaChamado] = useState('')
@@ -149,7 +147,7 @@ const AtividadeForm = (props) => {
   const [emailExecutor, getEmailExecutor] = useState('')
   const [telefoneExecutor, getTelefoneExecutor] = useState('')
   const [fkDemandante, setFkDemandante] = useState('')
-  const [fkUsuarioSolicitante, setFkUsuarioSolicitante] = useState('')
+  const [fkUsuario, setFkUsuario] = useState('')
   const [fkExecutor, getFkExecutor] = useState('')
   const [categoria, setCategoria] = useState('')
   const [arquivo, setArquivo] = useState(null)
@@ -241,7 +239,7 @@ const AtividadeForm = (props) => {
   }
 
 
-  
+
 
 
   const salvarArquivo = () => {
@@ -260,8 +258,8 @@ const AtividadeForm = (props) => {
         nomeArquivo: uploadResult.data.nome,
         hash: uploadResult.data.hash,
         id
-        
-        
+
+
 
       })
 
@@ -344,8 +342,8 @@ const AtividadeForm = (props) => {
               setSetorSolicitante(data.data.Usuario.Area.Unidade.nome)
               setValueUnidade(data.data.Area.Unidade.nome)
               getFkUnidadeExecutor(data.data.Area.fkUnidade)
-              setUsuarioSolicitante(data.data.Usuario.nome)
-              setEmailUsuarioSolicitante(data.data.Usuario.email)
+              setUsuario(data.data.Usuario.nome)
+              setEmailUsuario(data.data.Usuario.email)
               setTelefoneSolicitante(data.data.Usuario.telefone)
               setFkDemandante(data.data.fkDemandante)
               setCategoriaChamado(data.data.categoria)
@@ -355,9 +353,9 @@ const AtividadeForm = (props) => {
               setEditar(data.data.editar)
               setFkAreaDemandada(data.data.fkArea)
               setIdChamado(data.data.id)
-              setFkUsuarioSolicitante(data.data.fkUsuarioSolicitante)
+              setFkUsuario(data.data.fkUsuario)
               getNomeExecutor(data.data.UsuarioExecutor.nome)
-            
+
               getEmailExecutor(data.data.UsuarioExecutor.email)
               getTelefoneExecutor(data.data.UsuarioExecutor.telefone)
               getFkExecutor(data.data.UsuarioExecutor.id)
@@ -780,7 +778,7 @@ const AtividadeForm = (props) => {
         tempoEstimado,
         idAtividade: id,
         logged: props.logged.id
-        // email: emailUsuarioSolicitante,
+        // email: emailUsuario,
         // titulo: title,
 
 
@@ -1262,7 +1260,7 @@ const AtividadeForm = (props) => {
       body: JSON.stringify({
         fkAtividade: id,
         conteudo,
-        email: emailUsuarioSolicitante,
+        email: emailUsuario,
         emailExecutor: emailExecutor,
         caminho,
         listaDeArquivosEnviados
@@ -1552,7 +1550,7 @@ const AtividadeForm = (props) => {
     if (glcItem) {
       setFkUnidade(glcItem.id);
     }
-  }, [unidade,uploadResult]);
+  }, [unidade, uploadResult]);
 
 
 
@@ -1625,7 +1623,7 @@ const AtividadeForm = (props) => {
         }
 
 
-        {logged && status !='Concluido' && (logged.id === fkUsuarioSolicitante || logged.id === fkExecutor)
+        {logged && status != 'Concluido' && (logged.id === fkUsuario || logged.id === fkExecutor)
           ?
 
           <div>
@@ -1671,29 +1669,29 @@ const AtividadeForm = (props) => {
         }
       </div>
       {status === 'Concluido' ?
-            <div>
-              {mensagens.map((item, index) => (
-                <div key={index} style={{
-                  borderTop: '1px solid #e0e0e0',
-                  padding: 10,
-                  background: '#FFFFE0',
-                  borderRadius: 10,
+        <div>
+          {mensagens.map((item, index) => (
+            <div key={index} style={{
+              borderTop: '1px solid #e0e0e0',
+              padding: 10,
+              background: '#FFFFE0',
+              borderRadius: 10,
 
-                  border: '2px solid #e0e0e0',
-                }}>
-                  <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                      <b style={{ fontSize: 12 }}>{item.Usuario ? item.Usuario.nome : ''}</b>
-                      <b style={{ fontSize: 12 }}>{new Date(item.createdAt).toLocaleString()}</b>
-                    </div>
-                  </div>
-                  <div>
-                    <p style={{ wordBreak: "break-all" }}>{item.conteudo}</p>
-                  </div>
+              border: '2px solid #e0e0e0',
+            }}>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <b style={{ fontSize: 12 }}>{item.Usuario ? item.Usuario.nome : ''}</b>
+                  <b style={{ fontSize: 12 }}>{new Date(item.createdAt).toLocaleString()}</b>
                 </div>
-              ))}
+              </div>
+              <div>
+                <p style={{ wordBreak: "break-all" }}>{item.conteudo}</p>
+              </div>
+            </div>
+          ))}
 
-            </div> : ''}
+        </div> : ''}
 
 
 
@@ -1718,11 +1716,11 @@ const AtividadeForm = (props) => {
             area={valueArea}
             nomeP={nomeDoProjeto ? nomeDoProjeto : ''}
             classificacao={classificacao}
-            solicitante={usuarioSolicitante}
+            solicitante={Usuario}
             status={status}
             gparametrizacao={gparametrizacao}
             titulo={title}
-            emailUsuarioSolicitante={emailUsuarioSolicitante}
+            emailUsuario={emailUsuario}
             telefoneSolicitante={telefoneSolicitante}
             setorSol={valueUnidade}
             nomeExecutor={nomeExecutor}
@@ -1745,33 +1743,33 @@ const AtividadeForm = (props) => {
             loggedEmail={logged ? logged.email : ''}
             editar={editar}
             onToggle={handleToggle}
-           />
-          {categoria1 && categoria1 ==='Cadastro de Projeto até 10 itens'?
-      
-          
+          />
+          {categoria1 && categoria1 === 'Cadastro de Projeto até 10 itens' ?
+
+
             <div style={{ borderRadius: '8px', overflow: 'hidden', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
-                      <a>
-                        <img
-                          src={anexo}
-                          height={70}
-                          onClick={() => setOpenMsg2(true)}
-                          style={{ cursor: 'pointer', border: '2px solid #ddd', borderRadius: '8px', transition: 'transform 0.3s ease' }}
-                          onMouseEnter={e => e.target.style.transform = 'scale(1.05)'}
-                          onMouseLeave={e => e.target.style.transform = 'scale(1)'}
-                        />
-                      </a>
-               </div>
-
-
-             
+              <a>
+                <img
+                  src={anexo}
+                  height={70}
+                  onClick={() => setOpenMsg2(true)}
+                  style={{ cursor: 'pointer', border: '2px solid #ddd', borderRadius: '8px', transition: 'transform 0.3s ease' }}
+                  onMouseEnter={e => e.target.style.transform = 'scale(1.05)'}
+                  onMouseLeave={e => e.target.style.transform = 'scale(1)'}
+                />
+              </a>
+            </div>
 
 
 
-              
-          
-          :''}
 
-          
+
+
+
+
+            : ''}
+
+
 
 
           {arquivoDoChamado.length > 0 && (
@@ -1835,10 +1833,10 @@ const AtividadeForm = (props) => {
             categoria={categoria1}
             area={valueArea}
             classificacao={classificacao}
-            solicitante={usuarioSolicitante}
+            solicitante={Usuario}
             status={status}
             titulo={title}
-            emailUsuarioSolicitante={emailUsuarioSolicitante}
+            emailUsuario={emailUsuario}
             telefoneSolicitante={telefoneSolicitante}
             setorSol={valueUnidade}
             nomeExecutor={nomeExecutor}
@@ -1880,10 +1878,10 @@ const AtividadeForm = (props) => {
             categoria={categoria1}
             area={valueArea}
             classificacao={classificacao}
-            solicitante={usuarioSolicitante}
+            solicitante={Usuario}
             status={status}
             titulo={title}
-            emailUsuarioSolicitante={emailUsuarioSolicitante}
+            emailUsuario={emailUsuario}
             telefoneSolicitante={telefoneSolicitante}
             setorSol={valueUnidade}
             nomeExecutor={nomeExecutor}
@@ -1963,7 +1961,7 @@ const AtividadeForm = (props) => {
           <TextField size="small" fullWidth label="Status" disabled variant="outlined" value={status} />
         </div> : ''}
         {id ? <div style={{ flex: 1, marginBottom: 16 }}>
-          <TextField size="small" fullWidth label="Solicitante" disabled variant="outlined" value={usuarioSolicitante} />
+          <TextField size="small" fullWidth label="Solicitante" disabled variant="outlined" value={Usuario} />
         </div> : ''} */}
         {/* {id ? <div style={{ flex: 1, marginBottom: 16 }}>
           <TextField size="small" fullWidth label="Chamado" disabled variant="outlined" value={title} />
@@ -1989,7 +1987,7 @@ const AtividadeForm = (props) => {
                   color: '#333',
                 }}
               >
-               Ola {props.logged.nome},{' '}<br></br>
+                Ola {props.logged.nome},{' '}<br></br>
                 <span style={{ fontWeight: 'bold', fontStyle: 'italic' }}>
                   solicite cadastro de:
                 </span>{' '}
@@ -2001,30 +1999,30 @@ const AtividadeForm = (props) => {
                 <span style={{ fontWeight: '500' }}>fornecedores</span>.
               </div>
               <div>
-      <div>
-      <Grid container spacing={2}>
-        <Grid item xs={12} style={{ marginBottom: '16px' }}>
-          <h3>Tipo de Cadastro Selecionado: {tipoCadastro}</h3>
-        </Grid>
+                <div>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} style={{ marginBottom: '16px' }}>
+                      <h3>Tipo de Cadastro Selecionado: {tipoCadastro}</h3>
+                    </Grid>
 
-        {buttonData.map((button) => (
-          <Grid item xs={4} key={button.value}>
-            <Button
-              variant="contained"
-              fullWidth
-              onClick={() => handleButtonClick(button.value)}
-              style={{
-                backgroundColor: selectedButton === button.value ? '#FFD700' : '#1976D2', // Amarelo se selecionado, azul se não
-                color: selectedButton === button.value ? '#333' : '#fff' // Texto mais escuro se selecionado, branco se não
-              }}
-            >
-              {button.label}
-            </Button>
-          </Grid>
-        ))}
-      </Grid>
-    </div>
-    </div>
+                    {buttonData.map((button) => (
+                      <Grid item xs={4} key={button.value}>
+                        <Button
+                          variant="contained"
+                          fullWidth
+                          onClick={() => handleButtonClick(button.value)}
+                          style={{
+                            backgroundColor: selectedButton === button.value ? '#FFD700' : '#1976D2', // Amarelo se selecionado, azul se não
+                            color: selectedButton === button.value ? '#333' : '#fff' // Texto mais escuro se selecionado, branco se não
+                          }}
+                        >
+                          {button.label}
+                        </Button>
+                      </Grid>
+                    ))}
+                  </Grid>
+                </div>
+              </div>
               {/* <div
       style={{
         fontSize: '15px',
@@ -2185,9 +2183,9 @@ const AtividadeForm = (props) => {
                         }
                       }}
                     /> */}
-                   <b
-                   style={{color:'red'}}>
-                     CASO NÃO CONSIGA DESCREVER, ENVIE UM PRINT DA TELA DE ERRO
+                    <b
+                      style={{ color: 'red' }}>
+                      CASO NÃO CONSIGA DESCREVER, ENVIE UM PRINT DA TELA DE ERRO
                     </b>
                     <div style={{ borderRadius: '8px', overflow: 'hidden', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
                       <a>
@@ -2542,35 +2540,35 @@ const AtividadeForm = (props) => {
 
 
 
-                    
+
                     <div>
 
-                    <TextField
-  size="small"
-  fullWidth
-  label="CNPJ"
-  variant="outlined"
-  value={cnpj}
-  onChange={e => {
-    const newValue = e.target.value.replace(/\D/g, ''); // Remove qualquer caractere que não seja um número
-    setCnpj(newValue);
-  }}
-  style={{
-    backgroundColor: '#fff',
-    borderRadius: 4
-  }}
-  InputLabelProps={{ style: { color: '#888' } }}
-  InputProps={{
-    style: {
-      color: '#333'
-    },
-    classes: {
-      notchedOutline: {
-        borderColor: '#ccc'
-      }
-    }
-  }}
-/>
+                      <TextField
+                        size="small"
+                        fullWidth
+                        label="CNPJ"
+                        variant="outlined"
+                        value={cnpj}
+                        onChange={e => {
+                          const newValue = e.target.value.replace(/\D/g, ''); // Remove qualquer caractere que não seja um número
+                          setCnpj(newValue);
+                        }}
+                        style={{
+                          backgroundColor: '#fff',
+                          borderRadius: 4
+                        }}
+                        InputLabelProps={{ style: { color: '#888' } }}
+                        InputProps={{
+                          style: {
+                            color: '#333'
+                          },
+                          classes: {
+                            notchedOutline: {
+                              borderColor: '#ccc'
+                            }
+                          }
+                        }}
+                      />
 
                     </div>
 
@@ -2581,7 +2579,7 @@ const AtividadeForm = (props) => {
 
 
 
-                    
+
                     <div>
 
                       <TextField
@@ -2617,7 +2615,7 @@ const AtividadeForm = (props) => {
 
 
 
-                   
+
                     <div>
 
                       <TextField
@@ -2653,7 +2651,7 @@ const AtividadeForm = (props) => {
 
 
 
-                   
+
                     <div>
 
                       <TextField
@@ -2689,7 +2687,7 @@ const AtividadeForm = (props) => {
 
 
 
-                    
+
                     <div>
 
                       <TextField
@@ -2725,7 +2723,7 @@ const AtividadeForm = (props) => {
 
 
 
-                   
+
                     <div>
 
                       <TextField
@@ -2761,7 +2759,7 @@ const AtividadeForm = (props) => {
 
 
 
-                  
+
                     <div>
 
                       <TextField
@@ -4386,7 +4384,7 @@ Eficiência: 80 PLUS Bronze
           <InputLabel id="demo-select-small"><b>Unidade</b></InputLabel>
           {valueUnidade}
           <InputLabel id="demo-select-small"><b>Solicitante</b></InputLabel>
-          {usuarioSolicitante}
+          {Usuario}
 
           <hr></hr>
 

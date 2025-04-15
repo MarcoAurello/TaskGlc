@@ -321,7 +321,16 @@ const TaskItem = (props) => {
 
         </div>
 
+        {props.categoria === 'notaFiscal'
+        ?
         <div style={{ marginTop: 16, display: 'flex', flexDirection: 'row' }}>
+        <Button variant="contained" size="small" startIcon={<PlayCircleIcon />} onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/nfCadastro/${idChamado}/edit`}>
+          detalhes do chamado
+        </Button>
+        </div>
+      :
+
+      <div style={{ marginTop: 16, display: 'flex', flexDirection: 'row' }}>
           <Button variant="contained" size="small" startIcon={<PlayCircleIcon />} onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${idChamado}/edit`}>
             detalhes do chamado
           </Button>
@@ -341,6 +350,9 @@ const TaskItem = (props) => {
           }
           {/* <LinearProgress color="success" variant="determinate" value={100} /> */}
         </div>
+      }
+
+        
       </div>
 
     </div>

@@ -96,6 +96,10 @@ module.exports = {
         type: Sequelize.UUID,
         allowNull: true
       },
+      fkContrato: {
+        type: Sequelize.UUID,
+        allowNull: true
+      },
       fkArea: {
         type: Sequelize.UUID,
         allowNull: false
@@ -125,7 +129,7 @@ module.exports = {
         allowNull: true
       },
 
-      fkUsuarioSolicitante: {
+      fkUsuario: {
         type: Sequelize.UUID,
         allowNull: false
       },
@@ -179,6 +183,11 @@ module.exports = {
       },
       segmentoMr: {
         type: Sequelize.STRING,
+        allowNull: true
+      },
+
+      valorNota: {
+        type: Sequelize.FLOAT,
         allowNull: true
       },
       parametrizacaoCadastro: {

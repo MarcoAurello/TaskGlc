@@ -12,7 +12,7 @@ const TaskItemDoChamadoProjeto = (props) => {
     const { nome, logged, nomeP, prazoInicioAtividades, qtdPlanilha } = props;
 
     const { protocolo, unidade, area, classificacao, solicitante,
-        status, titulo, emailUsuarioSolicitante, telefoneSolicitante, setorSol,
+        status, titulo, emailUsuario, telefoneSolicitante, setorSol,
         nomeExecutor, anoMr, segmentoMr, emailExecutor, telefoneExecutor, categoria, nomePojeto,
         setorSolicitante, gparametrizacao, forma, medida, cor, loggedEmail,
         indicacao, informacoes, material, eletro, dimensao, editar, centroCusto, id } = props
@@ -352,7 +352,7 @@ const TaskItemDoChamadoProjeto = (props) => {
 
                                     }}>
                                         <b style={{ fontWeight: '600', marginRight: '8px' }}>Email:</b>
-                                        <span>{props.emailUsuarioSolicitante}</span>
+                                        <span>{props.emailUsuario}</span>
                                     </div>
 
                                     <div style={{

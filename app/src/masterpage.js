@@ -8,6 +8,12 @@ import Home from "./pages/home";
 import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Usuario from "./pages/usuario";
+import PagamentoDeNotas from "./pages/pagamentoDeNotas";
+import PesquisarNotas from "./pages/pesquisarNotas"; 
+import CadastroUsuarioNF from "./pages/cadastroUsuarioNf";
+
+
+
 import ArrowCircleLeftIcon from "@mui/icons-material/ArrowCircleLeft";
 import MinhasAtividades from "./pages/minhasAtividades";
 import CampaignIcon from "@mui/icons-material/Campaign";
@@ -83,6 +89,7 @@ import Unidade from "./pages/unidade";
 import UnidadeForm from "./pages/unidade-form";
 import Area from "./pages/area";
 import AreaForm from "./pages/area-form";
+import ContratoForm from "./pages/contrato-form";
 import PerfilUtils from "./utils/perfil.utils";
 import UserNotificationItem from "./components/user-notification-item";
 import AtividadeNotificationItem from "./components/atividade-notification-item";
@@ -91,9 +98,15 @@ import AtividadeRecebidaNotificationItem from "./components/atividadeRecebida-no
 import Equipe from "./pages/equipe";
 import ValidarUsuarioForm from "./pages/validar-usuario-form";
 import AtividadeForm from "./pages/chamado-form";
+import ContratoFormul from "./pages/contratoForm";
+
+import NfForm from "./pages/nfForm";
+
 import GroupsIcon from '@mui/icons-material/Groups';
 
 import AtividadeEditar from "./pages/atividadeEditar";
+import Contratos from "./pages/contratos";
+import ContratosSetor from "./pages/contratosSetor";
 import TaskItem from "./components/task-item";
 import TodasAsPendencias from "./pages/todasAsPendencias";
 import SolicitadasSetor from "./pages/solicitadasSetor";
@@ -194,7 +207,7 @@ const Masterpage = (props) => {
     setModalOpen(true);
   };
 
-  
+
   // const handleCloseModal1 = () => {
   //   setModalOpen(false);
   //   setAtividadesExecutor([]);
@@ -494,7 +507,7 @@ const Masterpage = (props) => {
     carregarSolicitacaoAtividades();
 
 
-  
+
   }, []);
 
   const salvarDadosPrimeiroAcesso = () => {
@@ -843,18 +856,18 @@ const Masterpage = (props) => {
 
                 <div>
 
-                  
+
                   {executores.map((executorNome) => (
                     <button className="executor-button" key={executorNome} onClick={() => handleExecutorClick(executorNome)}>
-                      {executorNome?
-                      
-                          <b>
+                      {executorNome ?
 
-                            {executorNome}
-                          </b>
-                      
-                      
-                      :'Não possui Executor'} ({meuSetor.filter(a => a?.UsuarioExecutor?.nome === executorNome).length})
+                        <b>
+
+                          {executorNome}
+                        </b>
+
+
+                        : 'Não possui Executor'} ({meuSetor.filter(a => a?.UsuarioExecutor?.nome === executorNome).length})
                     </button>
                   ))}<hr></hr>
 
@@ -863,18 +876,18 @@ const Masterpage = (props) => {
                       <h1 style={{ color: 'black' }}>Atividades de {executorSelecionado}</h1>
                       <>
                         {atividadesExecutor.map((atividade) => (
-                         
-                          
-                         <div>
-                          <button
-                            onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${atividade.id}/edit`}
-                            className="executor-button"
-                          >{atividade?.titulo} - {atividade?.Status?.nome}
 
-                          </button><hr></hr>
 
-                         </div>
-                          
+                          <div>
+                            <button
+                              onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${atividade.id}/edit`}
+                              className="executor-button"
+                            >{atividade?.titulo} - {atividade?.Status?.nome}
+
+                            </button><hr></hr>
+
+                          </div>
+
 
 
                         ))}
@@ -892,7 +905,7 @@ const Masterpage = (props) => {
                 id="panel1a-header"
               >
                 <Typography style={{ fontSize: 14, color: "#2c73d1" }}>
-                  Recebidas por Status <BallotIcon/>
+                  Recebidas por Status <BallotIcon />
                 </Typography>
               </AccordionSummary>
               <AccordionDetails>
@@ -907,21 +920,21 @@ const Masterpage = (props) => {
 
                   {modalOpen && (
                     <Modal onClose={handleCloseModal}>
-                      
+
                       <>
                         {atividadesStatus.map((atividade) => (
 
                           <div>
-                             <button
-                            onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${atividade.id}/edit`}
-                            className="executor-button"
-                          >{atividade?.titulo} - {atividade?.Status?.nome} - {atividade?.UsuarioExecutor?.nome}
+                            <button
+                              onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${atividade.id}/edit`}
+                              className="executor-button"
+                            >{atividade?.titulo} - {atividade?.Status?.nome} - {atividade?.UsuarioExecutor?.nome}
 
-                          </button><hr></hr>
+                            </button><hr></hr>
 
 
                           </div>
-                         
+
 
 
                         ))}<hr></hr>
@@ -1090,7 +1103,7 @@ const Masterpage = (props) => {
               </AccordionDetails>
             </Accordion>
 
-           
+
 
             {/* <ListItem disablePadding>
                   <ListItemButton onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/recebidasSetor/`}>
@@ -1111,7 +1124,7 @@ const Masterpage = (props) => {
             </ListItem> */}
 
             {logged &&
-               
+
               logged?.Area?.Unidade?.nome === 'GLC' &&
               (
 
@@ -1121,9 +1134,9 @@ const Masterpage = (props) => {
 
               )
               ? (
-              <>
-                <Divider />
-                {/* <ListItem disablePadding>
+                <>
+                  <Divider />
+                  {/* <ListItem disablePadding>
                   <ListItemButton>
                     <ListItemIcon>
                       <PhonelinkSetupIcon />
@@ -1136,7 +1149,7 @@ const Masterpage = (props) => {
                     />
                   </ListItemButton>
                 </ListItem> */}
-                {/* <ListItem disablePadding>
+                  {/* <ListItem disablePadding>
                   <ListItemButton>
                     <ListItemIcon>
                       <ContactMailIcon />
@@ -1149,36 +1162,36 @@ const Masterpage = (props) => {
                     />
                   </ListItemButton>
                 </ListItem> */}
-                <ListItem disablePadding>
-                  <ListItemButton>
-                    <ListItemIcon>
-                      <HomeWorkIcon />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary="Cadastrar Unidade"
-                      onClick={() =>
-                        (window.location.href = `${process.env.REACT_APP_DOMAIN}/unidade`)
-                      }
-                    />
-                  </ListItemButton>
-                </ListItem>
-                <ListItem disablePadding>
-                  <ListItemButton>
-                    <ListItemIcon>
-                      <AccountBalanceIcon />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary="Cadastrar Área"
-                      onClick={() =>
-                        (window.location.href = `${process.env.REACT_APP_DOMAIN}/area`)
-                      }
-                    />
-                  </ListItemButton>
-                </ListItem>
-              </>
-            ) : (
-              ""
-            )}
+                  <ListItem disablePadding>
+                    <ListItemButton>
+                      <ListItemIcon>
+                        <HomeWorkIcon />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary="Cadastrar Unidade"
+                        onClick={() =>
+                          (window.location.href = `${process.env.REACT_APP_DOMAIN}/unidade`)
+                        }
+                      />
+                    </ListItemButton>
+                  </ListItem>
+                  <ListItem disablePadding>
+                    <ListItemButton>
+                      <ListItemIcon>
+                        <AccountBalanceIcon />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary="Cadastrar Área"
+                        onClick={() =>
+                          (window.location.href = `${process.env.REACT_APP_DOMAIN}/area`)
+                        }
+                      />
+                    </ListItemButton>
+                  </ListItem>
+                </>
+              ) : (
+                ""
+              )}
           </List>
         </Box>
       </Drawer>
@@ -1248,15 +1261,68 @@ const Masterpage = (props) => {
 
           <Route
             exact
+            path="/contrato/:id/edit"
+            render={(props) => <ContratoFormul {...props} logged={logged} />}
+          />
+
+          <Route
+            exact
             path="/atividade/:id/editar"
             render={(props) => <AtividadeEditar {...props} logged={logged} />}
           />
 
           <Route
             exact
+            path="/contratosSetor"
+            render={(props) => <ContratosSetor {...props} logged={logged} />}
+          />
+
+          <Route
+            exact
+            path="/contratos"
+            render={(props) => <Contratos {...props} logged={logged} />}
+          />
+
+
+          <Route
+            exact
             path="/atividade/cadastro"
             render={(props) => <AtividadeForm {...props} logged={logged} />}
           />
+
+          <Route
+            exact
+            path="/nfCadastro/cadastro"
+            render={(props) => <NfForm {...props} logged={logged} />}
+          />
+
+          <Route
+            exact
+            path="/nfCadastro/:id/edit"
+            render={(props) => <NfForm {...props} logged={logged} />}
+          />
+
+          <Route
+            exact
+            path="/pagamentoDeNotas"
+            render={(props) => <PagamentoDeNotas {...props} logged={logged} />}
+          />
+
+          <Route
+            exact
+            path="/pesquisarNotas"
+            render={(props) => <PesquisarNotas {...props} logged={logged} />}
+          />
+
+          <Route
+            exact
+            path="/cadastroUsuarioNF"
+            render={(props) => <CadastroUsuarioNF {...props} logged={logged} />}
+          />
+
+
+
+
 
           <Route
             exact
@@ -1331,6 +1397,13 @@ const Masterpage = (props) => {
             path="/area/cadastro"
             render={(props) => <AreaForm {...props} logged={logged} />}
           />
+
+          <Route
+            exact
+            path="/formularioContrato"
+            render={(props) => <ContratoForm {...props} logged={logged} />}
+          />
+
 
           <Route
             exact

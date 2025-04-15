@@ -156,7 +156,7 @@ class AtividadeController  {
           fone: telefoneEmpresa,
           detalhes: conteudo,
           fkStatus: _optionalChain([status, 'optionalAccess', _6 => _6.id]),
-          fkUsuarioSolicitante: req.usuario.id,
+          fkUsuario: req.usuario.id,
           arquivado: false,
           pessoal: false,
           // fkUsuarioExecutor,
@@ -191,7 +191,7 @@ class AtividadeController  {
           eletro,
           dimensao,
           fkStatus: _optionalChain([status, 'optionalAccess', _9 => _9.id]),
-          fkUsuarioSolicitante: req.usuario.id,
+          fkUsuario: req.usuario.id,
           arquivado: false,
           pessoal: false,
           // fkUsuarioExecutor,
@@ -365,7 +365,7 @@ class AtividadeController  {
           qtdItems,
 
           fkStatus: _optionalChain([status, 'optionalAccess', _16 => _16.id]),
-          fkUsuarioSolicitante: req.usuario.id,
+          fkUsuario: req.usuario.id,
           arquivado: false,
           pessoal: false,
           // fkUsuarioExecutor,
@@ -565,7 +565,7 @@ class AtividadeController  {
           
 
           fkStatus: _optionalChain([status, 'optionalAccess', _20 => _20.id]),
-          fkUsuarioSolicitante: req.usuario.id,
+          fkUsuario: req.usuario.id,
           arquivado: false,
           pessoal: false,
           // fkUsuarioExecutor,
@@ -767,7 +767,7 @@ class AtividadeController  {
           
 
           fkStatus: _optionalChain([status, 'optionalAccess', _26 => _26.id]),
-          fkUsuarioSolicitante: req.usuario.id,
+          fkUsuario: req.usuario.id,
           arquivado: false,
           pessoal: false,
           // fkUsuarioExecutor,
@@ -898,7 +898,7 @@ class AtividadeController  {
           },
           {
             model: _usuariomodel2.default,
-            foreignKey: 'fkUsuarioSolicitante',
+            foreignKey: 'fkUsuario',
 
             include: [{ model: _areamodel2.default, include: [_unidademodel2.default] }]
           },
@@ -1040,7 +1040,7 @@ class AtividadeController  {
           },
           {
             model: _usuariomodel2.default,
-            foreignKey: 'fkUsuarioSolicitante',
+            foreignKey: 'fkUsuario',
 
             include: [{ model: _areamodel2.default, include: [_unidademodel2.default] }]
           }
@@ -1138,7 +1138,7 @@ class AtividadeController  {
           },
           {
             model: _usuariomodel2.default,
-            foreignKey: 'fkUsuarioSolicitante',
+            foreignKey: 'fkUsuario',
 
             include: [{ model: _areamodel2.default, include: [_unidademodel2.default] }]
           }
@@ -1172,7 +1172,7 @@ class AtividadeController  {
           },
           {
             model: _usuariomodel2.default,
-            foreignKey: 'fkUsuarioSolicitante',
+            foreignKey: 'fkUsuario',
 
             include: [{ model: _areamodel2.default, include: [_unidademodel2.default] }]
           }
@@ -1206,7 +1206,7 @@ class AtividadeController  {
           },
           {
             model: _usuariomodel2.default,
-            foreignKey: 'fkUsuarioSolicitante',
+            foreignKey: 'fkUsuario',
 
             include: [{ model: _areamodel2.default, include: [_unidademodel2.default] }]
           }
@@ -1240,7 +1240,7 @@ class AtividadeController  {
           },
           {
             model: _usuariomodel2.default,
-            foreignKey: 'fkUsuarioSolicitante',
+            foreignKey: 'fkUsuario',
 
             include: [{ model: _areamodel2.default, include: [_unidademodel2.default] }]
           }
@@ -1274,7 +1274,7 @@ class AtividadeController  {
           },
           {
             model: _usuariomodel2.default,
-            foreignKey: 'fkUsuarioSolicitante',
+            foreignKey: 'fkUsuario',
 
             include: [{ model: _areamodel2.default, include: [_unidademodel2.default] }]
           }
@@ -1340,7 +1340,7 @@ class AtividadeController  {
           },
           {
             model: _usuariomodel2.default,
-            foreignKey: 'fkUsuarioSolicitante',
+            foreignKey: 'fkUsuario',
 
             include: [{ model: _areamodel2.default, include: [_unidademodel2.default] }]
           }
@@ -1388,7 +1388,7 @@ class AtividadeController  {
           },
           {
             model: _usuariomodel2.default,
-            foreignKey: 'fkUsuarioSolicitante',
+            foreignKey: 'fkUsuario',
 
             include: [{ model: _areamodel2.default, include: [_unidademodel2.default] }]
           }
@@ -1436,7 +1436,7 @@ class AtividadeController  {
           },
           {
             model: _usuariomodel2.default,
-            foreignKey: 'fkUsuarioSolicitante',
+            foreignKey: 'fkUsuario',
 
             include: [{ model: _areamodel2.default, include: [_unidademodel2.default] }]
           }
@@ -1484,7 +1484,7 @@ class AtividadeController  {
           },
           {
             model: _usuariomodel2.default,
-            foreignKey: 'fkUsuarioSolicitante',
+            foreignKey: 'fkUsuario',
 
             include: [{ model: _areamodel2.default, include: [_unidademodel2.default] }]
           }
@@ -1559,7 +1559,7 @@ class AtividadeController  {
           },
           {
             model: _usuariomodel2.default,
-            foreignKey: 'fkUsuarioSolicitante',
+            foreignKey: 'fkUsuario',
 
             include: [{ model: _areamodel2.default, include: [_unidademodel2.default] }]
           }
@@ -1624,7 +1624,7 @@ class AtividadeController  {
           },
           {
             model: _usuariomodel2.default,
-            foreignKey: 'fkUsuarioSolicitante',
+            foreignKey: 'fkUsuario',
 
             include: [{ model: _areamodel2.default, include: [_unidademodel2.default] }]
           }
@@ -1678,7 +1678,7 @@ class AtividadeController  {
           },
           {
             model: _usuariomodel2.default,
-            foreignKey: 'fkUsuarioSolicitante',
+            foreignKey: 'fkUsuario',
 
             include: [{ model: _areamodel2.default, include: [_unidademodel2.default] }]
           }
@@ -1736,7 +1736,7 @@ class AtividadeController  {
           },
           {
             model: _usuariomodel2.default,
-            foreignKey: 'fkUsuarioSolicitante',
+            foreignKey: 'fkUsuario',
 
             include: [{ model: _areamodel2.default, include: [_unidademodel2.default] }]
           }
@@ -1778,7 +1778,7 @@ class AtividadeController  {
           },
           {
             model: _usuariomodel2.default,
-            foreignKey: 'fkUsuarioSolicitante',
+            foreignKey: 'fkUsuario',
 
             include: [{ model: _areamodel2.default, include: [_unidademodel2.default] }]
           }
@@ -1821,7 +1821,7 @@ class AtividadeController  {
           },
           {
             model: _usuariomodel2.default,
-            foreignKey: 'fkUsuarioSolicitante',
+            foreignKey: 'fkUsuario',
 
             include: [{ model: _areamodel2.default, include: [_unidademodel2.default] }]
           }
@@ -1829,7 +1829,7 @@ class AtividadeController  {
 
         order: [['createdAt', 'DESC']],
         where: {
-          fkUsuarioSolicitante: req.usuario.id
+          fkUsuario: req.usuario.id
         }
       })
 

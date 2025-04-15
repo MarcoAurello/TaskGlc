@@ -85,7 +85,7 @@ const AtividadeEditar = (props) => {
 
                             setCategoriaChamado(data.data.categoria)
                             setTitle(data.data.titulo)
-                            setFkSolicitante(data.data.fkUsuarioSolicitante)
+                            setFkSolicitante(data.data.fkUsuario)
                             // setCentroCusto(data.data.centroCusto)
 
                             setOpenLoadingDialog(false)

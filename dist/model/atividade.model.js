@@ -163,7 +163,7 @@ Atividade.init({
     type: _sequelize.DataTypes.TEXT,
     allowNull: true
   },
-  fkUsuarioSolicitante: {
+  fkUsuario: {
     type: _sequelize.DataTypes.UUID,
     allowNull: false
   },
@@ -237,7 +237,7 @@ Atividade.init({
 });
 
 Atividade.belongsTo(_classificacaomodel2.default, { foreignKey: 'fkClassificacao' });
-Atividade.belongsTo(_usuariomodel2.default, { foreignKey: 'fkUsuarioSolicitante' });
+Atividade.belongsTo(_usuariomodel2.default, { foreignKey: 'fkUsuario' });
 Atividade.belongsTo(_usuariomodel2.default, { foreignKey: 'fkUsuarioExecutor', as: 'UsuarioExecutor' });
 Atividade.belongsTo(_statusmodel2.default, { foreignKey: 'fkStatus' });
 Atividade.belongsTo(_areamodel2.default, { foreignKey: 'fkArea' });

@@ -78,7 +78,7 @@ const ChamadosAbertos = (props) => {
       Arquivado={item.arquivado}
       tempoEstimado={item.tempoEstimado}
       categoria={item.categoria}
-      solicitante={item.Usuario.Nome}
+      solicitante={item.Usuario.nome}
      
       // usuarioDemandante={item.Usuario.nome}
       // usuarioDemandanteTelefone={item.Usuario.telefone}

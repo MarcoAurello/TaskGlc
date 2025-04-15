@@ -57,6 +57,10 @@ class ArquivoController implements IController {
           extension = '.png'
           break
         }
+        case 'application/zip': {
+          extension = '.zip'
+          break
+        }
         case 'application/pdf': {
           extension = '.pdf'
           break
@@ -265,6 +269,7 @@ class ArquivoController implements IController {
   async find(req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
       const { id } = req.params
+      console.log('biu')
 
       const registro = await Arquivo.findOne({
         where: {

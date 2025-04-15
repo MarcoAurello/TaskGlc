@@ -1,6 +1,7 @@
 import { IController } from './controller.inteface'
 import { Request, Response, NextFunction } from 'express'
 import status from '../model/status.model'
+import Contrato from '../model/contrato.model'
 // import Chamado from '../models/chamado-model';
 
 class StatusController implements IController {

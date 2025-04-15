@@ -21,6 +21,7 @@ import Switch from "@mui/material/Switch";
 import Checkbox from "@mui/material/Checkbox";
 import Modal from '../components/modal'
 
+
 import { Box } from "@mui/system";
 const ImageLogo = require('../assets/cad.jpeg')
 
@@ -36,6 +37,7 @@ const Home = (props) => {
   const [openMessageDialog, setOpenMessageDialog] = useState(false);
   const [checked, setChecked] = React.useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const ImageProd = require('../assets/nf.png')
   const [searchTerm1, setSearchTerm1] = useState("");
   const [fkArea, setfkArea] = useState("");
   const [subarea, setSubArea] = useState([]);
@@ -197,7 +199,10 @@ const Home = (props) => {
 
 
     }
-  }, [todosEmails, emailNaoEncontrado, logged]);
+
+   
+   
+  }, [todosEmails, emailNaoEncontrado, logged,]);
 
   useEffect(() => {
     if (pesquisa) {
@@ -336,6 +341,39 @@ const Home = (props) => {
             onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/chamadosAbertos/`} >
             Atividades Solicitadas<KeyboardDoubleArrowRightIcon /><div style={{ color: '#FFA500', fontWeight: 'bold', fontSize: 24 }}>{solicitacaoAtividades.length}</div></Button><br></br> */}
 
+          
+          {logged &&
+          (logged.usuarioSolicitante === true  ||
+            logged.usuarioAtesto === true  ||
+            logged.usuarioPagamento === true  ||
+            logged.usuarioCarteiraFiscal === true  
+          ) 
+          
+          ?
+          <div
+            style={{
+              width: '220px',
+              height: '150px',
+              textAlign: 'center',
+              padding: '10px',
+              border: '2px solid #ccc',
+              borderRadius: '12px',
+              boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+              cursor: 'pointer',
+            }}
+          >
+            <b>Acompanhamento de Pagamentos</b><br />
+            <img src={ImageProd} style={{ width: '80px', borderRadius: '8px' }}
+              onClick={() =>
+                (window.location.href = `${process.env.REACT_APP_DOMAIN}/pagamentoDeNotas`)
+              }
+            />
+          </div>
+        
+        :''}
+          
+          <br></br>
+          <p></p>
           <Button
             size="large"
             variant="contained"
@@ -349,8 +387,11 @@ const Home = (props) => {
             Solicitar cadastro de item / serviço
 
           </Button>
-          <br></br>
-          <p></p>
+
+
+
+
+
         </div>
       </center>
       <center>
@@ -553,13 +594,13 @@ const Home = (props) => {
               >
                 <Typography style={{ marginLeft: '10px', fontSize: '30px' }}>
                   <div>
-                    <b>Minhas Pendencias</b>: 
-                    
-                    <b style={{fontSize:'20', color:'red'}}>
-                      {meuSetor && logged? meuSetor.filter(item => item.fkUsuarioExecutor === logged.id
-                    ).length :''}
-                      </b>
-                      
+                    <b>Minhas Pendencias</b>:
+
+                    <b style={{ fontSize: '20', color: 'red' }}>
+                      {meuSetor && logged ? meuSetor.filter(item => item.fkUsuarioExecutor === logged.id
+                      ).length : ''}
+                    </b>
+
 
                   </div>
                 </Typography>
@@ -631,9 +672,9 @@ const Home = (props) => {
                             <tr key={index} style={{ fontSize: '16px' }}>
                               <th scope="row" style={{ wordBreak: "break-all" }}>
                                 <b style={{ color: 'black', marginRight: '8px' }}>Atividade:</b>
-                              
-                                  {item.titulo}
-                                  
+
+                                {item.titulo}
+
                                 <br></br>
                                 <b style={{ color: 'black', marginRight: '8px' }}>Data de solicitação:</b>
                                 {new Date(item.createdAt).toLocaleDateString()}
@@ -696,126 +737,126 @@ const Home = (props) => {
                 aria-controls="panel1a-content"
                 id="panel1a-header"
               >
-                <Typography  style={{ marginLeft: '10px', fontSize: '30px' }}>
-                <div>
-                <b>Pendências do Setor:</b>
-                <b style={{fontSize:'20', color:'red'}}>
-                      {meuSetor && logged? meuSetor.length :''}
-                      </b>
+                <Typography style={{ marginLeft: '10px', fontSize: '30px' }}>
+                  <div>
+                    <b>Pendências do Setor:</b>
+                    <b style={{ fontSize: '20', color: 'red' }}>
+                      {meuSetor && logged ? meuSetor.length : ''}
+                    </b>
 
-              </div>
+                  </div>
                 </Typography>
               </AccordionSummary>
 
 
               <AccordionDetails>
-              <div style={{
-              flex: 1,
-              margin: '0 10px',
-              padding: '20px',
+                <div style={{
+                  flex: 1,
+                  margin: '0 10px',
+                  padding: '20px',
 
-              transition: 'transform 0.2s',
-              cursor: 'pointer'
-            }}>
-           
-              <table
-                className="table table-striped table-dark "
-                style={{
-                  fontFamily: "arial",
-                  fontSize: "12px",
-                  marginLeft: 10,
-                  marginRight: 20,
-                  marginRight: 20,
-                  borderCollapse: "collapse",
-                  boxShadow: "0 0 5px rgba(0, 0, 0, 0.3)",
-                  borderRadius: "3px",
-                }}
-              ><p></p>
-                {todasSetor === false ? (
-                  <div>
-                    <input
-                      type="text"
-                      placeholder="Pesquise o Setor demandante ou usuario executor"
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      style={{ marginBottom: "20px", padding: "10px", width: "80%", borderRadius: '5px', marginLeft: '20px' }}
-                    />
-                    <table className="table table-striped table-dark">
-                      <tbody>
-                        {meuSetor
-                          .filter((item) => {
-                            const isStatusValid = item.Status?.nome !== "Concluido" && item.Status.nome !== "Cancelado";
-                            const isSearchTermMatched = item.UsuarioExecutor?.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                              item.Usuario?.Area?.Unidade?.nome.toLowerCase().includes(searchTerm.toLowerCase());
-                            return isStatusValid && isSearchTermMatched;
-                          })
-                          .map((item, index) => (
-                            <tr key={index} style={{ fontSize: "16px" }}>
-                              <th scope="row" style={{ wordBreak: "break-all" }}>
+                  transition: 'transform 0.2s',
+                  cursor: 'pointer'
+                }}>
 
-                              <b style={{color:'yellow'}}>
+                  <table
+                    className="table table-striped table-dark "
+                    style={{
+                      fontFamily: "arial",
+                      fontSize: "12px",
+                      marginLeft: 10,
+                      marginRight: 20,
+                      marginRight: 20,
+                      borderCollapse: "collapse",
+                      boxShadow: "0 0 5px rgba(0, 0, 0, 0.3)",
+                      borderRadius: "3px",
+                    }}
+                  ><p></p>
+                    {todasSetor === false ? (
+                      <div>
+                        <input
+                          type="text"
+                          placeholder="Pesquise o Setor demandante ou usuario executor"
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                          style={{ marginBottom: "20px", padding: "10px", width: "80%", borderRadius: '5px', marginLeft: '20px' }}
+                        />
+                        <table className="table table-striped table-dark">
+                          <tbody>
+                            {meuSetor
+                              .filter((item) => {
+                                const isStatusValid = item.Status?.nome !== "Concluido" && item.Status.nome !== "Cancelado";
+                                const isSearchTermMatched = item.UsuarioExecutor?.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                                  item.Usuario?.Area?.Unidade?.nome.toLowerCase().includes(searchTerm.toLowerCase());
+                                return isStatusValid && isSearchTermMatched;
+                              })
+                              .map((item, index) => (
+                                <tr key={index} style={{ fontSize: "16px" }}>
+                                  <th scope="row" style={{ wordBreak: "break-all" }}>
 
-                                Atividade: {item.titulo}
-                                </b>
-                                <br />
-                                Data da solicitação: {new Date(item.createdAt).toLocaleDateString()}
-                                <br />
-                                Unidade Demandante: {item.Usuario ? item.Usuario.Area.Unidade.nome : ""}
-                                <br />
-                                {item.fkUsuarioExecutor ? (
-                                  <div style={{ color: "#9ad1f4", display: 'flex', alignItems: 'center' }}>
-                                    <b style={{ color: '#dadada', marginRight: '8px' }}>Executor:</b>
-                                    <span style={{ color: '#f4a261' }}>{item.UsuarioExecutor.nome}</span> &#128590;
-                                  </div>
-                                ) : (
-                                  <div style={{ color: "red" }}>
-                                    <b style={{ color: '#dadada' }}>Executor:</b> Execultor não selecionado &#10067;
-                                  </div>
-                                )}
-                                {item.Status.nome === "Concluido" ? (
-                                  <div style={{ color: "blue" }}>
-                                    Status: {item.Status.nome} &#9989;
-                                  </div>
-                                ) : (
-                                  <div style={{ color: "#9ad1f4", display: 'flex', alignItems: 'center' }}>
-                                    <b style={{ color: '#dadada', marginRight: '8px' }}>Status:</b>
-                                    <span style={{ color: '#f4a261' }}>{item.Status.nome}</span> &#x23F3;
-                                  </div>
-                                )}
-                              </th>
-                              <th>
-                                <Button
-                                  variant="contained"
-                                  size="small"
-                                  onClick={() =>
-                                    (window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`)
-                                  }
-                                >
-                                  ver
-                                </Button>
-                              </th>
-                            </tr>
-                          ))}
-                      </tbody>
-                    </table>
-                  </div>
-                ) : (
-                  ''
-                )}
-              </table>
-            </div>
+                                    <b style={{ color: 'yellow' }}>
+
+                                      Atividade: {item.titulo}
+                                    </b>
+                                    <br />
+                                    Data da solicitação: {new Date(item.createdAt).toLocaleDateString()}
+                                    <br />
+                                    Unidade Demandante: {item.Usuario ? item.Usuario.Area.Unidade.nome : ""}
+                                    <br />
+                                    {item.fkUsuarioExecutor ? (
+                                      <div style={{ color: "#9ad1f4", display: 'flex', alignItems: 'center' }}>
+                                        <b style={{ color: '#dadada', marginRight: '8px' }}>Executor:</b>
+                                        <span style={{ color: '#f4a261' }}>{item.UsuarioExecutor.nome}</span> &#128590;
+                                      </div>
+                                    ) : (
+                                      <div style={{ color: "red" }}>
+                                        <b style={{ color: '#dadada' }}>Executor:</b> Execultor não selecionado &#10067;
+                                      </div>
+                                    )}
+                                    {item.Status.nome === "Concluido" ? (
+                                      <div style={{ color: "blue" }}>
+                                        Status: {item.Status.nome} &#9989;
+                                      </div>
+                                    ) : (
+                                      <div style={{ color: "#9ad1f4", display: 'flex', alignItems: 'center' }}>
+                                        <b style={{ color: '#dadada', marginRight: '8px' }}>Status:</b>
+                                        <span style={{ color: '#f4a261' }}>{item.Status.nome}</span> &#x23F3;
+                                      </div>
+                                    )}
+                                  </th>
+                                  <th>
+                                    <Button
+                                      variant="contained"
+                                      size="small"
+                                      onClick={() =>
+                                        (window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`)
+                                      }
+                                    >
+                                      ver
+                                    </Button>
+                                  </th>
+                                </tr>
+                              ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    ) : (
+                      ''
+                    )}
+                  </table>
+                </div>
 
 
 
               </AccordionDetails>
-              </Accordion>
+            </Accordion>
 
 
 
 
 
 
-           
+
 
 
 

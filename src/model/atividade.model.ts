@@ -5,6 +5,7 @@ import Classificacao from './classificacao.model';
 import Area from './area.model';
 import Usuario from './usuario.model';
 import Status from './status.model';
+import Contrato from './contrato.model';
 
 class Atividade extends Model {
   public id!: string;
@@ -19,6 +20,7 @@ class Atividade extends Model {
   public gPagamento!: string;
   public filial!: string;
   public gCotacao!: string;
+  public valorNota!: number
 
   public centroCusto!: string;
   public indicacao!: string;
@@ -37,6 +39,7 @@ class Atividade extends Model {
   public dimensao!: string;
   public fkUsuarioSolicitante!: string;
   public fkUsuarioExecutor!: string;
+  public fkContrato!: string;
   public tempoEstimado!: number;
   public arquivado!: boolean;
   public editar!: boolean;
@@ -53,6 +56,7 @@ class Atividade extends Model {
   public parametrizacaoCadastro!: string;
 
   public Classificacao!: Classificacao;
+  public Contrato!: Contrato;
   public Area!: Area;
   public Usuario!: Usuario;
   public Status!: Status;
@@ -96,6 +100,16 @@ Atividade.init({
   gPagamento: {
     type: DataTypes.TEXT,
     allowNull: true
+  },
+
+  valorNota: {
+    type: DataTypes.FLOAT,
+    allowNull: true,
+    validate: {
+      isFloat: {
+        msg: 'O campo valorContrato deve ser um número válido.'
+      }
+    }
   },
   filial: {
     type: DataTypes.TEXT,
@@ -175,6 +189,10 @@ Atividade.init({
     type: DataTypes.STRING,
     allowNull: true
   },
+  fkContrato: {
+    type: DataTypes.UUID,
+    allowNull: true
+  },
   caminho: {
     type: DataTypes.STRING,
     allowNull: true
@@ -237,9 +255,11 @@ Atividade.init({
 });
 
 Atividade.belongsTo(Classificacao, { foreignKey: 'fkClassificacao' });
-Atividade.belongsTo(Usuario, { foreignKey: 'fkUsuarioSolicitante' });
+Atividade.belongsTo(Usuario, { foreignKey: 'fkUsuarioSolicitante'});
 Atividade.belongsTo(Usuario, { foreignKey: 'fkUsuarioExecutor', as: 'UsuarioExecutor' });
 Atividade.belongsTo(Status, { foreignKey: 'fkStatus' });
 Atividade.belongsTo(Area, { foreignKey: 'fkArea' });
+Atividade.belongsTo(Contrato, { foreignKey: 'fkContrato' });
+Contrato.hasMany(Atividade, { foreignKey: 'fkContrato' });
 
 export default Atividade;

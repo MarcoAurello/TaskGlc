@@ -4,6 +4,8 @@ import Perfil from '../model/perfil.model'
 import Unidade from '../model/unidade.model'
 import Usuario from '../model/usuario.model'
 import { IController } from './controller.inteface'
+import emailUtils from '../utils/email.utils'
+const { Op } = require('sequelize');
 
 class UsuarioController implements IController {
   async all (req: any, res: Response, next: NextFunction): Promise<any> {
@@ -115,6 +117,146 @@ class UsuarioController implements IController {
         }
       )
 
+      const registro = await Usuario.findOne({ where: { id } })
+
+      res
+        .status(200)
+        .json({ data: registro, message: 'Alteração realizada com sucesso.' })
+    } catch (err) {
+      console.log(err)
+      if (typeof err.errors !== 'undefined') {
+        res.status(401).json({ message: err.errors[0].message })
+      } else if (typeof err.message !== 'undefined') {
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
+      }
+    }
+  }
+
+  async updateNf (req: Request, res: Response, next: NextFunction): Promise<any> {
+    try {
+      const { id } = req.params
+      console.log('roda' +id)
+      const {
+        novoEmailNF,
+        novoPerfilNF
+
+      } = req.body
+
+      console.log(req.body)
+
+      if(novoPerfilNF ==='Cadastrante de Notas'){
+        await Usuario.update(
+          {
+            Usuario:true,
+            usuarioCarteiraFiscal:false,
+            usuarioPagamento:false,
+            usuarioAtesto:false
+          },
+          {
+            where: {
+              id
+            },
+            individualHooks: false
+          }
+        )
+
+
+
+        
+  
+
+      } else if(novoPerfilNF ==='Aprovador de pagamentos') {
+        await Usuario.update(
+          {
+            usuarioAtesto:true,
+            Usuario:false,
+            usuarioCarteiraFiscal:false,
+            usuarioPagamento:false,
+            
+          },
+          {
+            where: {
+              id
+            },
+            individualHooks: false
+          }
+        )
+  
+
+      }else if(novoPerfilNF ==='Cadastrante MXM') {
+        await Usuario.update(
+          {
+      
+
+            usuarioAtesto:false,
+            Usuario:false,
+            usuarioCarteiraFiscal:false,
+            usuarioPagamento:true,
+          },
+          {
+            where: {
+              id
+            },
+            individualHooks: false
+          }
+        )
+  
+
+      }else if(novoPerfilNF ==='Analise Fiscal') {
+        await Usuario.update(
+          {
+        
+
+            usuarioAtesto:false,
+            Usuario:false,
+            usuarioCarteiraFiscal:true,
+            usuarioPagamento:false,
+          },
+          {
+            where: {
+              id
+            },
+            individualHooks: false
+          }
+        )
+  
+
+      }else if(novoPerfilNF ==='excluir') {
+        await Usuario.update(
+          {
+        
+
+            usuarioAtesto:false,
+            Usuario:false,
+            usuarioCarteiraFiscal:false,
+            usuarioPagamento:false,
+          },
+          {
+            where: {
+              id
+            },
+            individualHooks: false
+          }
+        )
+  
+
+      }
+
+      const user = await Usuario.findOne({ where: { id} })
+
+
+
+       const txEmail = `
+            
+            Você foi adicionado no modulo acompanhamento de Nota Fiscal do Sistema de Atividade-GLC como: ${novoPerfilNF}
+            <a href="https://app1.pe.senac.br/taskmanagerglc">CLIQUE PARA VER</a><p>
+        `
+      
+            await emailUtils.enviar(user?.email, txEmail)
+
+     
       const registro = await Usuario.findOne({ where: { id } })
 
       res
@@ -367,5 +509,41 @@ class UsuarioController implements IController {
       }
     }
   }
+
+  async emailNF(req: any, res: Response, next: NextFunction): Promise<any> {
+    try {
+    
+      const registros = await Usuario.findAll({
+        // where: {
+        //   [Op.or]: [
+        //     { Usuario: true },
+        //     { usuarioPagamento: true },
+        //     { usuarioAtesto: true },
+        //     { usuarioCarteiraFiscal: true }
+        //   ]
+        // },
+        // include: [Perfil, { model: Area, include: [Unidade] }]
+        order: [['email', 'ASC']] 
+      });
+  
+      res.status(200).json({
+        data: registros
+      });
+  
+    } catch (err) {
+      console.log(err);
+  
+      if (typeof err.errors !== 'undefined') {
+        res.status(401).json({ message: err.errors[0].message });
+      } else if (typeof err.message !== 'undefined') {
+        res.status(401).json({ message: err.message });
+      } else {
+        res.status(401).json({
+          message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.'
+        });
+      }
+    }
+  }
+  
 }
 export default new UsuarioController()

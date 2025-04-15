@@ -54,6 +54,30 @@ module.exports = {
         allowNull: false,
         defaultValue: true
       },
+
+      usuarioSolicitante: {
+        type: Sequelize.BOOLEAN,
+        allowNull: true,
+        defaultValue: false
+      },
+
+      usuarioPagamento: {
+        type: Sequelize.BOOLEAN,
+        allowNull: true,
+        defaultValue: false
+      },
+
+      usuarioAtesto: {
+        type: Sequelize.BOOLEAN,
+        allowNull: true,
+        defaultValue: false
+      },
+
+      usuarioCarteiraFiscal: {
+        type: Sequelize.BOOLEAN,
+        allowNull: true,
+        defaultValue: false
+      },
       validado: {
         type: Sequelize.BOOLEAN,
         allowNull: false,

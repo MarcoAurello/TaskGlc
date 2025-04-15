@@ -87,7 +87,7 @@ const MinhasAtividadesArquivadas = (props) => {
       usuarioDemandanteTelefone={item.Usuario.telefone}
       usuarioDemandanteEmail={item.Usuario.email}
       tela={'minhas'}
-      fkUsuarioSoloicitante={item.fkUsuarioSolicitante}
+      fkUsuarioSoloicitante={item.fkUsuario}
       fklogado={props.logged.id}
       Arquivado={item.arquivado}
       usuarioExecutor={item.fkUsuarioExecutor}

@@ -12,7 +12,7 @@ const TaskItemDoChamadoFornecedor = (props) => {
     const { nome, logged } = props;
 
     const { protocolo, unidade, area, classificacao, solicitante,
-        status, titulo, emailUsuarioSolicitante, telefoneSolicitante, setorSol,
+        status, titulo, emailUsuario, telefoneSolicitante, setorSol,
         nomeExecutor, emailExecutor, telefoneExecutor, categoria,
         razao,email,fone,GPagamento,filial,gCotacao,
         setorSolicitante, forma, medida, cor, loggedEmail,
@@ -312,7 +312,7 @@ const TaskItemDoChamadoFornecedor = (props) => {
 
                                     }}>
                                         <b style={{ fontWeight: '600', marginRight: '8px' }}>Email:</b>
-                                        <span>{props.emailUsuarioSolicitante}</span>
+                                        <span>{props.emailUsuario}</span>
                                     </div>
 
                                     <div style={{

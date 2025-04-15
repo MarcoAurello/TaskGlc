@@ -59,6 +59,8 @@ class ClassificacaoController implements IController {
   async search (req: Request, res: Response, next: NextFunction): Promise<any> {
     throw new Error('Method not implemented.')
   }
+
+  
 }
 
 export default new ClassificacaoController()

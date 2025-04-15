@@ -3327,7 +3327,7 @@
 									"_parent": {
 										"$ref": "AAAAAAGGNvQFRt8bs74="
 									},
-									"name": "fkUsuarioSolicitante",
+									"name": "fkUsuario",
 									"type": "uuid",
 									"length": 0
 								},

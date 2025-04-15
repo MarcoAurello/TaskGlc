@@ -15,12 +15,14 @@ class UsuarioRouter {
 
   private routers () {
     this.router.get('/naovalidado/', controller.naoValidado)
+    this.router.get('/emailNF/', controller.emailNF)
     this.router.get('/equipe/', controller.equipe)
     this.router.get('/search/', controller.search)
     this.router.get('/', controller.all)
     this.router.post('/', controller.create)
     this.router.get('/:id',controller.find)
-    this.router.post('/:id/edit', routerMiddleware.role([PerfilUtils.Administrador]), controller.update)
+    this.router.post('/:id/editNf', controller.updateNf)
+    this.router.post('/:id/edit',  routerMiddleware.role([PerfilUtils.Administrador, PerfilUtils.Gerente, PerfilUtils.Coordenador]), controller.update)
     this.router.post('/:id/validar', routerMiddleware.role([PerfilUtils.Administrador, PerfilUtils.Gerente, PerfilUtils.Coordenador]), controller.validar)
     this.router.post('/edit/primeiroacesso/', controller.updatePrimeiroAcesso)
     this.router.post('/:id/delete', controller.delete)

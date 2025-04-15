@@ -7,7 +7,7 @@ class AreaController implements IController {
   async all (req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
       const { fkUnidade } = req.query
-      console.log('qqqqqq')
+      
 
       if (fkUnidade) {
         const registros = await Area.findAll({

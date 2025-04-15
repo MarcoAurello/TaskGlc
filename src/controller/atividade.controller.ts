@@ -18,6 +18,7 @@ import PerfilUtils from '../utils/perfil.utils'
 import emailUtils from '../utils/email.utils'
 import { QueryTypes } from 'sequelize'
 import TimeLineStatus from '../model/timeLineStatus.model'
+import Contrato from '../model/contrato.model'
 const multer = require('multer')
 const { Op } = require('sequelize')
 
@@ -62,10 +63,48 @@ cron.schedule('14 16 * * *', buscarAtividadesPendentes, {
 
 
 class AtividadeController implements IController {
-  async all(req: Request, res: Response, next: NextFunction): Promise<any> {
-    throw new Error('Method not implemented.')
-  }
+  async all (req: Request, res: Response, next: NextFunction): Promise<any> {
+    try {
+      const { fkUnidade } = req.query
+      
 
+      
+        const registros = await Atividade.findAll({
+
+          include: [
+            { model: Area, include: [Unidade] },
+            Classificacao,
+            Status,
+            Contrato,
+            {
+              model: Usuario,
+              as: 'UsuarioExecutor',
+              include: [{ model: Area, include: [Unidade] }]
+            },
+            {
+              model: Usuario,
+              foreignKey: 'fkUsuarioSolicitante',
+              include: [{ model: Area, include: [Unidade] }]
+            }
+          ],
+          where: { categoria: 'notaFiscal' },
+          
+          order: [['createdAt', 'asc']]
+        })
+
+        return res.status(200).json({ data: registros })
+      
+    } catch (err) {
+      console.log(err)
+      if (typeof err.errors !== 'undefined') {
+        res.status(401).json({ message: err.errors[0].message })
+      } else if (typeof err.message !== 'undefined') {
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
+      }
+    }
+  }
   async create(req: any, res: Response, next: NextFunction): Promise<any> {
     try {
       const {
@@ -156,7 +195,7 @@ class AtividadeController implements IController {
           fone: telefoneEmpresa,
           detalhes: conteudo,
           fkStatus: status?.id,
-          fkUsuarioSolicitante: req.usuario.id,
+          fkUsuario: req.usuario.id,
           arquivado: false,
           pessoal: false,
           // fkUsuarioExecutor,
@@ -382,9 +421,9 @@ class AtividadeController implements IController {
         })
 
         const atividadeSalva = await Atividade.findOne({
-          where: { 
-          protocolo: proc 
-        }
+          where: {
+            protocolo: proc
+          }
         })
 
         if (hash) {
@@ -482,7 +521,8 @@ class AtividadeController implements IController {
     }
   }
 
-  
+
+
 
 
 
@@ -558,11 +598,11 @@ class AtividadeController implements IController {
           protocolo: proc,
           fkArea: area?.id,
           prazoInicioAtividades: dataInicio,
-          conteudo:'Cadastro de MR a partir de 30 itens',
-        
+          conteudo: 'Cadastro de MR a partir de 30 itens',
+
           anoMr: anoMr,
           segmentoMr: segmentoMr,
-          
+
 
           fkStatus: status?.id,
           fkUsuarioSolicitante: req.usuario.id,
@@ -571,7 +611,7 @@ class AtividadeController implements IController {
           // fkUsuarioExecutor,
           categoria: tipoCadastro,
           caminho,
-        
+
         })
 
         await Mensagem.create({
@@ -581,9 +621,9 @@ class AtividadeController implements IController {
         })
 
         const atividadeSalva = await Atividade.findOne({
-          where: { 
-          protocolo: proc 
-        }
+          where: {
+            protocolo: proc
+          }
         })
 
         if (hash) {
@@ -601,11 +641,11 @@ class AtividadeController implements IController {
 
       }
 
-     
+
 
       const atividadeSalva = await Atividade.findOne({
         where: {
-        
+
           protocolo: proc
         }
       })
@@ -621,7 +661,7 @@ class AtividadeController implements IController {
       //   )
       // })
 
-      if(atividadeSalva){
+      if (atividadeSalva) {
 
         await TimeLineStatus.create(
           {
@@ -632,7 +672,7 @@ class AtividadeController implements IController {
         )
       }
 
-    
+
 
 
 
@@ -683,6 +723,148 @@ class AtividadeController implements IController {
       }
     }
   }
+
+  async nota(req: any, res: Response, next: NextFunction): Promise<any> {
+    try {
+      const {
+        hash,
+        fkUnidade,
+        tipoCadastro,
+        titulo,
+        conteudo,
+        dataInicio,
+        listaDeArquivosEnviados,
+        arquivado,
+        newContrato,
+        valorNota
+      } = req.body
+
+      console.log("🔍 REQ.BODY:", req.body)
+
+      if (!fkUnidade) {
+        console.log("❌ fkUnidade não foi informado!")
+        return res.status(401).json({
+          message: 'O campo unidade deve ser preenchido corretamente.'
+        })
+      }
+
+     
+
+      const area = await Area.findOne({
+        where: { nome: "GLC-Cadastro de Item" }
+      })
+      console.log("📌 Área encontrada:", area?.id)
+
+      const classificacao = await Classificacao.findOne({
+        where: { nome: 'Não Definido' }
+      })
+      console.log("📌 Classificação encontrada:", classificacao?.id)
+
+      const status = await Status.findOne({
+        where: { nome: 'Aberto' }
+      })
+      console.log("📌 Status encontrado:", status?.id)
+
+      const proc = protocolo()
+      console.log("📎 Protocolo gerado:", proc)
+
+      let atividade = []
+
+      if(newContrato === 'pagamento sem contrato'){
+        atividade = await Atividade.create({
+          id: uuid(),
+          titulo : titulo+'-pagamento sem contrato',
+          fkClassificacao: classificacao?.id,
+          protocolo: proc,
+          fkArea: area?.id,
+          prazoInicioAtividades: dataInicio,
+          conteudo,
+          fkStatus: status?.id,
+          fkUsuarioSolicitante: req.usuario.id,
+          arquivado: false,
+          pessoal: false,
+          categoria: tipoCadastro,
+          valorNota: valorNota
+        })
+
+      }else{
+        atividade = await Atividade.create({
+          id: uuid(),
+          titulo,
+          fkClassificacao: classificacao?.id,
+          protocolo: proc,
+          fkArea: area?.id,
+          prazoInicioAtividades: dataInicio,
+          conteudo,
+          fkStatus: status?.id,
+          fkUsuarioSolicitante: req.usuario.id,
+          arquivado: false,
+          pessoal: false,
+          categoria: tipoCadastro,
+          fkContrato: newContrato,
+          valorNota: valorNota
+        })
+
+      }
+
+       
+     
+
+      
+      console.log("✅ Atividade criada:", atividade?.id)
+
+      await Mensagem.create({
+        conteudo,
+        fkAtividade: atividade.id,
+        fkUsuario: req.usuario.id
+      })
+      console.log("💬 Mensagem registrada para a atividade")
+
+      const atividadeSalva = await Atividade.findOne({
+        where: { protocolo: proc }
+      })
+      console.log("📥 Atividade salva buscada:", atividadeSalva?.id)
+
+      if (hash) {
+        await Arquivo.update(
+          { fkAtividade: atividadeSalva?.id },
+          { where: { hash } }
+        )
+        console.log("📎 Arquivo com hash vinculado:", hash)
+      }
+
+      // console.log("📂 Arquivos recebidos:", listaDeArquivosEnviados)
+      // listaDeArquivosEnviados.map((item) => {
+      //   Arquivo.update(
+      //     { fkAtividade: atividadeSalva?.id },
+      //     { where: { id: item.id } }
+      //   )
+      // })
+
+      if (atividadeSalva) {
+        await TimeLineStatus.create({
+          fkStatus: status?.id,
+          fkAtividade: atividadeSalva?.id,
+          fkUsuario: req.usuario.id
+        })
+        console.log("📜 TimeLineStatus criado")
+      }
+
+      res.status(200).json({ message: 'Cadastro realizado com sucesso.' })
+    } catch (err) {
+      console.log("🚨 ERRO:", err)
+      if (typeof err.errors !== 'undefined') {
+        res.status(401).json({ message: err.errors[0].message })
+      } else if (typeof err.message !== 'undefined') {
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({
+          message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.'
+        })
+      }
+    }
+  }
+
 
   async createAjuste(req: any, res: Response, next: NextFunction): Promise<any> {
     try {
@@ -746,24 +928,24 @@ class AtividadeController implements IController {
 
       const proc = protocolo()
 
-    
 
-      if(parametrizacao){
+
+      if (parametrizacao) {
 
         const atividade = await Atividade.create({
 
           id: uuid(),
-          
+
           titulo: 'Ajuste de parametrização de cadastro',
           fkClassificacao: classificacao?.id,
           protocolo: proc,
           fkArea: area?.id,
-         
-          conteudo:parametrizacao,
-          parametrizacaoCadastro:parametrizacao,
-          
-        
-          
+
+          conteudo: parametrizacao,
+          parametrizacaoCadastro: parametrizacao,
+
+
+
 
           fkStatus: status?.id,
           fkUsuarioSolicitante: req.usuario.id,
@@ -772,7 +954,7 @@ class AtividadeController implements IController {
           // fkUsuarioExecutor,
           categoria: tipoCadastro,
           caminho,
-        
+
         })
 
         await Mensagem.create({
@@ -783,9 +965,9 @@ class AtividadeController implements IController {
         })
 
         const atividadeSalva = await Atividade.findOne({
-          where: { 
-          protocolo: proc 
-        }
+          where: {
+            protocolo: proc
+          }
         })
 
         if (hash) {
@@ -803,7 +985,7 @@ class AtividadeController implements IController {
 
       const atividadeSalva = await Atividade.findOne({
         where: {
-        
+
           protocolo: proc
         }
       })
@@ -819,7 +1001,7 @@ class AtividadeController implements IController {
       //   )
       // })
 
-      if(atividadeSalva){
+      if (atividadeSalva) {
 
         await TimeLineStatus.create(
           {
@@ -831,7 +1013,7 @@ class AtividadeController implements IController {
         )
       }
 
-    
+
 
 
 
@@ -888,8 +1070,9 @@ class AtividadeController implements IController {
     try {
       const { id } = req.params
 
-      const registro = await Atividade.findOne({
+      let registro = await Atividade.findOne({
         include: [
+          Contrato,
           { model: Area, include: [Unidade] },
           {
             model: Usuario,
@@ -900,7 +1083,6 @@ class AtividadeController implements IController {
           {
             model: Usuario,
             foreignKey: 'fkUsuarioSolicitante',
-
             include: [{ model: Area, include: [Unidade] }]
           },
           Area,
@@ -911,7 +1093,34 @@ class AtividadeController implements IController {
         where: { id }
       })
 
-      console.log('ppppppp', registro)
+      if (!registro) {
+        // Se não encontrou por ID, busca pelo fkContrato
+        registro = await Atividade.findAll({
+          include: [
+            Contrato,
+            { model: Area, include: [Unidade] },
+            Area,
+            { model: Area, include: [Unidade] },
+            {
+              model: Usuario,
+              foreignKey: 'fkUsuarioExecutor',
+              as: 'UsuarioExecutor',
+              include: [{ model: Area, include: [Unidade] }]
+            },
+            {
+              model: Usuario,
+              foreignKey: 'fkUsuarioSolicitante',
+              include: [{ model: Area, include: [Unidade] }]
+            },
+            Classificacao,
+            Status,
+            Usuario
+          ],
+          where: { fkContrato: id }
+        })
+      }
+
+      console.log('polv', registro)
 
       res.status(200).json({ data: registro })
     } catch (err) {
@@ -921,7 +1130,156 @@ class AtividadeController implements IController {
       } else if (typeof err.message !== 'undefined') {
         res.status(401).json({ message: err.message })
       } else {
-        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
+        res.status(401).json({
+          message:
+            'Aconteceu um erro no processamento da requisição, por favor tente novamente.'
+        })
+      }
+    }
+  }
+
+
+
+
+  async notaParaAnalise(req: Request, res: Response, next: NextFunction): Promise<any> {
+    try {
+      const { id } = req.params;
+      console.log('ID da atividade recebido:', id);
+
+      const { logged, statusNF, informacoes} = req.body;
+      console.log('Usuário logado (logged):', logged);
+
+      let resultadoUpdate 
+      let status
+      let status2
+      let atividade
+      //ok glc
+      if(statusNF ==='para pgt'){
+         status = await Status.findOne({ where: { nome: 'Pendênte' } });
+      console.log('Status encontrado:', status?.id);
+
+       resultadoUpdate = await Atividade.update(
+        {
+          fkStatus: status?.id,
+          informacoes
+        },
+        {
+          where: { id },
+          individualHooks: false,
+        }
+      );
+
+      //ok para setor
+      }else if(statusNF === 'para pagamento direto'){
+
+    
+        status = await Status.findOne({ where: { nome: 'Planejado para Iniciar' } });
+
+        atividade = await Atividade.findOne({ where: { id } });
+
+        
+
+         resultadoUpdate = await Atividade.update(
+           {
+             fkStatus: status?.id,
+             informacoes
+           },
+           {
+             where: { id },
+             individualHooks: false,
+           }
+         );
+
+        
+
+        
+       console.log('Status encontrado:', status?.id);
+ 
+       
+
+
+
+     }
+      else if(statusNF === 'iniciado'){
+
+    // para carteira
+         status = await Status.findOne({ where: { nome: 'Iniciado' } });
+
+         atividade = await Atividade.findOne({ where: { id } });
+
+         
+
+          resultadoUpdate = await Atividade.update(
+            {
+              fkStatus: status?.id,
+              informacoes
+            },
+            {
+              where: { id },
+              individualHooks: false,
+            }
+          );
+
+         
+
+         
+        console.log('Status encontrado:', status?.id);
+  
+        
+
+
+
+      }else if(statusNF === 'concluido'){
+
+        status = await Status.findOne({ where: { nome: 'Concluido' } });
+       console.log('Status encontrado:', status?.id);
+ 
+        resultadoUpdate = await Atividade.update(
+         {
+           fkStatus: status?.id,
+         },
+         {
+           where: { id },
+           individualHooks: false,
+         }
+       );
+
+
+
+     }
+
+      
+      console.log('Resultado do update da Atividade:', resultadoUpdate);
+
+      if (logged && id) {
+        const timeline = await TimeLineStatus.create({
+          fkStatus: status?.id,
+          fkAtividade: id,
+          fkUsuario: logged,
+        });
+        console.log('TimelineStatus criado:', timeline);
+      }
+
+      const registro = await Atividade.findOne({ where: { id } });
+      console.log('Registro atualizado da Atividade:', registro);
+
+      res
+        .status(200)
+        .json({ data: registro, message: 'Alteração realizada com sucesso.' });
+    } catch (err: any) {
+      console.log('Erro no try/catch:', err);
+
+      if (typeof err.errors !== 'undefined') {
+        res.status(401).json({ message: err.errors[0].message });
+      } else if (typeof err.message !== 'undefined') {
+        res.status(401).json({ message: err.message });
+      } else {
+        res
+          .status(401)
+          .json({
+            message:
+              'Aconteceu um erro no processamento da requisição, por favor tente novamente.',
+          });
       }
     }
   }
@@ -1139,8 +1497,8 @@ class AtividadeController implements IController {
           },
           {
             model: Usuario,
+            as: 'Usuario',
             foreignKey: 'fkUsuarioSolicitante',
-
             include: [{ model: Area, include: [Unidade] }]
           }
         ],
@@ -1390,7 +1748,7 @@ class AtividadeController implements IController {
           {
             model: Usuario,
             foreignKey: 'fkUsuarioSolicitante',
-
+            as: 'Usuario',
             include: [{ model: Area, include: [Unidade] }]
           }
         ],
@@ -1403,12 +1761,200 @@ class AtividadeController implements IController {
             { '$Status.nome$': 'Parado' },
             { '$Status.nome$': 'Planejado para Iniciar' },
             { '$Status.nome$': 'Pendênte' }
-            // { '$Status.nome$': 'Concluido' },
-
-          ]
-
+          ],
+          categoria: {
+            [Op.notLike]: '%notaFiscal%' // ou [Op.notLike] se não for PostgreSQL
+          }
         }
       })
+
+      res.status(200).json({ data: registros })
+    } catch (err) {
+      console.log(err)
+      res.status(401).json({ message: 'fkUnidade é inválido ou indefinido.' })
+    }
+  }
+
+
+
+
+  async recebidasSetorNFAtestar(
+    req: any,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const status = await Status.findOne({ where: { nome: 'Aberto' } })
+
+      // console.log('###########################################################')
+      console.log(req.usuario?.Area?.Unidade?.id)
+      // console.log('###########################################################')
+
+      const registros = await Atividade.findAll({
+        include: [
+          { model: Area, include: [Unidade] },
+          Classificacao,
+          Status,
+          Contrato,
+          {
+            model: Usuario,
+            as: 'Usuario',
+            include: [{ model: Area, include: [Unidade] }]
+          }
+        ],
+        order: [['createdAt', 'DESC']],
+        where: {
+          categoria: 'notaFiscal',
+          [Op.or]: [
+            { '$Status.nome$': 'Iniciado' },
+            { '$Status.nome$': 'Aberto' },
+            { '$Status.nome$': 'Parado' },
+            { '$Status.nome$': 'Planejado para Iniciar' },
+            { '$Status.nome$': 'Pendênte' }
+          ],
+          '$Usuario.Area.Unidade.id$': req.usuario?.Area?.Unidade?.id // 🛡️ proteção
+        }
+      });
+
+      res.status(200).json({ data: registros })
+    } catch (err) {
+      console.log(err)
+      res.status(401).json({ message: 'fkUnidade é inválido ou indefinido.' })
+    }
+  }
+
+  
+
+
+  async recebidasSetorNFPagar(
+    req: any,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const status = await Status.findOne({ where: { nome: 'Aberto' } })
+
+      // console.log('###########################################################')
+      console.log(req.usuario?.Area?.Unidade?.id)
+      // console.log('###########################################################')
+
+      const registros = await Atividade.findAll({
+        include: [
+          { model: Area, include: [Unidade] },
+          Classificacao,
+          Status,
+          Contrato,
+          {
+            model: Usuario,
+            as: 'Usuario',
+            include: [{ model: Area, include: [Unidade] }]
+          }
+        ],
+        order: [['createdAt', 'DESC']],
+        where: {
+          categoria: 'notaFiscal',
+          [Op.or]: [
+            // { '$Status.nome$': 'Iniciado' },
+            // // { '$Status.nome$': 'Aberto' },
+            // // { '$Status.nome$': 'Parado' },
+            // // { '$Status.nome$': 'Planejado para Iniciar' },
+             { '$Status.nome$': 'Pendênte' }
+          ],
+           }
+      });
+
+      res.status(200).json({ data: registros })
+    } catch (err) {
+      console.log(err)
+      res.status(401).json({ message: 'fkUnidade é inválido ou indefinido.' })
+    }
+  }
+
+  async recebidasSetorNFCarteira(
+    req: any,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const status = await Status.findOne({ where: { nome: 'Aberto' } })
+
+      // console.log('###########################################################')
+      console.log(req.usuario?.Area?.Unidade?.id)
+      // console.log('###########################################################')
+
+      const registros = await Atividade.findAll({
+        include: [
+          { model: Area, include: [Unidade] },
+          Classificacao,
+          Status,
+          Contrato,
+          {
+            model: Usuario,
+            as: 'Usuario',
+            include: [{ model: Area, include: [Unidade] }]
+          }
+        ],
+        order: [['createdAt', 'DESC']],
+        where: {
+          categoria: 'notaFiscal',
+          [Op.or]: [
+            { '$Status.nome$': 'Iniciado' },
+            // { '$Status.nome$': 'Aberto' },
+            // { '$Status.nome$': 'Parado' },
+            // { '$Status.nome$': 'Planejado para Iniciar' },
+            // { '$Status.nome$': 'Pendênte' }
+          ],
+           }
+      });
+
+      res.status(200).json({ data: registros })
+    } catch (err) {
+      console.log(err)
+      res.status(401).json({ message: 'fkUnidade é inválido ou indefinido.' })
+    }
+  }
+
+
+  async recebidasSetorNF(
+    req: any,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const status = await Status.findOne({ where: { nome: 'Aberto' } })
+
+      const registros = await Atividade.findAll({
+        include: [
+          { model: Area, include: [Unidade] },
+          Classificacao,
+          Status,
+          Contrato,
+          {
+            model: Usuario,
+            as: 'UsuarioExecutor',
+            include: [{ model: Area, include: [Unidade] }]
+          },
+          {
+            model: Usuario,
+            foreignKey: 'fkUsuarioSolicitante',
+            include: [{ model: Area, include: [Unidade] }]
+          }
+        ],
+        order: [['createdAt', 'DESC']],
+        where: {
+          fkUsuario: req.usuario?.id, // proteção contra undefined
+          categoria: 'notaFiscal',
+          [Op.or]: [
+            { '$Status.nome$': 'Iniciado' },
+            { '$Status.nome$': 'Aberto' },
+            { '$Status.nome$': 'Parado' },
+            { '$Status.nome$': 'Planejado para Iniciar' },
+            { '$Status.nome$': 'Pendênte' }
+          ],
+        }
+      });
+
+
       res.status(200).json({ data: registros })
     } catch (err) {
       console.log(err)
@@ -1738,7 +2284,7 @@ class AtividadeController implements IController {
           {
             model: Usuario,
             foreignKey: 'fkUsuarioSolicitante',
-
+            as: 'Usuario',
             include: [{ model: Area, include: [Unidade] }]
           }
         ],
@@ -1780,7 +2326,7 @@ class AtividadeController implements IController {
           {
             model: Usuario,
             foreignKey: 'fkUsuarioSolicitante',
-
+            as: "Usuario",
             include: [{ model: Area, include: [Unidade] }]
           }
         ],
