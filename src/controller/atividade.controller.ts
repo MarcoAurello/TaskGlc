@@ -116,7 +116,6 @@ class AtividadeController implements IController {
         caminho,
         tipoCadastro,
         medida,
-
         cnpj,
         razaoSocial,
         emailEmpresa,
@@ -124,7 +123,6 @@ class AtividadeController implements IController {
         gPagamento,
         filial,
         gCotacao,
-
         centroCusto,
         eletro,
         indicacao,
@@ -195,7 +193,7 @@ class AtividadeController implements IController {
           fone: telefoneEmpresa,
           detalhes: conteudo,
           fkStatus: status?.id,
-          fkUsuario: req.usuario.id,
+          fkUsuarioSolicitante: req.usuario.id,
           arquivado: false,
           pessoal: false,
           // fkUsuarioExecutor,
@@ -1189,8 +1187,6 @@ class AtividadeController implements IController {
              individualHooks: false,
            }
          );
-
-        
 
         
        console.log('Status encontrado:', status?.id);
