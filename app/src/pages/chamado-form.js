@@ -353,7 +353,7 @@ const AtividadeForm = (props) => {
               setEditar(data.data.editar)
               setFkAreaDemandada(data.data.fkArea)
               setIdChamado(data.data.id)
-              setFkUsuario(data.data.fkUsuario)
+              setFkUsuario(data.data.fkUsuarioSolicitante)
               getNomeExecutor(data.data.UsuarioExecutor.nome)
 
               getEmailExecutor(data.data.UsuarioExecutor.email)
@@ -1545,6 +1545,7 @@ const AtividadeForm = (props) => {
 
     }
 
+ 
     // Verifique se há um item com nome "GLC" e defina o valor selecionado
     const glcItem = unidade.find(item => item.nome === 'GLC' && item.receber === true);
     if (glcItem) {
@@ -1623,7 +1624,7 @@ const AtividadeForm = (props) => {
         }
 
 
-        {logged && status != 'Concluido' && (logged.id === fkUsuario || logged.id === fkExecutor)
+        {logged  && (logged.id === fkUsuario || logged.id === fkExecutor)
           ?
 
           <div>
@@ -1641,6 +1642,14 @@ const AtividadeForm = (props) => {
                 <img src={ImageLogo} height={64} />
               </b>
             </Button>
+
+            {/* {(logged && props.logged.id === fkExecutor) || (logged && logged.Perfil.nome === PerfilUtils.Coordenador && props.logged.fkArea === fkAreaDemandada) ?
+          <Button variant="contained" size="small" color="error" onClick={() => setOpenMsg(true)} style={{ marginRight: 10 }}>
+            Anexar Relatório MXM
+          </Button>
+          : ''
+        } */}
+
 
             <style>
               {`
@@ -1668,6 +1677,32 @@ const AtividadeForm = (props) => {
 
         }
       </div>
+
+      {status !="Concluido"?
+      <div>
+        {mensagens.map((item, index) => (
+            <div key={index} style={{
+              borderTop: '1px solid #e0e0e0',
+              padding: 10,
+              background: '#FFFFE0',
+              borderRadius: 10,
+
+              border: '2px solid #e0e0e0',
+            }}>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <b style={{ fontSize: 12 }}>{item.Usuario ? item.Usuario.nome : ''}</b>
+                  <b style={{ fontSize: 12 }}>{new Date(item.createdAt).toLocaleString()}</b>
+                </div>
+              </div>
+              <div>
+                <p style={{ wordBreak: "break-all" }}>{item.conteudo}</p>
+              </div>
+            </div>
+          ))}
+      </div>      
+    
+    :''}
       {status === 'Concluido' ?
         <div>
           {mensagens.map((item, index) => (
@@ -4504,7 +4539,8 @@ Eficiência: 80 PLUS Bronze
 
 
               {
-                alterarStatus.map((status, key) => <MenuItem name={status.nome} value={status.id} >
+                alterarStatus.filter(status => status.descricao === null)
+                .map((status, key) => <MenuItem name={status.nome} value={status.id} >
                   {status.nome}</MenuItem>)
               }
             </Select>
@@ -4630,7 +4666,7 @@ Eficiência: 80 PLUS Bronze
         <DialogContent
           style={{ width: '600px', padding: '16px' }}
         >
-          {mensagens.map((item, index) => (
+          {/* {mensagens.map((item, index) => (
             <div key={index} style={{
               borderTop: '1px solid #e0e0e0',
               padding: 10,
@@ -4649,7 +4685,7 @@ Eficiência: 80 PLUS Bronze
                 <p style={{ wordBreak: "break-all" }}>{item.conteudo}</p>
               </div>
             </div>
-          ))}
+          ))} */}
 
           <hr />
 

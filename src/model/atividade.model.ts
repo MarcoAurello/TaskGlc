@@ -21,8 +21,10 @@ class Atividade extends Model {
   public filial!: string;
   public gCotacao!: string;
   public valorNota!: number
+  public atesto!: string;
 
   public centroCusto!: string;
+  public codigoMira!: string;
   public indicacao!: string;
   public informacoes!: string;
   public forma!: string;
@@ -40,6 +42,8 @@ class Atividade extends Model {
   public fkUsuarioSolicitante!: string;
   public fkUsuarioExecutor!: string;
   public fkContrato!: string;
+  public numeroSerie!: string;
+  public numeroPedido!: string;
   public tempoEstimado!: number;
   public arquivado!: boolean;
   public editar!: boolean;
@@ -49,6 +53,11 @@ class Atividade extends Model {
 
   // Novos campos
   public nomeProjeto!: string;
+  public fornecedor!: string;
+  public numeroContrato!: string;
+  public numeroNota!: string;
+  public rateio!: string;
+  public localPatrimonio!: string;
   public qtdPlanilha!: string;
   public prazoInicioAtividades!: Date;
   public anoMr!: string;
@@ -89,6 +98,10 @@ Atividade.init({
     type: DataTypes.TEXT,
     allowNull: true
   },
+  atesto: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
   fone: {
     type: DataTypes.TEXT,
     allowNull: true
@@ -97,10 +110,27 @@ Atividade.init({
     type: DataTypes.TEXT,
     allowNull: true
   },
+  localPatrimonio: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  numeroSerie: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  numeroPedido: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
   gPagamento: {
     type: DataTypes.TEXT,
     allowNull: true
   },
+  codigoMira: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+
 
   valorNota: {
     type: DataTypes.FLOAT,
@@ -112,6 +142,22 @@ Atividade.init({
     }
   },
   filial: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  fornecedor: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  numeroContrato: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  numeroNota: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  rateio: {
     type: DataTypes.TEXT,
     allowNull: true
   },

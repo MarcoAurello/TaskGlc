@@ -197,7 +197,7 @@ const ContratosSetor = (props) => {
                 variant="contained"
                 startIcon={<ArrowBackIcon />}
                 onClick={() =>
-                    (window.location.href = `${process.env.REACT_APP_DOMAIN}/pagamentoDeNotas`)
+                    (window.location.href = `${process.env.REACT_APP_DOMAIN}/pagamentos`)
                 }
                 style={{
                     marginBottom: 16,

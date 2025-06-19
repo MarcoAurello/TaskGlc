@@ -144,15 +144,24 @@ class UsuarioController implements IController {
 
       } = req.body
 
+
+
+
+
+
+
       console.log(req.body)
 
       if(novoPerfilNF ==='Cadastrante de Notas'){
+        console.log('ff')
         await Usuario.update(
           {
-            Usuario:true,
+            usuarioSolicitante:true,
             usuarioCarteiraFiscal:false,
             usuarioPagamento:false,
-            usuarioAtesto:false
+            usuarioAtesto:false,
+            usuarioFinanceiro:false,
+            usuarioPatrimonio: false
           },
           {
             where: {
@@ -163,17 +172,15 @@ class UsuarioController implements IController {
         )
 
 
-
-        
-  
-
       } else if(novoPerfilNF ==='Aprovador de pagamentos') {
         await Usuario.update(
           {
             usuarioAtesto:true,
-            Usuario:false,
+            usuarioSolicitante:false,
             usuarioCarteiraFiscal:false,
             usuarioPagamento:false,
+            usuarioFinanceiro:false,
+            usuarioPatrimonio: false
             
           },
           {
@@ -191,9 +198,11 @@ class UsuarioController implements IController {
       
 
             usuarioAtesto:false,
-            Usuario:false,
+            usuarioSolicitante:false,
             usuarioCarteiraFiscal:false,
             usuarioPagamento:true,
+            usuarioFinanceiro:false,
+            usuarioPatrimonio: false
           },
           {
             where: {
@@ -210,9 +219,11 @@ class UsuarioController implements IController {
         
 
             usuarioAtesto:false,
-            Usuario:false,
+            usuarioSolicitante:false,
             usuarioCarteiraFiscal:true,
             usuarioPagamento:false,
+            usuarioFinanceiro:false,
+            usuarioPatrimonio: false
           },
           {
             where: {
@@ -223,15 +234,61 @@ class UsuarioController implements IController {
         )
   
 
-      }else if(novoPerfilNF ==='excluir') {
+      }else if(novoPerfilNF ==='Contas a Pagar') {
         await Usuario.update(
           {
         
 
             usuarioAtesto:false,
-            Usuario:false,
+            usuarioSolicitante:false,
             usuarioCarteiraFiscal:false,
             usuarioPagamento:false,
+            usuarioFinanceiro:true,
+            usuarioPatrimonio: false
+          },
+          {
+            where: {
+              id
+            },
+            individualHooks: false
+          }
+        )
+  
+
+      }else if(novoPerfilNF ==='Patrimonio') {
+        await Usuario.update(
+          {
+        
+
+            usuarioAtesto:false,
+            usuarioSolicitante:false,
+            usuarioCarteiraFiscal:false,
+            usuarioPagamento:false,
+            usuarioFinanceiro:false,
+            usuarioPatrimonio: true
+          },
+          {
+            where: {
+              id
+            },
+            individualHooks: false
+          }
+        )
+  
+
+      }
+
+      else if(novoPerfilNF ==='excluir') {
+        await Usuario.update(
+          {
+        
+
+            usuarioAtesto:false,
+            usuarioSolicitante:false,
+            usuarioCarteiraFiscal:false,
+            usuarioPagamento:false,
+            usuarioFinanceiro:false,
+            usuarioPatrimonio: false
           },
           {
             where: {
@@ -250,7 +307,7 @@ class UsuarioController implements IController {
 
        const txEmail = `
             
-            Você foi adicionado no modulo acompanhamento de Nota Fiscal do Sistema de Atividade-GLC como: ${novoPerfilNF}
+            Você foi adicionado no módulo acompanhamento de Nota Fiscal do Sistema de Atividade-GLC como: ${novoPerfilNF}
             <a href="https://app1.pe.senac.br/taskmanagerglc">CLIQUE PARA VER</a><p>
         `
       

@@ -11,6 +11,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import moment from 'moment';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
+
 const getCookie = require('../utils/getCookie')
 
 const PageContainer = styled.div`
@@ -113,12 +116,49 @@ const PesquisarNotas = (props) => {
         setPage(0);
     };
 
-    const filteredRows = registros.filter((row) =>
-        row.titulo.toLowerCase().includes(searchText.toLowerCase()) ||
-        row.Contrato?.nomeEmpresa.toLowerCase().includes(searchText.toLowerCase()) ||
-        row?.Usuario?.Area?.Unidade?.nome.toLowerCase().includes(searchText.toLowerCase())
-    );
+    const filteredRows = registros.filter((row) => {
+        const titulo = row?.titulo || '';
+        const numeroNota = row?.numeroNota || '';
+        const nomeUnidade = row?.Usuario?.Area?.Unidade?.nome || '';
+        const protocolo = row?.protocolo || '';
+        const status1 = row?.Status?.nome || '';
+        const usuario = row?.Usuario?.nome || '';
+        const criacao = row?.creatAt
+            ? new Date(row.creatAt).toISOString().slice(0, 10)
+            : '';
 
+        return (
+            protocolo.toLowerCase().includes(searchText.toLowerCase()) ||
+            titulo.toLowerCase().includes(searchText.toLowerCase()) ||
+            numeroNota.toLowerCase().includes(searchText.toLowerCase()) ||
+            status1.toLowerCase().includes(searchText.toLowerCase()) ||
+            usuario.toLowerCase().includes(searchText.toLowerCase()) ||
+            nomeUnidade.toLowerCase().includes(searchText.toLowerCase()) ||
+            criacao.includes(searchText)
+        );
+    });
+
+    const exportToExcel = () => {
+        const dataToExport = filteredRows.map(row => ({
+            Protocolo: row.id,
+            Fornecedor: row.titulo,
+            NF: row.numeroNota,
+            Setor: row?.Usuario?.Area?.Unidade?.nome,
+            Status: row?.Status?.nome,
+            Solicitante: row?.Usuario?.nome,
+            'Criado em': moment(row?.createdAt).format('DD/MM/YYYY')
+        }));
+
+        const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Registros');
+
+        const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+        const data = new Blob([excelBuffer], { type: 'application/octet-stream' });
+
+        const now = moment().format('YYYY-MM-DD_HH-mm-ss');
+        saveAs(data, `Acompanhamento de Notas_${now}.xlsx`);
+    };
 
 
     return (
@@ -128,7 +168,7 @@ const PesquisarNotas = (props) => {
                 variant="contained"
                 startIcon={<ArrowBackIcon />}
                 onClick={() =>
-                    (window.location.href = `${process.env.REACT_APP_DOMAIN}/pagamentoDeNotas`)
+                    (window.location.href = `${process.env.REACT_APP_DOMAIN}/pagamentos`)
                 }
                 style={{
                     marginBottom: 16,
@@ -141,8 +181,27 @@ const PesquisarNotas = (props) => {
                 Voltar
             </Button>
 
+            
+            <br></br>
+            <b
+  style={{
+    display: 'block',
+    fontWeight: 'bold',
+    marginBottom: '8px',
+    color: '#333',
+    fontSize: '14px',
+    backgroundColor: '#f0f0f5',
+    padding: '8px 12px',
+    borderLeft: '4px solid #1976d2',
+    borderRadius: '4px',
+    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+  }}
+>
+  Pesquise por: número da nota, empresa, setor, protocolo, status, data de criação ou solicitante
+</b>
+
             <TextField
-                label="Pesquise pelo numero da nota, empresa ou setor"
+                label=""
                 variant="outlined"
                 size="small"
                 fullWidth
@@ -154,12 +213,29 @@ const PesquisarNotas = (props) => {
 
             <TableContainer sx={{ borderRadius: 2, boxShadow: 3 }}>
                 <Table sx={{ minWidth: 650 }} aria-label="tabela de contratos">
+                    {logged && logged.usuarioPagamento === true?
+
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={exportToExcel}
+                                    sx={{ mb: 2 }}
+                                >
+                                    Exportar para Excel
+                                </Button>:""}
                     <TableHead sx={{ backgroundColor: '#1e1e2f' }}>
                         <TableRow>
-                            <TableCell sx={{ color: '#ffffff', fontWeight: 'bold' }}>Numero NF</TableCell>
-                            <TableCell sx={{ color: '#ffffff', fontWeight: 'bold' }}>Contrato</TableCell>
+                            <TableCell sx={{ color: '#ffffff', fontWeight: 'bold' }}>Fornecedor</TableCell>
+                            <TableCell sx={{ color: '#ffffff', fontWeight: 'bold' }}>NF</TableCell>
                             <TableCell sx={{ color: '#ffffff', fontWeight: 'bold' }}>Setor</TableCell>
-                            <TableCell sx={{ color: '#ffffff', fontWeight: 'bold' }}></TableCell>
+                            <TableCell sx={{ color: '#ffffff', fontWeight: 'bold' }}>Status</TableCell>
+                            <TableCell sx={{ color: '#ffffff', fontWeight: 'bold' }}>Criado em </TableCell>
+                            <TableCell sx={{ color: '#ffffff', fontWeight: 'bold' }}>Solicitante </TableCell>
+                            <TableCell sx={{ color: '#ffffff', fontWeight: 'bold' }}>
+
+                               
+
+                            </TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -173,8 +249,11 @@ const PesquisarNotas = (props) => {
                                 }}
                             >
                                 <TableCell>{row.titulo}</TableCell>
-                                <TableCell>{row.Contrato?.nomeEmpresa}</TableCell>
+                                <TableCell>{row.numeroNota}</TableCell>
                                 <TableCell>{row?.Usuario?.Area?.Unidade?.nome}</TableCell>
+                                <TableCell>{row?.Status?.nome}</TableCell>
+                                <TableCell>{moment(row?.createdAt).format('DD/MM/YYYY')}</TableCell>
+                                <TableCell>{row?.Usuario?.nome}</TableCell>
                                 <TableCell>
                                     {logged && (logged.usuarioAtesto === true || logged.usuarioSolicitante === true)
                                         &&
@@ -196,8 +275,10 @@ const PesquisarNotas = (props) => {
 
                                         : ''}
 
-                                    {logged && (logged.usuarioPagamento === true || logged.usuarioCarteiraFiscal === true)
-                                        
+                                    {logged && (logged.usuarioPagamento === true || logged.usuarioCarteiraFiscal === true ||
+                                         logged.usuarioFinanceiro === true || logged.usuarioPatrimonio === true
+                                    )
+
                                         ?
                                         <Tooltip title="Editar">
 
@@ -219,20 +300,8 @@ const PesquisarNotas = (props) => {
                             </TableRow>
                         ))}
                     </TableBody>
-                    <TableFooter>
-                        <TableRow>
-                            <TablePagination
-                                rowsPerPageOptions={[5, 10, 25, { label: 'Todos', value: -1 }]}
-                                colSpan={6}
-                                count={filteredRows.length}
-                                rowsPerPage={rowsPerPage}
-                                page={page}
-                                labelRowsPerPage='Linhas por Página'
-                                SelectProps={{ inputProps: { 'aria-label': 'Linhas por Página' }, native: true }}
-                                onPageChange={handleChangePage}
-                                onRowsPerPageChange={handleChangeRowsPerPage}
-                            />
-                        </TableRow>
+                    <TableFooter><p></p>
+                        
                     </TableFooter>
                 </Table>
             </TableContainer>

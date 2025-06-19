@@ -15,6 +15,7 @@ class StatusRouter {
   private routers () {
     this.router.get('/search/', controller.search)
     this.router.get('/', controller.all)
+ 
     this.router.post('/', controller.create)
     this.router.get('/:id', controller.find)
     this.router.post('/:id/edit', controller.update)

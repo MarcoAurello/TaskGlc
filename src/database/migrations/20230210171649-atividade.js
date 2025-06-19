@@ -32,6 +32,10 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: true
       },
+      atesto: {
+        type: Sequelize.TEXT,
+        allowNull: true
+      },
       medida: {
         type: Sequelize.TEXT,
         allowNull: true
@@ -40,6 +44,23 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: true
       },
+      numeroSerie: {
+        type: Sequelize.TEXT,
+        allowNull: true
+      },
+      LocalPatrimonio: {
+        type: Sequelize.TEXT,
+        allowNull: true
+      },
+      numeroPedido: {
+        type: Sequelize.TEXT,
+        allowNull: true
+      },
+      codigoMira: {
+        type: Sequelize.TEXT,
+        allowNull: true
+      },
+
 
       cnpj: {
         type: Sequelize.TEXT,
@@ -178,6 +199,22 @@ module.exports = {
         allowNull: true
       },
       anoMr: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
+      numeroNota: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
+      fornecedor: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
+      numeroContrato: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
+      rateio: {
         type: Sequelize.STRING,
         allowNull: true
       },

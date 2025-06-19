@@ -20,7 +20,7 @@ import { QueryTypes } from 'sequelize'
 import TimeLineStatus from '../model/timeLineStatus.model'
 import Contrato from '../model/contrato.model'
 const multer = require('multer')
-const { Op } = require('sequelize')
+const { Op, col, where } = require('sequelize');
 
 
 const buscarAtividadesPendentes = async () => {
@@ -63,13 +63,49 @@ cron.schedule('14 16 * * *', buscarAtividadesPendentes, {
 
 
 class AtividadeController implements IController {
-  async all (req: Request, res: Response, next: NextFunction): Promise<any> {
+  async all(req: any, res: Response, next: NextFunction): Promise<any> {
     try {
       const { fkUnidade } = req.query
-      
+      let registros = []
 
-      
-        const registros = await Atividade.findAll({
+      if (req.usuario.usuarioAtesto || req.usuario.usuarioSolicitante) {
+
+        registros = await Atividade.findAll({
+
+          include: [
+            { model: Area, include: [Unidade] },
+            Classificacao,
+            Status,
+            Contrato,
+            // {
+            //   model: Usuario,
+            //   as: 'UsuarioExecutor',
+            //   include: [{ model: Area, include: [Unidade] }]
+            // },
+            {
+              model: Usuario,
+              foreignKey: 'fkUsuarioSolicitante',
+              include: [{ model: Area, include: [Unidade] }]
+            }
+          ],
+          where: {
+            categoria: 'notaFiscal',
+            '$Usuario.Area.fkUnidade$': req.usuario.Area.fkUnidade
+          },
+          subQuery: false,
+
+          order: [['createdAt', 'asc']]
+        })
+        console.log('aaaaaaa' + req.usuario.Area.fkUnidade)
+
+        return res.status(200).json({ data: registros })
+
+      } else if (req.usuario.usuarioCarteiraFiscal ||
+        req.usuario.usuarioPagamento
+        || req.usuario.usuarioPatrimonio
+        || req.usuario.usuarioFinanceiro
+      ) {
+        registros = await Atividade.findAll({
 
           include: [
             { model: Area, include: [Unidade] },
@@ -88,12 +124,60 @@ class AtividadeController implements IController {
             }
           ],
           where: { categoria: 'notaFiscal' },
-          
+
           order: [['createdAt', 'asc']]
         })
 
         return res.status(200).json({ data: registros })
-      
+
+      }
+
+
+
+
+
+    } catch (err) {
+      console.log(err)
+      if (typeof err.errors !== 'undefined') {
+        res.status(401).json({ message: err.errors[0].message })
+      } else if (typeof err.message !== 'undefined') {
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({ message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.' })
+      }
+    }
+  }
+  async todasPatrimonio(req: Request, res: Response, next: NextFunction): Promise<any> {
+    try {
+      const { fkUnidade } = req.query
+
+
+
+      const registros = await Atividade.findAll({
+
+        include: [
+          { model: Area, include: [Unidade] },
+          Classificacao,
+          Status,
+          Contrato,
+          {
+            model: Usuario,
+            as: 'UsuarioExecutor',
+            include: [{ model: Area, include: [Unidade] }]
+          },
+          {
+            model: Usuario,
+            foreignKey: 'fkUsuarioSolicitante',
+            include: [{ model: Area, include: [Unidade] }]
+          }
+        ],
+        where: { detalhes: 'patrimonio' },
+
+        order: [['createdAt', 'asc']]
+      })
+
+      return res.status(200).json({ data: registros })
+
     } catch (err) {
       console.log(err)
       if (typeof err.errors !== 'undefined') {
@@ -247,7 +331,6 @@ class AtividadeController implements IController {
       // const emailCoordenadores = await queryInterface.sequelize.query('select email from usuario where fkArea = \'Aberto\'')
       // const status = await queryInterface.sequelize.query('select id from status where nome = \'Aberto\'')
 
-
       const atividadeSalva = await Atividade.findOne({
         where: {
           titulo,
@@ -270,8 +353,6 @@ class AtividadeController implements IController {
         where: { fkArea }
       })
 
-
-
       await TimeLineStatus.create(
         {
           fkStatus: status?.id,
@@ -280,17 +361,9 @@ class AtividadeController implements IController {
         }
       )
 
-
-
-
-
-
-
       const glc = await Unidade.findOne({
         where: { nome: 'GLC' }
       })
-
-
 
       const txEmail1 = `
             <b>Nova Atividade para sua área.</b><br>
@@ -308,10 +381,6 @@ class AtividadeController implements IController {
       });
 
       emailUtils.enviar(destinatarios, txEmail1);
-
-
-
-
 
       res
         .status(200)
@@ -362,13 +431,6 @@ class AtividadeController implements IController {
       const area = await Area.findOne({
         where: { nome: "GLC-Cadastro de Item" }
       })
-
-
-      // if (!titulo) {
-      //   return res.status(401).json({
-      //     message: 'O campo título deve ser preenchido corretamente.'
-      //   })
-      // }
 
       if (!nomeProjeto) {
         return res.status(401).json({
@@ -446,62 +508,10 @@ class AtividadeController implements IController {
         }
       })
 
-      // listaDeArquivosEnviados.map((item) => {
-      //   Arquivo.update(
-      //     {
-      //       fkAtividade: atividadeSalva?.id
-      //     },
-      //     {
-      //       where: { id: item.id }
-      //     }
-      //   )
-      // })
 
       const funcionarioDaArea = await Usuario.findAll({
         where: { fkArea }
       })
-
-
-
-      // await TimeLineStatus.create(
-      //   {
-      //     fkStatus: status?.id,
-      //     fkAtividade: atividadeSalva?.id,
-      //     fkUsuario: req.usuario.id
-      //   }
-      // )
-
-
-
-
-
-
-
-      // const glc = await Unidade.findOne({
-      //   where: { nome :'GLC' }
-      // })
-
-
-
-      // const txEmail1 = `
-      //     <b>Nova Atividade para sua área.</b><br>
-
-      // Unidade: <strong>${setorSolicitante}</strong><br>
-      // Titulo: <strong>${titulo}</strong><br>
-      //   Mensagem: <strong>${conteudo}</strong><br>
-      // <br/>
-      // <a href="https://app1.pe.senac.br/taskmanagerglc/atividade/${atividadeSalva?.id}/edit">CLIQUE PARA VER.</a><p>  
-      // `
-      // let destinatarios = '';
-
-      // funcionarioDaArea.forEach((usuario, index) => {
-      //   destinatarios += `${usuario.email};`;
-      // });
-
-      //  emailUtils.enviar(destinatarios, txEmail1);
-
-
-
 
 
       res
@@ -518,10 +528,6 @@ class AtividadeController implements IController {
       }
     }
   }
-
-
-
-
 
 
   async createMr(req: any, res: Response, next: NextFunction): Promise<any> {
@@ -557,24 +563,9 @@ class AtividadeController implements IController {
         })
       }
 
-
       const area = await Area.findOne({
         where: { nome: "GLC-Cadastro de Item" }
       })
-
-
-      // if (!titulo) {
-      //   return res.status(401).json({
-      //     message: 'O campo título deve ser preenchido corretamente.'
-      //   })
-      // }
-
-      // if (!anoMr) {
-      //   return res.status(401).json({
-      //     message: 'O campo Ano MR deve ser preenchido corretamente.'
-      //   })
-      // }
-
 
       const classificacao = await Classificacao.findOne({
         where: { nome: 'Não Definido' }
@@ -597,11 +588,8 @@ class AtividadeController implements IController {
           fkArea: area?.id,
           prazoInicioAtividades: dataInicio,
           conteudo: 'Cadastro de MR a partir de 30 itens',
-
           anoMr: anoMr,
           segmentoMr: segmentoMr,
-
-
           fkStatus: status?.id,
           fkUsuarioSolicitante: req.usuario.id,
           arquivado: false,
@@ -635,11 +623,7 @@ class AtividadeController implements IController {
           )
         }
 
-
-
       }
-
-
 
       const atividadeSalva = await Atividade.findOne({
         where: {
@@ -648,16 +632,6 @@ class AtividadeController implements IController {
         }
       })
 
-      // listaDeArquivosEnviados.map((item) => {
-      //   Arquivo.update(
-      //     {
-      //       fkAtividade: atividadeSalva?.id
-      //     },
-      //     {
-      //       where: { id: item.id }
-      //     }
-      //   )
-      // })
 
       if (atividadeSalva) {
 
@@ -669,43 +643,6 @@ class AtividadeController implements IController {
           }
         )
       }
-
-
-
-
-
-
-
-
-
-
-
-      // const glc = await Unidade.findOne({
-      //   where: { nome :'GLC' }
-      // })
-
-
-
-      // const txEmail1 = `
-      //     <b>Nova Atividade para sua área.</b><br>
-
-      // Unidade: <strong>${setorSolicitante}</strong><br>
-      // Titulo: <strong>${titulo}</strong><br>
-      //   Mensagem: <strong>${conteudo}</strong><br>
-      // <br/>
-      // <a href="https://app1.pe.senac.br/taskmanagerglc/atividade/${atividadeSalva?.id}/edit">CLIQUE PARA VER.</a><p>  
-      // `
-      // let destinatarios = '';
-
-      // funcionarioDaArea.forEach((usuario, index) => {
-      //   destinatarios += `${usuario.email};`;
-      // });
-
-      //  emailUtils.enviar(destinatarios, txEmail1);
-
-
-
-
 
       res
         .status(200)
@@ -721,6 +658,219 @@ class AtividadeController implements IController {
       }
     }
   }
+
+
+  async contrato(req: any, res: Response, next: NextFunction): Promise<any> {
+    try {
+      const {
+        hash,
+        fkUnidade,
+        tipoCadastro,
+        titulo,
+        conteudo,
+        dataInicio,
+        listaDeArquivosEnviados,
+
+        arquivado,
+        codigoMira,
+        newContrato,
+        valorNota,
+        detalhes,
+        informacoes,
+        atesto,
+
+        fornecedor,
+        cnpj,
+        numeroContrato,
+        numeroNota,
+        centroCusto,
+        rateio,
+        numeroSerie,
+        numeroPedido,
+        localPatrimonio
+
+      } = req.body
+
+      console.log("🔍 REQ.BODY:", req.body)
+
+      // if (!fkUnidade) {
+      //   console.log("❌ fkUnidade não foi informado!")
+      //   return res.status(401).json({
+      //     message: 'O campo unidade deve ser preenchido corretamente.'
+      //   })
+      // }
+
+
+
+      const area = await Area.findOne({
+        where: { nome: "pagamento de notas" }
+      })
+
+
+      const classificacao = await Classificacao.findOne({
+        where: { nome: 'Não Definido' }
+      })
+      console.log("📌 Classificação encontrada:", classificacao?.id)
+
+
+      let status = []
+      let usuarioEmails =[]
+     
+
+
+
+        
+
+      if (detalhes === 'Enviado para análise fiscal, pagamento direto pela unidade') {
+        status = await Status.findOne({
+          where: { nome: 'Enviado para análise fiscal, pagamento direto pela unidade' }
+        })
+
+         usuarioEmails = await Usuario.findAll({
+          where: { usuarioCarteiraFiscal: true }
+        })
+
+
+      }
+      if (detalhes === "servico" || detalhes === 'contrato') {
+
+        status = await Status.findOne({
+          where: { nome: 'Enviada para Análise Fiscal' }
+        })
+
+         usuarioEmails = await Usuario.findAll({
+          where: { usuarioCarteiraFiscal: true }
+        })
+
+      }
+      if (detalhes === "patrimonio" || detalhes === 'consumo') {
+        status = await Status.findOne({
+          where: { nome: 'Enviada para lançar pagamento GLC' }
+        })
+
+         usuarioEmails = await Usuario.findAll({
+          where: { usuarioPagamento: true }
+        })
+
+
+      }
+
+      console.log("📌 Status encontrado:", status?.id)
+
+      const proc = protocolo()
+      console.log("📎 Protocolo gerado:", proc)
+
+      // let atividade = []
+
+
+
+      const atividade = await Atividade.create({
+        id: uuid(),
+        titulo,
+        fkClassificacao: classificacao?.id,
+        protocolo: proc,
+        fkArea: area?.id,
+        conteudo,
+        codigoMira,
+        fkStatus: status?.id,
+        fkUsuarioSolicitante: req.usuario.id,
+        arquivado: false,
+        pessoal: false,
+        categoria: tipoCadastro,
+        atesto,
+
+        fornecedor,
+        detalhes,
+        numeroContrato,
+        numeroNota,
+        centroCusto,
+        cnpj,
+        rateio,
+        numeroSerie,
+        numeroPedido,
+        localPatrimonio
+      })
+
+
+
+
+      console.log("✅ Atividade criada:", atividade?.id)
+
+      await Mensagem.create({
+        conteudo: fornecedor,
+        fkAtividade: atividade.id,
+        fkUsuario: req.usuario.id
+      })
+      console.log("💬 Mensagem registrada para a atividade")
+
+      const atividadeSalva = await Atividade.findOne({
+        where: { protocolo: proc }
+      })
+      console.log("📥 Atividade salva buscada:", atividadeSalva?.id)
+
+      if (Array.isArray(listaDeArquivosEnviados) && listaDeArquivosEnviados.length > 0) {
+        for (const arquivo of listaDeArquivosEnviados) {
+          await Arquivo.create(
+            {
+              fkAtividade: atividadeSalva?.id,
+              hash: arquivo.hash,
+              caminho: arquivo.nome,
+              nomeApresentacao: arquivo.nome,
+              nome: arquivo.nome,
+
+            }
+          );
+
+          const txEmail2 = `
+        <b>Sistema de Acompanhamento de notas.</b><br>
+
+    Segue NF:${numeroNota} Empresa:${fornecedor} para acompanhamento
+    <br/>
+    <a href="https://app1.pe.senac.br/taskmanagerglc/nfCadastro/${atividadeSalva?.id}/edit">CLIQUE PARA VER.</a><p>  
+    `
+    let destinatarios2 = '';
+
+
+
+        usuarioEmails.forEach((usuario, index) => {
+          destinatarios2 += `${usuario.email};`;
+        });
+
+
+        emailUtils.enviar(destinatarios2, txEmail2);
+        emailUtils.enviar(req.usuario.email, txEmail2);
+
+          console.log("📎 Arquivo vinculado:", arquivo.hash);
+        }
+      }
+
+
+      if (atividadeSalva) {
+        await TimeLineStatus.create({
+          fkStatus: status?.id,
+          fkAtividade: atividadeSalva?.id,
+          fkUsuario: req.usuario.id
+        })
+        console.log("📜 TimeLineStatus criado")
+      }
+
+      res.status(200).json({ message: 'Cadastro realizado com sucesso.' })
+    } catch (err) {
+      console.log("🚨 ERRO:", err)
+      if (typeof err.errors !== 'undefined') {
+        res.status(401).json({ message: err.errors[0].message })
+      } else if (typeof err.message !== 'undefined') {
+        res.status(401).json({ message: err.message })
+      } else {
+        res.status(401).json({
+          message: 'Aconteceu um erro no processamento da requisição, por favor tente novamente.'
+        })
+      }
+    }
+  }
+
+
+
 
   async nota(req: any, res: Response, next: NextFunction): Promise<any> {
     try {
@@ -746,7 +896,7 @@ class AtividadeController implements IController {
         })
       }
 
-     
+
 
       const area = await Area.findOne({
         where: { nome: "GLC-Cadastro de Item" }
@@ -768,10 +918,10 @@ class AtividadeController implements IController {
 
       let atividade = []
 
-      if(newContrato === 'pagamento sem contrato'){
+      if (newContrato === 'pagamento sem contrato') {
         atividade = await Atividade.create({
           id: uuid(),
-          titulo : titulo+'-pagamento sem contrato',
+          titulo: titulo + '-pagamento sem contrato',
           fkClassificacao: classificacao?.id,
           protocolo: proc,
           fkArea: area?.id,
@@ -785,7 +935,7 @@ class AtividadeController implements IController {
           valorNota: valorNota
         })
 
-      }else{
+      } else {
         atividade = await Atividade.create({
           id: uuid(),
           titulo,
@@ -805,10 +955,10 @@ class AtividadeController implements IController {
 
       }
 
-       
-     
 
-      
+
+
+
       console.log("✅ Atividade criada:", atividade?.id)
 
       await Mensagem.create({
@@ -988,16 +1138,7 @@ class AtividadeController implements IController {
         }
       })
 
-      // listaDeArquivosEnviados.map((item) => {
-      //   Arquivo.update(
-      //     {
-      //       fkAtividade: atividadeSalva?.id
-      //     },
-      //     {
-      //       where: { id: item.id }
-      //     }
-      //   )
-      // })
+
 
       if (atividadeSalva) {
 
@@ -1010,43 +1151,6 @@ class AtividadeController implements IController {
           }
         )
       }
-
-
-
-
-
-
-
-
-
-
-
-      // const glc = await Unidade.findOne({
-      //   where: { nome :'GLC' }
-      // })
-
-
-
-      // const txEmail1 = `
-      //     <b>Nova Atividade para sua área.</b><br>
-
-      // Unidade: <strong>${setorSolicitante}</strong><br>
-      // Titulo: <strong>${titulo}</strong><br>
-      //   Mensagem: <strong>${conteudo}</strong><br>
-      // <br/>
-      // <a href="https://app1.pe.senac.br/taskmanagerglc/atividade/${atividadeSalva?.id}/edit">CLIQUE PARA VER.</a><p>  
-      // `
-      // let destinatarios = '';
-
-      // funcionarioDaArea.forEach((usuario, index) => {
-      //   destinatarios += `${usuario.email};`;
-      // });
-
-      //  emailUtils.enviar(destinatarios, txEmail1);
-
-
-
-
 
       res
         .status(200)
@@ -1137,117 +1241,360 @@ class AtividadeController implements IController {
   }
 
 
-
-
   async notaParaAnalise(req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
       const { id } = req.params;
       console.log('ID da atividade recebido:', id);
 
-      const { logged, statusNF, informacoes} = req.body;
+      const { logged, statusNF, informacoes, newStatus } = req.body;
       console.log('Usuário logado (logged):', logged);
 
-      let resultadoUpdate 
+      let resultadoUpdate
       let status
-      let status2
-      let atividade
+
       //ok glc
-      if(statusNF ==='para pgt'){
-         status = await Status.findOne({ where: { nome: 'Pendênte' } });
-      console.log('Status encontrado:', status?.id);
+      if (newStatus) {
 
-       resultadoUpdate = await Atividade.update(
-        {
-          fkStatus: status?.id,
-          informacoes
-        },
-        {
-          where: { id },
-          individualHooks: false,
-        }
-      );
-
-      //ok para setor
-      }else if(statusNF === 'para pagamento direto'){
-
-    
-        status = await Status.findOne({ where: { nome: 'Planejado para Iniciar' } });
-
-        atividade = await Atividade.findOne({ where: { id } });
-
-        
-
-         resultadoUpdate = await Atividade.update(
-           {
-             fkStatus: status?.id,
-             informacoes
-           },
-           {
-             where: { id },
-             individualHooks: false,
-           }
-         );
-
-        
-       console.log('Status encontrado:', status?.id);
- 
-       
-
-
-
-     }
-      else if(statusNF === 'iniciado'){
-
-    // para carteira
-         status = await Status.findOne({ where: { nome: 'Iniciado' } });
-
-         atividade = await Atividade.findOne({ where: { id } });
-
-         
-
-          resultadoUpdate = await Atividade.update(
-            {
-              fkStatus: status?.id,
-              informacoes
-            },
-            {
-              where: { id },
-              individualHooks: false,
-            }
-          );
-
-         
-
-         
-        console.log('Status encontrado:', status?.id);
-  
-        
-
-
-
-      }else if(statusNF === 'concluido'){
-
-        status = await Status.findOne({ where: { nome: 'Concluido' } });
-       console.log('Status encontrado:', status?.id);
- 
         resultadoUpdate = await Atividade.update(
-         {
-           fkStatus: status?.id,
-         },
-         {
-           where: { id },
-           individualHooks: false,
-         }
-       );
+          {
+            fkStatus: newStatus,
+            informacoes
+          },
+          {
+            where: { id },
+            individualHooks: false,
+          }
+        );
+
+      } else if (statusNF === 'Enviada para lançar pagamento GLC') {
+
+        status = await Status.findOne({ where: { nome: 'Enviada para lançar pagamento GLC' } });
+        console.log('Status encontrado:', status?.id);
+
+        resultadoUpdate = await Atividade.update(
+          {
+            fkStatus: status?.id,
+            informacoes
+          },
+          {
+            where: { id },
+            individualHooks: false,
+          }
+        );
+
+
+        const funcionarioPagamento = await Usuario.findAll({
+          where: { usuarioPagamento: true }
+        })
+
+        const atividade = await Atividade.findOne({ where: { id } });
+
+        const solicitante = await Usuario.findOne({
+          where: { id: atividade?.fkUsuarioSolicitante }
+        });
+
+
+        const txEmail2 = `
+        <b>Pagamento GLC.</b><br>
+
+    Segue NF para GLC
+    <br/>
+    <a href="https://app1.pe.senac.br/taskmanagerglc/nfCadastro/${id}/edit">CLIQUE PARA VER.</a><p>  
+    `
+
+        let destinatarios2 = '';
 
 
 
-     }
+        funcionarioPagamento.forEach((usuario, index) => {
+          destinatarios2 += `${usuario.email};`;
+        });
 
-      
+
+        emailUtils.enviar(destinatarios2, txEmail2);
+        emailUtils.enviar(solicitante?.email, txEmail2);
+
+
+
+
+        //ok para setor
+      } else if (statusNF === 'para pagamento direto') {
+
+
+        status = await Status.findOne({ where: { nome: 'Analisado pela carteira fiscal pagamento direto pela unidade' } });
+
+        const atividade = await Atividade.findOne({ where: { id } });
+
+
+
+        resultadoUpdate = await Atividade.update(
+          {
+            fkStatus: status?.id,
+            informacoes
+          },
+          {
+            where: { id },
+            individualHooks: false,
+          }
+        );
+
+
+        console.log('Status encontrado:', status?.id);
+
+
+
+
+
+      } else if (statusNF === 'Carteira Enviada para lançar pagamento GLC') {
+
+        status = await Status.findOne({ where: { nome: 'Enviada para lançar pagamento GLC' } });
+        console.log('Status encontrado:', status?.id);
+
+        resultadoUpdate = await Atividade.update(
+          {
+            fkStatus: status?.id,
+            informacoes
+          },
+          {
+            where: { id },
+            individualHooks: false,
+          }
+        );
+
+        const funcionario = await Usuario.findAll({
+          where: { usuarioPagamento: true }
+        })
+
+        const txEmail2 = `
+        <b>Pagamento GLC- Analise Fiscal</b><br>
+
+    Analise fiscal feita, segue para pagamento
+    <br/>
+    <a href="https://app1.pe.senac.br/taskmanagerglc/nfCadastro/${id}/edit">CLIQUE PARA VER.</a><p>  
+    `
+
+        let destinatarios2 = '';
+        funcionario.forEach((usuario, index) => {
+          destinatarios2 += `${usuario.email};`;
+        });
+
+
+        emailUtils.enviar(destinatarios2, txEmail2);
+
+
+
+
+      } else if (statusNF === 'Enviado para Contas a Pagar') {
+
+        status = await Status.findOne({ where: { nome: 'Enviado para Contas a Pagar' } });
+        console.log('Status encontrado:', status?.id);
+
+        resultadoUpdate = await Atividade.update(
+          {
+            fkStatus: status?.id,
+          },
+          {
+            where: { id },
+            individualHooks: false,
+          }
+        );
+
+        const funcionarioPagamento = await Usuario.findAll({
+          where: { usuarioFinanceiro: true }
+        })
+
+        const atividade = await Atividade.findOne({ where: { id } });
+
+        const solicitante = await Usuario.findOne({
+          where: { id: atividade?.fkUsuarioSolicitante }
+        });
+
+
+        const txEmail2 = `
+        <b>Pagamento GLC.</b><br>
+
+    Segue NF para contas a pagar
+    <br/>
+    <a href="https://app1.pe.senac.br/taskmanagerglc/nfCadastro/${id}/edit">CLIQUE PARA VER.</a><p>  
+    `
+
+        let destinatarios2 = '';
+
+
+
+        funcionarioPagamento.forEach((usuario, index) => {
+          destinatarios2 += `${usuario.email};`;
+        });
+
+
+        emailUtils.enviar(destinatarios2, txEmail2);
+        emailUtils.enviar(solicitante?.email, txEmail2);
+
+
+
+
+      } else if (statusNF === 'Enviado para Contas a PagarPatr') {
+
+        status = await Status.findOne({ where: { nome: 'Enviado para Contas a Pagar' } });
+        console.log('Status encontrado:', status?.id);
+
+        resultadoUpdate = await Atividade.update(
+          {
+            fkStatus: status?.id,
+          },
+          {
+            where: { id },
+            individualHooks: false,
+          }
+        );
+
+        const funcionarioPatrimonio = await Usuario.findAll({
+          where: { usuarioPatrimonio: true }
+        })
+
+        const funcionarioPagamento = await Usuario.findAll({
+          where: { usuarioFinanceiro: true }
+        })
+
+        const txEmail1 = `
+            <b>Pagamento de patrimônio.</b><br>
+
+        Segue chamado Patrimônio para atendimento
+        <br/>
+        <a href="https://app1.pe.senac.br/taskmanagerglc/nfCadastro/${id}/edit">CLIQUE PARA VER.</a><p>  
+        `
+
+        const txEmail2 = `
+            <b>Pagamento de patrimônio.</b><br>
+
+        Segue chamado Patrimônio para atendimento
+        <br/>
+        <a href="https://app1.pe.senac.br/taskmanagerglc/nfCadastro/${id}/edit">CLIQUE PARA VER.</a><p>  
+        `
+
+        let destinatarios = '';
+        let destinatarios2 = '';
+
+        funcionarioPatrimonio.forEach((usuario, index) => {
+          destinatarios += `${usuario.email};`;
+        });
+
+        funcionarioPagamento.forEach((usuario, index) => {
+          destinatarios2 += `${usuario.email};`;
+        });
+
+        emailUtils.enviar(destinatarios, txEmail1);
+        emailUtils.enviar(destinatarios2, txEmail2);
+
+
+
+      } else if (statusNF === 'Enviada para Análise Fiscal') {
+
+        status = await Status.findOne({ where: { nome: 'Enviada para Análise Fiscal' } });
+        console.log('Status encontrado:', status?.id);
+
+        resultadoUpdate = await Atividade.update(
+          {
+            fkStatus: status?.id,
+          },
+          {
+            where: { id },
+            individualHooks: false,
+          }
+        );
+
+        const funcionarioAnaliseFiscal = await Usuario.findAll({
+          where: { usuarioCarteiraFiscal: true }
+        })
+        const txEmail1 = `
+            <b>Nota Fiscal de serviço</b><br>
+
+        Segue NF para análise
+        <br/>
+        <a href="https://app1.pe.senac.br/taskmanagerglc/nfCadastro/${id}/edit">CLIQUE PARA VER.</a><p>  
+        `
+
+        let destinatarios = '';
+
+        funcionarioAnaliseFiscal.forEach((usuario, index) => {
+          destinatarios += `${usuario.email};`;
+        });
+
+
+        emailUtils.enviar(destinatarios, txEmail1);
+
+
+
+
+      } else if (statusNF === 'Enviado para análise fiscal, pagamento direto pela unidade') {
+
+        status = await Status.findOne({ where: { nome: 'Enviado para análise fiscal, pagamento direto pela unidade' } });
+        console.log('Status encontrado:', status?.id);
+
+        resultadoUpdate = await Atividade.update(
+          {
+            fkStatus: status?.id,
+          },
+          {
+            where: { id },
+            individualHooks: false,
+          }
+        );
+
+
+
+
+      }else if (statusNF === 'Mxm cadastrado, segue para validação da carteira fiscal') {
+
+        status = await Status.findOne({ where: { nome: 'Mxm cadastrado, segue para validação da carteira fiscal' } });
+        console.log('Status encontrado:', status?.id);
+
+        resultadoUpdate = await Atividade.update(
+          {
+            fkStatus: status?.id,
+          },
+          {
+            where: { id },
+            individualHooks: false,
+          }
+        );
+
+
+
+
+      }
+       else if (statusNF === 'Pago') {
+
+        status = await Status.findOne({ where: { nome: 'Pago' } });
+        console.log('Status encontrado:', status?.id);
+
+        resultadoUpdate = await Atividade.update(
+          {
+            fkStatus: status?.id,
+          },
+          {
+            where: { id },
+            individualHooks: false,
+          }
+        );
+
+
+
+      }
+
       console.log('Resultado do update da Atividade:', resultadoUpdate);
 
-      if (logged && id) {
+      if (newStatus) {
+        const timeline = await TimeLineStatus.create({
+          fkStatus: newStatus,
+          fkAtividade: id,
+          fkUsuario: logged,
+        });
+        console.log('TimelineStatus criado:', timeline);
+      }
+
+
+      if (newStatus === "") {
         const timeline = await TimeLineStatus.create({
           fkStatus: status?.id,
           fkAtividade: id,
@@ -1262,7 +1609,318 @@ class AtividadeController implements IController {
       res
         .status(200)
         .json({ data: registro, message: 'Alteração realizada com sucesso.' });
-    } catch (err: any) {
+    }
+    catch (err: any) {
+      console.log('Erro no try/catch:', err);
+
+      if (typeof err.errors !== 'undefined') {
+        res.status(401).json({ message: err.errors[0].message });
+      } else if (typeof err.message !== 'undefined') {
+        res.status(401).json({ message: err.message });
+      } else {
+        res
+          .status(401)
+          .json({
+            message:
+              'Aconteceu um erro no processamento da requisição, por favor tente novamente.',
+          });
+      }
+    }
+  }
+
+
+  async notaParaGLC(req: Request, res: Response, next: NextFunction): Promise<any> {
+    try {
+      const { id } = req.params;
+      console.log('ID da atividade recebido:', id);
+
+      const { logged, statusNF, informacoes, newStatus } = req.body;
+      console.log('Usuário logado (logged):', logged);
+
+      let resultadoUpdate
+      let status
+
+      //ok glc
+      if (newStatus) {
+
+        resultadoUpdate = await Atividade.update(
+          {
+            fkStatus: newStatus,
+            informacoes
+          },
+          {
+            where: { id },
+            individualHooks: false,
+          }
+        );
+
+
+
+      } else if (statusNF === 'Enviada para lançar pagamento GLC') {
+
+        status = await Status.findOne({ where: { nome: 'Enviada para lançar pagamento GLC' } });
+        console.log('Status encontrado:', status?.id);
+
+        resultadoUpdate = await Atividade.update(
+          {
+            fkStatus: status?.id,
+            informacoes
+          },
+          {
+            where: { id },
+            individualHooks: false,
+          }
+        );
+
+        //ok para setor
+      } else if (statusNF === 'para pagamento direto') {
+
+
+        status = await Status.findOne({ where: { nome: 'Analisado pela carteira fiscal pagamento direto pela unidade' } });
+
+        const atividade = await Atividade.findOne({ where: { id } });
+
+
+
+        resultadoUpdate = await Atividade.update(
+          {
+            fkStatus: status?.id,
+            informacoes
+          },
+          {
+            where: { id },
+            individualHooks: false,
+          }
+        );
+
+
+        console.log('Status encontrado:', status?.id);
+
+
+
+
+
+      } else if (statusNF === 'Carteira Enviada para lançar pagamento GLC') {
+
+        status = await Status.findOne({ where: { nome: 'Enviada para lançar pagamento GLC' } });
+        console.log('Status encontrado:', status?.id);
+
+        resultadoUpdate = await Atividade.update(
+          {
+            fkStatus: status?.id,
+            informacoes
+          },
+          {
+            where: { id },
+            individualHooks: false,
+          }
+        );
+
+        const funcionario = await Usuario.findAll({
+          where: { usuarioPagamento: true }
+        })
+
+        const txEmail2 = `
+        <b>Pagamento GLC- Analise Fiscal</b><br>
+
+    Analise fiscal feita, segue para pagamento
+    <br/>
+    <a href="https://app1.pe.senac.br/taskmanagerglc/nfCadastro/${id}/edit">CLIQUE PARA VER.</a><p>  
+    `
+
+        let destinatarios2 = '';
+        funcionario.forEach((usuario, index) => {
+          destinatarios2 += `${usuario.email};`;
+        });
+
+
+        emailUtils.enviar(destinatarios2, txEmail2);
+
+
+
+
+      } else if (statusNF === 'Enviado para Contas a Pagar') {
+
+        status = await Status.findOne({ where: { nome: 'Enviado para Contas a Pagar' } });
+        console.log('Status encontrado:', status?.id);
+
+        resultadoUpdate = await Atividade.update(
+          {
+            fkStatus: status?.id,
+          },
+          {
+            where: { id },
+            individualHooks: false,
+          }
+        );
+
+        const funcionarioPagamento = await Usuario.findAll({
+          where: { usuarioFinanceiro: true }
+        })
+
+        const txEmail2 = `
+        <b>Pagamento GLC.</b><br>
+
+    Segue chamado Nota Fiscal para atendimento
+    <br/>
+    <a href="https://app1.pe.senac.br/taskmanagerglc/nfCadastro/${id}/edit">CLIQUE PARA VER.</a><p>  
+    `
+
+        let destinatarios2 = '';
+
+
+
+        funcionarioPagamento.forEach((usuario, index) => {
+          destinatarios2 += `${usuario.email};`;
+        });
+
+
+        emailUtils.enviar(destinatarios2, txEmail2);
+
+
+
+
+      } else if (statusNF === 'Enviado para Contas a PagarPatr') {
+
+        status = await Status.findOne({ where: { nome: 'Enviado para Contas a Pagar' } });
+        console.log('Status encontrado:', status?.id);
+
+        resultadoUpdate = await Atividade.update(
+          {
+            fkStatus: status?.id,
+          },
+          {
+            where: { id },
+            individualHooks: false,
+          }
+        );
+
+        const funcionarioPatrimonio = await Usuario.findAll({
+          where: { usuarioPatrimonio: true }
+        })
+
+        const funcionarioPagamento = await Usuario.findAll({
+          where: { usuarioFinanceiro: true }
+        })
+
+        const txEmail1 = `
+            <b>Pagamento de patrimônio.</b><br>
+
+        Segue chamado Patrimônio para atendimento
+        <br/>
+        <a href="https://app1.pe.senac.br/taskmanagerglc/nfCadastro/${id}/edit">CLIQUE PARA VER.</a><p>  
+        `
+
+        const txEmail2 = `
+            <b>Pagamento de patrimônio.</b><br>
+
+        Segue chamado Patrimônio para atendimento
+        <br/>
+        <a href="https://app1.pe.senac.br/taskmanagerglc/nfCadastro/${id}/edit">CLIQUE PARA VER.</a><p>  
+        `
+
+        let destinatarios = '';
+        let destinatarios2 = '';
+
+        funcionarioPatrimonio.forEach((usuario, index) => {
+          destinatarios += `${usuario.email};`;
+        });
+
+        funcionarioPagamento.forEach((usuario, index) => {
+          destinatarios2 += `${usuario.email};`;
+        });
+
+        emailUtils.enviar(destinatarios, txEmail1);
+        emailUtils.enviar(destinatarios2, txEmail2);
+
+
+
+      } else if (statusNF === 'Enviada para Análise Fiscal') {
+
+        status = await Status.findOne({ where: { nome: 'Enviada para Análise Fiscal' } });
+        console.log('Status encontrado:', status?.id);
+
+        resultadoUpdate = await Atividade.update(
+          {
+            fkStatus: status?.id,
+          },
+          {
+            where: { id },
+            individualHooks: false,
+          }
+        );
+
+        const funcionarioAnaliseFiscal = await Usuario.findAll({
+          where: { usuarioCarteiraFiscal: true }
+        })
+        const txEmail1 = `
+            <b>Nota Fiscal de serviço</b><br>
+
+        Segue NF para análise
+        <br/>
+        <a href="https://app1.pe.senac.br/taskmanagerglc/nfCadastro/${id}/edit">CLIQUE PARA VER.</a><p>  
+        `
+
+        let destinatarios = '';
+
+        funcionarioAnaliseFiscal.forEach((usuario, index) => {
+          destinatarios += `${usuario.email};`;
+        });
+
+
+        emailUtils.enviar(destinatarios, txEmail1);
+
+
+
+
+      } else if (statusNF === 'Pago') {
+
+        status = await Status.findOne({ where: { nome: 'Pago' } });
+        console.log('Status encontrado:', status?.id);
+
+        resultadoUpdate = await Atividade.update(
+          {
+            fkStatus: status?.id,
+          },
+          {
+            where: { id },
+            individualHooks: false,
+          }
+        );
+
+
+
+      }
+
+      console.log('Resultado do update da Atividade:', resultadoUpdate);
+
+      // if ( newStatus) {
+      //   const timeline = await TimeLineStatus.create({
+      //     fkStatus: newStatus,
+      //     fkAtividade: id,
+      //     fkUsuario: logged,
+      //   });
+      //   console.log('TimelineStatus criado:', timeline);
+      // }
+
+
+      // if ( newStatus==="" ) {
+      //   const timeline = await TimeLineStatus.create({
+      //     fkStatus: status?.id,
+      //     fkAtividade: id,
+      //     fkUsuario: logged,
+      //   });
+      //   console.log('TimelineStatus criado:', timeline);
+      // }
+
+      const registro = await Atividade.findOne({ where: { id } });
+      console.log('Registro atualizado da Atividade:', registro);
+
+      res
+        .status(200)
+        .json({ data: registro, message: 'Alteração realizada com sucesso.' });
+    }
+    catch (err: any) {
       console.log('Erro no try/catch:', err);
 
       if (typeof err.errors !== 'undefined') {
@@ -1796,17 +2454,27 @@ class AtividadeController implements IController {
             model: Usuario,
             as: 'Usuario',
             include: [{ model: Area, include: [Unidade] }]
-          }
+          },
+          {
+            model: Usuario,
+            as: 'UsuarioExecutor',
+            include: [{ model: Area, include: [Unidade] }]
+          },
         ],
         order: [['createdAt', 'DESC']],
         where: {
           categoria: 'notaFiscal',
           [Op.or]: [
-            { '$Status.nome$': 'Iniciado' },
-            { '$Status.nome$': 'Aberto' },
-            { '$Status.nome$': 'Parado' },
-            { '$Status.nome$': 'Planejado para Iniciar' },
-            { '$Status.nome$': 'Pendênte' }
+            { '$Status.nome$': 'Enviada para lançar pagamento GLC' },
+            { '$Status.nome$': 'Enviado para Contas a Pagar' },
+            { '$Status.nome$': 'Enviada para Análise Fiscal' },
+            { '$Status.nome$': 'Enviado para análise fiscal, pagamento direto pela unidade' },
+            { '$Status.nome$': 'Nota Cadastrada - Aguardando aprovação do gestor' },
+            { '$Status.nome$': 'Pago' },
+            { '$Status.nome$': 'Nota Cadastrada - Aguardando aprovação do gestor' },
+            { '$Status.nome$': 'Analisado pela carteira fiscal pagamento direto pela unidade' },
+
+
           ],
           '$Usuario.Area.Unidade.id$': req.usuario?.Area?.Unidade?.id // 🛡️ proteção
         }
@@ -1819,7 +2487,7 @@ class AtividadeController implements IController {
     }
   }
 
-  
+
 
 
   async recebidasSetorNFPagar(
@@ -1844,20 +2512,29 @@ class AtividadeController implements IController {
             model: Usuario,
             as: 'Usuario',
             include: [{ model: Area, include: [Unidade] }]
+          },
+          {
+            model: Usuario,
+            foreignKey: 'fkUsuarioExecutor',
+            as: 'UsuarioExecutor',
+            include: [{ model: Area, include: [Unidade] }]
           }
+
         ],
         order: [['createdAt', 'DESC']],
         where: {
-          categoria: 'notaFiscal',
+
           [Op.or]: [
-            // { '$Status.nome$': 'Iniciado' },
-            // // { '$Status.nome$': 'Aberto' },
-            // // { '$Status.nome$': 'Parado' },
-            // // { '$Status.nome$': 'Planejado para Iniciar' },
-             { '$Status.nome$': 'Pendênte' }
+            { '$Status.nome$': 'Enviada para Análise Fiscal' },
+            { '$Status.nome$': 'Enviado para Contas a Pagar' },
+            { '$Status.nome$': 'Enviada para lançar pagamento GLC' },
+             { '$Status.nome$': 'Mxm cadastrado, segue para validação da carteira fiscal' }
+
           ],
-           }
+        }
       });
+
+      console.log('cvcvcv' + JSON.stringify(registros))
 
       res.status(200).json({ data: registros })
     } catch (err) {
@@ -1888,19 +2565,27 @@ class AtividadeController implements IController {
             model: Usuario,
             as: 'Usuario',
             include: [{ model: Area, include: [Unidade] }]
-          }
+          },
+          {
+            model: Usuario,
+            as: 'UsuarioExecutor',
+            include: [{ model: Area, include: [Unidade] }]
+          },
         ],
         order: [['createdAt', 'DESC']],
         where: {
-          categoria: 'notaFiscal',
+
           [Op.or]: [
-            { '$Status.nome$': 'Iniciado' },
-            // { '$Status.nome$': 'Aberto' },
-            // { '$Status.nome$': 'Parado' },
-            // { '$Status.nome$': 'Planejado para Iniciar' },
-            // { '$Status.nome$': 'Pendênte' }
+
+
+            { '$Status.nome$': 'Enviado para Contas a Pagar' },
+            { '$Status.nome$': 'Enviada para Análise Fiscal' },
+            { '$Status.nome$': 'Enviado para análise fiscal, pagamento direto pela unidade' },
+            { '$Status.nome$': 'Mxm cadastrado, segue para validação da carteira fiscal' },
+            
+
           ],
-           }
+        }
       });
 
       res.status(200).json({ data: registros })

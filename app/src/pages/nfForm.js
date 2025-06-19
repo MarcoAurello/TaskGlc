@@ -1,14 +1,17 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useMemo } from "react";
 import styled from 'styled-components'
+import ReactQuill from 'react-quill';
 import {
     Alert, Avatar, Box, Button, Checkbox, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel,
     FormGroup, FormLabel, Hidden, Grid, IconButton, InputLabel, MenuItem, Radio, RadioGroup, Select, Switch, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination,
-    TableRow, TextField, Tooltip
+    TableRow, TextField, Tooltip, Typography
 } from "@mui/material";
 
 import Stepper from '@mui/material/Stepper';
+
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
+import 'react-quill/dist/quill.snow.css';
 
 import TaskItemDoChamadoFornecedor from "../components/task-item-do-chamadoFornecedor";
 import moment from 'moment';
@@ -24,6 +27,10 @@ import UploadButton from "../components/UploadButton";
 import { color } from "@mui/system";
 import TaskFilter from "../components/task-filter";
 import FileViewer from '../components/fileViewer';
+import { Editor } from 'react-draft-wysiwyg';
+import { EditorState, convertToRaw } from 'draft-js';
+
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 
 
@@ -49,18 +56,22 @@ const NfForm = (props) => {
 
     const [open, setOpen] = useState(false);
     const ImageLogo = require('../assets/coment.png')
+    const ImageCalc = require('../assets/calc.png')
     const ImagePlan = require('../assets/zip.png')
     const [openImg, setOpenImg] = useState(false);
     const [openMsg, setOpenMsg] = useState(false);
     const [openStatus, setOpenStatus] = useState(false);
     const [boleanDimensao, setBoleanDimensao] = useState(false);
     const [dimensao, setDimensao] = useState("");
+    const ImageProd = require('../assets/pdf.png')
+    const ImageMsg = require('../assets/msg.png')
 
     const { id } = props.match.params;
     const [openLoadingDialog, setOpenLoadingDialog] = useState(false)
     const [openMessageDialog, setOpenMessageDialog] = useState(false)
     const [message, setMessage] = useState('')
     const [selectedButton, setSelectedButton] = useState("");
+
 
     const [classificacao, setClassificacao] = useState('')
     const [newClassificacao, setNewClassificacao] = useState('')
@@ -73,6 +84,7 @@ const NfForm = (props) => {
     const [status, setStatus] = useState('')
     const [valueArea, setValueArea] = useState('')
     const [valueUnidade, setValueUnidade] = useState('')
+    const [detalhes, setDetalhes] = useState('')
     const [usuario, setUsuario] = useState('')
     const [emailUsuario, setEmailUsuario] = useState('')
     const [telefoneSolicitante, setTelefoneSolicitante] = useState('')
@@ -80,8 +92,16 @@ const NfForm = (props) => {
     const [setorSolicitanteFk, setSetorSolicitanteFK] = useState('')
     const [categoriaChamado, setCategoriaChamado] = useState('')
     const [btnMsg, setBtnMsg] = useState(false);
-
     const [tempoEstimado, setTempoEstimado] = useState('')
+    const [numeroSerie, setNumeroSerie] = useState("");
+    const [numeroPedido, setNumeroPedido] = useState("");
+
+    const [fornecedor, setFornecedor] = useState('')
+    const [cnpj, setCnpj] = useState('')
+    const [numeroNota, setNumeroNota] = useState('')
+    const [rateio, setRateio] = useState('')
+    const [atesto, setAtesto] = useState('')
+    const [codigoMira, setCodigoMira] = useState('')
     const [createdAt, setCreatedAt] = useState('')
     const [title, setTitle] = useState('')
     const [valorNF, setValorNF] = useState('')
@@ -95,6 +115,8 @@ const NfForm = (props) => {
     const [gti, setGti] = useState('')
     const fileInputRef = useRef(null);
     const anexo2 = require('../assets/ane.png')
+    const anexo4 = require('../assets/log.png')
+
 
     const [titulo, setTitulo] = useState('')
     const [centroCusto, setCentroCusto] = useState('')
@@ -103,6 +125,9 @@ const NfForm = (props) => {
 
     const [centroCusto1, getCentroCusto] = useState('')
     const [openMsg2, setOpenMsg2] = useState(false);
+    const [openMsg3, setOpenMsg3] = useState(false);
+    const [openMsg4, setOpenMsg4] = useState(false);
+    const [openMsg5, setOpenMsg5] = useState(false);
     const [conteudo, setConteudo] = useState('')
     const [contrato, setContrato] = useState([]);
     const [fkUnidade, setFkUnidade] = useState('')
@@ -138,6 +163,10 @@ const NfForm = (props) => {
     const [fkExecutor, getFkExecutor] = useState('')
     const [categoria, setCategoria] = useState('')
     const [arquivo, setArquivo] = useState(null)
+    const [localPatrimonio, setLocalPatrimonio] = useState('')
+    const [arquivoEnviado, setArquivoEnviado] = useState(false);
+
+
     const [listaDeArquivosEnviados, setListaDeArquivosEnviados] = useState([])
     const [caminho, setCaminho] = useState()
     const [openDialogFile, setOpenDialogFile] = useState(false)
@@ -167,9 +196,9 @@ const NfForm = (props) => {
 
     const [idChamado, setIdChamado] = useState('')
 
-    const toggleChecked = () => {
-        setChecked((prev) => !prev);
-    };
+    // const toggleChecked = () => {
+    //     setChecked((prev) => !prev);
+    // };
 
 
 
@@ -237,6 +266,9 @@ const NfForm = (props) => {
             </Box>
         );
     }
+
+
+
 
 
     useEffect(() => {
@@ -329,6 +361,8 @@ const NfForm = (props) => {
 
 
 
+
+
     const salvarArquivo = () => {
         // alert(newStatus)
 
@@ -404,10 +438,14 @@ const NfForm = (props) => {
                             setOpenMessageDialog(true)
                         } else if (status === 200) {
                             // alert(JSON.stringify(data.data.prazoInicioAtividades))
-                            setClassificacao(data.data.informacoes)
+
                             setProtocolo(data.data.protocolo)
+                            setDetalhes(data.data.detalhes)
                             setStatus(data.data.Status.nome)
                             setStatusId(data.data.Status.id)
+
+
+                            setClassificacao(data.data.informacoes)
                             getCategoria(data.data.categoria)
                             setValueArea(data.data.Area.nome)
                             setSetorSolicitante(data.data.Usuario.Area.Unidade.nome)
@@ -420,9 +458,25 @@ const NfForm = (props) => {
                             setFkDemandante(data.data.fkDemandante)
                             setCategoriaChamado(data.data.categoria)
                             setTitle(data.data.titulo)
+                            setCentroCusto(data.data.centroCusto)
                             setValorNF(data.data.valorNota)
-                            setNumeroContrato(data.data.Contrato.nomeEmpresa)
+                            setNumeroSerie(data.data.numeroSerie)
+
+                            setLocalPatrimonio(data.data.localPatrimonio)
+                            setNumeroPedido(data.data.numeroPedido)
+
+
+
+                            setNumeroContrato(data.data.numeroContrato)
+                            setFornecedor(data.data.fornecedor)
+                            setNumeroNota(data.data.numeroNota)
+                            setRateio(data.data.rateio)
+                            setCodigoMira(data.data.codigoMira)
+                            setAtesto(data.data.atesto)
+                            setCnpj(data.data.cnpj)
+
                             setFkAreaDemandada(data.data.fkArea)
+
                             setIdChamado(data.data.id)
                             setFkUsuario(data.data.fkUsuario)
                             getNomeExecutor(data.data.UsuarioExecutor.nome)
@@ -443,6 +497,8 @@ const NfForm = (props) => {
                     }).catch(err => setOpenLoadingDialog(false))
                 })
         }
+
+
 
 
 
@@ -638,6 +694,8 @@ const NfForm = (props) => {
         }
 
 
+
+
         function carregarStatus() {
             // setOpenLoadingDialog(true)
             const token = getCookie('_token_task_manager')
@@ -721,6 +779,7 @@ const NfForm = (props) => {
 
 
 
+
     useEffect(() => {
         function carregarArea() {
 
@@ -753,6 +812,10 @@ const NfForm = (props) => {
 
         }
     }, [fkUnidade])
+
+
+
+
 
     useEffect(() => {
         function carregarSubArea() {
@@ -793,7 +856,6 @@ const NfForm = (props) => {
 
 
     function onSaveStatus(statusNF) {
-        console.log('Função onSaveStatus chamada');
 
         const token = getCookie('_token_task_manager');
         console.log('Token obtido:', token);
@@ -807,11 +869,10 @@ const NfForm = (props) => {
             body: JSON.stringify({
                 logged: props.logged.id,
                 statusNF,
-                informacoes
+                informacoes,
+                newStatus
             })
         };
-
-        console.log('Parâmetros enviados na requisição:', params);
 
         fetch(`${process.env.REACT_APP_DOMAIN_API}/api/atividade/${id}/notaParaAnalise`, params)
             .then(response => {
@@ -825,6 +886,7 @@ const NfForm = (props) => {
                         setOpenLoadingDialog(false);
 
                         if (status === 401) {
+
                             console.log('Erro 401:', data.message);
                             setMessage(data.message);
                             setOpenMessageDialog(true);
@@ -892,6 +954,7 @@ const NfForm = (props) => {
                     console.log('Resposta parseada:', parsedResult); // Mostra a resposta parseada
                     setUploadResult(parsedResult);
                     setErrorMessage('');
+                    setArquivoEnviado(true)
 
                 } catch (e) {
                     console.error('Erro ao parsear a resposta:', e);
@@ -912,81 +975,80 @@ const NfForm = (props) => {
 
 
 
-    const
-        onSave = () => {
+    const onSave = () => {
 
-            // alert(newContrato);
-            // alert(valorNota)
-            setOpenLoadingDialog(true);
+        // alert(newContrato);
+        // alert(valorNota)
+        setOpenLoadingDialog(true);
 
-            const token = getCookie('_token_task_manager');
-            const payload = {
-                setorSolicitante: props.logged.Area.Unidade.nome,
-                listaDeArquivosEnviados,
-                caminho,
-                hash,
-                fkUnidade,
-                fkArea,
-                titulo: numeroNF,
-                dataInicio,
-                conteudo: justificativaNota,
-                dimensao,
-                tipoCadastro: 'notaFiscal',
-                informacoes: 'teste',
-                arquivado: false,
-                newContrato,
-                valorNota
-            };
-
-
-
-            const params = {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(payload)
-            };
-
-            const url = `${process.env.REACT_APP_DOMAIN_API}/api/atividade/nota`;
-
-
-            fetch(url, params)
-                .then(response => {
-                    const { status } = response;
-
-
-                    response.json().then(data => {
-                        setOpenLoadingDialog(false);
+        const token = getCookie('_token_task_manager');
+        const payload = {
+            setorSolicitante: props.logged.Area.Unidade.nome,
+            listaDeArquivosEnviados,
+            caminho,
+            hash,
+            fkUnidade,
+            fkArea,
+            titulo: numeroNF,
+            dataInicio,
+            conteudo: justificativaNota,
+            dimensao,
+            tipoCadastro: 'notaFiscal',
+            informacoes: 'teste',
+            arquivado: false,
+            newContrato,
+            valorNota
+        };
 
 
 
-                        if (status === 401) {
-                            setMessage(data.message);
-                            setOpenMessageDialog(true);
-                        } else if (status === 200) {
-                            setAtividade(data.data);
-                            setMessage(data.message);
-                            setOpenMessageDialog(true);
-                            setModalSave(false);
+        const params = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(payload)
+        };
 
-                            window.location.href = `${process.env.REACT_APP_DOMAIN}/pagamentoDeNotas/`;
-                        }
-                    }).catch(err => {
-                        alert(err.message);
-                        setOpenLoadingDialog(false);
-                        setMessage('Erro ao processar a resposta do servidor.');
-                        setOpenMessageDialog(true);
-                    });
-                })
-                .catch(err => {
-                    alert("🚨 Erro na requisição fetch:\n" + err.message);
+        const url = `${process.env.REACT_APP_DOMAIN_API}/api/atividade/nota`;
+
+
+        fetch(url, params)
+            .then(response => {
+                const { status } = response;
+
+
+                response.json().then(data => {
                     setOpenLoadingDialog(false);
-                    setMessage('Erro na conexão com o servidor.');
+
+
+
+                    if (status === 401) {
+                        setMessage(data.message);
+                        setOpenMessageDialog(true);
+                    } else if (status === 200) {
+                        setAtividade(data.data);
+                        setMessage(data.message);
+                        setOpenMessageDialog(true);
+                        setModalSave(false);
+
+                        window.location.href = `${process.env.REACT_APP_DOMAIN}/pagamentoDeNotas/`;
+                    }
+                }).catch(err => {
+                    alert(err.message);
+                    setOpenLoadingDialog(false);
+                    setMessage('Erro ao processar a resposta do servidor.');
                     setOpenMessageDialog(true);
                 });
-        };
+            })
+            .catch(err => {
+                alert("🚨 Erro na requisição fetch:\n" + err.message);
+                setOpenLoadingDialog(false);
+                setMessage('Erro na conexão com o servidor.');
+                setOpenMessageDialog(true);
+            });
+    };
 
 
     const novaInteracao = () => {
@@ -1138,7 +1200,7 @@ const NfForm = (props) => {
     }
 
     const criarExecucao = () => {
-    
+
 
         // alert(emailExecutor)
         const token = getCookie('_token_task_manager')
@@ -1238,31 +1300,82 @@ const NfForm = (props) => {
         <TextField size="small" fullWidth label="Protocolo" disabled variant="outlined" value={protocolo} />
       </div> : ''} */}
 
-            {/* <div style={{
+            <div style={{
                 display: 'flex',
                 flexDirection: 'row',
                 alignItems: 'center',
                 marginBottom: 16,
                 marginLeft: 5
             }}>
-                {(logged && logged.fkArea === fkAreaDemandada && logged.Perfil.nome === PerfilUtils.Coordenador) ||
-                    (logged && logged.Perfil.nome === PerfilUtils.Gerente && logged.Area.fkUnidade === fkUnidadeExecutor) ?
-                    <Button variant="contained" size="small" color="error" onClick={() => setOpen(true)} style={{ marginRight: 10 }}>
-                        Selecionar funcionário para atender<PersonIcon />
-                    </Button>
-                    : ''
-                }
+                <Button
+                    size="small"
+                    variant="contained"
+                    startIcon={<ArrowBackIcon />}
+                    onClick={() =>
+                        (window.location.href = `${process.env.REACT_APP_DOMAIN}/pagamentos`)
+                    }
+                    style={{
+                        marginBottom: 16,
+                        borderRadius: 6,
 
-                {(logged && props.logged.id === fkExecutor) || (logged && logged.Perfil.nome === PerfilUtils.Coordenador && props.logged.fkArea === fkAreaDemandada) ?
-                    <Button variant="contained" size="small" color="error" onClick={() => setOpenStatus(true)} style={{ marginRight: 10 }}>
-                        Alterar Status da Atividade
-                    </Button>
-                    : ''
-                }
+                        textTransform: 'none',
+                        fontSize: 13,
+                    }}
+                >
+                    Voltar
+                </Button>
 
 
-              
-            </div> */}
+
+
+                <div style={{ overflow: 'hidden', marginLeft: '20PX' }}>
+                    <a>
+                        <img
+                            src={ImageMsg}
+                            height={70}
+                            onClick={() => setOpenMsg3(true)}
+                            style={{ cursor: 'pointer', border: '2px solid #ddd', borderRadius: '8px', transition: 'transform 0.3s ease' }}
+                            onMouseEnter={e => e.target.style.transform = 'scale(1.05)'}
+                            onMouseLeave={e => e.target.style.transform = 'scale(1)'}
+                        />
+                    </a>
+                </div>
+
+                {logged &&
+                    (logged.usuarioSolicitante === true ||
+                        logged.usuarioAtesto === true ||
+                        logged.usuarioPagamento === true ||
+                        logged.usuarioCarteiraFiscal === true)
+
+                    ?
+                    <div style={{ borderRadius: '8px', overflow: 'hidden', marginLeft: '20PX' }}>
+                        <a>
+                            <img
+                                src={anexo2}
+                                height={70}
+                                onClick={() => setOpenMsg2(true)}
+                                style={{ cursor: 'pointer', border: '2px solid #ddd', borderRadius: '8px', transition: 'transform 0.3s ease' }}
+                                onMouseEnter={e => e.target.style.transform = 'scale(1.05)'}
+                                onMouseLeave={e => e.target.style.transform = 'scale(1)'}
+                            />
+                        </a>
+                        <a style={{ marginLeft: '20PX' }}>
+                            <img
+                                src={anexo4}
+                                height={70}
+                                onClick={() => setOpenMsg4(true)}
+                                style={{ cursor: 'pointer', border: '2px solid #ddd', borderRadius: '8px', transition: 'transform 0.3s ease' }}
+                                onMouseEnter={e => e.target.style.transform = 'scale(1.05)'}
+                                onMouseLeave={e => e.target.style.transform = 'scale(1)'}
+                            />
+                        </a>
+                    </div>
+
+                    : ''}
+
+
+
+            </div>
 
             <div>
 
@@ -1280,29 +1393,31 @@ const NfForm = (props) => {
                             margin: 'auto',
                         }}
                     >
-                        {/* Botão voltar */}
-                        <Button
-                            size="small"
-                            variant="contained"
-                            startIcon={<ArrowBackIcon />}
-                            onClick={() =>
-                                (window.location.href = `${process.env.REACT_APP_DOMAIN}/pagamentoDeNotas`)
-                            }
-                            style={{
-                                marginBottom: 16,
-                                borderRadius: 6,
+                        {logged && logged.Area.fkUnidade === '1ac87340-11f0-4e12-8c0e-4552f2ac1e6c' && logged.usuarioPagamento ?
+                            <Button variant="contained" size="small" color="error" onClick={() => setOpen(true)} style={{ marginRight: 10 }}>
+                                Selecionar funcionário para atender<PersonIcon />
+                            </Button>
+                            : ''
+                        }
 
-                                textTransform: 'none',
-                                fontSize: 13,
-                            }}
-                        >
-                            Voltar
-                        </Button>
-                        <StatusStepper status={status} />
+                        {(logged && props.logged.id === fkExecutor && logged.usuarioPagamento) || (logged && logged.Perfil.nome === PerfilUtils.Coordenador && props.logged.fkArea === fkAreaDemandada)
+                        || logged && logged.usuarioCarteiraFiscal
 
-                        {/* Status da nota */}
-
+                            ?
+                            <Button variant="contained" size="small" color="error" onClick={() => setOpenStatus(true)} style={{ marginRight: 10 }}>
+                                Alterar Status da Atividade
+                            </Button>
+                            : ''
+                        }
                         {/* Informações da nota */}
+                        {nomeExecutor ?
+                            <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                <span style={{ color: '#1976d2', fontWeight: 'bold' }}>Executor:</span> {nomeExecutor}
+                            </h3>
+
+                            :
+                            <div><b>Atividade sem executor</b></div>
+                        }
                         <div
                             style={{
                                 marginBottom: 24,
@@ -1313,15 +1428,24 @@ const NfForm = (props) => {
 
                             }}
                         >
-                            <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
-                                <span style={{ color: '#1976d2', fontWeight: 'bold' }}>Nota Fiscal:</span> {title}
+
+                            <h3 style={{ margin: '8px 0', color: 'red', fontSize: 16 }}>
+                                <span style={{ color: '#1976d2', fontWeight: 'bold' }}>Protocolo:</span> {protocolo}
                             </h3>
+                            <h3 style={{ margin: '8px 0', color: 'red', fontSize: 16 }}>
+                                <span style={{ color: '#1976d2', fontWeight: 'bold' }}>Status:</span> {status}
+                            </h3>
+                            <h3 style={{ margin: '8px 0', color: 'red', fontSize: 16 }}>
+                                <span style={{ color: '#1976d2', fontWeight: 'bold' }}>Tipo Pagamento:</span> {detalhes}
+                            </h3>
+
                             <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                <span style={{ color: '#1976d2', fontWeight: 'bold' }}>Fornecedor:</span> {title}
+                            </h3>
+                            {/* <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
                                 <span style={{ color: '#1976d2', fontWeight: 'bold' }}>Contrato:</span> {numeroContrato}
-                            </h3>
-                            <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
-                                <span style={{ color: '#1976d2', fontWeight: 'bold' }}>Valor R$:</span> {valorNF}
-                            </h3>
+                            </h3> */}
+
                             <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
                                 <span style={{ color: '#1976d2', fontWeight: 'bold' }}>Setor:</span> {setorSolicitante}
                             </h3>
@@ -1332,12 +1456,599 @@ const NfForm = (props) => {
                                 <span style={{ color: '#1976d2', fontWeight: 'bold' }}>Email:</span> {emailUsuario}
                             </h3>
 
-                            {nomeExecutor ?
+
+                            {codigoMira ?
                                 <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
-                                    <span style={{ color: '#1976d2', fontWeight: 'bold' }}>Executor:</span> {nomeExecutor}
+                                    <span style={{ color: '#1976d2', fontWeight: 'bold' }}>Codigo Mira:</span> {codigoMira}
                                 </h3>
+                                : ''}
+
+
+
+                            {detalhes === 'Enviado para análise fiscal, pagamento direto pela unidade' ?
+                                <>
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>Fornecedor:</span> {fornecedor}
+                                    </h3>
+
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>Cnpj:</span> {cnpj}
+                                    </h3>
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>n° Nota:</span> {numeroNota}
+                                    </h3>
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>Atesto:</span> {atesto}
+                                    </h3>
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>C/ Custo:</span> {centroCusto}
+                                    </h3>
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>Rateio:</span> {rateio}
+                                    </h3>
+
+                                </>
+                                : ''}
+
+
+
+
+                            {detalhes === 'contrato' ?
+                                <div>
+
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>Fornecedor:</span> {fornecedor}
+                                    </h3>
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>Cnpj:</span> {cnpj}
+                                    </h3>
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>n° Contrato:</span> {numeroContrato}
+                                    </h3>
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>n° Nota:</span> {numeroNota}
+                                    </h3>
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>C/ Custo:</span> {centroCusto}
+                                    </h3>
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>Rateio:</span> {rateio}
+                                    </h3>
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>Atesto:</span> {atesto}
+                                    </h3>
+                                    {logged &&
+                                        (logged.id === fkExecutor && logged.usuarioPagamento === true)
+
+                                        ?
+                                        <div style={{ borderRadius: '8px', overflow: 'hidden', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+
+
+
+
+
+                                            {/* <Button
+                                                variant="contained"
+                                                color="primary"
+                                                onClick={() => onSaveStatus('Enviada para Análise Fiscal')}
+                                                sx={{
+                                                    paddingX: 3,
+                                                    paddingY: 1,
+                                                    marginBottom: '10px',
+                                                    borderRadius: '8px',
+                                                    textTransform: 'none',
+                                                    fontWeight: 'bold',
+                                                    marginRight: '10px'
+                                                }}
+                                            >
+                                                Enviar para Analise Fiscal
+                                            </Button>
+
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                onClick={() => onSaveStatus('Enviado para Contas a Pagar')}
+                                                sx={{
+                                                    paddingX: 3,
+                                                    paddingY: 1,
+                                                    marginBottom: '10px',
+                                                    borderRadius: '8px',
+                                                    textTransform: 'none',
+                                                    fontWeight: 'bold',
+                                                    marginRight: '10px'
+                                                }}
+                                            >
+                                                Enviar para contas a pagar
+                                            </Button> */}
+
+
+
+
+
+
+                                        </div>
+
+                                        : ''}
+
+
+
+
+
+
+                                </div>
+                                :
+                                ''}
+
+
+                            {detalhes === 'Pagamento Direto pela Unidade' ?
+                                <div>
+
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>Fornecedor:</span> {fornecedor}
+                                    </h3>
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>Cnpj:</span> {cnpj}
+                                    </h3>
+
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>n° Nota:</span> {numeroNota}
+                                    </h3>
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>C/ Custo:</span> {centroCusto}
+                                    </h3>
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>Rateio:</span> {rateio}
+                                    </h3>
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>Atesto:</span> {atesto}
+                                    </h3>
+
+
+
+
+
+                                </div>
+                                :
+                                ''}
+
+                            {detalhes === 'consumo' ?
+                                <div>
+
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>Fornecedor:</span> {fornecedor}
+                                    </h3>
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>Cnpj:</span> {cnpj}
+                                    </h3>
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>n° Nota:</span> {numeroNota}
+                                    </h3>
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>n° Serie:</span> {numeroSerie}
+                                    </h3>
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>n° Pedido:</span> {numeroPedido}
+                                    </h3>
+
+
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>Recebido por:</span> {rateio}
+                                    </h3>
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>Atesto:</span> {atesto}
+                                    </h3>
+
+
+                                    {logged &&
+                                        (logged.id === fkExecutor && logged.usuarioPagamento === true)
+
+                                        ?
+                                        <div style={{ borderRadius: '8px', overflow: 'hidden', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+
+
+
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                onClick={() => setOpenMsg2(true)}
+                                                sx={{
+                                                    paddingX: 3,
+                                                    paddingY: 1,
+                                                    marginBottom: '10px',
+                                                    borderRadius: '8px',
+                                                    textTransform: 'none',
+                                                    fontWeight: 'bold',
+                                                    marginRight: '10px'
+                                                }}
+                                            >
+                                                Anexar relatório MXM
+                                            </Button>
+
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                onClick={() => onSaveStatus('Enviada para Análise Fiscal')}
+                                                sx={{
+                                                    paddingX: 3,
+                                                    paddingY: 1,
+                                                    marginBottom: '10px',
+                                                    borderRadius: '8px',
+                                                    textTransform: 'none',
+                                                    fontWeight: 'bold',
+                                                    marginRight: '10px'
+                                                }}
+                                            >
+                                                Enviar para Analise Fiscal
+                                            </Button>
+
+                                            {/* <Button
+                                                variant="contained"
+                                                color="primary"
+                                                onClick={() => onSaveStatus('Enviado para Contas a Pagar')}
+                                                sx={{
+                                                    paddingX: 3,
+                                                    paddingY: 1,
+                                                    marginBottom: '10px',
+                                                    borderRadius: '8px',
+                                                    textTransform: 'none',
+                                                    fontWeight: 'bold',
+                                                    marginRight: '10px'
+                                                }}
+                                            >
+                                                Enviar para contas a pagar
+                                            </Button> */}
+
+
+
+
+
+
+                                        </div>
+
+                                        : ''}
+
+
+
+
+
+                                </div>
+                                :
+                                ''}
+
+                            {detalhes === 'patrimonio' ?
+                                <div>
+
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>Fornecedor:</span> {fornecedor}
+                                    </h3>
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>Cnpj:</span> {cnpj}
+                                    </h3>
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>n° Nota:</span> {numeroNota}
+                                    </h3>
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>n° Serie:</span> {numeroSerie}
+                                    </h3>
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>n° Pedido:</span> {numeroPedido}
+                                    </h3>
+
+
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>Recebido por:</span> {rateio}
+                                    </h3>
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>Atesto:</span> {atesto}
+                                    </h3>
+
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>Local do Bem:</span> {localPatrimonio}
+                                    </h3>
+
+
+                                    {logged &&
+                                        (logged.id === fkExecutor && logged.usuarioPagamento === true)
+
+                                        ?
+                                        <div style={{ borderRadius: '8px', overflow: 'hidden', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                onClick={() => setOpenMsg2(true)}
+                                                sx={{
+                                                    paddingX: 3,
+                                                    paddingY: 1,
+                                                    marginBottom: '10px',
+                                                    borderRadius: '8px',
+                                                    textTransform: 'none',
+                                                    fontWeight: 'bold',
+                                                    marginRight: '10px'
+                                                }}
+                                            >
+                                                Anexar relatório MXM
+                                            </Button>
+
+
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                onClick={() => setOpenMsg2(true)}
+                                                sx={{
+                                                    paddingX: 3,
+                                                    paddingY: 1,
+                                                    marginBottom: '10px',
+                                                    borderRadius: '8px',
+                                                    textTransform: 'none',
+                                                    marginRight: '10px',
+                                                    fontWeight: 'bold',
+                                                }}
+                                            >
+                                                Anexar relatório de tombamento
+                                            </Button>
+
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                onClick={() => onSaveStatus('Enviada para Análise Fiscal')}
+                                                sx={{
+                                                    paddingX: 3,
+                                                    paddingY: 1,
+                                                    marginBottom: '10px',
+                                                    borderRadius: '8px',
+                                                    textTransform: 'none',
+                                                    fontWeight: 'bold',
+                                                    marginRight: '10px'
+                                                }}
+                                            >
+                                                Enviar para Analise Fiscal
+                                            </Button>
+
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                onClick={() => onSaveStatus('Enviado para Contas a PagarPatr')}
+                                                sx={{
+                                                    paddingX: 3,
+                                                    paddingY: 1,
+                                                    marginBottom: '10px',
+                                                    borderRadius: '8px',
+                                                    textTransform: 'none',
+                                                    fontWeight: 'bold',
+                                                }}
+                                            >
+                                                Enviar para contas a pagar e patrimônio
+                                            </Button>
+
+                                        </div>
+
+                                        : ''}
+
+
+
+                                </div>
+                                :
+                                ''}
+
+                            {logged && logged.usuarioFinanceiro && status === 'Enviado para Contas a Pagar' ?
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={() => onSaveStatus('Pago')}
+                                    sx={{
+                                        paddingX: 3,
+                                        paddingY: 1,
+                                        marginBottom: '10px',
+                                        borderRadius: '8px',
+                                        textTransform: 'none',
+                                        fontWeight: 'bold',
+                                    }}
+                                >
+                                    Pagamento feito
+                                </Button>
 
                                 : ''}
+
+                            {logged && logged.Area?.Unidade?.nome === setorSolicitante && status === 'Analisado pela carteira fiscal pagamento direto pela unidade'
+                                && classificacao ?
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={() => setOpenMsg5(true)}
+
+                                    sx={{
+                                        paddingX: 3,
+                                        paddingY: 1,
+                                        marginBottom: '10px',
+                                        borderRadius: '8px',
+                                        textTransform: 'none',
+                                        fontWeight: 'bold',
+                                    }}
+                                >
+                                    Nota inserida no MXM, enviar para Analise Fiscal
+                                </Button>
+
+                                : ''}
+
+
+
+                            {detalhes === 'servico' ?
+                                <div>
+
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>Fornecedor:</span> {fornecedor}
+                                    </h3>
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>Cnpj:</span> {cnpj}
+                                    </h3>
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>n° Nota:</span> {numeroNota}
+                                    </h3>
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>n° Serie:</span> {numeroSerie}
+                                    </h3>
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>n° Pedido:</span> {numeroPedido}
+                                    </h3>
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>Grupo Pagamento:</span> {centroCusto}
+                                    </h3>
+
+
+
+                                    <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
+                                        <span style={{ color: '#1976d2', fontWeight: 'bold' }}>Atesto:</span> {atesto}
+                                    </h3>
+
+
+
+                                    {logged &&
+                                        (logged.id === fkExecutor && logged.usuarioPagamento === true)
+
+                                        ?
+                                        <div style={{ borderRadius: '8px', overflow: 'hidden', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+
+
+
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                onClick={() => setOpenMsg2(true)}
+                                                sx={{
+                                                    paddingX: 3,
+                                                    paddingY: 1,
+                                                    marginBottom: '10px',
+                                                    borderRadius: '8px',
+                                                    textTransform: 'none',
+                                                    fontWeight: 'bold',
+                                                    marginRight: '10px'
+                                                }}
+                                            >
+                                                Anexar relatório MXM
+                                            </Button>
+
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                onClick={() => onSaveStatus('Enviada para Análise Fiscal')}
+                                                sx={{
+                                                    paddingX: 3,
+                                                    paddingY: 1,
+                                                    marginBottom: '10px',
+                                                    borderRadius: '8px',
+                                                    textTransform: 'none',
+                                                    fontWeight: 'bold',
+                                                    marginRight: '10px'
+                                                }}
+                                            >
+                                                Enviar para Analise Fiscal
+                                            </Button>
+
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                onClick={() => onSaveStatus('Enviado para Contas a Pagar')}
+                                                sx={{
+                                                    paddingX: 3,
+                                                    paddingY: 1,
+                                                    marginBottom: '10px',
+                                                    borderRadius: '8px',
+                                                    textTransform: 'none',
+                                                    fontWeight: 'bold',
+                                                }}
+                                            >
+                                                Enviar para contas a pagar
+                                            </Button>
+
+                                           
+
+
+
+
+
+
+
+                                        </div>
+
+                                        : ''}
+
+                                        
+
+
+
+                                </div>
+                                :
+                                ''}
+                            {logged?.usuarioCarteiraFiscal && (status === 'Enviada para Análise Fiscal' || status === 'Enviado para análise fiscal, pagamento direto pela unidade') && (
+                                <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 24 }}>
+                                    <Button
+                                        variant="contained"
+                                        color="error"
+                                        onClick={() => setModalSave(true)}
+                                        sx={{
+                                            paddingX: 3,
+                                            paddingY: 1,
+                                            borderRadius: '8px',
+                                            textTransform: 'none',
+                                            fontWeight: 'bold',
+                                        }}
+                                    >
+                                        Analisar nota
+                                    </Button>
+                                </div>
+                            )}
+
+                            {logged && logged.usuarioCarteiraFiscal &&
+                                (status === 'Mxm cadastrado, segue para validação da carteira fiscal') ?
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={() => onSaveStatus('Enviado para Contas a Pagar')}
+                                    sx={{
+                                        paddingX: 3,
+                                        paddingY: 1,
+                                        marginBottom: '10px',
+                                        borderRadius: '8px',
+                                        textTransform: 'none',
+                                        fontWeight: 'bold',
+                                        marginRight: '10px'
+                                    }}
+                                >
+                                    Enviar para contas a pagar
+                                </Button>
+
+
+                                :
+                                ''}
+
+                                 {logged && logged.usuarioPagamento &&
+                                                logged.nome === nomeExecutor &&
+                                                status === 'Enviada para lançar pagamento GLC' && classificacao
+                                                ?
+                                                <Button
+                                                    variant="contained"
+                                                    color="primary"
+                                                    onClick={() => setOpenMsg5(true)}
+
+                                                    sx={{
+                                                        paddingX: 3,
+                                                        paddingY: 1,
+                                                        marginBottom: '10px',
+                                                        borderRadius: '8px',
+                                                        textTransform: 'none',
+                                                        fontWeight: 'bold',
+                                                    }}
+                                                >
+                                                    Nota inserida no MXM, enviar para Analise Fiscal
+                                                </Button>
+
+                                                : ''}
+
+
+
+
+
 
                             {arquivoDoChamado.length > 0 && (
                                 <div
@@ -1352,47 +2063,80 @@ const NfForm = (props) => {
                                     <strong style={{ display: 'block', marginBottom: 12 }}>
                                         Baixe os documentos para analisar este pagamento:
                                     </strong>
-                                    {arquivoDoChamado
-                                        .filter(item => !item.hash)
-                                        .map((item, index) => (
-                                            <Button
-                                                key={index}
-                                                size="small"
-                                                onClick={() => baixar(item.id)}
-                                                style={{
-                                                    margin: '4px',
-                                                    fontSize: '12px',
-                                                    border: '1px solid #ddd',
-                                                    borderRadius: '6px',
-                                                    textTransform: 'none',
-                                                }}
-                                            >
-                                                <AttachFileIcon style={{ marginRight: 4 }} />
-                                                {item.nomeApresentacao}
-                                            </Button>
-                                        ))}
+
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'row',
+                                            gap: 12,
+                                            flexWrap: 'wrap',
+                                            marginBottom: 16,
+                                        }}
+                                    >
+                                        {arquivoDoChamado
+                                            .filter(item => !item.hash)
+                                            .map((item, index) => (
+                                                <button
+                                                    key={index}
+                                                    onClick={() => baixar(item.id)}
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        whiteSpace: 'nowrap',
+                                                        padding: '6px 12px',
+                                                        borderRadius: 6,
+                                                        border: '1px solid #ccc',
+                                                        backgroundColor: '#f5f5f5',
+                                                        cursor: 'pointer',
+                                                    }}
+                                                >
+                                                    <AttachFileIcon style={{ marginRight: 4 }} />
+                                                    {item.nomeApresentacao}
+                                                </button>
+                                            ))}
+                                    </div>
+
+
                                     <FileViewer arquivoDoChamado={arquivoDoChamado} />
                                 </div>
+
+
                             )}
 
                         </div>
+
+
                         {classificacao ?
                             <div
                                 style={{
                                     marginBottom: 24,
                                     padding: 16,
-                                    background: '#fcb4dd',
+                                    background: '#000', // fundo preto
                                     borderRadius: 12,
                                     boxShadow: '0 4px 12px rgba(0, 0, 0, 0.06)',
-                                    whiteSpace: 'pre-wrap', // <- habilita quebra de linha
-                                    wordBreak: 'break-word', // <- quebra palavras longas se necessário
-
+                                    whiteSpace: 'pre-wrap',
+                                    wordBreak: 'break-word',
+                                    display: 'flex', // coloca os itens lado a lado
+                                    alignItems: 'center', // alinha verticalmente
+                                    gap: 16, // espaçamento entre os itens
+                                    color: '#fff' // texto branco
                                 }}
                             >
-                                <h3 style={{ margin: '8px 0', color: '#333', fontSize: 16 }}>
-                                    <span style={{ color: '#1976d2', fontWeight: 'bold' }}>Analise Fiscal:</span> {classificacao}
+                                <img
+                                    src={ImageCalc}
+                                    height={70}
+                                    style={{
+                                        cursor: 'pointer',
+
+                                        borderRadius: '8px',
+                                        transition: 'transform 0.3s ease'
+                                    }}
+                                />
+                                <h3 style={{ margin: 0, color: '#fff', fontSize: 16 }}>
+                                    <span style={{ color: '#4dabf7', fontWeight: 'bold' }}>Análise Fiscal:</span> {classificacao}
                                 </h3>
                             </div>
+
 
 
                             : ''}
@@ -1401,27 +2145,7 @@ const NfForm = (props) => {
 
                         {/* Documentos */}
 
-                        {logged &&
-                            (logged.usuarioSolicitante === true ||
-                                logged.usuarioAtesto === true ||
-                                logged.usuarioPagamento === true ||
-                                logged.usuarioCarteiraFiscal === true)
 
-                            ?
-                            <div style={{ borderRadius: '8px', overflow: 'hidden', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
-                                <a>
-                                    <img
-                                        src={anexo2}
-                                        height={50}
-                                        onClick={() => setOpenMsg2(true)}
-                                        style={{ cursor: 'pointer', border: '2px solid #ddd', borderRadius: '8px', transition: 'transform 0.3s ease' }}
-                                        onMouseEnter={e => e.target.style.transform = 'scale(1.05)'}
-                                        onMouseLeave={e => e.target.style.transform = 'scale(1)'}
-                                    />
-                                </a>
-                            </div>
-
-                            : ''}
 
 
 
@@ -1437,91 +2161,58 @@ const NfForm = (props) => {
                             borderRadius: '10px',
                             marginBottom: '20px',
                         }}>
-                            {mensagens.map((item, index) => {
-                                const isUsuarioAtual = item.Usuario?.id === logged?.id; // Altere se necessário
+                            {mensagens.map((item, index) => (
+                                <div key={index} style={{
+                                    borderTop: '1px solid #e0e0e0',
+                                    padding: 10,
+                                    background: '#FFFFE0',
+                                    borderRadius: 10,
 
-                                return (
-                                    <div
-                                        key={index}
-                                        style={{
-                                            display: 'flex',
-                                            justifyContent: isUsuarioAtual ? 'flex-end' : 'flex-start',
-                                            marginBottom: 10,
-                                        }}
-                                    >
-                                        <div
-                                            style={{
-                                                maxWidth: '50%',
-                                                backgroundColor: isUsuarioAtual ? '#dcf8c6' : '#fff',
-                                                padding: '10px 14px',
-                                                borderRadius: '15px',
-                                                borderBottomRightRadius: isUsuarioAtual ? '0' : '15px',
-                                                borderBottomLeftRadius: isUsuarioAtual ? '15px' : '0',
-                                                boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
-                                                fontSize: 14,
-                                                whiteSpace: 'pre-wrap',
-                                                wordBreak: 'break-word',
-                                            }}
-                                        >
-                                            <div style={{ marginBottom: 4, fontWeight: 'bold', fontSize: 12, color: '#555' }}>
-                                                {item.Usuario?.nome}
-                                            </div>
-                                            <div>{item.conteudo}</div>
-                                            <div style={{ fontSize: 10, color: '#999', textAlign: 'right', marginTop: 5 }}>
-                                                {new Date(item.createdAt).toLocaleTimeString()}
-                                            </div>
+                                    border: '2px solid #e0e0e0',
+                                }}>
+                                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                            <b style={{ fontSize: 12 }}>{item.Usuario ? item.Usuario.nome : ''}</b>
+                                            <b style={{ fontSize: 12 }}>{new Date(item.createdAt).toLocaleString()}</b>
                                         </div>
                                     </div>
-                                );
-                            })}
+                                    <div>
+
+
+                                        <Box
+                                            sx={{
+
+                                            }}
+                                            dangerouslySetInnerHTML={{ __html: item.conteudo }}
+                                        />
+                                    </div>
+                                </div>
+                            ))}
                         </div>
 
                         {/* Campo para mensagem */}
-                        <div style={{ marginBottom: 24 }}>
-                            <TextField
-                                fullWidth
-                                label="Deixe um comentario sobre este pagamento"
-                                multiline
-                                rows={4}
-                                variant="outlined"
-                                value={conteudo}
-                                onChange={e => setConteudo(e.target.value)}
-                                sx={{
-                                    backgroundColor: '#fff',
-                                    borderRadius: 2,
-                                    boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-                                }}
-                            />
-                        </div>
+
 
                         {/* Botão de enviar mensagem */}
-                        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 24 }}>
-                            {conteudo ?
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={novaInteracao}
-                                    sx={{
-                                        paddingX: 3,
-                                        paddingY: 1,
-                                        borderRadius: '8px',
-                                        textTransform: 'none',
-                                        fontWeight: 'bold',
-                                    }}
-                                >
-                                    Enviar Mensagem
-                                </Button>
 
-                                : ''}
 
-                        </div>
-                        {logged?.usuarioAtesto && status === 'Aberto'
-                            && logged.Area.Unidade.id === setorSolicitanteFk && (
+
+
+
+
+
+
+
+                        {logged?.usuarioAtesto && status === 'Nota Cadastrada - Aguardando aprovação do gestor' &&
+                            (detalhes === 'contrato' || detalhes === 'patrimonio' || detalhes === 'servico'
+                                || detalhes === 'consumo'
+                            ) &&
+                            logged.Area.Unidade.nome === setorSolicitante && (
                                 <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 24 }}>
                                     <Button
                                         variant="contained"
                                         color="error"
-                                        onClick={() => onSaveStatus('iniciado')}
+                                        onClick={() => onSaveStatus('Enviada para Análise Fiscal')}
                                         sx={{
                                             paddingX: 3,
                                             paddingY: 1,
@@ -1530,19 +2221,21 @@ const NfForm = (props) => {
                                             fontWeight: 'bold',
                                         }}
                                     >
-                                        Enviar nota para análise Fiscal
+                                        Aprovar e enviar para Analise Fiscal
                                     </Button>
                                 </div>
                             )}
 
 
-                        {(logged?.usuarioAtesto || logged?.usuarioSolicitante) && status === 'Planejado para Iniciar'
-                            && logged.Area.Unidade.id === setorSolicitanteFk && (
+                        {logged?.usuarioAtesto && status === 'Nota Cadastrada - Aguardando aprovação do gestor' &&
+                            detalhes === 'Enviado para análise fiscal, pagamento direto pela unidade'
+                            &&
+                            logged.Area.Unidade.nome === setorSolicitante && (
                                 <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 24 }}>
                                     <Button
                                         variant="contained"
                                         color="error"
-                                        onClick={() => onSaveStatus('concluido')}
+                                        onClick={() => onSaveStatus('Enviado para análise fiscal, pagamento direto pela unidade')}
                                         sx={{
                                             paddingX: 3,
                                             paddingY: 1,
@@ -1550,73 +2243,13 @@ const NfForm = (props) => {
                                             textTransform: 'none',
                                             fontWeight: 'bold',
                                         }}
-                                    >
-                                        Finalise após cadastrar pagamento no MXM
+                                    >Aprovar e enviar para Analise Fiscal
                                     </Button>
                                 </div>
                             )}
 
 
 
-
-                        {logged?.usuarioCarteiraFiscal && status != 'Aberto' && (
-                            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 24 }}>
-                                <Button
-                                    variant="contained"
-                                    color="error"
-                                    onClick={() => setModalSave(true)}
-                                    sx={{
-                                        paddingX: 3,
-                                        paddingY: 1,
-                                        borderRadius: '8px',
-                                        textTransform: 'none',
-                                        fontWeight: 'bold',
-                                    }}
-                                >
-                                    Analisar esta nota
-                                </Button>
-                            </div>
-                        )}
-
-                        {logged?.usuarioPagamento && status === 'Pendênte' &&
-                            logged.id === fkExecutor && (
-                                <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 24 }}>
-                                    <Button
-                                        variant="contained"
-                                        color="error"
-                                        onClick={() => onSaveStatus('concluido')}
-                                        sx={{
-                                            paddingX: 3,
-                                            paddingY: 1,
-                                            borderRadius: '8px',
-                                            textTransform: 'none',
-                                            fontWeight: 'bold',
-                                        }}
-                                    >
-                                        Finalise após cadastrar pagamento no MXM
-                                    </Button>
-                                </div>
-                            )}
-
-
-                        {logged?.usuarioPagamento && status === 'Pendênte' && (
-                            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 24 }}>
-                                <Button
-                                    variant="contained"
-                                    color="error"
-                                    onClick={() => setOpen(true)}
-                                    sx={{
-                                        paddingX: 3,
-                                        paddingY: 1,
-                                        borderRadius: '8px',
-                                        textTransform: 'none',
-                                        fontWeight: 'bold',
-                                    }}
-                                >
-                                    <PersonIcon />Selecione o funcionario que vai cadastrar no MXM
-                                </Button>
-                            </div>
-                        )}
 
 
 
@@ -1625,22 +2258,7 @@ const NfForm = (props) => {
                         <hr style={{ borderTop: '1px solid #e0e0e0', marginBottom: 24 }} />
 
                         {/* Mensagens anteriores */}
-                        <div>
-                            {timelineStatus.length ? (
-                                <div><b>
 
-                                    log do processo:
-                                </b>
-                                    {timelineStatus.map((item, index) => (
-                                        <div key={index} style={{ fontSize: '9px' }}>
-                                            {item.Usuario?.nome}-{item.Status?.nome}- {moment(item.createdAt).format('DD/MM/YYYY HH:mm:ss')}
-                                            <hr></hr></div>
-                                    ))}
-                                </div>
-                            ) : (
-                                'x'
-                            )}
-                        </div>
 
                     </div>
 
@@ -1667,7 +2285,7 @@ const NfForm = (props) => {
                             variant="contained"
                             startIcon={<ArrowBackIcon />}
                             onClick={() =>
-                                (window.location.href = `${process.env.REACT_APP_DOMAIN}/pagamentoDeNotas`)
+                                (window.location.href = `${process.env.REACT_APP_DOMAIN}/pagamentos`)
                             }
                             style={{
                                 borderRadius: 6,
@@ -1945,7 +2563,7 @@ const NfForm = (props) => {
                     />
 
 
-                    { title.includes('sem contrato') ?
+                    {status === 'Enviado para análise fiscal, pagamento direto pela unidade' ?
                         <Button
                             variant="contained"
                             color="primary"
@@ -1958,7 +2576,7 @@ const NfForm = (props) => {
                                 fontWeight: 'bold',
                             }}
                         >
-                            Enviar Análise
+                            Enviar Análise da Nota
                         </Button>
 
                         :
@@ -1966,7 +2584,7 @@ const NfForm = (props) => {
                         <Button
                             variant="contained"
                             color="primary"
-                            onClick={() => onSaveStatus('para pgt')}
+                            onClick={() => onSaveStatus('Carteira Enviada para lançar pagamento GLC')}
                             style={{
                                 alignSelf: 'flex-end',
                                 borderRadius: 6,
@@ -1998,6 +2616,60 @@ const NfForm = (props) => {
 
 
                 </div>
+            </Dialog>
+
+
+
+            <Dialog open={openStatus}  >
+
+                <DialogContent>
+                    <DialogContentText>
+                        Atenção, o Status é configurado para mudar automaticamente em cada passo da NF, só altere manualmente caso algum erro
+                        ocorra no processo.
+
+                    </DialogContentText>
+
+
+
+                    <p></p>
+
+                    <FormControl labelId="demo-simple-select-label" id="demo-simple-select" style={{ width: 250 }}>
+                        <InputLabel id="demo-simple-select-label">{status}</InputLabel>
+
+
+                        <Select style={{ fontSize: 20 }} onChange={e => setNewStatus(e.target.value)}>
+                            {/* <option>{status}</option> */}
+
+
+                            {
+                                alterarStatus.filter(status => status.descricao != null)
+                                    .filter(status =>
+                                        status.descricao != null &&
+                                        status.nome !== 'Nota Cadastrada - Aguardando aprovação do gestor'
+                                    ).map((status, key) => <MenuItem name={status.nome} value={status.id} >
+                                        {status.nome}</MenuItem>)
+                            }
+                        </Select>
+
+
+
+                    </FormControl>
+
+
+                    <p></p>
+
+                </DialogContent>
+                <DialogActions>
+                    {newStatus != '' ?
+                        <div>
+                            <DialogActions>
+                                <Button onClick={() => setOpenStatus(false)}>Cancelar</Button>
+                                <Button onClick={() => { onSaveStatus() }} >Alterar</Button>
+                            </DialogActions>
+
+                        </div>
+                        : ''}
+                </DialogActions>
             </Dialog>
 
 
@@ -2145,91 +2817,218 @@ const NfForm = (props) => {
             </Dialog>
 
 
+            <Dialog open={openMsg4}>
+                <DialogContent>
+                    <hr style={{ margin: '20px 0', borderColor: '#ddd' }} />
 
-            {/* 
-            <Dialog open={openMsg}>
-                <DialogContent
-                    style={{ width: '600px', padding: '16px' }}
-                >
-                    {mensagens.map((item, index) => (
-                        <div key={index} style={{
-                            borderTop: '1px solid #e0e0e0',
-                            padding: 10,
-                            background: '#FFFFE0',
-                            borderRadius: 10,
+                    <div style={{ color: 'red' }}>
 
-                            border: '2px solid #e0e0e0',
-                        }}>
-                            <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                    <b style={{ fontSize: 12 }}>{item.Usuario ? item.Usuario.nome : ''}</b>
-                                    <b style={{ fontSize: 12 }}>{new Date(item.createdAt).toLocaleString()}</b>
-                                </div>
-                            </div>
-                            <div>
-                                <p style={{ wordBreak: "break-all" }}>{item.conteudo}</p>
-                            </div>
-                        </div>
-                    ))}
-
-                    <hr />
-
-                    {openStatus === false ? <h2>Enviar mensagem</h2> : <h4>Informe o motivo da alteração do Status</h4>}
-
-                    <div style={{ marginBottom: 16 }}>
-                        <TextField
-                            fullWidth
-                            label='Digite sua mensagem...'
-                            multiline
-                            rows={8}
-                            variant="outlined"
-                            value={conteudo}
-                            onChange={e => setConteudo(e.target.value)}
-                            sx={{ margin: 1 }}
-                        />
                     </div>
+                    <div>
+                        {timelineStatus.length ? (
+                            <div><b>
 
-                    <hr />
+                                Atendimento do Pagamento:
+                            </b>
+                                {timelineStatus.map((item, index) => (
+                                    <div key={index} style={{ fontSize: '9px' }}>
+                                        {item.Usuario?.nome}-{item.Status?.nome}- {moment(item.createdAt).format('DD/MM/YYYY HH:mm:ss')}
+                                        <hr></hr></div>
+                                ))}
+                            </div>
+                        ) : (
+                            'x'
+                        )}
+                    </div>
+                    <p></p>
 
-                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
-                        <Button variant="contained" color="primary" onClick={novaInteracao} >
-                            Enviar
-                        </Button>
-                        <Button variant="outlined" onClick={() => setOpenMsg(false)}>
-                            Cancelar
+
+                    <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <Button
+                            onClick={() => setOpenMsg4(false)}
+                            style={{
+                                background: 'transparent',
+                                border: 'none',
+                                color: '#555',
+                                cursor: 'pointer',
+                                fontWeight: 'bold',
+                                textDecoration: 'underline'
+                            }}
+                        >
+                            Voltar para o chamado
                         </Button>
                     </div>
                 </DialogContent>
-            </Dialog> */}
+            </Dialog>
 
 
-            <Dialog open={termo}  >
-
+            <Dialog open={openMsg3}>
                 <DialogContent>
 
-                    {openStatus === false ?
-                        <h2>Informe o cpf do funcionário</h2>
-                        : <h4></h4>}
 
-                    <div style={{ flex: 1, marginBottom: 2 }}>
-                        <TextField fullWidth sx={{ m: 1 }} size='200px' label='Digite o CPF' variant="outlined" value={cpfTermo} onChange={e => setCpfTermo(e.target.value)} />
-                    </div>
-                    <hr></hr>
+                    {status != "Pago"
+                        ?
+                        <>
+                            <div style={{ padding: '20px' }}>
+                                <ReactQuill
+                                    theme="snow"
+                                    value={conteudo}
+                                    onChange={setConteudo}
+                                    style={{
+                                        minHeight: '200px',
+                                        maxHeight: '400px',
+                                        overflowY: 'auto',
+                                        backgroundColor: '#fff',
+                                    }}
+                                    modules={{
+                                        toolbar: [
+                                            ['bold', 'italic', 'underline'],
+                                            [{ list: 'ordered' }, { list: 'bullet' }],
+                                            ['clean'],
+                                        ],
+                                    }}
+                                    formats={['bold', 'italic', 'underline', 'list', 'bullet']}
+                                />
+
+                            </div>
+                            <div style={{ padding: '20px' }}>
 
 
-                    <div style={{ flex: 1, display: 'flex', flexDirection: 'row' }}>
-                        {/* <Button variant="outlined" onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/area/`}>Voltar</Button> */}
-                        <div style={{ flex: 1 }}></div>
-                        <Button variant="contained" onClick={checarTermo}>{'Checar termo de compromisso'}</Button>
+
+                            </div>
+                            <div style={{ marginBottom: 24 }}>
+
+                            </div>
+                            <Button variant="contained" color="primary" onClick={novaInteracao} >
+                                Enviar
+                            </Button>
+                        </>
+                        : ''}
+
+                    <p></p>
 
 
-                        <Button onClick={() => setTermo(false)}>sair</Button>
-
-
+                    <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <Button
+                            onClick={() => setOpenMsg3(false)}
+                            style={{
+                                background: 'transparent',
+                                border: 'none',
+                                color: '#555',
+                                cursor: 'pointer',
+                                fontWeight: 'bold',
+                                textDecoration: 'underline'
+                            }}
+                        >
+                            Voltar para o chamado
+                        </Button>
                     </div>
                 </DialogContent>
-
             </Dialog>
+
+
+            <Dialog open={openMsg5}>
+                <DialogContent>
+
+
+
+                    <div>
+                        <h2>Insira o PDF MXM</h2>
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            style={{
+                                padding: '10px',
+                                borderRadius: '5px',
+                                border: '1px solid #ccc',
+                                marginBottom: '20px',
+                                width: '100%',
+                                fontSize: '16px'
+                            }}
+                        />
+                        <form>
+                            <button
+                                onClick={() => {
+                                    handleUpload();
+
+
+
+
+                                    // novaInteracao();
+
+
+
+                                }}
+                                type="button"
+
+                                style={{
+                                    backgroundColor: '#108cdd',
+                                    color: 'white',
+                                    padding: '10px 20px',
+                                    border: 'none',
+                                    borderRadius: '5px',
+                                    cursor: 'pointer',
+                                    fontSize: '16px',
+                                    transition: 'red'
+                                }}
+                                onMouseEnter={e => e.target.style.backgroundColor = 'red'}
+                                onMouseLeave={e => e.target.style.backgroundColor = '#108cdd'}
+                            >
+                                Enviar
+                            </button>
+
+                        </form>
+
+
+                        {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+
+                    </div>
+                    <div style={{ marginBottom: 24 }}>
+
+                    </div>
+
+
+                    {arquivoEnviado && (
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => {
+                                onSaveStatus('Mxm cadastrado, segue para validação da carteira fiscal');
+                            }}
+                        >
+                            enviar para carteira fiscal
+                        </Button>
+                    )}
+
+
+
+
+                    <p></p>
+
+
+                    <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <Button
+                            onClick={() => setOpenMsg5(false)}
+                            style={{
+                                background: 'transparent',
+                                border: 'none',
+                                color: '#555',
+                                cursor: 'pointer',
+                                fontWeight: 'bold',
+                                textDecoration: 'underline'
+                            }}
+                        >
+                            Voltar para o chamado
+                        </Button>
+                    </div>
+                </DialogContent>
+            </Dialog>
+
+
+
+
+
+
 
             <Dialog open={openMensagens}  >
 

@@ -219,6 +219,9 @@ const CadastrousuarioNf = (props) => {
         if (pesquisa) {
             pesquisar();
         }
+
+
+
     }, [pesquisa]);
 
     // useEffect(() => {
@@ -228,6 +231,8 @@ const CadastrousuarioNf = (props) => {
 
 
     const onSave = () => {
+        // alert(novoEmailNF)
+        //  alert(novoPerfilNF)
 
         const token = getCookie('_token_task_manager')
         const params = {
@@ -269,7 +274,7 @@ const CadastrousuarioNf = (props) => {
     }
 
 
-    function onsave2(idUser){
+    function onsave2(idUser) {
 
         const token = getCookie('_token_task_manager')
         const params = {
@@ -437,11 +442,45 @@ const CadastrousuarioNf = (props) => {
                     <p></p>
 
                     {logged
-                        && logged.usuarioPagamento === true 
+                        && logged.usuarioPagamento === true
                         ? (
 
+
                             <div>
-                                <h1>Usuarios do modulo Nota fiscal</h1>
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        gap: '16px',
+                                        marginTop: '20px' // ou use height: '100vh' se quiser centralizar na tela inteira
+                                    }}
+                                >
+                                    <Button
+                                        size="small"
+                                        variant="contained"
+                                        // startIcon={<ArrowBackIcon />}
+                                        onClick={() =>
+                                            (window.location.href = `${process.env.REACT_APP_DOMAIN}/pagamentos`)
+                                        }
+                                        style={{
+                                            marginBottom: 16,
+                                            borderRadius: 6,
+                                            marginRight: '30px',
+
+                                            textTransform: 'none',
+                                            fontSize: 13,
+                                        }}
+                                    >
+                                        Voltar
+                                    </Button>
+
+
+                                    <h1>Usuarios do módulo Nota fiscal</h1>
+
+
+                                </div>
+
                                 <div
                                     style={{
                                         display: 'flex',
@@ -455,88 +494,114 @@ const CadastrousuarioNf = (props) => {
                                         gap: '20px' // espaço entre colunas
                                     }}
                                 >
-                                    <b>
-                                        Cadastre e exclua usuarios do modulo Nota Fiscal
-
-                                    </b>
 
 
 
-                                    <FormControl fullWidth size="small" sx={{ mt: 2 }}>
-                                        <InputLabel id="select-email-label">Selecione um e-mail</InputLabel>
-                                        <Select
-                                            labelId="select-email-label"
-                                            value={novoEmailNF}
-                                            onChange={(e) => setNovoEmailNF(e.target.value)}
-                                            label="Selecione um e-mail"
-                                            sx={{
-                                                backgroundColor: '#fafce5',
-                                                borderRadius: '8px',
-                                                boxShadow: 1,
-                                                '& .MuiSelect-select': {
 
-                                                }
+
+                                    <div>
+
+
+                                    </div>
+
+                                    <div style={{
+                                        display: 'flex',
+                                        gap: '32px',
+                                        padding: '24px',
+                                        backgroundColor: '#f9fafb',
+                                        borderRadius: '12px',
+                                        fontFamily: 'Segoe UI, sans-serif',
+                                        maxWidth: '1000px',
+                                        margin: '0 auto',
+                                        alignItems: 'flex-start',
+                                        flexWrap: 'wrap'
+                                    }}>
+                                        {/* Painel informativo */}
+                                        {/* <div
+                                            style={{
+                                                minWidth: '300px',
+                                                backgroundColor: '#ffffff',
+                                                borderRadius: '12px',
+                                                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
+                                                padding: '24px',
+                                                color: '#333',
+                                                lineHeight: '1.8',
                                             }}
                                         >
-                                            {todosEmailsNF.map((item, index) => (
-                                                <MenuItem key={index} value={item.id}>
-                                                    {item.nome}
-                                                </MenuItem>
+                                            {[
+                                                { label: 'Cadastrante de notas', desc: 'Usuário do setor responsável por enviar notas para pagamento.' },
+                                                { label: 'Aprovador de pagamento', desc: 'Funcionário do setor responsável por validar as informações anexadas pelo usuário.' },
+                                                { label: 'Cadastrante MXM GLC', desc: 'Funcionário designado pela GLC para receber processos de pagamentos.' },
+                                                { label: 'Análise fiscal', desc: 'Funcionário da GCF responsável por calcular taxas e encargos de pagamento.' },
+                                                { label: 'Contas a pagar', desc: 'Funcionário GCF responsável por efetivamente fazer o pagamento da nota.' },
+                                                { label: 'Patrimônio', desc: 'Funcionário informado de compra de patrimônio para prosseguir com o tombamento.' },
+                                            ].map((item, index) => (
+                                                <div key={index} style={{ marginBottom: '12px' }}>
+                                                    <strong style={{ color: '#1F2937' }}>{item.label}:</strong> {item.desc}
+                                                </div>
                                             ))}
-                                        </Select>
+                                        </div> */}
 
 
-                                    </FormControl>
-                                    <FormControl fullWidth size="small" sx={{ mt: 2 }}>
-                                        <InputLabel id="select-email-label">Selecione tipo de perfil</InputLabel>
-                                        <Select
-                                            labelId="select-email-label"
-                                            value={novoPerfilNF}
-                                            onChange={(e) => setNovoPerfilNF(e.target.value)}
-                                            label="Selecione um usuário"
-                                            sx={{
-                                                backgroundColor: '#fafce5',
-                                                borderRadius: '8px',
-                                                boxShadow: 1,
-                                                '& .MuiSelect-select': {
+                                        {/* Seletores */}
+                                        <div style={{ flex: '1', minWidth: '300px' }}>
+                                            <FormControl fullWidth size="small" sx={{ mt: 1 }}>
+                                                <InputLabel id="select-email-label">Selecione um e-mail</InputLabel>
+                                                <Select
+                                                    labelId="select-email-label"
+                                                    value={novoEmailNF}
+                                                    onChange={(e) => setNovoEmailNF(e.target.value)}
+                                                    label="Selecione um e-mail"
+                                                    sx={{
+                                                        backgroundColor: '#fafce5',
+                                                        borderRadius: '8px',
+                                                        boxShadow: 1
+                                                    }}
+                                                >
+                                                    {todosEmailsNF.map((item, index) => (
+                                                        <MenuItem key={index} value={item.id}>
+                                                            {item.nome}
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
 
-                                                }
-                                            }}
-                                        >
+                                            <FormControl fullWidth size="small" sx={{ mt: 3 }}>
+                                                <InputLabel id="select-perfil-label">Selecione tipo de perfil</InputLabel>
+                                                <Select
+                                                    labelId="select-perfil-label"
+                                                    value={novoPerfilNF}
+                                                    onChange={(e) => setNovoPerfilNF(e.target.value)}
+                                                    label="Selecione um usuário"
+                                                    sx={{
+                                                        backgroundColor: '#fafce5',
+                                                        borderRadius: '8px',
+                                                        boxShadow: 1
+                                                    }}
+                                                >
+                                                    <MenuItem value="Cadastrante de Notas">Cadastrante de Notas - setor</MenuItem>
+                                                    <MenuItem value="Aprovador de pagamentos">Aprovador de pagamentos - setor</MenuItem>
+                                                    <MenuItem value="Cadastrante MXM">Cadastrante MXM - GLC</MenuItem>
+                                                    <MenuItem value="Analise Fiscal">Análise Fiscal - GCF</MenuItem>
+                                                    <MenuItem value="Contas a Pagar">Contas a Pagar - GCF</MenuItem>
+                                                    <MenuItem value="Patrimonio">Patrimônio - GSI</MenuItem>
+                                                </Select>
+                                            </FormControl>
+                                            {novoEmailNF && novoPerfilNF ?
 
-                                            <MenuItem value="Cadastrante de Notas">
-                                                Cadastrante de Notas- setor
-                                            </MenuItem>
-
-                                            <MenuItem value="Aprovador de pagamentos">
-                                                Aprovador de pagamentos- setor
-                                            </MenuItem>
-
-                                            <MenuItem value="Cadastrante MXM">
-                                                Cadastrante MXM- GLC
-                                            </MenuItem>
-
-                                            <MenuItem value="Analise Fiscal">
-                                                Analise Fiscal- GCF
-                                            </MenuItem>
-
-
-
-
-                                        </Select>
-                                    </FormControl>
-                                    <br></br>
-
-
-                                    {novoEmailNF && novoPerfilNF ?
-
-                                        <Button size="large" variant="contained" style={{ marginRight: 20, marginTop: 20 }}
-                                            onClick={() => onSave()} >
-                                            cadastrar usuario no modulo de Nota Fiscal
-                                        </Button>
+                                                <Button size="large" variant="contained" style={{ marginRight: 20, marginTop: 20 }}
+                                                    onClick={() => onSave()} >
+                                                    cadastrar usuario no módulo de Nota Fiscal
+                                                </Button>
 
 
-                                        : ''}
+                                                : ''}
+                                        </div>
+                                    </div>
+
+
+
+
 
                                 </div>
 
@@ -555,11 +620,11 @@ const CadastrousuarioNf = (props) => {
                                 >
 
                                     <div style={{ flex: 1, padding: '10px', backgroundColor: '#f5f5f5', borderRadius: '8px' }}>
-                                        Cadastrante de Notas- setor
+                                       <b>Cadastrante de Notas- setor</b> 
 
                                         <div style={{ marginTop: '16px' }}>
                                             {todosEmailsNF
-                                                .filter(item => item.Usuario === true)
+                                                .filter(item => item.usuarioSolicitante === true)
                                                 .map((item, index) => (
                                                     <div
                                                         key={index}
@@ -576,7 +641,7 @@ const CadastrousuarioNf = (props) => {
                                                     >
                                                         <span>{item.nome}</span>
                                                         <button
-                                                           onClick={() => onsave2(item.id)}
+                                                            onClick={() => onsave2(item.id)}
                                                             style={{
                                                                 backgroundColor: '#e53935',
                                                                 color: '#fff',
@@ -596,7 +661,7 @@ const CadastrousuarioNf = (props) => {
 
                                     </div>
 
-                                    <div style={{ flex: 1, padding: '10px', backgroundColor: '#f5f5f5', borderRadius: '8px' }}>Aprovador de pagamentos- setor
+                                    {/* <div style={{ flex: 1, padding: '10px', backgroundColor: '#f5f5f5', borderRadius: '8px' }}><b>Aprovador de pagamentos- setor</b>
 
                                         <div style={{ marginTop: '16px' }}>
                                             {todosEmailsNF
@@ -617,7 +682,7 @@ const CadastrousuarioNf = (props) => {
                                                     >
                                                         <span>{item.nome}</span>
                                                         <button
-                                                           onClick={() => onsave2(item.id)}
+                                                            onClick={() => onsave2(item.id)}
                                                             style={{
                                                                 backgroundColor: '#e53935',
                                                                 color: '#fff',
@@ -633,9 +698,9 @@ const CadastrousuarioNf = (props) => {
                                                 ))}
                                         </div>
 
-                                    </div>
+                                    </div> */}
 
-                                    <div style={{ flex: 1, padding: '10px', backgroundColor: '#f5f5f5', borderRadius: '8px' }}>Cadastrante MXM- GLC
+                                    <div style={{ flex: 1, padding: '10px', backgroundColor: '#f5f5f5', borderRadius: '8px' }}><b>Cadastrante MXM- GLC</b>
                                         <div style={{ marginTop: '16px' }}>
                                             {todosEmailsNF
                                                 .filter(item => item.usuarioPagamento === true)
@@ -674,10 +739,85 @@ const CadastrousuarioNf = (props) => {
 
                                     </div>
 
-                                    <div style={{ flex: 1, padding: '10px', backgroundColor: '#f5f5f5', borderRadius: '8px' }}>Analise Fiscal- GCF
+                                    <div style={{ flex: 1, padding: '10px', backgroundColor: '#f5f5f5', borderRadius: '8px' }}><b>Analise Fiscal- GCF</b>
                                         <div style={{ marginTop: '16px' }}>
                                             {todosEmailsNF
                                                 .filter(item => item.usuarioCarteiraFiscal === true)
+                                                .map((item, index) => (
+                                                    <div
+                                                        key={index}
+                                                        style={{
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'space-between',
+                                                            padding: '10px',
+                                                            marginBottom: '8px',
+                                                            backgroundColor: '#f9f9f9',
+                                                            borderRadius: '8px',
+                                                            boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+                                                        }}
+                                                    >
+                                                        <span>{item.nome}</span>
+                                                        <button
+                                                            onClick={() => onsave2(item.id)}
+                                                            style={{
+                                                                backgroundColor: '#e53935',
+                                                                color: '#fff',
+                                                                border: 'none',
+                                                                padding: '6px 12px',
+                                                                borderRadius: '6px',
+                                                                cursor: 'pointer'
+                                                            }}
+                                                        >
+                                                            Excluir
+                                                        </button>
+                                                    </div>
+                                                ))}
+                                        </div>
+
+                                    </div>
+
+                                    <div style={{ flex: 1, padding: '10px', backgroundColor: '#f5f5f5', borderRadius: '8px' }}><b>Contas a pagar- GCF</b>
+                                        <div style={{ marginTop: '16px' }}>
+                                            {todosEmailsNF
+                                                .filter(item => item.usuarioFinanceiro === true)
+                                                .map((item, index) => (
+                                                    <div
+                                                        key={index}
+                                                        style={{
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'space-between',
+                                                            padding: '10px',
+                                                            marginBottom: '8px',
+                                                            backgroundColor: '#f9f9f9',
+                                                            borderRadius: '8px',
+                                                            boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+                                                        }}
+                                                    >
+                                                        <span>{item.nome}</span>
+                                                        <button
+                                                            onClick={() => onsave2(item.id)}
+                                                            style={{
+                                                                backgroundColor: '#e53935',
+                                                                color: '#fff',
+                                                                border: 'none',
+                                                                padding: '6px 12px',
+                                                                borderRadius: '6px',
+                                                                cursor: 'pointer'
+                                                            }}
+                                                        >
+                                                            Excluir
+                                                        </button>
+                                                    </div>
+                                                ))}
+                                        </div>
+
+                                    </div>
+                                    <div style={{ flex: 1, padding: '10px', backgroundColor: '#f5f5f5', borderRadius: '8px' }}><b>Patrimonio -GSI</b>
+                                        <div style={{ marginTop: '16px' }}>
+                                            {todosEmailsNF
+                                                .filter(item => item.usuarioPatrimonio === true)
                                                 .map((item, index) => (
                                                     <div
                                                         key={index}

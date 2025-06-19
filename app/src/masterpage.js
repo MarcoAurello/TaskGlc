@@ -5,11 +5,14 @@ import Content from "./components/content";
 import Modal from './components/modal'
 
 import Home from "./pages/home";
+
+import HomeCad from "./pages/homeCad";
 import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Usuario from "./pages/usuario";
-import PagamentoDeNotas from "./pages/pagamentoDeNotas";
+import Pagamentos from "./pages/pagamentos";
 import PesquisarNotas from "./pages/pesquisarNotas"; 
+import PesquisarNotasGLC from "./pages/pesquisarNotasGLC"; 
 import CadastroUsuarioNF from "./pages/cadastroUsuarioNf";
 
 
@@ -1304,8 +1307,8 @@ const Masterpage = (props) => {
 
           <Route
             exact
-            path="/pagamentoDeNotas"
-            render={(props) => <PagamentoDeNotas {...props} logged={logged} />}
+            path="/pagamentos"
+            render={(props) => <Pagamentos {...props} logged={logged} />}
           />
 
           <Route
@@ -1313,6 +1316,13 @@ const Masterpage = (props) => {
             path="/pesquisarNotas"
             render={(props) => <PesquisarNotas {...props} logged={logged} />}
           />
+
+           <Route
+            exact
+            path="/pesquisarNotasGLC"
+            render={(props) => <PesquisarNotasGLC {...props} logged={logged} />}
+          />
+
 
           <Route
             exact
@@ -1447,6 +1457,12 @@ const Masterpage = (props) => {
             exact
             path="/home"
             render={(props) => <Home {...props} logged={logged} />}
+          />
+
+          <Route
+            exact
+            path="/homeCad"
+            render={(props) => <HomeCad {...props} logged={logged} />}
           />
           <Route
             exact

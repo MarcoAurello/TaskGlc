@@ -38,6 +38,7 @@ const Home = (props) => {
   const [checked, setChecked] = React.useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const ImageProd = require('../assets/nf.png')
+  const ImageItens = require('../assets/itens.png')
   const [searchTerm1, setSearchTerm1] = useState("");
   const [fkArea, setfkArea] = useState("");
   const [subarea, setSubArea] = useState([]);
@@ -200,8 +201,8 @@ const Home = (props) => {
 
     }
 
-   
-   
+
+
   }, [todosEmails, emailNaoEncontrado, logged,]);
 
   useEffect(() => {
@@ -332,28 +333,42 @@ const Home = (props) => {
         ''
       } */}
       <center>
-        <div>
-          {/* <Button size="large" variant="contained" style={{ marginRight: 20, marginTop: 20 }}
-            onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/minhasAtividades/`} >
-            Atividades Recebidas<KeyboardDoubleArrowLeftIcon /><div style={{ color: '#FFA500', fontWeight: 'bold', fontSize: 24 }}>{minhasAtividades.length}</div></Button><br></br>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center", // centraliza horizontalmente
+            alignItems: "center",     // centraliza verticalmente
+            height: "100vh",          // altura da viewport para centralizar na tela inteira
+          }}
+        >
 
-          <Button size="large" variant="contained" style={{ marginRight: 20, marginTop: 20 }}
-            onClick={() => window.location.href = `${process.env.REACT_APP_DOMAIN}/chamadosAbertos/`} >
-            Atividades Solicitadas<KeyboardDoubleArrowRightIcon /><div style={{ color: '#FFA500', fontWeight: 'bold', fontSize: 24 }}>{solicitacaoAtividades.length}</div></Button><br></br> */}
 
-          
-          {logged &&
-          (logged.usuarioSolicitante === true  ||
-            logged.usuarioAtesto === true  ||
-            logged.usuarioPagamento === true  ||
-            logged.usuarioCarteiraFiscal === true  
-          ) 
-          
-          ?
+          {/* <div
+            style={{
+              width: '220px',
+              height: '200px',
+              textAlign: 'center',
+              padding: '10px',
+              border: '2px solid #ccc',
+              borderRadius: '12px',
+              boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+              cursor: 'pointer',
+              marginRight: '20px'
+            }}
+            onClick={() =>
+                (window.location.href = `${process.env.REACT_APP_DOMAIN}/pagamentos`)
+              }
+          >
+            <b>Acompanhamento de Notas e Pagamentos</b><br />
+            <img src={ImageProd} style={{ width: '100px', borderRadius: '8px' }}
+              
+            />
+          </div> */}
+
           <div
             style={{
               width: '220px',
-              height: '150px',
+              height: '200px',
               textAlign: 'center',
               padding: '10px',
               border: '2px solid #ccc',
@@ -361,20 +376,23 @@ const Home = (props) => {
               boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
               cursor: 'pointer',
             }}
-          >
-            <b>Acompanhamento de Pagamentos</b><br />
-            <img src={ImageProd} style={{ width: '80px', borderRadius: '8px' }}
-              onClick={() =>
-                (window.location.href = `${process.env.REACT_APP_DOMAIN}/pagamentoDeNotas`)
+             onClick={() =>
+                (window.location.href = `${process.env.REACT_APP_DOMAIN}/homeCad`)
               }
+          >
+            <b>Cadastro de Itens e Serviços</b><br />
+            <img src={ImageItens} style={{ width: '100px', borderRadius: '8px' }}
+             
             />
           </div>
-        
-        :''}
-          
+
+
+
+
+
           <br></br>
           <p></p>
-          <Button
+          {/* <Button
             size="large"
             variant="contained"
             style={{ marginRight: 20, marginTop: 20 }}
@@ -382,11 +400,11 @@ const Home = (props) => {
               (window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/cadastro`)
             }
           >
-            {/* <img src={ImageLogo} height={64} />   */}
+    
 
             Solicitar cadastro de item / serviço
 
-          </Button>
+          </Button> */}
 
 
 
@@ -405,166 +423,9 @@ const Home = (props) => {
           />
         </div>{" "} */}
         <hr></hr>
-        {!checked ? (
-          <Box
-            sx={{
-              width: 500,
-              maxWidth: "100%",
-            }}
-          >
-            <TextField
-              fullWidth
-              id="filled-basic"
-              variant="filled"
-              label="Pesquise por Protocolo"
-              name="pesquisa"
-              value={pesquisa}
-              type="number"
 
-              focused
-              onChange={(e) => setPesquisa(e.target.value)}
-            />
-
-
-            {/* <Button type="button" className="btn btn-primary" onClick={(e) => { pesquisar() }}>Buscar </Button> */}
-          </Box>
-        ) : (
-          ""
-        )}
-        {checked ? (
-          <Box
-            sx={{
-              width: 500,
-              maxWidth: "100%",
-            }}
-          >
-            <div style={{ flex: 1, marginBottom: 16 }}>
-              <FormControl size="small" fullWidth>
-                <InputLabel id="demo-select-small">Área</InputLabel>
-                <Select
-                  fullWidth
-                  labelId="demo-select-small"
-                  id="demo-select-small"
-                  label="pesquisa"
-                  style={{ backgroundColor: "#fff3d1" }}
-                  value={pesquisa}
-                >
-                  {setor.map((item, index) => (
-                    <MenuItem
-                      key={index}
-                      value={item.nome}
-                      onClick={() => [
-                        setPesquisa(item.nome),
-                        setfkArea(item.id),
-                      ]}
-                    >
-                      {item.nome}
-                    </MenuItem>
-                  ))}
-                </Select>
-                <p></p>
-              </FormControl>
-              {subarea ? (
-                <FormControl size="small" fullWidth>
-                  <InputLabel id="demo-select-small">Sub Área </InputLabel>
-                  <Select
-                    fullWidth
-                    labelId="demo-select-small"
-                    id="demo-select-small"
-                    label="pesquisa"
-                    style={{ backgroundColor: "#fff3d1" }}
-                    value={pesquisa}
-                  >
-                    {subarea.map((item, index) => (
-                      <MenuItem
-                        key={index}
-                        value={item.nome}
-                        onClick={() => setPesquisa(item.nome)}
-                      >
-                        {item.nome}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              ) : (
-                ""
-              )}
-            </div>
-          </Box>
-        ) : (
-          ""
-        )}
-        {respostas ? (
-          <center>
-            <table
-              className="table table-striped"
-              style={{
-                fontFamily: "arial",
-                fontSize: "12px",
-                marginLeft: 10,
-                marginRight: 10,
-                width: "100%",
-              }}
-            >
-              <tbody>
-                {respostas.map((item, index) => (
-                  <tr key={index}>
-                    <th scope="row" style={{ wordBreak: "break-all" }}>
-                      {!item.fkUsuarioExecutor ? (
-                        <div style={{ color: "red", size: 28 }}>
-                          {" "}
-                          Executor: &#10067;{" "}
-                        </div>
-                      ) : (
-                        <div style={{ color: "Blue" }}>
-                          {" "}
-                          Executor: {item.UsuarioExecutor.nome}&#128587;{" "}
-                        </div>
-                      )}
-                      {"Item para cadastrar: " + item.titulo}
-                      <br></br>
-                      {"Status : " + item.Status.nome}
-                      {item.Status.nome == "Concluido" ? (
-                        <a>&#9989;</a>
-                      ) : (
-                        <a> &#128341;</a>
-                      )}
-                      <br></br>
-                      {item.categoria === ""
-                        ? ""
-                        : "Categoria : " + item.categoria}
-                      <br></br>
-                    </th>
-                    <br></br>
-
-                    <th>
-                      <Button
-                        variant="contained"
-                        size="small"
-                        onClick={() =>
-                          (window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/${item.id}/edit`)
-                        }
-                      >
-                        abrir atividade
-                      </Button>
-                    </th>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </center>
-        ) : (
-          ""
-        )}
       </center>
-      <SpeedDial
-        ariaLabel="Nova Tarefa"
-        sx={{ position: "fixed", bottom: 16, right: 16 }}
-        icon={<EditIcon />}
-        onClick={() =>
-          (window.location.href = `${process.env.REACT_APP_DOMAIN}/atividade/cadastro`)
-        }
-      />
+
 
       <hr></hr>
 
@@ -577,7 +438,7 @@ const Home = (props) => {
         >
 
 
-          <div style={{
+          {/* <div style={{
 
             justifyContent: 'space-between',
             alignItems: 'flex-start', // Alinha os componentes ao topo
@@ -860,7 +721,7 @@ const Home = (props) => {
 
 
 
-          </div>
+          </div> */}
 
 
 

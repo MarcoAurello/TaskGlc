@@ -21,17 +21,12 @@ class AtividadeRouter {
     this.router.get('/searchRecebidos/', controller.searchRecebidos)
     this.router.get('/searchSolicitadas/', controller.searchSolicitadas)
     this.router.get('/', controller.all)
+    this.router.get('/todaspatrimonio', controller.todasPatrimonio)
     this.router.get('/recebidasSetor', controller.recebidasSetor)
     this.router.get('/recebidasSetorNF', controller.recebidasSetorNF)
     this.router.get('/recebidasSetorNFAtestar', controller.recebidasSetorNFAtestar)
     this.router.get('/recebidasSetorNFCarteira', controller.recebidasSetorNFCarteira)
     this.router.get('/recebidasSetorNFPagar', controller.recebidasSetorNFPagar)
-
-    
-
-    
-
-    
     this.router.get('/recebidasSetorCount', controller.recebidasSetorCount)
     this.router.get('/solicitadasSetor', controller.solicitadasSetor)
     this.router.get('/chamadosAbertos', controller.chamadosAbertos)
@@ -41,13 +36,14 @@ class AtividadeRouter {
     this.router.post('/createProjeto', controller.createProjeto)
     this.router.post('/createMr', controller.createMr)
     this.router.post('/nota', controller.nota)
+    this.router.post('/contrato', controller.contrato)
     this.router.post('/createAjuste', controller.createAjuste)
     this.router.post('/', controller.create)
     this.router.get('/termo/:cpfTermo', controller.termo);
-
     this.router.get('/:id', controller.find)
     this.router.post('/:id/edit', controller.update)
     this.router.post('/:id/notaParaAnalise', controller.notaParaAnalise)
+    this.router.post('/:id/notaParaGLC', controller.notaParaGLC)
     this.router.post('/:id/delete', controller.delete)
   }
 }

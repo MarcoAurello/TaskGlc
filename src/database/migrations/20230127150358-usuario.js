@@ -72,6 +72,17 @@ module.exports = {
         allowNull: true,
         defaultValue: false
       },
+      usuarioFinanceiro: {
+        type: Sequelize.BOOLEAN,
+        allowNull: true,
+        defaultValue: false
+      },
+      usuarioPatrimonio: {
+        type: Sequelize.BOOLEAN,
+        allowNull: true,
+        defaultValue: false
+      },
+
 
       usuarioCarteiraFiscal: {
         type: Sequelize.BOOLEAN,

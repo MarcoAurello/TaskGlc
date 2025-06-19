@@ -35,8 +35,10 @@ class Usuario extends Model {
   public usuarioPagamento!: Boolean
 
   public usuarioAtesto!: Boolean
+  public usuarioFinanceiro!: Boolean
 
   public usuarioCarteiraFiscal!: Boolean
+  public usuarioPatrimonio!: Boolean
 
   public validado!: Boolean
 
@@ -147,6 +149,18 @@ Usuario.init({
     allowNull: true,
     defaultValue: false
   },
+  usuarioFinanceiro: {
+    type: DataTypes.BOOLEAN,
+    allowNull: true,
+    defaultValue: false
+  },
+  usuarioPatrimonio: {
+    type: DataTypes.BOOLEAN,
+    allowNull: true,
+    defaultValue: false
+  },
+
+
 
 
   primeiroLogin: {
